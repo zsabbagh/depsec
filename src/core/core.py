@@ -1,7 +1,8 @@
 # It will be a class that will be used to interact with the database.
 # The class will have methods to create, read, update, and delete (CRUD) records in the database
 import sqlite3
-from tools.parse import Config
+from src.tools.config import Config
+from database.schema import *
 
 class Core:
     """
@@ -12,10 +13,14 @@ class Core:
     def __init__(self, config: str | Config):
         """
         Initialise the class
-        database_path: The path to the database
+
+        config: The path to the config file or the config object
         """
         self.__config: Config = None
-        if type(config) == str:
+        if type(config) in [str, dict]:
             self.__config = Config(config)
-        else:
+        elif type(config) == Config:
             self.__config = config
+        # Set the database path
+        DatabaseConfig.set(self.__config.get_database_path())
+        
