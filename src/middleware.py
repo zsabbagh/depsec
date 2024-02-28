@@ -31,7 +31,7 @@ class Middleware:
         self.__debug = debug
         self.config = Config(config)
         self.libraries = LibrariesQuerier(self.config.api_keys.libraries)
-        DatabaseConfig.set(config.get_database_path())
+        DatabaseConfig.set(self.config.get_database_path())
     
     def get_project(self,
                     package_name: str,
@@ -39,11 +39,21 @@ class Middleware:
         """
         Get project
         """
-        package = Project.get_or_none(Project.name ** package_name and Project.platform ** platform)
+        # Force lowercase
+        package_name = package_name.strip().lower()
+        platform = platform.strip().lower()
+        self.__print(f"Getting {package_name} from database with platform {platform}")
+        # Query the database
+        package = Project.get_or_none((
+            (Project.name == package_name) & 
+            (Project.platform == platform)
+        ))
         if package is not None:
+            # If the package is in the database, return it
             self.__print(f"Found {package_name} in database")
             return package
         self.__print(f"Querying libraries.io for {package_name}")
+        # Query libraries.io if the package is not in the database
         result: dict = self.libraries.query_package(package_name, package_name)
         name = result.get('name', '').strip().lower()
         platform = result.get('platform', '').strip().lower()
@@ -62,3 +72,4 @@ class Middleware:
         return project
 
 
+mw = Middleware("config.yml", debug=True)

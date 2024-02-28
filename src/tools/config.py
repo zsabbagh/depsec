@@ -26,26 +26,22 @@ class Config:
         if type(config_file) == dict:
             self.__config = config_file
         else:
-            if os.path.isfile(config_file):
-                with open(config_file, "r") as file:
-                    self.__config = yaml.safe_load(file)
-            else:
-                directory = os.path.dirname(config_file)
-                for file_extension in ["yaml", "yml", "json"]:
-                    if os.path.isfile(f"{directory}/config.{file_extension}"):
-                        with open(f"{directory}/config.{file_extension}", "r") as file:
-                            if file_extension == "json":
-                                self.__config = json.load(file)
-                                return
-                            else:
-                                self.__config = yaml.safe_load(file)
-                                return
-                    if self.__config is not None:
-                        break
-        self.api_keys = type("api_keys", (object,), {})()
+            directory = os.path.dirname(config_file)
+            if directory == "":
+                directory = os.getcwd()
+            for file_extension in ["yaml", "yml", "json"]:
+                if os.path.isfile(f"{directory}/config.{file_extension}"):
+                    with open(f"{directory}/config.{file_extension}", "r") as file:
+                        if file_extension == "json":
+                            self.__config = json.load(file)
+                        else:
+                            self.__config = yaml.safe_load(file)
+                if self.__config is not None:
+                    break
+        print(f"Config: {self.__config}")
+        self.api_keys = self.APIKeys(self.__config.get("api_keys", {}))
         for key in self.__config.keys():
             setattr(self.api_keys, key, self.__config[key])
-
         self.__database_path = self.__config.get("database", {}).get("path", None)
         self.__database_path = os.path.abspath(self.__database_path) if self.__database_path is not None else None
     
