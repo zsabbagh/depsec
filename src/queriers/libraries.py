@@ -1,5 +1,6 @@
 import os, requests, yaml, sys, re
-from src.tools.parse import Parse
+from src.tools.config import Config
+from src.database.schema import *
 
 # This file will handle querying the libraries.io API
 
@@ -17,8 +18,9 @@ class LibrariesQuerier:
         api_key_or_config: The API key or path or dict of the config file
         """
         try:
-            self.__api_key = Parse.api_key(api_key_or_config, "libraries")
-        except:
+            self.__api_key = Config(api_key_or_config).api_keys.libraries
+        except Exception as e:
+            print(f"Error: {e}")
             self.__api_key = None
 
     def search_packages(self, search_term: str):

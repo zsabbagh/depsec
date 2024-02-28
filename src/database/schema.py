@@ -13,10 +13,24 @@ class DatabaseConfig:
     
     @staticmethod
     def get():
+        """
+        Gets the database
+        """
         return DatabaseConfig.__database
+
+    @staticmethod
+    def is_set():
+        """
+        Checks if the database is set,
+        that is, if it is not None or a DatabaseProxy
+        """
+        return type(DatabaseConfig.__database).__name__ not in ['NoneType', 'DatabaseProxy']
     
     @staticmethod
-    def set(path):
+    def set(path: str):
+        """
+        Sets the database by path
+        """
         database = SqliteDatabase(path)
         DatabaseConfig.__database.initialize(database)
         DatabaseConfig.__database.create_tables([Project,
