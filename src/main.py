@@ -1,4 +1,8 @@
+import argparse
 from queriers.libraries import LibrariesQuerier
+from tools.parse import Config
+
+config = Config("config.yml")
 
 lib = LibrariesQuerier()
 
@@ -22,3 +26,9 @@ def print_response_keys(response, indent=0):
         else:
             print(f": {type(response[key]).__name__}", end="")
         print()
+
+
+if __name__ == '__main__':
+    parser = argparse.ArgumentParser(description="Query libraries.io API")
+    parser.add_argument("config", help="The query")
+    pass

@@ -1,4 +1,7 @@
-import os, requests, yaml, sys
+import os, requests, yaml, sys, re
+from src.tools.parse import Parse
+
+# This file will handle querying the libraries.io API
 
 LIBRARIES_IO_API = "https://libraries.io/api"
 LIBRARIES_IO_API_VERSION = "1.1"
@@ -8,18 +11,20 @@ class LibrariesQuerier:
     A class to query libraries.io API
     """
 
-    def __init__(self, config_path=".."):
+    def __init__(self, api_key_or_config: dict | str =None):
+        """
+        Initialise the class
+        api_key_or_config: The API key or path or dict of the config file
+        """
         try:
-            with open(os.path.expanduser(f"{config_path}/config.yml")) as f:
-                yml = yaml.safe_load(f)
-                self.__api_key = yml["api_keys"]["libraries"]
-        except Exception as e:
-            print(f"Error parsing API key: {e}", file=sys.stderr)
+            self.__api_key = Parse.api_key(api_key_or_config, "libraries")
+        except:
             self.__api_key = None
 
-    def search_packages(self, search_term):
+    def search_packages(self, search_term: str):
         """
         Search libraries.io API for a package
+        search_term: The search term
         """
         if self.__api_key is None:
             return Exception("API key is required")
@@ -27,9 +32,11 @@ class LibrariesQuerier:
         response = requests.get(url)
         return response.json()
 
-    def query_package(self, package_name, get_dependencies=False):
+    def query_package(self, package_name: str, get_dependencies: bool=False):
         """
         Query libraries.io API for a package
+        package_name: The name of the package
+        get_dependencies: Whether to get the package's dependencies
         """
         if self.__api_key is None:
             return Exception("API key is required")
@@ -37,9 +44,12 @@ class LibrariesQuerier:
         response = requests.get(url)
         return response.json()
 
-    def query_dependencies(self, package_name, version=None, package_manager="pypi"):
+    def query_dependencies(self, package_name: str, version:str=None, package_manager: str="pypi"):
         """
         Query libraries.io API for a package's dependencies
+        package_name: The name of the package
+        version: The version of the package
+        package_manager: The package manager
         """
         if self.__api_key is None:
             return Exception("API key is required")
