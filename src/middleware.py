@@ -37,21 +37,22 @@ class Middleware:
                     package_name: str,
                     platform: str="pypi"):
         """
-        Get project
+        Get project, returns (Project, Releases)
         """
         # Force lowercase
         package_name = package_name.strip().lower()
         platform = platform.strip().lower()
         self.__print(f"Getting {package_name} from database with platform {platform}")
         # Query the database
-        package = Project.get_or_none((
+        project = Project.get_or_none((
             (Project.name == package_name) & 
             (Project.platform == platform)
         ))
-        if package is not None:
+        if project is not None:
             # If the package is in the database, return it
             self.__print(f"Found {package_name} in database")
-            return package
+            releases = Release.get(Release.project_id == project.id)
+            return project, releases
         self.__print(f"Querying libraries.io for {package_name}")
         # Query libraries.io if the package is not in the database
         result: dict = self.libraries.query_package(package_name, package_name)
@@ -69,7 +70,29 @@ class Middleware:
                                  dependent_projects=dependent_projects)
         if project:
             project.save()
-        return project
+            releases = []
+            for release in result.get('versions', []):
+                number = release.get('number', '')
+                if number == '':
+                    continue
+                self.__print(f"Creating release {number} for {name} with data: {release}")
+                published_at = release.get('published_at', None)
+                try:
+                    # transform the date to a datetime object
+                    published_at = datetime.datetime.strptime(published_at, '%Y-%m-%dT%H:%M:%S.%fZ')
+                    # print the date in integer value
+                    self.__print(f"Date parsed: {published_at}")
+                except:
+                    self.__print(f"Error parsing date {published_at}")
+                    published_at = None
+                release = Release.create(
+                    project=project,
+                    version_number=release.get('number', ''),
+                    published_at=release.get('published_at', None),
+                )
+                releases.append(release)
+                release.save()
+        return project, releases
 
 
 mw = Middleware("config.yml", debug=True)
