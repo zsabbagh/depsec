@@ -12,17 +12,22 @@ class LibrariesQuerier:
     A class to query libraries.io API
     """
 
-    def __init__(self, api_key_or_config: dict | str =None):
+    def __init__(self, api_key: str =None):
         """
         Initialise the class
         api_key_or_config: The API key or path or dict of the config file
         """
-        try:
-            self.__api_key = Config(api_key_or_config).api_keys.libraries
-        except Exception as e:
-            print(f"Error: {e}")
-            self.__api_key = None
-
+        self.__api_key = api_key
+        if api_key is None:
+            print(f"Warning: Libraries.io API key is None, trying to get from config file", file=sys.stderr)
+    
+    def set_api_key(self, api_key: str):
+        """
+        Set the API key
+        api_key: The API key
+        """
+        self.__api_key = api_key
+    
     def search_packages(self, search_term: str):
         """
         Search libraries.io API for a package

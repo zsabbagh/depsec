@@ -48,15 +48,16 @@ class Project(Model):
     id: The project id
     name: The project name
     platform: The platform the project is on
-    project_name: The name of the project (not sure what this is, maybe dependencies?)
     language: The language the project is written in
     updated_at: The date the row in the database was updated
     """
     id = AutoField()
     name = CharField(null=False)
     platform = CharField(null=False)
-    project_name = CharField(null=True)
     language = CharField(null=True)
+    contributions = IntegerField(null=True)
+    dependent_repos = IntegerField(null=True)
+    dependent_projects = IntegerField(null=True)
     updated_at = TimestampField(default=datetime.datetime.now)
 
     class Meta:
@@ -89,6 +90,7 @@ class ReleaseDependency(Model):
 
     release_id: The release id
     name: The name of the dependency
+    project_name: The name of the project the dependency is on, usually the same as the name
     platform: The platform the dependency is on
     requirements: The version requirements of the dependency
     updated_at: The date the row in the database was updated
@@ -96,6 +98,7 @@ class ReleaseDependency(Model):
     
     release_id = ForeignKeyField(Release, backref='dependencies')
     name = CharField(null=False)
+    project_name = CharField(null=False)
     platform = CharField(null=True)
     requirements = CharField(null=True)
     updated_at = TimestampField(default=datetime.datetime.now)

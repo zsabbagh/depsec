@@ -1,6 +1,6 @@
 import argparse
 from queriers.libraries import LibrariesQuerier
-from tools.parse import Config
+from src.tools.config import Config
 
 config = Config("config.yml")
 
