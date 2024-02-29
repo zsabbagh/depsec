@@ -38,7 +38,6 @@ class Config:
                             self.__config = yaml.safe_load(file)
                 if self.__config is not None:
                     break
-        print(f"Config: {self.__config}")
         self.api_keys = self.APIKeys(self.__config.get("api_keys", {}))
         for key in self.__config.keys():
             setattr(self.api_keys, key, self.__config[key])

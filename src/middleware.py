@@ -53,6 +53,7 @@ class Middleware:
         """
         self.__debug = debug
         self.__debug_delay = debug_delay
+        self.__print(f"Initialising {type(self).__name__} with config {config}")
         self.config = Config(config)
         self.libraries = LibrariesQuerier(self.config.api_keys.libraries)
         DatabaseConfig.set(self.config.get_database_path())
@@ -122,7 +123,7 @@ class Middleware:
 
         return project
     
-    def get_releases(self, project_name: str, platform: str="pypi"):
+    def get_releases(self, project_name: str, version_number: str = '', platform: str="pypi"):
         """
         Gets all releases of a project 
         """
@@ -132,8 +133,8 @@ class Middleware:
             self.__error(f"Project {project_name} not found")
             return None
         releases = [ release for release in Release.select().where(Release.project_id == project.id) ]
+        releases = list(filter(lambda release: release.version_number.startswith(version_number), releases) if version_number else releases)
         return releases
-
 
     def get_dependencies(self, project_name: str, version_number: str, platform: str="pypi"):
         """
@@ -190,8 +191,6 @@ class Middleware:
             dep_instance.save()
             deps.append(dep_instance)
         return deps
-        
-        
 
-
-mw = Middleware("config.yml", debug=True)
+if __name__ == "__main__":
+    mw = Middleware("config.yml", debug=True)
