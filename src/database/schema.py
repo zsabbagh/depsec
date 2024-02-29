@@ -56,9 +56,13 @@ class Project(Model):
     platform = CharField(null=False)
     language = CharField(null=True)
     contributions = IntegerField(null=True)
+    stars = IntegerField(null=True)
+    forks = IntegerField(null=True)
     dependent_repos = IntegerField(null=True)
     dependent_projects = IntegerField(null=True)
     updated_at = DateTimeField(default=datetime.datetime.now)
+    package_manager_url = CharField(null=True)
+    repository_url = CharField(null=True)
 
     class Meta:
         database = DatabaseConfig.get()

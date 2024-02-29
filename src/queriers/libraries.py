@@ -1,6 +1,4 @@
-import os, requests, yaml, sys, re
-from src.tools.config import Config
-from src.database.schema import *
+import requests, sys
 
 # This file will handle querying the libraries.io API
 
@@ -12,21 +10,24 @@ class LibrariesQuerier:
     A class to query libraries.io API
     """
 
-    def __init__(self, api_key: str =None):
+    def __init__(self, config: dict =None):
         """
-        Initialise the class
-        api_key_or_config: The API key or path or dict of the config file
+        Initialise the class, config:
+
+        libraries: (first search in dict, if not found, then assume it's a dict with the following keys)
+            key: The API key
+            org: The organisation ID
         """
-        self.__api_key = api_key
-        if api_key is None:
-            print(f"Warning: Libraries.io API key is None, trying to get from config file", file=sys.stderr)
+        self.config(config)
     
-    def set_api_key(self, api_key: str):
+    def config(self, config: dict):
         """
         Set the API key
         api_key: The API key
         """
-        self.__api_key = api_key
+        if 'libraries' in config:
+            config = config['libraries']
+        self.__api_key = config.get('key', None)
     
     def search_packages(self, search_term: str):
         """

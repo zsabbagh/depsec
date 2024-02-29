@@ -1,7 +1,7 @@
-import time
+import time, yaml, json, glob
 from src.queriers.libraries import LibrariesQuerier
+from src.queriers.snyk import SnykQuerier
 from src.database.schema import *
-from src.tools.config import Config
 
 class Middleware:
     """
@@ -38,6 +38,34 @@ class Middleware:
             if self.__debug_delay is not None:
                 time.sleep(self.__debug_delay / 1000.0)
     
+    def config(self, config_path: str):
+        """
+        Set the config file
+        """
+        self.__config = None
+        extension = config_path.split('.')[-1]
+        # lambda for loading the file
+        loader = lambda f : json.load(f) if extension == 'json' else yaml.safe_load(f)
+        if os.path.exists(config_path):
+            with open(config_path) as f:
+                self.__config = loader(f)
+        if self.__config is None:
+            dir = os.path.dirname(os.path.abspath(__file__))
+            for file_ext in ['json', 'yml', 'yaml']:
+                for file in glob.glob(f"{dir}/*.{file_ext}"):
+                    with open(file) as f:
+                        self.__config = loader(f)
+                    if self.__config is not None:
+                        break
+                if self.__config is not None:
+                    break
+        if self.__config is None:
+            raise Exception(f"Config file not found at {config_path}")
+        apis = self.__config.get('apis', {})
+        self.libraries = LibrariesQuerier(apis)
+        self.snyk = SnykQuerier(apis)
+        DatabaseConfig.set(self.__config.get('database', {}).get('path', ''))
+    
     def set_debug(self, debug: bool = None):
         """
         Set debug
@@ -47,16 +75,14 @@ class Middleware:
         else:
             self.__debug = not self.__debug
     
-    def __init__(self, config, debug: bool=False, debug_delay: int=None) -> None:
+    def __init__(self, config_path: str, debug: bool=False, debug_delay: int=None) -> None:
         """
         Initialise the middleware
         """
         self.__debug = debug
         self.__debug_delay = debug_delay
-        self.__print(f"Initialising {type(self).__name__} with config {config}")
-        self.config = Config(config)
-        self.libraries = LibrariesQuerier(self.config.api_keys.libraries)
-        DatabaseConfig.set(self.config.get_database_path())
+        self.__print(f"Initialising {type(self).__name__} with config {config_path}")
+        self.config(config_path)
     
     def get_project(self,
                     package_name: str,
@@ -86,16 +112,22 @@ class Middleware:
         platform = result.get('platform', '')
         language = result.get('language', '')
         name, platform, language = self.__format_strings(name, platform, language)
-
-        contributions = result.get('contributions_count', 0)
-        dependent_repos = result.get('dependent_repos_count', 0)
-        dependent_projects = result.get('dependent_projects_count', 0)
-        project = Project.create(name=name,
-                                 platform=platform,
-                                 language=language,
-                                 contributions=contributions,
-                                 dependent_repos=dependent_repos,
-                                 dependent_projects=dependent_projects)
+        package_manager_url = result.get('package_manager_url')
+        repository_url = result.get('repository_url')
+        stars, forks = result.get('stars'), result.get('forks')
+        contributions = result.get('contributions_count')
+        dependent_repos = result.get('dependent_repos_count')
+        dependent_projects = result.get('dependent_projects_count')
+        project = Project.create(contributions=contributions,
+                                dependent_projects=dependent_projects,
+                                dependent_repos=dependent_repos,
+                                forks=forks,
+                                language=language,
+                                name=name,
+                                package_manager_url=package_manager_url,
+                                platform=platform,
+                                repository_url=repository_url,
+                                stars=stars)
         if project:
             project.save()
             # Create releases
