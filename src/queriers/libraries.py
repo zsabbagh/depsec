@@ -16,14 +16,15 @@ class LibrariesQuerier:
 
         libraries: (first search in dict, if not found, then assume it's a dict with the following keys)
             key: The API key
-            org: The organisation ID
         """
         self.config(config)
     
     def config(self, config: dict):
         """
-        Set the API key
-        api_key: The API key
+        Set the config
+
+        libraries: (first search in dict, if not found, then assume it's a dict with the following keys)
+            key: The API key
         """
         if 'libraries' in config:
             config = config['libraries']
