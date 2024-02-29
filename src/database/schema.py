@@ -58,7 +58,7 @@ class Project(Model):
     contributions = IntegerField(null=True)
     dependent_repos = IntegerField(null=True)
     dependent_projects = IntegerField(null=True)
-    updated_at = TimestampField(default=datetime.datetime.now)
+    updated_at = DateTimeField(default=datetime.datetime.now)
 
     class Meta:
         database = DatabaseConfig.get()
@@ -76,9 +76,9 @@ class Release(Model):
     """
     id = AutoField()
     project_id = ForeignKeyField(Project, backref='releases')
-    published_at = TimestampField(null=True)
+    published_at = DateTimeField(null=True)
     version_number = CharField(null=False)
-    updated_at = TimestampField(default=datetime.datetime.now)
+    updated_at = DateTimeField(default=datetime.datetime.now)
 
     class Meta:
         database = DatabaseConfig.get()
@@ -101,7 +101,8 @@ class ReleaseDependency(Model):
     project_name = CharField(null=False)
     platform = CharField(null=True)
     requirements = CharField(null=True)
-    updated_at = TimestampField(default=datetime.datetime.now)
+    updated_at = DateTimeField(default=datetime.datetime.now)
+    optional = BooleanField(default=False)
 
     class Meta:
         database = DatabaseConfig.get()
@@ -117,7 +118,7 @@ class ReleaseRepo(Model):
     """
     release_id = ForeignKeyField(Release, backref='repos')
     repo_url = CharField(null=False)
-    updated_at = TimestampField(default=datetime.datetime.now)
+    updated_at = DateTimeField(default=datetime.datetime.now)
 
     class Meta:
         database = DatabaseConfig.get()
