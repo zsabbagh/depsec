@@ -2,7 +2,8 @@ import sys, requests, src.utils.tools as tools
 
 # This file will handle querying the libraries.io API
 
-SNYK_API_URL = "https://snyk.io/api/rest"
+SNYK_API_URL = "https://api.snyk.io/"
+SNYK_API_VERSION = "v1"
 
 class SnykQuerier:
     """
@@ -54,12 +55,17 @@ class SnykQuerier:
         """
         Query Snyk API for a project
 
-        purl: The package URL
+        platform: The platform of the package
+        name: The name of the package
+        version: The version of the package
+        namespace (optional): The namespace of the package
+        qualifiers (optional): The qualifiers of the package
+        subpath (optional): The subpath of the package
         """
         if self.__api_key is None:
             return Exception("API key is required")
         purl = tools.create_purl(platform, namespace, name, version, qualifiers, subpath)
-        url = f"{SNYK_API_URL}/orgs/{self.__org_id}/packages/{purl}/issues"
+        url = f"{SNYK_API_URL}/{SNYK_API_VERSION}/orgs/{self.__org_id}/packages/{purl}/issues"
         response = requests.get(url, headers=self.__headers)
         return response.json()
     

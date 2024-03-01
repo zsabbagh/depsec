@@ -36,9 +36,37 @@ class DatabaseConfig:
         DatabaseConfig.__database.create_tables([Project,
              Release,
              ReleaseDependency,
-             ReleaseRepo])
+             ReleaseRepo,
+             CPE])
         DatabaseConfig.__database.close()
 
+
+
+class CPE(Model):
+    """
+    CPE models a Common Platform Enumeration
+
+    id: The CPE id
+    vendor: The vendor of the CPE
+    platform: The platform of the CPE (e.g. pypi)
+    product: The product of the CPE
+    version: The version of the CPE
+    language: The language of the CPE
+    updated_at: The date the row in the database was updated
+    """
+    id = AutoField()
+    platform = CharField(null=True)
+    vendor = CharField(null=False)
+    product = CharField(null=False)
+    version = CharField(null=True)
+    version_start_including = CharField(null=True)
+    version_end_excluding = CharField(null=True)
+    language = CharField(null=True)
+    updated_at = DateTimeField(default=datetime.datetime.now)
+
+    class Meta:
+        database = DatabaseConfig.get()
+        table_name = 'cpes'
 
 class Project(Model):
     """
