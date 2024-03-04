@@ -51,6 +51,9 @@ class LibrariesQuerier:
             return Exception("API key is required")
         url = f"{LIBRARIES_IO_API}/pypi/{package_name}?api_key={self.__api_key}"
         response = requests.get(url)
+        if response.status_code != 200:
+            print(f"Error querying libraries.io for {package_name}: {response.status_code}: {response.text}", file=sys.stderr)
+            return None
         return response.json()
 
     def query_dependencies(self, package_name: str, version:str=None, package_manager: str="pypi"):

@@ -23,11 +23,16 @@ def create_purl(type, namespace, name, version, qualifiers=None, subpath=None):
 def homepage_to_vendor(homepage: str) -> str:
     """
     Get the vendor from the homepage URL.
+
+    This is not a perfect solution, but it works for most cases.
     """
     if not homepage:
         return None
+    print(f"Homepage: {homepage}")
     homepage = re.sub(r'^https?://', '', homepage)
+    print(f"Homepage: {homepage}")
     parts = homepage.split('.')
+    print(f"Parts: {parts}")
     if len(parts) < 2:
         return None
     return parts[-2]

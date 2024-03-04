@@ -125,7 +125,7 @@ class Middleware:
                                 dependent_projects=dependent_projects,
                                 dependent_repos=dependent_repos,
                                 homepage=homepage,
-                                vendor_name=vendor_name,
+                                vendor=vendor_name,
                                 forks=forks,
                                 language=language,
                                 name=name,
