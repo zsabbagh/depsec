@@ -1,4 +1,4 @@
-import requests, sys
+import requests, sys, time
 
 # This file will handle querying the libraries.io API
 
@@ -10,7 +10,26 @@ class LibrariesQuerier:
     A class to query libraries.io API
     """
 
-    def __init__(self, config: dict =None):
+    def __wait_if_necessary(self):
+        """
+        Wait for a short time to avoid rate limiting
+        """
+        split = 0
+        for i in range(len(self.__queries_done)):
+            if time.time() - self.__queries_done[i] > 60:
+                split = i
+                break
+        self.__queries_done = self.__queries_done[split:]
+        self.__queries_done.append(time.time())
+        if len(self.__queries_done) < self.__limit:
+            return
+        latest = self.__queries_done[0] if self.__queries_done else 0
+        wait_time = 60 - (time.time() - latest)
+        for i in range(wait_time // 1.0, 0, -1):
+            print(f"Libraries.io waiting for {i} seconds...", end='\r')
+            time.sleep(1)
+
+    def __init__(self, config: dict =None, limit: int = 60):
         """
         Initialise the class, config:
 
@@ -18,6 +37,8 @@ class LibrariesQuerier:
             key: The API key
         """
         self.config(config)
+        self.__limit = limit
+        self.__queries_done = []
     
     def config(self, config: dict):
         """
