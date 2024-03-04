@@ -1,5 +1,6 @@
 import argparse, json, time, pprint, requests, random
 from src.database.schema import *
+from loguru import logger
 
 # Script for migrating data from NVD JSON files to a database
 # They can be downloaded from https://nvd.nist.gov/vuln/data-feeds
@@ -56,7 +57,10 @@ def process_cpe(match: str, py_cpes: list):
     """
     vstart = match.get('versionStartIncluding', None)
     vend = match.get('versionEndExcluding', None)
-    cpe = parse_cpe(match['cpe23Uri'], vstart, vend)
+    cpe = match.get('cpe23Uri', None)
+    logger.debug(f"Processing CPE: {cpe}")
+    return
+    cpe = parse_cpe(cpe, vstart, vend)
     vendor, product, version, language = cpe['vendor'], cpe['product'], cpe['version'], cpe['language']
     cpe_db = CPE.get_or_none(CPE.product == product, CPE.vendor == vendor)
     if cpe_db is not None:
@@ -81,30 +85,99 @@ def process_cpe(match: str, py_cpes: list):
         if cpe_is_pypi:
             py_cpes.append(cpe)
 
+def get_first_eng_value(cve: dict, *keys):
+    """
+    Get the description from the CVE
+    """
+    descs = None
+    try:
+        for i in range(len(keys)):
+            cve = cve.get(keys[i], {} if i < len(keys) - 1 else [{}])
+        descs = list(filter(lambda d: d.get('lang', '') == 'en', cve))
+        return descs[0].get('value', '') if len(descs) > 0 else ''
+    except Exception as e:
+        logger.error(f"Error getting value: {e}, {descs}")
+        return ''
+
 def migrate_data(data: dict, debug: bool = False):
     """
     Migrate the data to the database
     """
     print(f"Migrating data for {data['CVE_data_timestamp']}")
     print(f"Number of CVEs: {len(data['CVE_Items'])}")
+    count_processed = 0
+    count_skipped = 0
     for entry in data['CVE_Items']:
+        count_processed += 1
+        logger.info(f"Processing entry {count_processed}/{len(data['CVE_Items'])}")
+        time.sleep(0.01)
         cve = entry.get('cve', {})
         configurations = entry.get('configurations', {})
         nodes = configurations.get('nodes', [])
-        py_cpes = []
-        for node in nodes:
-            cpe_match = node.get('cpe_match', [])
-            for match in cpe_match:
-                process_cpe(match, py_cpes)
-        if not py_cpes:
-            continue
-        print(f"Vulnerability: {cve.get('CVE_data_meta', {}).get('ID', None)}")
+        cve_id = cve.get('CVE_data_meta', {}).get('ID', None)
+        # no impact means no CVSS score evaluated, so we skip
         impact = entry.get('impact', {})
-        published_date = entry.get('publishedDate', None)
-        last_modified_date = entry.get('lastModifiedDate', None)
-        if not prompt_continue(debug):
-            return
-    pass
+        if impact == {}:
+            logger.warning(f"No impact for {cve_id}")
+            count_skipped += 1
+            continue
+        cve_db = CVE.get_or_none(CVE.cve_id == cve_id)
+        # check for duplicate entry
+        if cve_db is not None:
+            logger.info(f"EXISTING ENTRY: {cve_id}")
+            count_skipped += 1
+            continue
+        # published and last modified dates
+        published_at = cve.get('publishedDate', None)
+        last_modified_at = cve.get('lastModifiedDate', None)
+        # description of the CVE
+        description = get_first_eng_value(cve, 'description', 'description_data')
+        base_metrics = impact.get('baseMetricV3', {})
+        cvss_expliotability_score = base_metrics.get('exploitabilityScore', None)
+        cvss_impact_score = base_metrics.get('impactScore', None)
+        cvss = base_metrics.get('cvssV3', {})
+        cvss_version = cvss.get('version', None)
+        cvss_vector_string = cvss.get('vectorString', None)
+        cvss_attack_vector = cvss.get('attackVector', None)
+        cvss_attack_complexity = cvss.get('attackComplexity', None)
+        cvss_privileges_required = cvss.get('privilegesRequired', None)
+        cvss_user_interaction = cvss.get('userInteraction', None)
+        cvss_scope = cvss.get('scope', None)
+        cvss_confidentiality_impact = cvss.get('confidentialityImpact', None)
+        cvss_integrity_impact = cvss.get('integrityImpact', None)
+        cvss_availability_impact = cvss.get('availabilityImpact', None)
+        cvss_base_score = cvss.get('baseScore', None)
+        cvss_base_severity = cvss.get('baseSeverity', None)
+
+        logger.info(f"NEW ENTRY: {cve_id} being added to the database")
+        cwe = get_first_eng_value(cve, 'problemtype', 'problemtype_data', 'description')
+
+        cve_db = CVE.create(
+            cve_id=cve_id,
+            description=description,
+            published_at=published_at,
+            last_modified_at=last_modified_at,
+            cwe=cwe,
+            cvss_version=cvss_version,
+            cvss_expliotability_score=cvss_expliotability_score,
+            cvss_impact_score=cvss_impact_score,
+            cvss_vector_string=cvss_vector_string,
+            cvss_attack_vector=cvss_attack_vector,
+            cvss_attack_complexity=cvss_attack_complexity,
+            cvss_privileges_required=cvss_privileges_required,
+            cvss_user_interaction=cvss_user_interaction,
+            cvss_scope=cvss_scope,
+            cvss_confidentiality_impact=cvss_confidentiality_impact,
+            cvss_integrity_impact=cvss_integrity_impact,
+            cvss_availability_impact=cvss_availability_impact,
+            cvss_base_score=cvss_base_score,
+            cvss_base_severity=cvss_base_severity
+        )
+        cve_db.save()
+
+        logger.info(f"Processing CPEs for {cve_id}")
+
+
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description='Migrate NVD data to a database')

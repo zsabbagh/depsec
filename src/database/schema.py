@@ -37,6 +37,7 @@ class DatabaseConfig:
              Release,
              ReleaseDependency,
              ReleaseRepo,
+             CVE,
              CPE])
         DatabaseConfig.__database.close()
 
