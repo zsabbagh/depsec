@@ -84,6 +84,8 @@ class Project(Model):
     platform = CharField(null=False)
     language = CharField(null=True)
     contributions = IntegerField(null=True)
+    homepage = CharField(null=True)
+    vendor_name = CharField(null=True)
     stars = IntegerField(null=True)
     forks = IntegerField(null=True)
     dependent_repos = IntegerField(null=True)

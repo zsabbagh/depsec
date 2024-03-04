@@ -2,6 +2,7 @@ import time, yaml, json, glob
 from src.queriers.libraries import LibrariesQuerier
 from src.queriers.snyk import SnykQuerier
 from src.database.schema import *
+from src.utils.tools import *
 
 class Middleware:
     """
@@ -118,9 +119,13 @@ class Middleware:
         contributions = result.get('contributions_count')
         dependent_repos = result.get('dependent_repos_count')
         dependent_projects = result.get('dependent_projects_count')
+        homepage = result.get('homepage')
+        vendor_name = homepage_to_vendor(homepage)
         project = Project.create(contributions=contributions,
                                 dependent_projects=dependent_projects,
                                 dependent_repos=dependent_repos,
+                                homepage=homepage,
+                                vendor_name=vendor_name,
                                 forks=forks,
                                 language=language,
                                 name=name,

@@ -68,6 +68,7 @@ def process_cpe(match: str, py_cpes: list):
         return
     else:
         print(f"[DB MISS] New CPE: {product} ({vendor})")
+        return
         cpe_is_pypi = is_pypi(product)
         cpe_db = CPE.create(
             platform='pypi' if cpe_is_pypi else None,

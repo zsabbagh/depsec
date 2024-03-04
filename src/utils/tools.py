@@ -1,3 +1,5 @@
+import re
+
 def create_purl(type, namespace, name, version, qualifiers=None, subpath=None):
     """
     Create a PURL (Package URL) string, used by Snyk for example.
@@ -17,3 +19,15 @@ def create_purl(type, namespace, name, version, qualifiers=None, subpath=None):
     if subpath:
         purl += f"#{subpath}"
     return purl
+
+def homepage_to_vendor(homepage: str) -> str:
+    """
+    Get the vendor from the homepage URL.
+    """
+    if not homepage:
+        return None
+    homepage = re.sub(r'^https?://', '', homepage)
+    parts = homepage.split('.')
+    if len(parts) < 2:
+        return None
+    return parts[-2]
