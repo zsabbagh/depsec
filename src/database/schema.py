@@ -41,10 +41,62 @@ class DatabaseConfig:
         DatabaseConfig.__database.close()
 
 
+class CVE(Model):
+    """
+    CVE models a Common Vulnerability and Exposures
+
+    id: The CVE id
+    cve_id: The CVE id
+    description: The description of the CVE
+    published_at: The date the CVE was published
+    last_modified_at: The date the CVE was last modified
+    updated_at: The date the row in the database was updated
+    cwe: The Common Weakness Enumeration
+    cvss_version: The Common Vulnerability Scoring System version
+    cvss_expliotability_score: The CVSS exploitability score
+    cvss_impact_score: The CVSS impact score
+    cvss_vector_string: The CVSS vector string
+    cvss_attack_vector: The CVSS attack vector
+    cvss_attack_complexity: The CVSS attack complexity
+    cvss_privileges_required: The CVSS privileges required
+    cvss_user_interaction: The CVSS user interaction
+    cvss_scope: The CVSS scope
+    cvss_confidentiality_impact: The CVSS confidentiality impact
+    cvss_integrity_impact: The CVSS integrity impact
+    cvss_availability_impact: The CVSS availability impact
+    cvss_base_score: The CVSS base score
+    cvss_base_severity: The CVSS base severity
+    """
+    id = AutoField()
+    cve_id = CharField(null=False, unique=True)
+    description = TextField(null=True)
+    published_at = DateTimeField(null=True)
+    last_modified_at = DateTimeField(null=True)
+    updated_at = DateTimeField(default=datetime.datetime.now)
+    cwe = CharField(null=True)
+    cvss_version = CharField(null=True)
+    cvss_expliotability_score = FloatField(null=True)
+    cvss_impact_score = FloatField(null=True)
+    cvss_vector_string = CharField(null=True)
+    cvss_attack_vector = CharField(null=True)
+    cvss_attack_complexity = CharField(null=True)
+    cvss_privileges_required = CharField(null=True)
+    cvss_user_interaction = CharField(null=True)
+    cvss_scope = CharField(null=True)
+    cvss_confidentiality_impact = CharField(null=True)
+    cvss_integrity_impact = CharField(null=True)
+    cvss_availability_impact = CharField(null=True)
+    cvss_base_score = FloatField(null=True)
+    cvss_base_severity = CharField(null=True)
+
+    class Meta:
+        database = DatabaseConfig.get()
+        table_name = 'cves'
 
 class CPE(Model):
     """
     CPE models a Common Platform Enumeration
+    which links a CVE to a project, in this case a Python package
 
     id: The CPE id
     vendor: The vendor of the CPE
@@ -74,10 +126,19 @@ class Project(Model):
     that is, a Python package etc
 
     id: The project id
-    name: The project name
-    platform: The platform the project is on
-    language: The language the project is written in
+    name: The name of the project
+    platform: The platform of the project
+    language: The language of the project
+    contributions: The number of contributions to the project
+    homepage: The homepage of the project
+    vendor: The vendor of the project (commonly deduced from the homepage domain)
+    stars: The number of stars the project has
+    forks: The number of forks the project has
+    dependent_repos: The number of dependent repositories
+    dependent_projects: The number of dependent projects
     updated_at: The date the row in the database was updated
+    package_manager_url: The URL of the package manager
+    repository_url: The URL of the repository
     """
     id = AutoField()
     name = CharField(null=False)

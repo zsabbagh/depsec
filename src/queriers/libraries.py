@@ -1,4 +1,5 @@
 import requests, sys, time
+from loguru import logger
 
 # This file will handle querying the libraries.io API
 
@@ -36,6 +37,7 @@ class LibrariesQuerier:
         libraries: (first search in dict, if not found, then assume it's a dict with the following keys)
             key: The API key
         """
+        logger.info("Initialising LibrariesQuerier")
         self.config(config)
         self.__limit = limit
         self.__queries_done = []
@@ -69,12 +71,15 @@ class LibrariesQuerier:
         get_dependencies: Whether to get the package's dependencies
         """
         if self.__api_key is None:
+            logger.error("API key is required")
             return Exception("API key is required")
         url = f"{LIBRARIES_IO_API}/pypi/{package_name}?api_key={self.__api_key}"
+        logger.debug(f"Querying libraries.io for {package_name}")
         response = requests.get(url)
         if response.status_code != 200:
-            print(f"Error querying libraries.io for {package_name}: {response.status_code}: {response.text}", file=sys.stderr)
+            logger.error(f"Error querying libraries.io for {package_name}: {response.status_code}: {response.text}")
             return None
+        logger.debug(f"Queried libraries.io for {package_name}")
         return response.json()
 
     def query_dependencies(self, package_name: str, version:str=None, package_manager: str="pypi"):
