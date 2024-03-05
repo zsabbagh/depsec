@@ -38,7 +38,9 @@ class DatabaseConfig:
              ReleaseDependency,
              ReleaseRepo,
              CVE,
-             CPE])
+             CPE,
+             ConfigNode,
+             ConfigEdge])
         DatabaseConfig.__database.close()
 
 
@@ -47,7 +49,7 @@ class CVE(Model):
     CVE models a Common Vulnerability and Exposures
 
     id: The CVE id
-    cve_id: The CVE id
+    cve The CVE id
     description: The description of the CVE
     published_at: The date the CVE was published
     last_modified_at: The date the CVE was last modified
@@ -94,27 +96,73 @@ class CVE(Model):
         database = DatabaseConfig.get()
         table_name = 'cves'
 
+class ConfigNode(Model):
+    """
+    ConfigNode models a configuration node,
+    which is a node in the configurations of a CVE
+
+    id: The configuration node id
+    cpe: The Common Platform Enumeration
+    operator: The operator of the node
+    children: The children of the node
+    """
+    id = AutoField()
+    cve = ForeignKeyField(CVE, backref='configurations')
+    is_root = BooleanField(default=False)
+    operator = CharField(null=True)
+
+    class Meta:
+        database = DatabaseConfig.get()
+        table_name = 'config_nodes'
+
+class ConfigEdge(Model):
+    """
+    ConfigGraph models a configuration graph,
+
+    id: The configuration children id
+    parent The parent id
+    cpe: The Common Platform Enumeration
+    """
+    id = AutoField()
+    root = ForeignKeyField(ConfigNode, backref='root')
+    parent = ForeignKeyField(ConfigNode, backref='children')
+    child = ForeignKeyField(ConfigNode, backref='parents')
+
+    class Meta:
+        database = DatabaseConfig.get()
+        table_name = 'config_edges'
+
 class CPE(Model):
     """
     CPE models a Common Platform Enumeration
     which links a CVE to a project, in this case a Python package
 
     id: The CPE id
+    node The configuration node id
+    platform: The platform of the CPE
     vendor: The vendor of the CPE
-    platform: The platform of the CPE (e.g. pypi)
     product: The product of the CPE
     version: The version of the CPE
+    version_start: The start version of the CPE
+    version_end: The end version of the CPE, exclusive
     language: The language of the CPE
     updated_at: The date the row in the database was updated
     """
     id = AutoField()
-    platform = CharField(null=True)
+
+    node = ForeignKeyField(ConfigNode, backref='cpe')
+    part = CharField(null=True)
     vendor = CharField(null=False)
     product = CharField(null=False)
     version = CharField(null=True)
-    version_start_including = CharField(null=True)
-    version_end_excluding = CharField(null=True)
     language = CharField(null=True)
+    sw_edition = CharField(null=True)
+    target_sw = CharField(null=True)
+    target_hw = CharField(null=True)
+    other = CharField(null=True)
+
+    version_start = CharField(null=True)
+    version_end = CharField(null=True)
     updated_at = DateTimeField(default=datetime.datetime.now)
 
     class Meta:
@@ -165,15 +213,15 @@ class Release(Model):
     Release models a release of a project
     
     id: The release id
-    project_id: The project id
+    project The project id
     published_at: The date the release was published
-    version_number: The version number of the release
+    version: The version number of the release
     updated_at: The date the row in the database was updated
     """
     id = AutoField()
-    project_id = ForeignKeyField(Project, backref='releases')
+    project = ForeignKeyField(Project, backref='releases')
     published_at = DateTimeField(null=True)
-    version_number = CharField(null=False)
+    version = CharField(null=False)
     updated_at = DateTimeField(default=datetime.datetime.now)
 
     class Meta:
@@ -184,7 +232,7 @@ class ReleaseDependency(Model):
     """
     ReleaseDependency models a release's dependencies
 
-    release_id: The release id
+    release The release id
     name: The name of the dependency
     project_name: The name of the project the dependency is on, usually the same as the name
     platform: The platform the dependency is on
@@ -192,7 +240,7 @@ class ReleaseDependency(Model):
     updated_at: The date the row in the database was updated
     """
     
-    release_id = ForeignKeyField(Release, backref='dependencies')
+    release = ForeignKeyField(Release, backref='dependencies')
     name = CharField(null=False)
     project_name = CharField(null=False)
     platform = CharField(null=True)
@@ -208,11 +256,11 @@ class ReleaseRepo(Model):
     """
     ReleaseRepo models a release's repository
 
-    release_id: The release id
+    release The release id
     repo_url: The URL of the repository
     updated_at: The date the row in the database was updated
     """
-    release_id = ForeignKeyField(Release, backref='repos')
+    release = ForeignKeyField(Release, backref='repos')
     repo_url = CharField(null=False)
     updated_at = DateTimeField(default=datetime.datetime.now)
 

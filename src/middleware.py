@@ -137,7 +137,7 @@ class Middleware:
                 except:
                     published_at = None
                 release = Release.create(
-                    project_id=project.id,
+                    project=project,
                     version_number=number,
                     published_at=published_at,
                 )
@@ -154,7 +154,7 @@ class Middleware:
         if project is None:
             logger.error(f"Project {project_name} not found")
             return None
-        releases = [ release for release in Release.select().where(Release.project_id == project.id) ]
+        releases = [ release for release in Release.select().where(Release.project == project.id) ]
         releases = list(filter(lambda release: release.version_number.startswith(version_number), releases) if version_number else releases)
         return releases
 
@@ -172,13 +172,13 @@ class Middleware:
             return None
         # Get the release
         release = Release.get_or_none((
-            (Release.project_id == project.id) &
+            (Release.project == project) &
             (Release.version_number == version_number)
         ))
         if release is None:
             logger.error(f"Release '{version_number}' not found for {project_name}")
             return None
-        dependencies = [ dep for dep in ReleaseDependency.select().where(ReleaseDependency.release_id == release.id) ]
+        dependencies = [ dep for dep in ReleaseDependency.select().where(ReleaseDependency.release == release) ]
         if len(dependencies) > 0:
             # Found dependencies in the database
             logger.debug(f"Found {len(dependencies)} dependencies for {project_name} {version_number}")
@@ -203,7 +203,7 @@ class Middleware:
             name, project_name, ptfrm = self.__format_strings(name, project_name, ptfrm)
             logger.debug(f"Creating dependency {name} {project_name} {ptfrm} {reqs} {optional}")
             dep_instance = ReleaseDependency.create(
-                release_id=release.id,
+                release=release,
                 name=name,
                 project_name=project_name,
                 platform=ptfrm,
