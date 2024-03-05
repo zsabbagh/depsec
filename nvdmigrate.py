@@ -1,6 +1,7 @@
-import argparse, json, time, requests, random, sys
-from src.database.schema import *
+import argparse, json, time, requests, random, sys, yaml
+from src.schemas.vulnerabilities import *
 from loguru import logger
+from src.utils.tools import *
 
 # Script for migrating data from NVD JSON files to a database
 # They can be downloaded from https://nvd.nist.gov/vuln/data-feeds
@@ -18,6 +19,7 @@ def timestamp_to_date(timestamp: str, lowest: str = 'min'):
         format = '%Y-%m-%dT%H:%MZ'
     elif lowest == 'sec':
         format = '%Y-%m-%dT%H:%M:%SZ'
+    logger.debug(f"Timestamp: {timestamp}")
     date = datetime.datetime.strptime(timestamp, format)
     return date
 
@@ -99,9 +101,12 @@ def create_cve(entry: dict) -> int | CVE:
         logger.warning(f"{cve_id} already exists")
         return 0
     # published and last modified dates
-    published_at = cve.get('publishedDate', None)
+    published_at = entry.get('publishedDate', None)
+    if published_at is None:
+        logger.warning(f"No published date for {cve_id}, skipping")
+        return 1
     published_at = timestamp_to_date(published_at, lowest='min')
-    last_modified_at = cve.get('lastModifiedDate', None)
+    last_modified_at = entry.get('lastModifiedDate', None)
     last_modified_at = timestamp_to_date(last_modified_at, lowest='min')
     # description of the CVE
     description = get_first_eng_value(cve, 'description', 'description_data')
@@ -264,9 +269,8 @@ def migrate_data(data: dict, debug: bool = False, filename: str = '', skip_proce
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description='Migrate NVD data to a database')
-    parser.add_argument('--db', metavar='DATABASE', type=str, required=True,
-                        help='The database to migrate to',
-                        default='data/packages.db')
+    parser.add_argument('config', metavar='CONFIG', type=str,
+                        help='The configuration file to use')
     parser.add_argument('--debug', action='store_true',
                         help='Enable debug mode (delays)',
                         default=False)
@@ -283,9 +287,14 @@ if __name__ == '__main__':
     for level in args.level:
         logger.add(sys.stderr, level=level, format="<green>{time:YYYY-MM-DD HH:mm:ss}</green> <level>{level: <8}</level> {name} | <cyan>{function}</cyan> - <level>{message}</level>")
     args.json_files = sorted([os.path.abspath(f) for f in args.json_files], reverse=True)
-    print(f"Using database: {args.db}")
-    DatabaseConfig.set(args.db)
-    print(f"Using JSON files: {', '.join(args.json_files)}")
+    with open(args.config, 'r') as file:
+        config = yaml.safe_load(file)
+    dbconfig = config.get('database', {})
+    path, name = get_database_dir_and_name(dbconfig, 'vulnerabilities')
+
+    print(f"Using database at {path}/{name}")
+    DB_VULNERABILITIES.set(path, name)
+
     for f in args.json_files:
         try:
             with open(f, 'r') as file:

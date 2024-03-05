@@ -1,15 +1,18 @@
 import time, yaml, json, glob
 from src.queriers.libraries import LibrariesQuerier
 from src.queriers.snyk import SnykQuerier
-from src.database.schema import *
+from src.schemas.projects import *
+from src.schemas.vulnerabilities import *
 from src.utils.tools import *
 from loguru import logger
+from pathlib import Path
 
 class Middleware:
     """
     The middleware for querying the libraries.io API
     or database
     """
+
 
     def __format_strings(self, *strings: str):
         """
@@ -51,7 +54,17 @@ class Middleware:
         apis = self.__config.get('apis', {})
         self.libraries = LibrariesQuerier(apis)
         self.snyk = SnykQuerier(apis)
-        DatabaseConfig.set(self.__config.get('database', {}).get('path', ''))
+
+        databases = self.__config.get('databases', {})
+        if not databases:
+            logger.warning("No databases found in config file")
+            raise Exception("No databases found in config file")
+
+        # Configure the databases
+        projects_path, projects_name = get_database_dir_and_name(databases, 'projects')
+        vulns_path, vulns_name = get_database_dir_and_name(databases, 'vulnerabilities')
+        DB_PROJECTS.set(projects_path, projects_name)
+        DB_VULNERABILITIES.set(vulns_path, vulns_name)
     
     def set_debug(self, debug: bool = None):
         """

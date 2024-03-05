@@ -1,4 +1,21 @@
 import re
+from pathlib import Path
+
+def get_database_dir_and_name(databases: dict, name: str):
+    """
+    Get the path and name of the database
+    """
+    data = databases.get(name, {})
+    path = data.get('path', './data')
+    path = Path(path).resolve()
+    if not path.exists():
+        raise ValueError(f"Path does not exist for '{name}', cannot create database to non-existent path '{path}'")
+    elif not path.is_dir():
+        raise ValueError(f"Path is not a directory for '{name}', cannot create database to non-directory path '{path}'")
+    name = data.get('name', name)
+    if not name.endswith('.db'):
+        name = f"{name}.db"
+    return path, name
 
 def create_purl(type, namespace, name, version, qualifiers=None, subpath=None):
     """
