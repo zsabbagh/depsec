@@ -197,9 +197,14 @@ class Middleware:
         logger.debug(f"Found {len(cpes)} CPEs for {project.vendor} {project.name}")
         # We need to find the CPEs that match the version
         vulns = []
+        vulnset = set()
         release_published_at = release.published_at if release else None
         for cpe in cpes:
             # Get release of versions since some contain letters
+            cve = cpe.node.cve
+            if cve.id in vulnset:
+                logger.debug(f"Vulnerability {cve.id} already in set")
+                continue
             logger.debug(f"Getting release for {cpe.vendor} {cpe.product} {cpe.version_start} - {cpe.version_end}")
             start_release = Release.get_or_none((
                 (Release.project == project) &
@@ -217,19 +222,22 @@ class Middleware:
                 logger.warning(f"Operator '{node.operator}' is not OR")
             if not node.is_root:
                 logger.warning(f"Node {node.id} is not root")
-            cve = cpe.node.cve
             if release_published_at is not None:
                 if start_date is not None and end_date is not None:
                     if start_date <= release_published_at < end_date:
                         logger.debug(f"Release {release.version} is in range {cpe.version_start} - {cpe.version_end}")
+                        vulnset.add(cve.id)
                         vulns.append(cve)
                 elif start_date is not None and release_published_at >= start_date:
                     logger.debug(f"Release {release.version} is in range {cpe.version_start} - {cpe.version_end}")
+                    vulnset.add(cve.id)
                     vulns.append(cve)
                 elif end_date is not None and release_published_at < end_date:
                     logger.debug(f"Release {release.version} is in range {cpe.version_start} - {cpe.version_end}")
+                    vulnset.add(cve.id)
                     vulns.append(cve)
             else:
+                vulnset.add(cve.id)
                 vulns.append(cve)
         return vulns
 
