@@ -1,9 +1,25 @@
-import argparse, json, time, pprint, requests, random
+import argparse, json, time, requests, random, sys
 from src.database.schema import *
 from loguru import logger
 
 # Script for migrating data from NVD JSON files to a database
 # They can be downloaded from https://nvd.nist.gov/vuln/data-feeds
+
+START_TIME = time.time()
+
+def timestamp_to_date(timestamp: str, lowest: str = 'min'):
+    """
+    Timestamp to date with lowest being the lowest unit,
+    either min or sec
+    """
+    date = None
+    format = '%Y-%m-%dT%H:%MZ'
+    if lowest == 'min':
+        format = '%Y-%m-%dT%H:%MZ'
+    elif lowest == 'sec':
+        format = '%Y-%m-%dT%H:%M:%SZ'
+    date = datetime.datetime.strptime(timestamp, format)
+    return date
 
 def prompt_continue(debug: bool = False):
     """
@@ -66,7 +82,7 @@ def get_first_eng_value(cve: dict, *keys):
         logger.error(f"Error getting value: {e}, {descs}")
         return ''
 
-def create_cve(entry: dict):
+def create_cve(entry: dict) -> int | CVE:
     """
     Create a CVE from an entry
     """
@@ -75,16 +91,18 @@ def create_cve(entry: dict):
     # no impact means no CVSS score evaluated, so we skip
     impact = entry.get('impact', {})
     if impact == {}:
-        logger.warning(f"No impact for {cve_id}")
-        return None
+        logger.warning(f"No impact for {cve_id}, skipping")
+        return 1
     cve_db = CVE.get_or_none(CVE.cve_id == cve_id)
     # check for duplicate entry
     if cve_db is not None:
-        logger.info(f"EXISTING ENTRY: {cve_id}")
-        return None
+        logger.warning(f"{cve_id} already exists")
+        return 0
     # published and last modified dates
     published_at = cve.get('publishedDate', None)
+    published_at = timestamp_to_date(published_at, lowest='min')
     last_modified_at = cve.get('lastModifiedDate', None)
+    last_modified_at = timestamp_to_date(last_modified_at, lowest='min')
     # description of the CVE
     description = get_first_eng_value(cve, 'description', 'description_data')
     base_metrics = impact.get('baseMetricV3', {})
@@ -104,7 +122,7 @@ def create_cve(entry: dict):
     cvss_base_score = cvss.get('baseScore', None)
     cvss_base_severity = cvss.get('baseSeverity', None)
 
-    logger.info(f"NEW ENTRY: {cve_id} being added to the database")
+    logger.debug(f"NEW ENTRY: {cve_id} being added to the database")
     cwe = get_first_eng_value(cve, 'problemtype', 'problemtype_data', 'description')
 
     cve_db = CVE.create(
@@ -147,7 +165,7 @@ def create_nodes(node: dict, cve: CVE,
         operator=operator,
         is_root=is_root
     )
-    logger.info("Created node {node_db.id}")
+    logger.debug("Created node {node_db.id}")
     # If there is a parent, create an edge
     if parent is not None:
         ConfigEdge.create(
@@ -181,32 +199,49 @@ def create_nodes(node: dict, cve: CVE,
         root = node_db if is_root else root
         create_nodes(child, cve, is_root=False, parent=node_db, root=root)
 
-def migrate_data(data: dict, debug: bool = False):
+def migrate_data(data: dict, debug: bool = False, filename: str = '', skip_processed_files: bool = True):
     """
     Migrate the data to the database
     """
     print(f"Migrating data for {data['CVE_data_timestamp']}")
     print(f"Number of CVEs: {len(data['CVE_Items'])}")
+    ts = data['CVE_data_timestamp']
+    date = timestamp_to_date(ts)
+    number_of_cves = len(data['CVE_Items'])
+    nvd_file = NVDFile.get_or_none(NVDFile.created_at == date)
+    if nvd_file is not None and skip_processed_files:
+        if nvd_file.cves_processed == number_of_cves:
+            logger.info(f"File {filename} already processed with {number_of_cves}/{number_of_cves} CVEs, skipping")
+            return
+        else:
+            logger.info(f"File {filename} already processed, but not all CVEs processed, continuing")
+            nvd_file.delete_instance()
+    elif nvd_file is not None:
+        print(f"File {filename} already processed, but not all CVEs processed, continuing")
+        nvd_file.delete_instance()
+        
     count_processed = 0
     count_skipped = 0
     for entry in data['CVE_Items']:
         count_processed += 1
-        logger.info(f"Processing entry {count_processed}/{len(data['CVE_Items'])}")
+        time_since_start = time.time() - START_TIME
+        # round to 2 decimal places
+        cve_id = entry.get('cve', {}).get('CVE_data_meta', {}).get('ID', '')
+        logger.info(f"{cve_id} {time_since_start:.1f}s ({count_processed}/{len(data['CVE_Items'])}) {' in ' + filename if filename != '' else ''}")
         time.sleep(0.01)
         configurations = entry.get('configurations', {})
-        cve_id = entry.get('cve', {}).get('CVE_data_meta', {}).get('ID', '')
         if configurations == {}:
-            logger.warning(f"No configurations for {cve_id}")
+            logger.debug(f"No configurations for {cve_id}")
             count_skipped += 1
             continue
         nodes = configurations.get('nodes', [])
         if len(nodes) == 0:
-            logger.warning(f"No nodes for {cve_id}")
+            logger.debug(f"No nodes for {cve_id}")
             count_skipped += 1
             continue
         cve_db = create_cve(entry)
-        if cve_db is None:
-            logger.warning(f"Skipping entry {count_processed}/{len(data['CVE_Items'])}")
+        if type(cve_db) == int:
+            count_skipped += cve_db
             continue
         nodes = configurations.get('nodes', [])
         root_node = ConfigNode.get_or_none(
@@ -214,11 +249,17 @@ def migrate_data(data: dict, debug: bool = False):
             ConfigNode.is_root
         )
         if root_node is not None:
-            logger.info(f"Root node already exists for {cve_db.cve_id}, skipping nodes")
+            logger.debug(f"Root node already exists for {cve_db.cve_id}, skipping nodes")
             continue
         for node in nodes:
             create_nodes(node, cve_db, is_root=True)
-            logger.info(f"Created nodes for {cve_db.cve_id}")
+            logger.debug(f"Created nodes for {cve_db.cve_id}")
+    NVDFile.create(
+        file=filename,
+        created_at=date,
+        cves_processed=count_processed,
+        cves_skipped=count_skipped
+    ).save()
 
 
 if __name__ == '__main__':
@@ -231,7 +272,16 @@ if __name__ == '__main__':
                         default=False)
     parser.add_argument('json_files', metavar='JSON_FILE', type=str, nargs='+',
                         help='The JSON files to migrate')
+    parser.add_argument('-l', '--level',
+                        help='Set the logging level', nargs='+',
+                        default=['INFO'])
+    parser.add_argument('-s', '--skip-processed-files', action='store_true',
+                        help='Skip processed files',
+                        default=True)
     args = parser.parse_args()
+    logger.remove()
+    for level in args.level:
+        logger.add(sys.stderr, level=level, format="<green>{time:YYYY-MM-DD HH:mm:ss}</green> <level>{level: <8}</level> {name} | <cyan>{function}</cyan> - <level>{message}</level>")
     args.json_files = sorted([os.path.abspath(f) for f in args.json_files], reverse=True)
     print(f"Using database: {args.db}")
     DatabaseConfig.set(args.db)
@@ -241,7 +291,8 @@ if __name__ == '__main__':
             with open(f, 'r') as file:
                 data = json.load(file)
                 start_time = time.time()
-                migrate_data(data, args.debug)
+                fn = os.path.basename(f)
+                migrate_data(data, args.debug, filename=fn, skip_processed_files=args.skip_processed_files)
                 end_time = time.time()
                 print(f"Migration took {end_time - start_time:.2f} seconds")
         except Exception as e:

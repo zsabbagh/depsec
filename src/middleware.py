@@ -138,14 +138,14 @@ class Middleware:
                     published_at = None
                 release = Release.create(
                     project=project,
-                    version_number=number,
+                    version=number,
                     published_at=published_at,
                 )
                 release.save()
 
         return project
     
-    def get_releases(self, project_name: str, version_number: str = '', platform: str="pypi"):
+    def get_releases(self, project_name: str, version: str = '', platform: str="pypi"):
         """
         Gets all releases of a project 
         """
@@ -155,15 +155,77 @@ class Middleware:
             logger.error(f"Project {project_name} not found")
             return None
         releases = [ release for release in Release.select().where(Release.project == project.id) ]
-        releases = list(filter(lambda release: release.version_number.startswith(version_number), releases) if version_number else releases)
+        releases = list(filter(lambda release: release.version.startswith(version), releases) if version else releases)
         return releases
+    
+    def get_vulnerabilities(self, project_name: str, version: str = None, platform: str="pypi"):
+        """
+        Get vulnerabilities of a project and a specific version number (release)
+        """
+        # Force lowercase
+        project_name, version, platform = self.__format_strings(project_name, version, platform)
+        # Get the project
+        project = self.get_project(project_name, platform)
+        if project is None:
+            logger.error(f"Project {project_name} not found")
+            return None
+        # Get the release
+        release = None
+        if version:
+            release = Release.get_or_none((
+                (Release.project == project) &
+                (Release.version == version)
+            ))
+            if release is None:
+                logger.error(f"Release '{version}' not found for {project_name}")
+                return None
+        logger.debug(f"Querying databases for vulnerabilities of {project_name} {version}")
+        cpes = CPE.select().where((CPE.vendor == project.vendor) & (CPE.product == project.name))
+        logger.debug(f"Found {len(cpes)} CPEs for {project.vendor} {project.name}")
+        # We need to find the CPEs that match the version
+        vulns = []
+        release_published_at = release.published_at if release else None
+        for cpe in cpes:
+            # Get release of versions since some contain letters
+            logger.debug(f"Getting release for {cpe.vendor} {cpe.product} {cpe.version_start} - {cpe.version_end}")
+            start_release = Release.get_or_none((
+                (Release.project == project) &
+                (Release.version == cpe.version_start)
+            ))
+            end_release = Release.get_or_none((
+                (Release.project == project) &
+                (Release.version == cpe.version_end)
+            ))
+            start_date: datetime = start_release.published_at if start_release else None
+            end_date: datetime = end_release.published_at if end_release else None
+            logger.debug(f"Getting vulnerabilities for {cpe.vendor} {cpe.product} {cpe.version_start} ({start_date}) - {cpe.version_end}({end_date})")
+            node = cpe.node
+            if node.operator != 'OR':
+                logger.warning(f"Operator '{node.operator}' is not OR")
+            if not node.is_root:
+                logger.warning(f"Node {node.id} is not root")
+            cve = cpe.node.cve
+            if release_published_at is not None:
+                if start_date is not None and end_date is not None:
+                    if start_date <= release_published_at < end_date:
+                        logger.debug(f"Release {release.version} is in range {cpe.version_start} - {cpe.version_end}")
+                        vulns.append(cve)
+                elif start_date is not None and release_published_at >= start_date:
+                    logger.debug(f"Release {release.version} is in range {cpe.version_start} - {cpe.version_end}")
+                    vulns.append(cve)
+                elif end_date is not None and release_published_at < end_date:
+                    logger.debug(f"Release {release.version} is in range {cpe.version_start} - {cpe.version_end}")
+                    vulns.append(cve)
+            else:
+                vulns.append(cve)
+        return vulns
 
-    def get_dependencies(self, project_name: str, version_number: str, platform: str="pypi"):
+    def get_dependencies(self, project_name: str, version: str, platform: str="pypi"):
         """
         Get dependencies of a project and a specific version number (release)
         """
         # Force lowercase
-        project_name, version_number = self.__format_strings(project_name, version_number)
+        project_name, version = self.__format_strings(project_name, version)
 
         # Get the project
         project = self.get_project(project_name)
@@ -173,21 +235,21 @@ class Middleware:
         # Get the release
         release = Release.get_or_none((
             (Release.project == project) &
-            (Release.version_number == version_number)
+            (Release.version == version)
         ))
         if release is None:
-            logger.error(f"Release '{version_number}' not found for {project_name}")
+            logger.error(f"Release '{version}' not found for {project_name}")
             return None
         dependencies = [ dep for dep in ReleaseDependency.select().where(ReleaseDependency.release == release) ]
         if len(dependencies) > 0:
             # Found dependencies in the database
-            logger.debug(f"Found {len(dependencies)} dependencies for {project_name} {version_number}")
+            logger.debug(f"Found {len(dependencies)} dependencies for {project_name} {version}")
             return dependencies
         # No dependencies in database, query the API
-        logger.debug(f"Querying libraries.io for dependencies of {project_name} {version_number}")
-        result = self.libraries.query_dependencies(project_name, version_number, platform)
+        logger.debug(f"Querying libraries.io for dependencies of {project_name} {version}")
+        result = self.libraries.query_dependencies(project_name, version, platform)
         if result is None or 'dependencies' not in result:
-            logger.error(f"Dependencies not found for {project_name} {version_number}")
+            logger.error(f"Dependencies not found for {project_name} {version}")
             return None
         dependencies = result['dependencies']
         deps = []
@@ -195,7 +257,7 @@ class Middleware:
             name = dependency.get('name', '')
             project_name = dependency.get('project_name', '')
             if name == '':
-                logger.error(f"Dependency name not found for {project_name} {version_number}")
+                logger.error(f"Dependency name not found for {project_name} {version}")
                 continue
             ptfrm = dependency.get('platform', '')
             reqs = dependency.get('requirements', '')

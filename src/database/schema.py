@@ -40,7 +40,8 @@ class DatabaseConfig:
              CVE,
              CPE,
              ConfigNode,
-             ConfigEdge])
+             ConfigEdge,
+             NVDFile])
         DatabaseConfig.__database.close()
 
 
@@ -95,6 +96,30 @@ class CVE(Model):
     class Meta:
         database = DatabaseConfig.get()
         table_name = 'cves'
+
+class NVDFile(Model):
+    """
+    NVDFile models a file from the National Vulnerability Database
+    This is to keep track of the files that have been processed and speed up the process
+
+    id: The NVDFile id
+    file: The file name
+    created_at: The date the file was created
+    cves_total: The total number of CVEs in the file
+    cves_processed: The number of CVEs processed
+    cves_skipped: The number of CVEs skipped
+    updated_at: The date the row in the database was updated
+    """
+    id = AutoField()
+    file = CharField(null=False)
+    created_at = DateTimeField(null=True)
+    updated_at = DateTimeField(default=datetime.datetime.now)
+    cves_processed = IntegerField(null=True)
+    cves_skipped = IntegerField(null=True)
+
+    class Meta:
+        database = DatabaseConfig.get()
+        table_name = 'nvd_files'
 
 class ConfigNode(Model):
     """
