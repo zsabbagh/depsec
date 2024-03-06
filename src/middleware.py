@@ -6,13 +6,12 @@ from src.schemas.vulnerabilities import *
 from src.utils.tools import *
 from loguru import logger
 from pathlib import Path
+from typing import List
 
 class Middleware:
     """
-    The middleware for querying the libraries.io API
-    or database
+    The middleware to communicate with the databases and the APIs
     """
-
 
     def __format_strings(self, *strings: str):
         """
@@ -84,29 +83,45 @@ class Middleware:
         logger.debug(f"Initalising middleware with config file {config_path}")
         self.config(config_path)
     
+    def set_project_vendor(self,
+                           project_name: str,
+                           vendor: str,
+                           platform: str="pypi") -> Project:
+        """
+        Set the vendor of a project
+        """
+        project_name, platform = self.__format_strings(project_name, platform)
+        project = self.get_project(project_name, platform)
+        if project is None:
+            logger.error(f"Project {project_name} not found")
+            return None
+        project.vendor = vendor
+        project.save()
+        return project
+    
     def get_project(self,
-                    package_name: str,
-                    platform: str="pypi"):
+                    project_name: str,
+                    platform: str="pypi") -> Project:
         """
         Get project, returns (Project, Releases)
         """
         # Force lowercase
-        package_name = package_name.strip().lower()
+        project_name = project_name.strip().lower()
         platform = platform.strip().lower()
-        logger.debug(f"Getting {package_name} from database with platform {platform}")
+        logger.debug(f"Getting {project_name} from database with platform {platform}")
         # Query the database
         project = Project.get_or_none((
-            (Project.name == package_name) & 
+            (Project.name == project_name) & 
             (Project.platform == platform)
         ))
         if project is not None:
             # If the package is in the database, return it
-            logger.debug(f"Found {package_name} in database")
+            logger.debug(f"Found {project_name} in database")
             return project
-        logger.debug(f"Querying libraries.io for {package_name}")
+        logger.debug(f"Querying libraries.io for {project_name}")
 
         # Query libraries.io if the package is not in the database
-        result: dict = self.libraries.query_package(package_name, package_name)
+        result: dict = self.libraries.query_package(project_name)
 
         name = result.get('name', '')
         platform = result.get('platform', '')
@@ -158,7 +173,10 @@ class Middleware:
 
         return project
     
-    def get_releases(self, project_name: str, version: str = '', platform: str="pypi"):
+    def get_releases(self,
+                     project_name: str,
+                     version: str = '',
+                     platform: str="pypi") -> List[Release]:
         """
         Gets all releases of a project 
         """
@@ -171,7 +189,10 @@ class Middleware:
         releases = list(filter(lambda release: release.version.startswith(version), releases) if version else releases)
         return releases
     
-    def get_vulnerabilities(self, project_name: str, version: str = None, platform: str="pypi"):
+    def get_vulnerabilities(self,
+                            project_name: str,
+                            version: str = None,
+                            platform: str="pypi") -> List[CVE]:
         """
         Get vulnerabilities of a project and a specific version number (release)
         """
@@ -240,8 +261,36 @@ class Middleware:
                 vulnset.add(cve.id)
                 vulns.append(cve)
         return vulns
+    
+    def get_vulnerabilities_timeline(self,
+                                     project_name: str,
+                                     start_date: str,
+                                     end_date: str = None,
+                                     step: str = 'm',
+                                     platform: str="pypi") -> List[dict]:
+        """
+        Returns a list of vulnerabilities for a project in a specific time range.
+        For each date, the most recent release is used to check for vulnerabilities.
 
-    def get_dependencies(self, project_name: str, version: str, platform: str="pypi"):
+        TODO: Construct the timeline
+
+        project_name: str
+        start_date: str, format: YYYY[-MM]
+        end_date: str, format: YYYY[-MM] or falsy value
+        step: str, format: y(ear) / m(month), needs to match the format of the dates' lowest precision
+        platform: str, default: pypi
+        """
+        step = step.strip().lower()
+        releases = self.get_releases(project_name, platform=platform)
+        vulns = self.get_vulnerabilities(project_name, platform=platform)
+        for release in releases:
+            print(release.version, release.published_at)
+        pass
+    
+    def get_dependencies(self,
+                         project_name: str,
+                         version: str,
+                         platform: str="pypi") -> List[ReleaseDependency]:
         """
         Get dependencies of a project and a specific version number (release)
         """
@@ -298,4 +347,6 @@ class Middleware:
         return deps
 
 if __name__ == "__main__":
+    # For the purpose of loading in interactive shell
+    # e.g., py -i src/middleware.py
     mw = Middleware("config.yml", debug=True)

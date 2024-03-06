@@ -23,14 +23,13 @@ def timestamp_to_date(timestamp: str, lowest: str = 'min'):
     date = datetime.datetime.strptime(timestamp, format)
     return date
 
-def prompt_continue(debug: bool = False):
+def prompt_continue():
     """
     Prompt the user to continue
     """
-    if debug:
-        response = input("[DEBUG ENABLED] Continue? (q to quit)")
-        if response.lower() == 'q':
-            return False
+    pmpt = input("Continue? (yes)")
+    if pmpt.lower() != 'yes':
+        return False
     return True
 
 def is_pypi(package: str):
@@ -213,13 +212,16 @@ def migrate_data(data: dict, debug: bool = False, filename: str = '', skip_proce
     ts = data['CVE_data_timestamp']
     date = timestamp_to_date(ts)
     number_of_cves = len(data['CVE_Items'])
-    nvd_file = NVDFile.get_or_none(NVDFile.created_at == date)
+    nvd_file = NVDFile.get_or_none(NVDFile.created_at == date, NVDFile.file == filename)
+    logger.info(f"NVD file {filename} has been processed: {nvd_file is not None}")
     if nvd_file is not None and skip_processed_files:
         if nvd_file.cves_processed == number_of_cves:
             logger.info(f"File {filename} already processed with {number_of_cves}/{number_of_cves} CVEs, skipping")
             return
         else:
-            logger.info(f"File {filename} already processed, but not all CVEs processed, continuing")
+            logger.info(f"File {filename} already processed, but not all CVEs processed")
+            if not prompt_continue():
+                return
             nvd_file.delete_instance()
     elif nvd_file is not None:
         print(f"File {filename} already processed, but not all CVEs processed, continuing")
