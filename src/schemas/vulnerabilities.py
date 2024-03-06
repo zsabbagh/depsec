@@ -91,7 +91,7 @@ class ConfigNode(Model):
     children: The children of the node
     """
     id = AutoField()
-    cve = ForeignKeyField(CVE, backref='configurations')
+    cve = ForeignKeyField(CVE, backref='config_nodes')
     is_root = BooleanField(default=False)
     operator = CharField(null=True)
 
@@ -134,7 +134,7 @@ class CPE(Model):
     """
     id = AutoField()
 
-    node = ForeignKeyField(ConfigNode, backref='cpe')
+    node = ForeignKeyField(ConfigNode, backref='cpes')
     part = CharField(null=True)
     vendor = CharField(null=False)
     product = CharField(null=False)

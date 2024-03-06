@@ -6,7 +6,7 @@ from src.schemas.vulnerabilities import *
 from src.utils.tools import *
 from loguru import logger
 from pathlib import Path
-from typing import List
+from typing import List, Dict
 
 class Middleware:
     """
@@ -266,7 +266,8 @@ class Middleware:
                                      project_name: str,
                                      start_date: str,
                                      end_date: str = None,
-                                     step: str = 'm',
+                                     step: str = 'y',
+                                     versions_count: int = 3,
                                      platform: str="pypi") -> List[dict]:
         """
         Returns a list of vulnerabilities for a project in a specific time range.
@@ -278,14 +279,45 @@ class Middleware:
         start_date: str, format: YYYY[-MM]
         end_date: str, format: YYYY[-MM] or falsy value
         step: str, format: y(ear) / m(month), needs to match the format of the dates' lowest precision
+        versions_count: int, default: 3, counts the latest versions to check for vulnerabilities for each date
         platform: str, default: pypi
         """
         step = step.strip().lower()
         releases = self.get_releases(project_name, platform=platform)
         vulns = self.get_vulnerabilities(project_name, platform=platform)
-        for release in releases:
-            print(release.version, release.published_at)
-        pass
+        start_date: datetime.datetime = datetime.datetime.strptime(start_date, '%Y-%m' if '-' in start_date else '%Y')
+        if end_date:
+            end_date = datetime.datetime.strptime(end_date, '%Y-%m' if '-' in end_date else '%Y')
+        else:
+            end_date = datetime.datetime.now()
+        # for each date in the range, get the most recent releases and check for vulnerabilities
+        results: Dict[str, Dict] = {}
+        while start_date <= end_date:
+            logger.debug(f"Checking for vulnerabilities at {start_date.strftime('%Y-%m-%d')}")
+            date_str = start_date.strftime('%Y-%m') if step == 'm' else start_date.strftime('%Y')
+            results[date_str] = {}
+            relevant_releases = list(filter(lambda release: release.published_at <= start_date, releases))
+            if len(relevant_releases) == 0:
+                logger.debug(f"No releases found for {project_name} at {start_date.strftime('%Y-%m-%d')}")
+                start_date = datetime_increment(start_date, step)
+                continue
+            relevant_releases = sorted(relevant_releases, key=lambda release: release.published_at, reverse=True)
+            logger.debug(f"Found {len(relevant_releases)} releases for {project_name} at {start_date.strftime('%Y-%m-%d')}")
+            for release in relevant_releases[:versions_count]:
+                logger.debug(f"Checking for vulnerabilities in {release.version}")
+                release_vulns = self.get_vulnerabilities(project_name, release.version, platform)
+                for vuln in release_vulns:
+                    cve_id = vuln.cve_id
+                    if cve_id not in results[date_str]:
+                        results[date_str][cve_id] = {
+                            'cve': vuln,
+                            'releases': set()
+                        }
+                    results[date_str][cve_id]['releases'].add(release)
+            for key in results[date_str].keys():
+                results[date_str][key]['releases'] = list(results[date_str][key]['releases'])
+            start_date = datetime_increment(start_date, step)
+        return results
     
     def get_dependencies(self,
                          project_name: str,

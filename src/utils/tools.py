@@ -1,5 +1,21 @@
-import re
+import re, datetime
 from pathlib import Path
+
+def datetime_increment(dt: datetime.datetime, step: str = 'm'):
+    """
+    Increment a datetime object by a given step.
+    """
+    year, month = dt.year, dt.month
+    if step == 'y':
+        year += 1
+    elif step == 'm':
+        month += 1
+        if month > 12:
+            month = 1
+            year += 1
+    else:
+        raise ValueError(f"Unimplemented step '{step}'")
+    return datetime.datetime(year, month, 1)
 
 def get_database_dir_and_name(databases: dict, name: str):
     """
