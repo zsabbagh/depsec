@@ -4,6 +4,71 @@ from src.schemas.config import DatabaseConfig
 
 DB_VULNERABILITIES = DatabaseConfig()
 
+class CWE(Model):
+    """
+    CWE models a Common Weakness Enumeration
+    Not connected with a foreign key to CVE, as this is a separate entity
+    and has its own migration script
+
+    id: The CWE id
+    cwe_id: The CWE id
+    name: The name of the CWE
+    description: The description of the CWE
+    updated_at: The date the row in the database was updated
+    """
+    id = AutoField()
+    cwe_id = CharField(null=False, unique=True)
+    name = CharField(null=True)
+    abstraction = CharField(null=True)
+    structure = CharField(null=True)
+    status = CharField(null=True)
+    description = TextField(null=True)
+    background_details = TextField(null=True)
+    likelihood_of_exploit = CharField(null=True)
+    updated_at = DateTimeField(default=datetime.datetime.now)
+
+    class Meta:
+        database = DB_VULNERABILITIES.get()
+        table_name = 'cwes'
+
+class CWEConsequence(Model):
+    """
+    CWEConsequence models a consequence of a Common Weakness Enumeration
+
+    id: The CWEConsequence id
+    cwe_id: The CWE id
+    consequence: The consequence of the CWE
+    scope: The scope of the consequence
+    updated_at: The date the row in the database was updated
+    """
+    id = AutoField()
+    cwe = ForeignKeyField(CWE, backref='consequences')
+    consequence = CharField(null=False)
+    scope = CharField(null=True)
+    impact = CharField(null=True)
+    note = TextField(null=True)
+    updated_at = DateTimeField(default=datetime.datetime.now)
+
+    class Meta:
+        database = DB_VULNERABILITIES.get()
+        table_name = 'cwe_consequences'
+
+class CWERelation(Model):
+    """
+    CWERelation models a relation between a CVE and a CWE
+    Is this really necessary?
+
+    main_id: The main id
+    other_id: The other id
+    """
+    main_id = CharField(null=False)
+    other_id = CharField(null=False)
+    ordinal = IntegerField(null=False)
+
+    class Meta:
+        database = DB_VULNERABILITIES.get()
+        table_name = 'cwe_relations'
+
 class CVE(Model):
     """
     CVE models a Common Vulnerability and Exposures
