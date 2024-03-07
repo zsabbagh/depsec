@@ -5,4 +5,5 @@
 **/config.json
 **/.vscode
 data/*
+datasets
 !data/projects.db
