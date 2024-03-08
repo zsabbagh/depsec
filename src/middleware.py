@@ -63,8 +63,10 @@ class Middleware:
         # Configure the databases
         projects_path, projects_name = get_database_dir_and_name(databases, 'projects')
         vulns_path, vulns_name = get_database_dir_and_name(databases, 'vulnerabilities')
+        weaks_path, weaks_name = get_database_dir_and_name(databases, 'weaknesses')
         DB_PROJECTS.set(projects_path, projects_name)
         nvd.CONFIG.set(vulns_path, vulns_name)
+        cwe.CONFIG.set(weaks_path, weaks_name)
     
     def set_debug(self, debug: bool = None):
         """

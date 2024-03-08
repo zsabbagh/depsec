@@ -57,11 +57,13 @@ class Weakness(Model):
     likelihood_of_exploit = CharField(null=True)
     updated_at = DateTimeField(default=datetime.datetime.now)
 
-    detection_methods = CharField(null=True)
+    detection_methods = TextField(null=True)
+    consequences = TextField(null=True)
 
     class Meta:
         database = CONFIG.get()
         table_name = 'weaknesses'
+
 
 class Consequence(Model):
     """
@@ -74,11 +76,8 @@ class Consequence(Model):
     updated_at: The date the row in the database was updated
     """
     id = AutoField()
-    weakness = ForeignKeyField(Weakness, backref='consequences')
-    consequence = CharField(null=False)
     scope = CharField(null=True)
     impact = CharField(null=True)
-    note = TextField(null=True)
     updated_at = DateTimeField(default=datetime.datetime.now)
 
     class Meta:
@@ -93,9 +92,9 @@ class Relation(Model):
     main_id: The main id
     other_id: The other id
     """
-    main_id = ForeignKeyField(Weakness, backref='relations')
+    main = ForeignKeyField(Weakness, backref='relations')
     nature = CharField(null=False)
-    ordinal = IntegerField(null=False)
+    ordinal = CharField(null=True)
     view_id = ForeignKeyField(View, backref='relations')
     other_id = CharField(null=False)
 

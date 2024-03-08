@@ -1,6 +1,5 @@
-import argparse, json, time, sys, yaml, xmltodict
+import argparse, time, sys, yaml, xmltodict, os
 import src.schemas.cwe as cwe
-from src.schemas.nvd import *
 from loguru import logger
 from src.utils.tools import *
 from pprint import pprint
@@ -9,6 +8,30 @@ from pprint import pprint
 # They can be downloaded from https://nvd.nist.gov/vuln/data-feeds
 
 START_TIME = time.time()
+
+def parse_cia_scope(scope: str | list) -> str:
+    """
+    Parse the CIA scope
+    """
+    result = []
+    if type(scope) != list:
+        scope = [scope]
+    scope = set(scope)
+    if 'Confidentiality' in scope:
+        result.append('C')
+    if 'Integrity' in scope:
+        result.append('I')
+    if 'Availability' in scope:
+        result.append('A')
+    return f"{'.'.join(result)}."
+
+def wrap_as_list(value):
+    """
+    Wrap a value as a list
+    """
+    if type(value) == list:
+        return value
+    return [value]
 
 def not_none(*values):
     """
@@ -67,32 +90,85 @@ def create_weakness(weak: dict):
     description = weak.get('Description')
     background_details = weak.get('Background_Details')
     likelihood_of_exploit = weak.get('Likelihood_Of_Exploit')
-    detection_methods = weak.get('Detection_Methods', {})
-    logger.debug(f"Detection methods {type(detection_methods).__name__}")
-    # somehow the detection methods are a list of dictionaries or a dictionary
-    if type(detection_methods) == dict:
-        detection_methods = [ detection_methods ]
-    methods = []
-    method_ids = set()
+    detection_methods = weak.get('Detection_Methods', {}).get('Detection_Method', {})
+    logger.debug(f"Methods type: {type(detection_methods).__name__}")
+    # some detections methods are lists, some are dictionaries
+    # this circumvents type errors
+    detection_methods = wrap_as_list(detection_methods)
+    methods, method_ids = [], set()
     for method in detection_methods:
-        detect_ms = method.get('Detection_Method', {})
-        # same issue here, some are lists, some are dictionaries
-        if type(detect_ms) != list:
-            detect_ms = [detect_ms]
-        for m in detect_ms:
-            mid = m.get('@Detection_Method_ID')
-            if mid in method_ids:
-                continue
-            desc = m.get('Method')
-            if mid is not None and desc is not None:
-                method_ids.add(mid)
-                methods.append(f"{desc} ({mid})")
+        mid = method.get('@Detection_Method_ID')
+        if mid in method_ids:
+            continue
+        desc = method.get('Method')
+        if mid is not None and desc is not None:
+            method_ids.add(mid)
+            methods.append(f"{desc} ({mid})")
     if len(methods) > 0:
         methods = sorted(methods)
-        methods = ', '.join(methods)
+        methods = '; '.join(methods)
     else:
         methods = None
-
+    common_consequences = weak.get('Common_Consequences', {}).get('Consequence', {})
+    logger.debug(f"Consequences type: {type(common_consequences).__name__}")
+    # same here, some are lists, some are dictionaries
+    common_consequences = wrap_as_list(common_consequences)
+    conseqs = []
+    for conseq in common_consequences:
+        scope, impact = conseq.get('Scope'), conseq.get('Impact')
+        if type(impact) == list:
+            impact = '-'.join(impact)
+        scope = parse_cia_scope(scope)
+        if not_none(scope, impact):
+            conseqs.append(f"{impact} ({scope})")
+    if len(conseqs) > 0:
+        conseqs = sorted(conseqs)
+        conseqs = '; '.join(conseqs)
+    else:
+        conseqs = None
+    logger.debug(f"Consequences: {conseqs}")
+    logger.info(f"Attempting to create weakness {cwe_formatted_id} with name {name} and status {status}")
+    # we have all the data, now we can create the weakness
+    weakness_db = cwe.Weakness.create(
+        cwe_id=cwe_formatted_id,
+        name=name,
+        abstraction=abstraction,
+        structure=structure,
+        status=status,
+        description=description,
+        background_details=background_details,
+        likelihood_of_exploit=likelihood_of_exploit,
+        detection_methods=methods,
+        consequences=conseqs
+    )
+    if weakness_db is not None:
+        logger.info(f"Created weakness {cwe_formatted_id} with name {name} and status {status}")
+        weakness_db.save()
+    else:
+        logger.warning(f"Failed to create weakness {cwe_formatted_id} with name {name} and status {status}")
+        return None
+    # process relations
+    relations = weak.get('Related_Weaknesses', {}).get('Related_Weakness', {})
+    # same here, some are lists, some are dictionaries
+    relations = wrap_as_list(relations)
+    for rel in relations:
+        pprint_dict(rel)
+        nature, ordinal, view_id, other_id = rel.get('@Nature'), rel.get('@Ordinal'), rel.get('@View_ID'), rel.get('@CWE_ID')
+        if not_none(nature, view_id, other_id):
+            logger.debug(f"Creating relation: {nature}, {ordinal}, {view_id}, {other_id}")
+            relation = cwe.Relation.create(
+                main=weakness_db,
+                nature=nature,
+                ordinal=ordinal,
+                view_id=view_id,
+                other_id=other_id
+            )
+            if relation is not None:
+                logger.info(f"Created relation: {nature}, {ordinal}, {view_id}, {other_id}")
+                relation.save()
+        else:
+            logger.warning(f"Skipping relation with missing data {rel}, status '{status}'")
+    logger.debug(f"RELATIONS type: {type(relations).__name__}")
 
 def timestamp_to_date(timestamp: str, lowest: str = 'min'):
     """
@@ -152,7 +228,7 @@ if __name__ == '__main__':
 
     logger.remove()
     for level in args.level:
-        logger.add(sys.stderr, level=level, format="<green>{time:YYYY-MM-DD HH:mm:ss}</green> <level>{level: <8}</level> {name} | <cyan>{function}</cyan> - <level>{message}</level>")
+        logger.add(sys.stdout, level=level, format="<green>{time:YYYY-MM-DD HH:mm:ss}</green> <level>{level: <8}</level> {name} | <cyan>{function}</cyan> - <level>{message}</level>")
     args.xml_files = sorted([os.path.abspath(f) for f in args.xml_files], reverse=True)
     with open(args.config, 'r') as file:
         config = yaml.safe_load(file)
