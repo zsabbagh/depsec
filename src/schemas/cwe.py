@@ -81,7 +81,7 @@ class Relation(Model):
     other_id: The other id
     """
     main = ForeignKeyField(Entry, backref='relations')
-    nature = CharField(null=False)
+    kind = CharField(null=False)
     ordinal = CharField(null=True)
     view_id = CharField(null=True) # The view table is not implemented yet
     other_id = CharField(null=False)

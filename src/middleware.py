@@ -1,7 +1,8 @@
 import time, yaml, json, glob
 import src.schemas.nvd as nvd
 import src.schemas.cwe as cwe
-import src.utils.convert as convert
+import src.utils.db as db
+from pprint import pprint
 from src.queriers.libraries import LibrariesQuerier
 from src.queriers.snyk import SnykQuerier
 from src.schemas.projects import *

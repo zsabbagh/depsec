@@ -163,7 +163,7 @@ def create_entry(entry: dict, kind: str):
             if not_none(id):
                 relation = cwe.Relation.create(
                     main=entry_db,
-                    nature='Has_Member',
+                    kind='HasMember',
                     view_id=view,
                     other_id=id
                 )
@@ -171,7 +171,7 @@ def create_entry(entry: dict, kind: str):
                     logger.info(f"Created relation: {id}, {view}")
                     relation.save()
             other_db = cwe.Entry.get_or_none(cwe_id=id)
-            relation_exists = cwe.Relation.get_or_none(main=other_db, nature='Is_Member_Of', view_id=view, other_id=cwe_formatted_id)
+            relation_exists = cwe.Relation.get_or_none(main=other_db, kind='IsMemberOf', view_id=view, other_id=cwe_formatted_id)
             if relation_exists is not None:
                 logger.debug(f"Relation exists: {cwe_formatted_id}, {view}")
                 continue
@@ -181,7 +181,7 @@ def create_entry(entry: dict, kind: str):
             else:
                 relation = cwe.Relation.create(
                     main=other_db,
-                    nature='Is_Member_Of',
+                    kind='IsMemberOf',
                     view_id=view,
                     other_id=cwe_formatted_id
                 )
@@ -197,19 +197,19 @@ def create_entry(entry: dict, kind: str):
         relations = wrap_as_list(relations)
         for rel in relations:
             pprint_dict(rel)
-            nature, ordinal, view_id, other_id = rel.get('@Nature'), rel.get('@Ordinal'), rel.get('@View_ID'), rel.get('@CWE_ID')
+            kind, ordinal, view_id, other_id = rel.get('@Nature'), rel.get('@Ordinal'), rel.get('@View_ID'), rel.get('@CWE_ID')
             other_id = f"CWE-{other_id}"
-            if not_none(nature, view_id, other_id):
-                logger.debug(f"Creating relation: {nature}, {ordinal}, {view_id}, {other_id}")
+            if not_none(kind, view_id, other_id):
+                logger.debug(f"Creating relation: {kind}, {ordinal}, {view_id}, {other_id}")
                 relation = cwe.Relation.create(
                     main=entry_db,
-                    nature=nature,
+                    kind=kind,
                     ordinal=ordinal,
                     view_id=view_id,
                     other_id=other_id
                 )
                 if relation is not None:
-                    logger.info(f"Created relation: {nature}, {ordinal}, {view_id}, {other_id}")
+                    logger.info(f"Created relation: {kind}, {ordinal}, {view_id}, {other_id}")
                     relation.save()
             else:
                 logger.warning(f"Skipping relation with missing data {rel}, status '{status}'")
