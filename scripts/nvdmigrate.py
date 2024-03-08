@@ -1,12 +1,39 @@
-import argparse, json, time, requests, random, sys, yaml, os
+import argparse, json, time, requests, random, sys, yaml, os, re
 import src.schemas.nvd as nvd
 from loguru import logger
 from src.utils.tools import *
+
+parser = argparse.ArgumentParser(description='Migrate NVD data to a database')
+parser.add_argument('config', metavar='CONFIG', type=str,
+                    help='The configuration file to use')
+parser.add_argument('--debug', action='store_true',
+                    help='Enable debug mode (delays)',
+                    default=False)
+parser.add_argument('json_files', metavar='JSON_FILE', type=str, nargs='+',
+                    help='The JSON files to migrate')
+parser.add_argument('-l', '--level',
+                    help='Set the logging level', nargs='+',
+                    default=['INFO'])
+parser.add_argument('-s', '--skip-processed-files', action='store_true',
+                    help='Skip processed files',
+                    default=True)
+parser.add_argument('-f', '--force', action='store_true',
+                    help='Force',
+                    default=False)
+args = parser.parse_args()
 
 # Script for migrating data from NVD JSON files to a database
 # They can be downloaded from https://nvd.nist.gov/vuln/data-feeds
 
 START_TIME = time.time()
+
+def wrap_in_list(obj):
+    """
+    Wrap an object in a list if it is not already a list
+    """
+    if type(obj) != list:
+        return [obj]
+    return obj
 
 def timestamp_to_date(timestamp: str, lowest: str = 'min'):
     """
@@ -96,9 +123,11 @@ def create_cve(entry: dict) -> int | nvd.CVE:
         return 1
     cve_db = nvd.CVE.get_or_none(nvd.CVE.cve_id == cve_id)
     # check for duplicate entry
-    if cve_db is not None:
+    if cve_db is not None and not args.force:
         logger.warning(f"{cve_id} already exists")
         return 0
+    elif args.force and cve_db is not None:
+        cve_db.delete_instance()
     # published and last modified dates
     published_at = entry.get('publishedDate', None)
     if published_at is None:
@@ -127,14 +156,12 @@ def create_cve(entry: dict) -> int | nvd.CVE:
     cvss_base_severity = cvss.get('baseSeverity', None)
 
     logger.debug(f"NEW ENTRY: {cve_id} being added to the database")
-    cwe = get_first_eng_value(cve, 'problemtype', 'problemtype_data', 'description')
 
     cve_db = nvd.CVE.create(
         cve_id=cve_id,
         description=description,
         published_at=published_at,
         last_modified_at=last_modified_at,
-        cwe=cwe,
         cvss_version=cvss_version,
         cvss_expliotability_score=cvss_expliotability_score,
         cvss_impact_score=cvss_impact_score,
@@ -150,6 +177,33 @@ def create_cve(entry: dict) -> int | nvd.CVE:
         cvss_base_score=cvss_base_score,
         cvss_base_severity=cvss_base_severity
     )
+
+    if cve_db is not None:
+        cve_db.save()
+
+    # CVEs can have more than one CWE
+    # e.g., CVE-2021-44228 has more than one CWE
+    problemtype = cve.get('problemtype', {})
+    problemtype_data = problemtype.get('problemtype_data', [])
+    problemtype_data = wrap_in_list(problemtype_data)
+    has_cwe = False
+    for prob in problemtype_data:
+        descriptions = prob.get('description', [])
+        descriptions = wrap_in_list(descriptions)
+        for desc in descriptions:
+            value = desc.get('value', '')
+            if re.match(r'^CWE-\d+$', value):
+                has_cwe = True
+                cwe_db = nvd.CWE.create(
+                    cve=cve_db,
+                    cwe_id=value
+                )
+                if cwe_db is not None:
+                    cwe_db.save()
+    # set has_cwe to True if there is a CWE
+    if has_cwe:
+        cve_db.has_cwe = True
+        cve_db.save()
 
     return cve_db
 
@@ -212,20 +266,21 @@ def migrate_data(data: dict, debug: bool = False, filename: str = '', skip_proce
     ts = data['CVE_data_timestamp']
     date = timestamp_to_date(ts)
     number_of_cves = len(data['CVE_Items'])
-    nvd_file = nvd.NVDFile.get_or_none(nvd.NVDFile.created_at == date, nvd.NVDFile.file == filename)
-    logger.info(f"NVD file {filename} has been processed: {nvd_file is not None}")
-    if nvd_file is not None and skip_processed_files:
-        if nvd_file.cves_processed == number_of_cves:
-            logger.info(f"File {filename} already processed with {number_of_cves}/{number_of_cves} CVEs, skipping")
-            return
-        else:
-            logger.info(f"File {filename} already processed, but not all CVEs processed")
-            if not prompt_continue():
+    if not args.force:
+        nvd_file = nvd.NVDFile.get_or_none(nvd.NVDFile.created_at == date, nvd.NVDFile.file == filename)
+        logger.info(f"NVD file {filename} has been processed: {nvd_file is not None}")
+        if nvd_file is not None and skip_processed_files:
+            if nvd_file.cves_processed == number_of_cves:
+                logger.info(f"File {filename} already processed with {number_of_cves}/{number_of_cves} CVEs, skipping")
                 return
+            else:
+                logger.info(f"File {filename} already processed, but not all CVEs processed")
+                if not prompt_continue():
+                    return
+                nvd_file.delete_instance()
+        elif nvd_file is not None:
+            print(f"File {filename} already processed, but not all CVEs processed, continuing")
             nvd_file.delete_instance()
-    elif nvd_file is not None:
-        print(f"File {filename} already processed, but not all CVEs processed, continuing")
-        nvd_file.delete_instance()
         
     count_processed = 0
     count_skipped = 0
@@ -261,30 +316,18 @@ def migrate_data(data: dict, debug: bool = False, filename: str = '', skip_proce
         for node in nodes:
             create_nodes(node, cve_db, is_root=True)
             logger.debug(f"Created nodes for {cve_db.cve_id}")
-    nvd.NVDFile.create(
+    nvd_file_db = nvd.NVDFile.create(
         file=filename,
         created_at=date,
         cves_processed=count_processed,
         cves_skipped=count_skipped
-    ).save()
+    )
+    if not debug and nvd_file_db is not None:
+        nvd_file_db.save()
+
 
 
 if __name__ == '__main__':
-    parser = argparse.ArgumentParser(description='Migrate NVD data to a database')
-    parser.add_argument('config', metavar='CONFIG', type=str,
-                        help='The configuration file to use')
-    parser.add_argument('--debug', action='store_true',
-                        help='Enable debug mode (delays)',
-                        default=False)
-    parser.add_argument('json_files', metavar='JSON_FILE', type=str, nargs='+',
-                        help='The JSON files to migrate')
-    parser.add_argument('-l', '--level',
-                        help='Set the logging level', nargs='+',
-                        default=['INFO'])
-    parser.add_argument('-s', '--skip-processed-files', action='store_true',
-                        help='Skip processed files',
-                        default=True)
-    args = parser.parse_args()
     logger.remove()
     for level in args.level:
         logger.add(sys.stderr, level=level, format="<green>{time:YYYY-MM-DD HH:mm:ss}</green> <level>{level: <8}</level> {name} | <cyan>{function}</cyan> - <level>{message}</level>")

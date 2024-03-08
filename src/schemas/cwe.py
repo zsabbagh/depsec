@@ -20,22 +20,9 @@ class View(Model):
         database = CONFIG.get()
         table_name = 'views'
 
-class Category(Model):
+class Entry(Model):
     """
-    Category models a category of a Common Weakness Enumeration list
-    """
-    id = AutoField()
-    name = CharField(null=False)
-    status = CharField(null=True)
-    summary = TextField(null=True)
-
-    class Meta:
-        database = CONFIG.get()
-        table_name = 'categories'
-
-class Weakness(Model):
-    """
-    Weakness models a weakness of a Common Weakness Enumeration list
+    Entry models a weakness of a Common Weakness Enumeration list entry
     Not connected with a foreign key to CVE, as this is a separate entity
     and has its own migration script
 
@@ -47,11 +34,12 @@ class Weakness(Model):
     """
     id = AutoField()
     cwe_id = CharField(null=False, unique=True)
+    kind = CharField(null=True)
     name = CharField(null=True)
     abstraction = CharField(null=True)
     structure = CharField(null=True)
     status = CharField(null=True)
-    description = TextField(null=True)
+    summary = TextField(null=True)
 
     background_details = TextField(null=True)
     likelihood_of_exploit = CharField(null=True)
@@ -92,10 +80,10 @@ class Relation(Model):
     main_id: The main id
     other_id: The other id
     """
-    main = ForeignKeyField(Weakness, backref='relations')
+    main = ForeignKeyField(Entry, backref='relations')
     nature = CharField(null=False)
     ordinal = CharField(null=True)
-    view_id = ForeignKeyField(View, backref='relations')
+    view_id = CharField(null=True) # The view table is not implemented yet
     other_id = CharField(null=False)
 
     class Meta:
@@ -104,7 +92,6 @@ class Relation(Model):
 
 
 CONFIG.add_tables(View,
-                  Category,
-                  Weakness,
+                  Entry,
                   Consequence,
                   Relation)

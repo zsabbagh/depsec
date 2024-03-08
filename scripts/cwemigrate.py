@@ -63,22 +63,18 @@ def pprint_dict(d: dict, i: int = 0):
             print(f"\n{indent}{k}: ", end='')
             pprint_dict(v, i + 2)
 
-
-def create_category(cat: dict):
-    """
-    Create a category
-    """
-    pass
-
-def create_weakness(weak: dict):
+def create_entry(entry: dict, kind: str):
     """
     Create a weakness
+
+    weak: The weakness to create
+    kind: The kind of weakness to create (category or weakness)
     """
-    cwe_id = weak.get('@ID')
+    cwe_id = entry.get('@ID')
     cwe_formatted_id = f"CWE-{cwe_id}"
 
-    weakness_db = cwe.Weakness.get_or_none(cwe_id=cwe_formatted_id)
-    if weakness_db is not None:
+    entry_db = cwe.Entry.get_or_none(cwe_id=cwe_formatted_id)
+    if entry_db is not None:
         logger.debug(f"Skipping existing weakness {cwe_formatted_id}")
         return None
     
@@ -86,11 +82,13 @@ def create_weakness(weak: dict):
     if cwe_id is None:
         logger.warning(f"Skipping weakness with no ID")
         return None
-    name, abstraction, structure, status = weak.get('@Name'), weak.get('@Abstraction'), weak.get('@Structure'), weak.get('@Status')
-    description = weak.get('Description')
-    background_details = weak.get('Background_Details')
-    likelihood_of_exploit = weak.get('Likelihood_Of_Exploit')
-    detection_methods = weak.get('Detection_Methods', {}).get('Detection_Method', {})
+    name, abstraction, structure, status = entry.get('@Name'), entry.get('@Abstraction'), entry.get('@Structure'), entry.get('@Status')
+    description = entry.get('Description')
+    if description is None:
+        description = entry.get('Summary')
+    background_details = entry.get('Background_Details')
+    likelihood_of_exploit = entry.get('Likelihood_Of_Exploit')
+    detection_methods = entry.get('Detection_Methods', {}).get('Detection_Method', {})
     logger.debug(f"Methods type: {type(detection_methods).__name__}")
     # some detections methods are lists, some are dictionaries
     # this circumvents type errors
@@ -109,7 +107,7 @@ def create_weakness(weak: dict):
         methods = '; '.join(methods)
     else:
         methods = None
-    common_consequences = weak.get('Common_Consequences', {}).get('Consequence', {})
+    common_consequences = entry.get('Common_Consequences', {}).get('Consequence', {})
     logger.debug(f"Consequences type: {type(common_consequences).__name__}")
     # same here, some are lists, some are dictionaries
     common_consequences = wrap_as_list(common_consequences)
@@ -129,8 +127,9 @@ def create_weakness(weak: dict):
     logger.debug(f"Consequences: {conseqs}")
     logger.info(f"Attempting to create weakness {cwe_formatted_id} with name {name} and status {status}")
     # we have all the data, now we can create the weakness
-    weakness_db = cwe.Weakness.create(
+    entry_db = cwe.Entry.create(
         cwe_id=cwe_formatted_id,
+        kind=kind,
         name=name,
         abstraction=abstraction,
         structure=structure,
@@ -141,34 +140,79 @@ def create_weakness(weak: dict):
         detection_methods=methods,
         consequences=conseqs
     )
-    if weakness_db is not None:
+    if entry_db is not None:
         logger.info(f"Created weakness {cwe_formatted_id} with name {name} and status {status}")
-        weakness_db.save()
+        entry_db.save()
     else:
         logger.warning(f"Failed to create weakness {cwe_formatted_id} with name {name} and status {status}")
         return None
     # process relations
-    relations = weak.get('Related_Weaknesses', {}).get('Related_Weakness', {})
-    # same here, some are lists, some are dictionaries
-    relations = wrap_as_list(relations)
-    for rel in relations:
-        pprint_dict(rel)
-        nature, ordinal, view_id, other_id = rel.get('@Nature'), rel.get('@Ordinal'), rel.get('@View_ID'), rel.get('@CWE_ID')
-        if not_none(nature, view_id, other_id):
-            logger.debug(f"Creating relation: {nature}, {ordinal}, {view_id}, {other_id}")
-            relation = cwe.Relation.create(
-                main=weakness_db,
-                nature=nature,
-                ordinal=ordinal,
-                view_id=view_id,
-                other_id=other_id
-            )
-            if relation is not None:
-                logger.info(f"Created relation: {nature}, {ordinal}, {view_id}, {other_id}")
-                relation.save()
-        else:
-            logger.warning(f"Skipping relation with missing data {rel}, status '{status}'")
-    logger.debug(f"RELATIONS type: {type(relations).__name__}")
+    if kind == 'category':
+        # "Has_Members" is a list of dictionaries
+        print(f"Processing category {cwe_formatted_id}")
+        relationships = entry.get('Relationships', {})
+        pprint_dict(relationships)
+        members = relationships.get('Has_Member', {})
+        members = wrap_as_list(members)
+        for member in members:
+            print(f"MEMBER: {member}")
+            id = member.get('@CWE_ID')
+            view = member.get('@View_ID')
+            id = f"CWE-{id}"
+            logger.debug(f"Creating relation: {id}, {view}")
+            if not_none(id):
+                relation = cwe.Relation.create(
+                    main=entry_db,
+                    nature='Has_Member',
+                    view_id=view,
+                    other_id=id
+                )
+                if relation is not None:
+                    logger.info(f"Created relation: {id}, {view}")
+                    relation.save()
+            other_db = cwe.Entry.get_or_none(cwe_id=id)
+            relation_exists = cwe.Relation.get_or_none(main=other_db, nature='Is_Member_Of', view_id=view, other_id=cwe_formatted_id)
+            if relation_exists is not None:
+                logger.debug(f"Relation exists: {cwe_formatted_id}, {view}")
+                continue
+            if other_db is None:
+                logger.warning(f"Skipping relation with missing data {id}, status '{status}'")
+                continue
+            else:
+                relation = cwe.Relation.create(
+                    main=other_db,
+                    nature='Is_Member_Of',
+                    view_id=view,
+                    other_id=cwe_formatted_id
+                )
+                if relation is not None:
+                    logger.info(f"Created relation: {cwe_formatted_id}, {view}")
+                    relation.save()
+
+        pass
+    elif kind == 'weakness':
+        relations = entry.get('Related_Weaknesses', {}).get('Related_Weakness', {})
+        # same here, some are lists, some are dictionaries
+        logger.debug(f"RELATIONS type: {type(relations).__name__}")
+        relations = wrap_as_list(relations)
+        for rel in relations:
+            pprint_dict(rel)
+            nature, ordinal, view_id, other_id = rel.get('@Nature'), rel.get('@Ordinal'), rel.get('@View_ID'), rel.get('@CWE_ID')
+            other_id = f"CWE-{other_id}"
+            if not_none(nature, view_id, other_id):
+                logger.debug(f"Creating relation: {nature}, {ordinal}, {view_id}, {other_id}")
+                relation = cwe.Relation.create(
+                    main=entry_db,
+                    nature=nature,
+                    ordinal=ordinal,
+                    view_id=view_id,
+                    other_id=other_id
+                )
+                if relation is not None:
+                    logger.info(f"Created relation: {nature}, {ordinal}, {view_id}, {other_id}")
+                    relation.save()
+            else:
+                logger.warning(f"Skipping relation with missing data {rel}, status '{status}'")
 
 def timestamp_to_date(timestamp: str, lowest: str = 'min'):
     """
@@ -202,10 +246,10 @@ def migrate_data(data: dict, debug: bool = False, filename: str = '', skip_proce
     print(f"------------------------------------")
     print(f"VIEWS SCHEMA: {len(views)}")
     pprint_dict(views)
-    for category in categories.get('Category', []):
-        create_category(category)
     for weak in weaknesses.get('Weakness', []):
-        create_weakness(weak)
+        create_entry(weak, 'weakness')
+    for category in categories.get('Category', []):
+        create_entry(category, 'category')
     pass
 
 

@@ -4,7 +4,6 @@ from src.schemas.config import DatabaseConfig
 
 CONFIG = DatabaseConfig()
 
-
 class CVE(Model):
     """
     CVE models a Common Vulnerability and Exposures
@@ -37,7 +36,6 @@ class CVE(Model):
     published_at = DateTimeField(null=True)
     last_modified_at = DateTimeField(null=True)
     updated_at = DateTimeField(default=datetime.datetime.now)
-    cwe = CharField(null=True)
     cvss_version = CharField(null=True)
     cvss_expliotability_score = FloatField(null=True)
     cvss_impact_score = FloatField(null=True)
@@ -53,9 +51,29 @@ class CVE(Model):
     cvss_base_score = FloatField(null=True)
     cvss_base_severity = CharField(null=True)
 
+    has_cwe = BooleanField(default=False)
+
     class Meta:
         database = CONFIG.get()
         table_name = 'cves'
+
+class CWE(Model):
+    """
+    CWE models a Common Weakness Enumeration
+
+    id: The CWE id
+    cwe The CWE id
+    name: The name of the CWE
+    description: The description of the CWE
+    updated_at: The date the row in the database was updated
+    """
+    cve = ForeignKeyField(CVE, backref='cwes')
+    cwe_id = CharField(null=False)
+    updated_at = DateTimeField(default=datetime.datetime.now)
+
+    class Meta:
+        database = CONFIG.get()
+        table_name = 'cwes'
 
 class NVDFile(Model):
     """
@@ -156,6 +174,7 @@ class CPE(Model):
 
 CONFIG.add_tables(
     CVE,
+    CWE,
     NVDFile,
     ConfigNode,
     ConfigEdge,
