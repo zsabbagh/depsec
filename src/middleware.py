@@ -1,11 +1,11 @@
 import time, yaml, json, glob
 import src.schemas.nvd as nvd
 import src.schemas.cwe as cwe
+import src.utils.convert as convert
 from src.queriers.libraries import LibrariesQuerier
 from src.queriers.snyk import SnykQuerier
 from src.schemas.projects import *
 from src.utils.tools import *
-from src.utils.maps import *
 from loguru import logger
 from pathlib import Path
 from typing import List, Dict
