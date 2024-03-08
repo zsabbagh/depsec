@@ -1,5 +1,5 @@
-import argparse, json, time, requests, random, sys, yaml
-from src.schemas.vulnerabilities import *
+import argparse, json, time, requests, random, sys, yaml, os
+import src.schemas.nvd as nvd
 from loguru import logger
 from src.utils.tools import *
 
@@ -83,9 +83,9 @@ def get_first_eng_value(cve: dict, *keys):
         logger.error(f"Error getting value: {e}, {descs}")
         return ''
 
-def create_cve(entry: dict) -> int | CVE:
+def create_cve(entry: dict) -> int | nvd.CVE:
     """
-    Create a CVE from an entry
+    Create a nvd.CVE from an entry
     """
     cve = entry.get('cve', {})
     cve_id = cve.get('CVE_data_meta', {}).get('ID', None)
@@ -94,7 +94,7 @@ def create_cve(entry: dict) -> int | CVE:
     if impact == {}:
         logger.warning(f"No impact for {cve_id}, skipping")
         return 1
-    cve_db = CVE.get_or_none(CVE.cve_id == cve_id)
+    cve_db = nvd.CVE.get_or_none(nvd.CVE.cve_id == cve_id)
     # check for duplicate entry
     if cve_db is not None:
         logger.warning(f"{cve_id} already exists")
@@ -129,7 +129,7 @@ def create_cve(entry: dict) -> int | CVE:
     logger.debug(f"NEW ENTRY: {cve_id} being added to the database")
     cwe = get_first_eng_value(cve, 'problemtype', 'problemtype_data', 'description')
 
-    cve_db = CVE.create(
+    cve_db = nvd.CVE.create(
         cve_id=cve_id,
         description=description,
         published_at=published_at,
@@ -153,10 +153,10 @@ def create_cve(entry: dict) -> int | CVE:
 
     return cve_db
 
-def create_nodes(node: dict, cve: CVE,
+def create_nodes(node: dict, cve: nvd.CVE,
                  is_root: bool = True,
-                 parent: ConfigNode = None,
-                 root: ConfigNode = None):
+                 parent: nvd.ConfigNode = None,
+                 root: nvd.ConfigNode = None):
     """
     Process a node and return vulnerable versions
     """
@@ -164,7 +164,7 @@ def create_nodes(node: dict, cve: CVE,
         return None
     operator = node.get('operator', '')
     # Create the node
-    node_db = ConfigNode.create(
+    node_db = nvd.ConfigNode.create(
         cve=cve,
         operator=operator,
         is_root=is_root
@@ -172,7 +172,7 @@ def create_nodes(node: dict, cve: CVE,
     logger.debug("Created node {node_db.id}")
     # If there is a parent, create an edge
     if parent is not None:
-        ConfigEdge.create(
+        nvd.ConfigEdge.create(
             parent=parent,
             root=root,
             child=node_db
@@ -183,7 +183,7 @@ def create_nodes(node: dict, cve: CVE,
         if not vulnerable:
             continue
         cpe = parse_cpe(cpe)
-        CPE.create(
+        nvd.CPE.create(
             node=node_db,
             part=cpe.get('part'),
             vendor=cpe.get('vendor'),
@@ -212,7 +212,7 @@ def migrate_data(data: dict, debug: bool = False, filename: str = '', skip_proce
     ts = data['CVE_data_timestamp']
     date = timestamp_to_date(ts)
     number_of_cves = len(data['CVE_Items'])
-    nvd_file = NVDFile.get_or_none(NVDFile.created_at == date, NVDFile.file == filename)
+    nvd_file = nvd.NVDFile.get_or_none(nvd.NVDFile.created_at == date, nvd.NVDFile.file == filename)
     logger.info(f"NVD file {filename} has been processed: {nvd_file is not None}")
     if nvd_file is not None and skip_processed_files:
         if nvd_file.cves_processed == number_of_cves:
@@ -251,9 +251,9 @@ def migrate_data(data: dict, debug: bool = False, filename: str = '', skip_proce
             count_skipped += cve_db
             continue
         nodes = configurations.get('nodes', [])
-        root_node = ConfigNode.get_or_none(
-            ConfigNode.cve == cve_db.cve_id,
-            ConfigNode.is_root
+        root_node = nvd.ConfigNode.get_or_none(
+            nvd.ConfigNode.cve == cve_db.cve_id,
+            nvd.ConfigNode.is_root
         )
         if root_node is not None:
             logger.debug(f"Root node already exists for {cve_db.cve_id}, skipping nodes")
@@ -261,7 +261,7 @@ def migrate_data(data: dict, debug: bool = False, filename: str = '', skip_proce
         for node in nodes:
             create_nodes(node, cve_db, is_root=True)
             logger.debug(f"Created nodes for {cve_db.cve_id}")
-    NVDFile.create(
+    nvd.NVDFile.create(
         file=filename,
         created_at=date,
         cves_processed=count_processed,
@@ -295,7 +295,7 @@ if __name__ == '__main__':
     path, name = get_database_dir_and_name(dbconfig, 'vulnerabilities')
 
     print(f"Using database at {path}/{name}")
-    DB_VULNERABILITIES.set(path, name)
+    nvd.CONFIG.set(path, name)
 
     for f in args.json_files:
         try:

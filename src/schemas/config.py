@@ -41,6 +41,7 @@ class DatabaseConfig:
         Sets the database by path
         """
         path = Path(path).resolve()
+        logger.debug(f"Setting database to {path}")
         if not path.exists():
             raise ValueError('Path does not exist, cannot create database to non-existent path')
         if not name.endswith('.db'):
@@ -50,6 +51,8 @@ class DatabaseConfig:
         database = SqliteDatabase(str(path))
         self.__database.initialize(database)
         self.__database.close()
+        table_names = [type(table).__name__ for table in self.__tables]
+        logger.debug(f"Database set to {path}, creating tables '{', '.join(table_names) if len(table_names) > 0 else 'None'}'")
         self.create_tables(*self.__tables)
     
     def add_tables(self, *tables):

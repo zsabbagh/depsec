@@ -2,13 +2,23 @@ import datetime, os
 from peewee import *
 from src.schemas.config import DatabaseConfig
 
-DB_WEAKNESSES = DatabaseConfig()
+CONFIG = DatabaseConfig()
 
 class View(Model):
     """
     View models a view of a Common Weakness Enumeration list
+
+    Could this be skipped?
     """
-    pass
+    id = AutoField()
+    name = CharField(null=False)
+    kind = CharField(null=False)
+    status = CharField(null=True)
+    objective = TextField(null=True)
+    
+    class Meta:
+        database = CONFIG.get()
+        table_name = 'views'
 
 class Category(Model):
     """
@@ -18,6 +28,10 @@ class Category(Model):
     name = CharField(null=False)
     status = CharField(null=True)
     summary = TextField(null=True)
+
+    class Meta:
+        database = CONFIG.get()
+        table_name = 'categories'
 
 class Weakness(Model):
     """
@@ -38,13 +52,16 @@ class Weakness(Model):
     structure = CharField(null=True)
     status = CharField(null=True)
     description = TextField(null=True)
+
     background_details = TextField(null=True)
     likelihood_of_exploit = CharField(null=True)
     updated_at = DateTimeField(default=datetime.datetime.now)
 
+    detection_methods = CharField(null=True)
+
     class Meta:
-        database = DB_WEAKNESSES.get()
-        table_name = 'cwes'
+        database = CONFIG.get()
+        table_name = 'weaknesses'
 
 class Consequence(Model):
     """
@@ -57,7 +74,7 @@ class Consequence(Model):
     updated_at: The date the row in the database was updated
     """
     id = AutoField()
-    cwe = ForeignKeyField(Weakness, backref='consequences')
+    weakness = ForeignKeyField(Weakness, backref='consequences')
     consequence = CharField(null=False)
     scope = CharField(null=True)
     impact = CharField(null=True)
@@ -65,21 +82,30 @@ class Consequence(Model):
     updated_at = DateTimeField(default=datetime.datetime.now)
 
     class Meta:
-        database = DB_WEAKNESSES.get()
-        table_name = 'cwe_consequences'
+        database = CONFIG.get()
+        table_name = 'consequences'
 
-class CWERelation(Model):
+class Relation(Model):
     """
-    CWERelation models a relation between a CVE and a CWE
+    Relation models a relation between a CVE and a CWE
     Is this really necessary?
 
     main_id: The main id
     other_id: The other id
     """
-    main_id = CharField(null=False)
-    other_id = CharField(null=False)
+    main_id = ForeignKeyField(Weakness, backref='relations')
+    nature = CharField(null=False)
     ordinal = IntegerField(null=False)
+    view_id = ForeignKeyField(View, backref='relations')
+    other_id = CharField(null=False)
 
     class Meta:
-        database = DB_WEAKNESSES.get()
-        table_name = 'cwe_relations'
+        database = CONFIG.get()
+        table_name = 'relations'
+
+
+CONFIG.add_tables(View,
+                  Category,
+                  Weakness,
+                  Consequence,
+                  Relation)

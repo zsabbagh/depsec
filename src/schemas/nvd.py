@@ -2,7 +2,7 @@ import datetime, os
 from peewee import *
 from src.schemas.config import DatabaseConfig
 
-DB_VULNERABILITIES = DatabaseConfig()
+CONFIG = DatabaseConfig()
 
 
 class CVE(Model):
@@ -54,7 +54,7 @@ class CVE(Model):
     cvss_base_severity = CharField(null=True)
 
     class Meta:
-        database = DB_VULNERABILITIES.get()
+        database = CONFIG.get()
         table_name = 'cves'
 
 class NVDFile(Model):
@@ -78,7 +78,7 @@ class NVDFile(Model):
     cves_skipped = IntegerField(null=True)
 
     class Meta:
-        database = DB_VULNERABILITIES.get()
+        database = CONFIG.get()
         table_name = 'nvd_files'
 
 class ConfigNode(Model):
@@ -97,7 +97,7 @@ class ConfigNode(Model):
     operator = CharField(null=True)
 
     class Meta:
-        database = DB_VULNERABILITIES.get()
+        database = CONFIG.get()
         table_name = 'config_nodes'
 
 class ConfigEdge(Model):
@@ -114,7 +114,7 @@ class ConfigEdge(Model):
     child = ForeignKeyField(ConfigNode, backref='parents')
 
     class Meta:
-        database = DB_VULNERABILITIES.get()
+        database = CONFIG.get()
         table_name = 'config_edges'
 
 class CPE(Model):
@@ -151,10 +151,10 @@ class CPE(Model):
     updated_at = DateTimeField(default=datetime.datetime.now)
 
     class Meta:
-        database = DB_VULNERABILITIES.get()
+        database = CONFIG.get()
         table_name = 'cpes'
 
-DB_VULNERABILITIES.add_tables(
+CONFIG.add_tables(
     CVE,
     NVDFile,
     ConfigNode,

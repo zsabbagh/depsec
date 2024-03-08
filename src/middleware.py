@@ -1,8 +1,9 @@
 import time, yaml, json, glob
+import src.schemas.nvd as nvd
+import src.schemas.cwe as cwe
 from src.queriers.libraries import LibrariesQuerier
 from src.queriers.snyk import SnykQuerier
 from src.schemas.projects import *
-from src.schemas.vulnerabilities import *
 from src.utils.tools import *
 from loguru import logger
 from pathlib import Path
@@ -63,7 +64,7 @@ class Middleware:
         projects_path, projects_name = get_database_dir_and_name(databases, 'projects')
         vulns_path, vulns_name = get_database_dir_and_name(databases, 'vulnerabilities')
         DB_PROJECTS.set(projects_path, projects_name)
-        DB_VULNERABILITIES.set(vulns_path, vulns_name)
+        nvd.CONFIG.set(vulns_path, vulns_name)
     
     def set_debug(self, debug: bool = None):
         """
@@ -192,7 +193,7 @@ class Middleware:
     def get_vulnerabilities(self,
                             project_name: str,
                             version: str = None,
-                            platform: str="pypi") -> List[CVE]:
+                            platform: str="pypi") -> List[nvd.CVE]:
         """
         Get vulnerabilities of a project and a specific version number (release)
         """
@@ -214,7 +215,7 @@ class Middleware:
                 logger.error(f"Release '{version}' not found for {project_name}")
                 return None
         logger.debug(f"Querying databases for vulnerabilities of {project_name} {version}")
-        cpes = CPE.select().where((CPE.vendor == project.vendor) & (CPE.product == project.name))
+        cpes = nvd.CPE.select().where((nvd.CPE.vendor == project.vendor) & (nvd.CPE.product == project.name))
         logger.debug(f"Found {len(cpes)} CPEs for {project.vendor} {project.name}")
         # We need to find the CPEs that match the version
         vulns = []
