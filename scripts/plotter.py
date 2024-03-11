@@ -51,22 +51,40 @@ def plot_timelines(timelines: dict):
     """
     Expects a dictionary with the following structure:
 
-    <project>: {
-        '<date>': {
-            '<cve-id>', {
-                'cve': CVE-DICT,
-                'releases': [RELEASE-DICT, ...]
-            }
+    <project>: [
+        {
+            date: datetime,
+            release: dict,
+            cves: [dict]
         }
-    }
+    ]
     """
-    fix, ax = plt.subplots()
+    fig, count_ax = plt.subplots()
+    fig2, score_ax = plt.subplots()
     pprint(timelines)
     for project, timeline in timelines.items():
-        dates_ordered = sorted(timeline.keys())
-        y = [len(timeline[date_str]) for date_str in dates_ordered]
-        ax.step(dates_ordered, y, label=project)
-        df = DataFrame({'project': project, 'date': dates_ordered, 'count': y})
+        dates = [release['date'] for release in timeline]
+        cves = [len(release['cves']) for release in timeline]
+        max_scores = []
+        mean_scores = []
+        median_scores = []
+        for entry in timeline:
+            scrs = []
+            for cve in entry['cves']:
+                scrs.append(cve['cvss_base_score'])
+            if len(scrs) == 0:
+                max_scores.append(0)
+                mean_scores.append(0)
+                median_scores.append(0)
+                continue
+            max_scores.append(max(scrs))
+            mean_scores.append(np.mean(scrs))
+            median_scores.append(np.std(scrs))
+        count_ax.step(dates, cves, label=project)
+        # score_ax.step(dates, max_scores, label=f"{project} max")
+        score_ax.step(dates, mean_scores, label=f"{project} mean")
+        # score_ax.step(dates, median_scores, label=f"{project} med")
+    plt.legend()
     plt.show()
 
 mw = Middleware(args.config)
@@ -75,6 +93,6 @@ if __name__ == '__main__':
     
     timelines = {}
     for project in args.projects:
-        timeline = mw.get_vulnerabilities_timeline(project, 2014, step='m')
+        timeline = mw.get_vulnerabilities_timeline(project, 2014, step='y')
         timelines[project] = timeline
     plot_timelines(timelines)
