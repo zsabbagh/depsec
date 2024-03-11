@@ -4,6 +4,7 @@
 **/config.yaml
 **/config.json
 **/.vscode
+output
 data/*
 datasets
 !data/projects.db

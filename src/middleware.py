@@ -2,6 +2,7 @@ import time, yaml, json, glob
 import src.schemas.nvd as nvd
 import src.schemas.cwe as cwe
 import src.utils.db as db
+from playhouse.shortcuts import model_to_dict
 from pprint import pprint
 from src.queriers.libraries import LibrariesQuerier
 from src.queriers.snyk import SnykQuerier
@@ -272,55 +273,56 @@ class Middleware:
                                      start_date: str,
                                      end_date: str = None,
                                      step: str = 'y',
-                                     versions_count: int = 3,
                                      platform: str="pypi") -> List[dict]:
         """
         Returns a list of vulnerabilities for a project in a specific time range.
         For each date, the most recent release is used to check for vulnerabilities.
 
-        TODO: Construct the timeline
-
         project_name: str
         start_date: str, format: YYYY[-MM]
         end_date: str, format: YYYY[-MM] or falsy value
         step: str, format: y(ear) / m(month), needs to match the format of the dates' lowest precision
-        versions_count: int, default: 3, counts the latest versions to check for vulnerabilities for each date
         platform: str, default: pypi
+
+        Returns:
+        [
+            {
+                'date': datetime.datetime,
+                'release': dict,
+                'cves': [dict, ...]
+            }
+        ]
         """
+        start_date = str(start_date)
+        if end_date:
+            end_date = str(end_date)
         step = step.strip().lower()
-        releases = self.get_releases(project_name, platform=platform)
-        vulns = self.get_vulnerabilities(project_name, platform=platform)
+        project = self.get_project(project_name, platform)
+        if project is None:
+            logger.error(f"Project {project_name} not found")
+            return None
         start_date: datetime.datetime = datetime.datetime.strptime(start_date, '%Y-%m' if '-' in start_date else '%Y')
         if end_date:
             end_date = datetime.datetime.strptime(end_date, '%Y-%m' if '-' in end_date else '%Y')
         else:
             end_date = datetime.datetime.now()
         # for each date in the range, get the most recent releases and check for vulnerabilities
-        results: Dict[str, Dict] = {}
+        def non_recursive_model_to_dict(model):
+            return model_to_dict(model, recurse=False)
+        results: list = []
         while start_date <= end_date:
-            logger.debug(f"Checking for vulnerabilities at {start_date.strftime('%Y-%m-%d')}")
-            date_str = start_date.strftime('%Y-%m') if step == 'm' else start_date.strftime('%Y')
-            results[date_str] = {}
-            relevant_releases = list(filter(lambda release: release.published_at <= start_date, releases))
-            if len(relevant_releases) == 0:
-                logger.debug(f"No releases found for {project_name} at {start_date.strftime('%Y-%m-%d')}")
+            rel_mr = project.releases.where(Release.published_at <= start_date).order_by(Release.published_at.desc()).first()
+            if rel_mr is None:
+                logger.warning(f"No release found for {project.name} at {start_date}")
                 start_date = datetime_increment(start_date, step)
                 continue
-            relevant_releases = sorted(relevant_releases, key=lambda release: release.published_at, reverse=True)
-            logger.debug(f"Found {len(relevant_releases)} releases for {project_name} at {start_date.strftime('%Y-%m-%d')}")
-            for release in relevant_releases[:versions_count]:
-                logger.debug(f"Checking for vulnerabilities in {release.version}")
-                release_vulns = self.get_vulnerabilities(project_name, release.version, platform)
-                for vuln in release_vulns:
-                    cve_id = vuln.cve_id
-                    if cve_id not in results[date_str]:
-                        results[date_str][cve_id] = {
-                            'cve': vuln,
-                            'releases': set()
-                        }
-                    results[date_str][cve_id]['releases'].add(release)
-            for key in results[date_str].keys():
-                results[date_str][key]['releases'] = list(results[date_str][key]['releases'])
+            logger.info(f"Got most recent release {rel_mr.version} for {project.name} at {start_date}")
+            vulns = self.get_vulnerabilities(project.name, rel_mr.version, platform)
+            results.append({
+                'date': start_date,
+                'release': non_recursive_model_to_dict(rel_mr),
+                'cves': [ non_recursive_model_to_dict(cve) for cve in vulns if cve is not None ]
+            })
             start_date = datetime_increment(start_date, step)
         return results
     
