@@ -68,4 +68,13 @@ def homepage_to_vendor(homepage: str) -> str:
     print(f"Parts: {parts}")
     if len(parts) < 2:
         return None
-    return parts[-2]
+    domain = parts[-2]
+    if domain == 'github':
+        result = parts[-1]
+        if result is not None:
+            result = result.split('/')[1]
+    elif domain == 'readthedocs':
+        return None
+    else:
+        result = parts[-2]
+    return result

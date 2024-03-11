@@ -268,6 +268,33 @@ class Middleware:
                 vulns.append(cve)
         return vulns
     
+    def get_dependency_vulnerabilities(self,
+                                       project_name: str,
+                                        version: str,
+                                        platform: str="pypi") -> List[dict]:
+        """
+        Gets the vulnerabilities of the dependencies of a project
+        """
+        # Force lowercase
+        project_name, version, platform = self.__format_strings(project_name, version, platform)
+        dependencies = self.get_dependencies(project_name, version, platform)
+        results = []
+        for dep in dependencies:
+            project_name = dep.project_name
+            reqs = dep.requirements
+            dep = self.get_project(dep.name, dep.platform)
+            name = dep.name
+            vulns = self.get_vulnerabilities(name, platform=platform)
+            results.append({
+                'name': name,
+                'homepage': dep.homepage,
+                'vendor': dep.vendor,
+                'platform': platform,
+                'requirements': reqs,
+                'vulnerabilities': vulns
+            })
+        return results
+    
     def get_vulnerabilities_timeline(self,
                                      project_name: str,
                                      start_date: str,
