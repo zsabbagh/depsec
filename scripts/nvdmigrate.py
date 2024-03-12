@@ -138,22 +138,41 @@ def create_cve(entry: dict) -> int | nvd.CVE:
     last_modified_at = timestamp_to_date(last_modified_at, lowest='min')
     # description of the CVE
     description = get_first_eng_value(cve, 'description', 'description_data')
-    base_metrics = impact.get('baseMetricV3', {})
+    base_metrics = impact.get('baseMetricV3', {}) if impact.get('baseMetricV3', {}) != {} else impact.get('baseMetricV2', {})
     cvss_expliotability_score = base_metrics.get('exploitabilityScore', None)
     cvss_impact_score = base_metrics.get('impactScore', None)
-    cvss = base_metrics.get('cvssV3', {})
+    # v2 and v3-3.1 share 'version', 'vectorString', 'confidentialityImpact', 'integrityImpact', 'availabilityImpact', 'baseScore'
+    cvss = base_metrics.get('cvssV3', {}) if base_metrics.get('cvssV3', {}) != {} else base_metrics.get('cvssV2', {})
     cvss_version = cvss.get('version', None)
-    cvss_vector_string = cvss.get('vectorString', None)
-    cvss_attack_vector = cvss.get('attackVector', None)
-    cvss_attack_complexity = cvss.get('attackComplexity', None)
-    cvss_privileges_required = cvss.get('privilegesRequired', None)
-    cvss_user_interaction = cvss.get('userInteraction', None)
-    cvss_scope = cvss.get('scope', None)
+    # init these to None
+    cvss_attack_complexity, cvss_vector_string = None, None
+    cvss_attack_vector, cvss_privileges_required, cvss_user_interaction, cvss_scope, cvss_base_severity = None, None, None, None, None
+    if cvss_version == '2.0':
+        # version 2 has different fields
+        # note 'access' takes the place of 'attack'
+        cvss_attack_vector = cvss.get('accessVector', None)
+        cvss_attack_complexity = cvss.get('accessComplexity', None)
+        cvss_privileges_required = cvss.get('authentication', None)
+        cvss_user_interaction = base_metrics.get('userInteractionRequired', None)
+        # asserts that scope changes if privileges are obtained
+        if impact.get('obtainAllPrivilege', None) is True or impact.get('obtainUserPrivilege', None) is True or impact.get('obtainOtherPrivilege', None) is True:
+            cvss_scope = 'CHANGED'
+        else:
+            cvss_scope = 'UNCHANGED'
+    else:
+        # version 3-3.1 has these fields
+        cvss_vector_string = cvss.get('vectorString', None)
+        cvss_attack_vector = cvss.get('attackVector', None)
+        cvss_attack_complexity = cvss.get('attackComplexity', None)
+        cvss_privileges_required = cvss.get('privilegesRequired', None)
+        cvss_user_interaction = cvss.get('userInteraction', None)
+        cvss_scope = cvss.get('scope', None)
+        cvss_base_severity = cvss.get('baseSeverity', None)
+
     cvss_confidentiality_impact = cvss.get('confidentialityImpact', None)
     cvss_integrity_impact = cvss.get('integrityImpact', None)
     cvss_availability_impact = cvss.get('availabilityImpact', None)
     cvss_base_score = cvss.get('baseScore', None)
-    cvss_base_severity = cvss.get('baseSeverity', None)
 
     logger.debug(f"NEW ENTRY: {cve_id} being added to the database")
 
