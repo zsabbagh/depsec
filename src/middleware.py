@@ -364,8 +364,8 @@ class Middleware:
             if not node.is_root:
                 logger.warning(f"Node {node.id} is not root, getting root")
             applicability = {
-                'version_start': cpe.version_start,
-                'version_end': cpe.version_end,
+                'version_start': cpe.version_start if bool(cpe.version_start) else None,
+                'version_end': cpe.version_end if bool(cpe.version_end) else None,
                 'start_date': start_date,
                 'end_date': end_date,
             }
@@ -427,10 +427,11 @@ class Middleware:
             return model_to_dict(model, recurse=False)
         results: list = {
             'cves': {},
-            'releases': {},
+            project.name: model_to_dict(project, recurse=False),
             'timeline': []
         }
-        cves, releases, timeline = results['cves'], results['releases'], results['timeline']
+        results[project.name]['releases'] = {}
+        cves, releases, timeline = results['cves'], results[project.name]['releases'], results['timeline']
         vulnerabilities = self.get_vulnerabilities(project.name, platform=platform)
         rels = [ rel for rel in project.releases.order_by(Release.version.desc()) ]
         while start_date <= end_date:
@@ -464,7 +465,7 @@ class Middleware:
                 cve_id = cve.get('cve_id')
                 if cve_id:
                     cves[cve_id] = cve
-            releases[rel_mr.version] = model_to_dict(rel_mr)
+            releases[rel_mr.version] = model_to_dict(rel_mr, recurse=False)
             start_date = datetime_increment(start_date, step)
         return results
     
