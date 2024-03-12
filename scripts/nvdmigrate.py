@@ -251,13 +251,14 @@ def create_nodes(node: dict, cve: nvd.CVE,
             child=node_db
         ).save()
     for cpe_match in node.get('cpe_match', []):
-        cpe = cpe_match.get('cpe23Uri', '')
+        cpe_uri = cpe_match.get('cpe23Uri', '')
         vulnerable = cpe_match.get('vulnerable', False)
         if not vulnerable:
             continue
-        cpe = parse_cpe(cpe)
+        cpe = parse_cpe(cpe_uri)
         nvd.CPE.create(
             node=node_db,
+            uri=cpe_uri,
             part=cpe.get('part'),
             vendor=cpe.get('vendor'),
             product=cpe.get('product'),

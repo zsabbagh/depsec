@@ -153,7 +153,7 @@ class CPE(Model):
     updated_at: The date the row in the database was updated
     """
     id = AutoField()
-
+    uri = CharField(null=False)
     node = ForeignKeyField(ConfigNode, backref='cpes')
     part = CharField(null=True)
     vendor = CharField(null=False)

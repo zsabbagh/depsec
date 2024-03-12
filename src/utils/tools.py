@@ -1,5 +1,6 @@
 import re, datetime
 from pathlib import Path
+from loguru import logger
 
 def datetime_increment(dt: datetime.datetime, step: str = 'm'):
     """
@@ -76,3 +77,22 @@ def homepage_to_vendor(homepage: str) -> str:
     else:
         result = parts[-2]
     return result
+
+def datetime_in_range(dt: datetime.datetime, start: datetime.datetime, end: datetime.datetime):
+    """
+    Check if a datetime is within a range.
+
+    dt: The datetime to check
+    start: The start of the range
+    end: The end of the range (exclusive)
+    """
+    if dt is None:
+        logger.warning(f"Unexpected 'None' datetime!")
+        return False
+    if start is None and end is None:
+        return True
+    elif end is None:
+        return dt >= start
+    elif start is None:
+        return dt < end
+    return start <= dt < end

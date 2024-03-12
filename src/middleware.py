@@ -369,27 +369,13 @@ class Middleware:
                 'start_date': start_date,
                 'end_date': end_date,
             }
-            if release_published_at is not None:
-                add = False
-                if start_date is not None and end_date is not None:
-                    if start_date <= release_published_at < end_date:
-                        logger.debug(f"Release {release.version} is in range {cpe.version_start} - {cpe.version_end}")
-                        add = True
-                elif start_date is not None and release_published_at >= start_date:
-                    logger.debug(f"Release {release.version} is in range {cpe.version_start} - {cpe.version_end}")
-                    add = True
-                elif end_date is not None and release_published_at < end_date:
-                    logger.debug(f"Release {release.version} is in range {cpe.version_start} - {cpe.version_end}")
-                    add = True
-            else:
-                add = True
+            add = datetime_in_range(release_published_at, start_date, end_date) if release_published_at is not None else True
             if add:
                 vulnset.add(cve.id)
                 if cve.cve_id not in results:
-                    results[cve.cve_id] = {
-                        'cve': model_to_dict(cve),
-                        'applicability': [applicability],
-                    }
+                    cve_data = model_to_dict(cve)
+                    cve_data['applicability'] = [applicability]
+                    results[cve.cve_id] = cve_data
                 else:
                     results[cve.cve_id]['applicability'].append(applicability)
         return results
@@ -444,26 +430,41 @@ class Middleware:
             'releases': {},
             'timeline': []
         }
-        cves = results.get('cves')
-        releases = results.get('releases')
-        timeline = results.get('timeline')
+        cves, releases, timeline = results['cves'], results['releases'], results['timeline']
         vulnerabilities = self.get_vulnerabilities(project.name, platform=platform)
+        rels = [ rel for rel in project.releases.order_by(Release.version.desc()) ]
         while start_date <= end_date:
-            rel_mr = project.releases.where(Release.published_at <= start_date).order_by(Release.published_at.desc()).first()
+            rel_mr = None
+            for rel in rels:
+                if rel.published_at is not None and re.match(r'^([0-9]\.?)+$', rel.version) and rel.published_at <= start_date:
+                    rel_mr = rel
+                    break
             if rel_mr is None:
                 logger.warning(f"No release found for {project.name} at {start_date}")
                 start_date = datetime_increment(start_date, step)
                 continue
             logger.info(f"Got most recent release {rel_mr.version} for {project.name} at {start_date}")
-            vulns = self.get_vulnerabilities(project.name, rel_mr.version, platform)
+            vulns = []
+            for vuln in vulnerabilities.values():
+                applicabilities = vuln.get('applicability', [])
+                is_applicable = False
+                for app in applicabilities:
+                    start, end = app.get('start_date'), app.get('end_date')
+                    if datetime_in_range(rel_mr.published_at, start, end):
+                        is_applicable = True
+                        break
+                if is_applicable:
+                    vulns.append(vuln)
             timeline.append({
                 'date': start_date,
                 'release': rel_mr.version,
-                'cves': [ cve.cve_id for cve in vulns if cve is not None ]
+                'cves': [ cve['cve_id'] for cve in vulns if cve is not None ]
             })
             for cve in vulns:
-                cves[cve.cve_id] = non_recursive_model_to_dict(cve)
-            releases[rel_mr.version] = non_recursive_model_to_dict(rel_mr)
+                cve_id = cve.get('cve_id')
+                if cve_id:
+                    cves[cve_id] = cve
+            releases[rel_mr.version] = model_to_dict(rel_mr)
             start_date = datetime_increment(start_date, step)
         return results
     
