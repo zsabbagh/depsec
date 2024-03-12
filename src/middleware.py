@@ -227,6 +227,14 @@ class Middleware:
                 }
         }
         """
+        def split_brace(name):
+            if '[' in name:
+                name = list(filter(bool, name.split('[')))
+                if len(name)< 1:
+                    logger.error(f"Unexpected name {name}")
+                    return None
+                name = name[0]
+            return name
         # Force lowercase
         logger.info(f"Getting dependency graph for {project_name} {platform}, max depth {max_depth}")
         project_name, platform = self.__format_strings(project_name, platform)
@@ -247,33 +255,35 @@ class Middleware:
                 continue
             logger.info(f"Currently processed {len(processed)} projects")
             r = graph
+            pname = split_brace(p.name)
             for i in range(len(ks)):
                 k = ks[i]
                 r = r.get(k, {})
-            if p.name in processed:
-                logger.warning(f"Project {p.name} already processed, skipping")
-                r[p.name] = processed[p.name]
+            if pname in processed:
+                logger.warning(f"Project {pname} already processed, skipping")
+                r[pname] = processed[pname]
                 continue
-            processed[p.name] = r
-            deps = self.get_dependencies(p.name, platform=p.platform)
+            processed[pname] = r
+            deps = self.get_dependencies(pname, platform=p.platform)
             for dep in deps:
                 count += 1
-                total.add(dep.project_name)
-                logger.info(f"Processing dependency {dep.name} {dep.platform}, nr {count}")
-                if dep.name.startswith('pytest') or '[' in dep.name:
-                    logger.warning(f"Skipping dependency {dep.name}")
+                depname = split_brace(dep.name)
+                total.add(depname)
+                logger.info(f"Processing dependency {depname} {dep.platform}, nr {count}")
+                if depname.startswith('pytest'):
+                    logger.warning(f"Skipping dependency {depname}")
                     continue
-                logger.debug(f"Getting project {dep.project_name} {dep.platform}")
-                dep_project = self.get_project(dep.project_name, dep.platform)
+                logger.debug(f"Getting project {depname} {dep.platform}")
+                dep_project = self.get_project(depname, dep.platform)
                 if dep_project is None:
-                    logger.error(f"Project {dep.project_name} not found")
+                    logger.error(f"Project {depname} not found")
                     continue
                 if dep_project.dependencies is None or dep_project.dependencies > 0:
-                    r[dep_project.name] = {}
-                    queue.append((dep_project, ks + [dep_project.name]))
+                    r[depname] = {}
+                    queue.append((dep_project, ks + [depname]))
                 else:
                     r[dep_project.name] = {}
-                    logger.warning(f"No dependencies found for {dep_project.name}: {dep_project.dependencies}")
+                    logger.warning(f"No dependencies found for {depname}: {dep_project.dependencies}")
         return { 'platform': platform, 'projects': sorted(list(total)), 'graph': graph }
     
     def get_releases(self,
