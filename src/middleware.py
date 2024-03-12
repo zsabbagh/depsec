@@ -335,16 +335,13 @@ class Middleware:
         cpes = nvd.CPE.select().where((nvd.CPE.vendor == project.vendor) & (nvd.CPE.product == product_name))
         logger.debug(f"Found {len(cpes)} CPEs for {project.vendor} {project.name}")
         # We need to find the CPEs that match the version
-        vulns = []
         vulnset = set()
         release_published_at = release.published_at if release else None
+        results = {}
         for cpe in cpes:
             logger.debug(f"Processing CPE {cpe.vendor} {cpe.product} {cpe.version_start} - {cpe.version_end}")
             # Get release of versions since some contain letters
             cve = cpe.node.cve
-            if cve.id in vulnset:
-                logger.debug(f"Vulnerability {cve.id} already in set")
-                continue
             logger.debug(f"Getting release for {cpe.vendor} {cpe.product} {cpe.version_start} - {cpe.version_end}")
             start_release = Release.get_or_none(
                 Release.project == project,
@@ -354,6 +351,10 @@ class Middleware:
                 Release.project == project,
                 Release.version == cpe.version_end
             )
+            vuln_cpe_id = f"{cve.cve_id}:{cpe.version_start}:{cpe.version_end}"
+            if vuln_cpe_id in vulnset:
+                logger.warning(f"Vulnerability {vuln_cpe_id} already in set")
+                continue
             start_date: datetime = start_release.published_at if start_release else None
             end_date: datetime = end_release.published_at if end_release else None
             logger.debug(f"Getting vulnerabilities for {cpe.vendor} {cpe.product} {cpe.version_start} ({start_date}) - {cpe.version_end}({end_date})")
@@ -362,28 +363,40 @@ class Middleware:
                 logger.warning(f"Operator '{node.operator}' is not OR")
             if not node.is_root:
                 logger.warning(f"Node {node.id} is not root, getting root")
+            applicability = {
+                'version_start': cpe.version_start,
+                'version_end': cpe.version_end,
+                'start_date': start_date,
+                'end_date': end_date,
+            }
             if release_published_at is not None:
+                add = False
                 if start_date is not None and end_date is not None:
                     if start_date <= release_published_at < end_date:
                         logger.debug(f"Release {release.version} is in range {cpe.version_start} - {cpe.version_end}")
-                        vulnset.add(cve.id)
-                        vulns.append(cve)
+                        add = True
                 elif start_date is not None and release_published_at >= start_date:
                     logger.debug(f"Release {release.version} is in range {cpe.version_start} - {cpe.version_end}")
-                    vulnset.add(cve.id)
-                    vulns.append(cve)
+                    add = True
                 elif end_date is not None and release_published_at < end_date:
                     logger.debug(f"Release {release.version} is in range {cpe.version_start} - {cpe.version_end}")
-                    vulnset.add(cve.id)
-                    vulns.append(cve)
+                    add = True
             else:
+                add = True
+            if add:
                 vulnset.add(cve.id)
-                vulns.append(cve)
-        return vulns
+                if cve.cve_id not in results:
+                    results[cve.cve_id] = {
+                        'cve': model_to_dict(cve),
+                        'applicability': [applicability],
+                    }
+                else:
+                    results[cve.cve_id]['applicability'].append(applicability)
+        return results
     
     def get_vulnerabilities_timeline(self,
-                                     project_name: str,
-                                     start_date: str,
+                                     project_name: str | list,
+                                     start_date: str = 2019,
                                      end_date: str = None,
                                      step: str = 'y',
                                      platform: str="pypi") -> List[dict]:
@@ -391,7 +404,7 @@ class Middleware:
         Returns a list of vulnerabilities for a project in a specific time range.
         For each date, the most recent release is used to check for vulnerabilities.
 
-        project_name: str
+        project_name: str, or list of str
         start_date: str, format: YYYY[-MM]
         end_date: str, format: YYYY[-MM] or falsy value
         step: str, format: y(ear) / m(month), needs to match the format of the dates' lowest precision
@@ -434,6 +447,7 @@ class Middleware:
         cves = results.get('cves')
         releases = results.get('releases')
         timeline = results.get('timeline')
+        vulnerabilities = self.get_vulnerabilities(project.name, platform=platform)
         while start_date <= end_date:
             rel_mr = project.releases.where(Release.published_at <= start_date).order_by(Release.published_at.desc()).first()
             if rel_mr is None:
@@ -452,6 +466,19 @@ class Middleware:
             releases[rel_mr.version] = non_recursive_model_to_dict(rel_mr)
             start_date = datetime_increment(start_date, step)
         return results
+    
+    def get_vulnerabilities_timelines(self,
+                                      project_names: list,
+                                      start_date: str = 2019,
+                                      end_date: str = None,
+                                      step: str = 'y',
+                                      platform: str="pypi") -> List[dict]:
+        """
+        Similar to get_vulnerabilities_timeline, but for multiple projects
+        """
+        results = {
+            'projects': {}
+        }
     
     def get_dependencies(self,
                          project_name: str,
