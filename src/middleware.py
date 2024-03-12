@@ -109,7 +109,9 @@ class Middleware:
                     project_name: str,
                     platform: str="pypi") -> Project:
         """
-        Get project, returns (Project, Releases)
+        When you get a project, it does the following:
+
+        1) If the project is in the database, it returns it
         """
         # Force lowercase
         project_name = project_name.strip().lower()
@@ -120,14 +122,22 @@ class Middleware:
             (Project.name == project_name) & 
             (Project.platform == platform)
         ))
-        if project is not None:
+        if project is not None and project.releases.count() > 0:
             # If the package is in the database, return it
             logger.debug(f"Found {project_name} in database")
             return project
+        elif project is not None:
+            logger.debug(f"Project {project_name} in database but no releases found")
+            project.delete_instance()
         logger.debug(f"Querying libraries.io for {project_name}")
 
         # Query libraries.io if the package is not in the database
+        logger.debug(f"Querying libraries.io for {project_name}")
+        time.sleep(1)
         result: dict = self.libraries.query_package(project_name)
+        if result is None:
+            logger.error(f"Project {project_name} not found in libraries.io")
+            return None
 
         name = result.get('name', '')
         platform = result.get('platform', '')
@@ -167,7 +177,6 @@ class Middleware:
                 try:
                     # transform the date to a datetime object
                     published_at = datetime.datetime.strptime(published_at, '%Y-%m-%dT%H:%M:%S.%fZ')
-                    # print the date in integer value
                 except:
                     published_at = None
                 release = Release.create(
@@ -176,8 +185,71 @@ class Middleware:
                     published_at=published_at,
                 )
                 release.save()
-
+            # get the latest release
+            latest_release = Release.select().where(Release.project == project).order_by(Release.published_at.desc()).first()
+            project.latest_release = latest_release.version
+            project.save()
         return project
+
+    def get_dependency_graph(self,
+                                project_name: str,
+                                platform: str="pypi",
+                                max_depth: int = 2) -> List[Project]:
+        """
+        Get all dependencies of a project
+
+        project_name: str
+        platform: str, default: pypi
+        max_depth: int, default: 2 (max depth of the dependency graph)
+        """
+        # Force lowercase
+        logger.info(f"Getting dependency graph for {project_name} {platform}, max depth {max_depth}")
+        project_name, platform = self.__format_strings(project_name, platform)
+        project = self.get_project(project_name, platform)
+        processed = {}
+        # results per platform
+        result = {
+            project.platform: {
+                project.name: {}
+            }
+        }
+        queue = [(project, [project.name])]
+        count = 0
+        while len(queue) > 0:
+            p, ks = queue.pop(0)
+            logger.info(f"Getting dependencies for {p.name} {p.platform}, depth {len(ks)}")
+            if max_depth > 0 and len(ks) > max_depth:
+                logger.warning(f"Max depth reached, skipping {p.name}")
+                continue
+            logger.info(f"Currently processed {len(processed)} projects")
+            r = result.get(project.platform, {})
+            for i in range(len(ks)):
+                k = ks[i]
+                r = r.get(k, {})
+            if p.name in processed:
+                logger.warning(f"Project {p.name} already processed, skipping")
+                r[p.name] = processed[p.name]
+                continue
+            processed[p.name] = r
+            deps = self.get_dependencies(p.name, platform=p.platform)
+            for dep in deps:
+                count += 1
+                logger.info(f"Processing dependency {dep.name} {dep.platform}, nr {count}")
+                if dep.name.startswith('pytest') or '[' in dep.name:
+                    logger.warning(f"Skipping dependency {dep.name}")
+                    continue
+                logger.debug(f"Getting project {dep.project_name} {dep.platform}")
+                dep_project = self.get_project(dep.project_name, dep.platform)
+                if dep_project is None:
+                    logger.error(f"Project {dep.project_name} not found")
+                    continue
+                if dep_project.dependencies is None or dep_project.dependencies > 0:
+                    r[dep_project.name] = {}
+                    queue.append((dep_project, ks + [dep_project.name]))
+                else:
+                    r[dep_project.name] = {}
+                    logger.warning(f"No dependencies found for {dep_project.name}: {dep_project.dependencies}")
+        return result
     
     def get_releases(self,
                      project_name: str,
@@ -268,33 +340,6 @@ class Middleware:
                 vulns.append(cve)
         return vulns
     
-    def get_dependency_vulnerabilities(self,
-                                       project_name: str,
-                                        version: str,
-                                        platform: str="pypi") -> List[dict]:
-        """
-        Gets the vulnerabilities of the dependencies of a project
-        """
-        # Force lowercase
-        project_name, version, platform = self.__format_strings(project_name, version, platform)
-        dependencies = self.get_dependencies(project_name, version, platform)
-        results = []
-        for dep in dependencies:
-            project_name = dep.project_name
-            reqs = dep.requirements
-            dep = self.get_project(dep.name, dep.platform)
-            name = dep.name
-            vulns = self.get_vulnerabilities(name, platform=platform)
-            results.append({
-                'name': name,
-                'homepage': dep.homepage,
-                'vendor': dep.vendor,
-                'platform': platform,
-                'requirements': reqs,
-                'vulnerabilities': vulns
-            })
-        return results
-    
     def get_vulnerabilities_timeline(self,
                                      project_name: str,
                                      start_date: str,
@@ -312,13 +357,17 @@ class Middleware:
         platform: str, default: pypi
 
         Returns:
-        [
-            {
-                'date': datetime.datetime,
-                'release': dict,
-                'cves': [dict, ...]
-            }
-        ]
+        {
+            'cves': { <cve_id>: <cve> },
+            'releases': { <version>: <release> },
+            'timeline': [
+                {
+                    'date': <date>,
+                    'release': <version>,
+                    'cves': [ <cve_id> ]
+                }
+            ]
+        }
         """
         start_date = str(start_date)
         if end_date:
@@ -336,7 +385,14 @@ class Middleware:
         # for each date in the range, get the most recent releases and check for vulnerabilities
         def non_recursive_model_to_dict(model):
             return model_to_dict(model, recurse=False)
-        results: list = []
+        results: list = {
+            'cves': {},
+            'releases': {},
+            'timeline': []
+        }
+        cves = results.get('cves')
+        releases = results.get('releases')
+        timeline = results.get('timeline')
         while start_date <= end_date:
             rel_mr = project.releases.where(Release.published_at <= start_date).order_by(Release.published_at.desc()).first()
             if rel_mr is None:
@@ -345,29 +401,40 @@ class Middleware:
                 continue
             logger.info(f"Got most recent release {rel_mr.version} for {project.name} at {start_date}")
             vulns = self.get_vulnerabilities(project.name, rel_mr.version, platform)
-            results.append({
+            timeline.append({
                 'date': start_date,
-                'release': non_recursive_model_to_dict(rel_mr),
-                'cves': [ non_recursive_model_to_dict(cve) for cve in vulns if cve is not None ]
+                'release': rel_mr.version,
+                'cves': [ cve.cve_id for cve in vulns if cve is not None ]
             })
+            for cve in vulns:
+                cves[cve.cve_id] = non_recursive_model_to_dict(cve)
+            releases[rel_mr.version] = non_recursive_model_to_dict(rel_mr)
             start_date = datetime_increment(start_date, step)
         return results
     
     def get_dependencies(self,
                          project_name: str,
-                         version: str,
+                         version: str = None,
                          platform: str="pypi") -> List[ReleaseDependency]:
         """
         Get dependencies of a project and a specific version number (release)
+
+        project_name: str
+        version: str, if None, the latest release is used
+        platform: str, default: pypi
         """
         # Force lowercase
-        project_name, version = self.__format_strings(project_name, version)
-
+        project_name = self.__format_strings(project_name)[0]
         # Get the project
         project = self.get_project(project_name)
         if project is None:
             logger.error(f"Project {project_name} not found")
             return None
+        elif project.dependencies == 0:
+            logger.error(f"No dependencies found for {project_name}")
+            return None
+        # Get the release
+        version = version if version else project.latest_release
         # Get the release
         release = Release.get_or_none((
             (Release.project == project) &
@@ -389,6 +456,9 @@ class Middleware:
             return None
         dependencies = result['dependencies']
         deps = []
+        # Save the dependencies
+        project.dependencies = len(dependencies)
+        project.save()
         for dependency in dependencies:
             name = dependency.get('name', '')
             project_name = dependency.get('project_name', '')

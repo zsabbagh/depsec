@@ -61,18 +61,16 @@ def homepage_to_vendor(homepage: str) -> str:
     """
     if not homepage:
         return None
-    print(f"Homepage: {homepage}")
     homepage = re.sub(r'^https?://', '', homepage)
-    print(f"Homepage: {homepage}")
     parts = homepage.split('.')
-    print(f"Parts: {parts}")
     if len(parts) < 2:
         return None
     domain = parts[-2]
     if domain == 'github':
         result = parts[-1]
         if result is not None:
-            result = result.split('/')[1]
+            result = result.split('/')
+            result = result[1] if len(result) > 1 else None
     elif domain == 'readthedocs':
         return None
     else:
