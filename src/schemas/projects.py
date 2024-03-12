@@ -31,6 +31,7 @@ class Project(Model):
     contributions = IntegerField(null=True)
     homepage = CharField(null=True)
     vendor = CharField(null=True)
+    product = CharField(null=True)
     stars = IntegerField(null=True)
     forks = IntegerField(null=True)
     latest_release = CharField(null=True)
@@ -44,24 +45,6 @@ class Project(Model):
     class Meta:
         database = DB_PROJECTS.get()
         table_name = 'projects'
-
-
-class Product(Model):
-    """
-    Model for products
-
-    Meant to connect with CPEs
-    """
-    platform = CharField(null=False)
-    name = CharField(null=False)
-    vendor = CharField(null=False)
-    product = CharField(null=False)
-    created_at = DateTimeField(default=datetime.datetime.now)
-    updated_at = DateTimeField(default=datetime.datetime.now)
-
-    class Meta:
-        database = DB_PROJECTS.get()
-        table_name = 'products'
 
 class Release(Model):
     """
@@ -126,7 +109,6 @@ class ReleaseRepo(Model):
 # Add the tables to the database
 DB_PROJECTS.add_tables(
     Project,
-    Product,
     Release,
     ReleaseDependency,
     ReleaseRepo

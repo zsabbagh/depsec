@@ -89,21 +89,34 @@ class Middleware:
         logger.debug(f"Initalising middleware with config file {config_path}")
         self.config(config_path)
     
-    def set_project_vendor(self,
-                           project_name: str,
-                           vendor: str,
-                           platform: str="pypi") -> Project:
+    def load_projects(self, file: str = 'projects.json') -> Project:
         """
-        Set the vendor of a project
+        Update the projects
         """
-        project_name, platform = self.__format_strings(project_name, platform)
-        project = self.get_project(project_name, platform)
-        if project is None:
-            logger.error(f"Project {project_name} not found")
-            return None
-        project.vendor = vendor
-        project.save()
-        return project
+        if not file.endswith('.json'):
+            file = f"{file}.json"
+        logger.info(f"Loading projects from '{file}'")
+        path = Path(file)
+        result = []
+        with open(path) as f:
+            data = json.load(f)
+            for platform in data:
+                logger.debug(f"Loading platform {platform}")
+                projects = data[platform]
+                for proj in projects:
+                    logger.debug("Loading project {proj}")
+                    info = projects[proj]
+                    project = self.get_project(proj, platform)
+                    vendor = info.get('vendor')
+                    product = info.get('product')
+                    if vendor is not None:
+                        project.vendor = vendor
+                    if product is not None:
+                        project.product = product
+                    project.save()
+                    result.append(project)
+        logger.info(f"Loaded {len(result)} projects")
+        return result
     
     def get_project(self,
                     project_name: str,
@@ -304,27 +317,30 @@ class Middleware:
                 logger.error(f"Release '{version}' not found for {project_name}")
                 return None
         logger.debug(f"Querying databases for vulnerabilities of {project_name} {version}")
-        cpes = nvd.CPE.select().where((nvd.CPE.vendor == project.vendor) & (nvd.CPE.product == project.name))
+        product_name = project.name if project.product is None else project.product
+        logger.debug(f"Getting CPEs for {project.vendor} {product_name}")
+        cpes = nvd.CPE.select().where((nvd.CPE.vendor == project.vendor) & (nvd.CPE.product == product_name))
         logger.debug(f"Found {len(cpes)} CPEs for {project.vendor} {project.name}")
         # We need to find the CPEs that match the version
         vulns = []
         vulnset = set()
         release_published_at = release.published_at if release else None
         for cpe in cpes:
+            logger.debug(f"Processing CPE {cpe.vendor} {cpe.product} {cpe.version_start} - {cpe.version_end}")
             # Get release of versions since some contain letters
             cve = cpe.node.cve
             if cve.id in vulnset:
                 logger.debug(f"Vulnerability {cve.id} already in set")
                 continue
             logger.debug(f"Getting release for {cpe.vendor} {cpe.product} {cpe.version_start} - {cpe.version_end}")
-            start_release = Release.get_or_none((
-                (Release.project == project) &
-                (Release.version == cpe.version_start)
-            ))
-            end_release = Release.get_or_none((
-                (Release.project == project) &
-                (Release.version == cpe.version_end)
-            ))
+            start_release = Release.get_or_none(
+                Release.project == project,
+                Release.version == cpe.version_start
+            )
+            end_release = Release.get_or_none(
+                Release.project == project,
+                Release.version == cpe.version_end
+            )
             start_date: datetime = start_release.published_at if start_release else None
             end_date: datetime = end_release.published_at if end_release else None
             logger.debug(f"Getting vulnerabilities for {cpe.vendor} {cpe.product} {cpe.version_start} ({start_date}) - {cpe.version_end}({end_date})")
@@ -332,7 +348,7 @@ class Middleware:
             if node.operator != 'OR':
                 logger.warning(f"Operator '{node.operator}' is not OR")
             if not node.is_root:
-                logger.warning(f"Node {node.id} is not root")
+                logger.warning(f"Node {node.id} is not root, getting root")
             if release_published_at is not None:
                 if start_date is not None and end_date is not None:
                     if start_date <= release_published_at < end_date:

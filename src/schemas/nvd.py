@@ -123,6 +123,7 @@ class ConfigEdge(Model):
     ConfigGraph models a configuration graph,
 
     id: The configuration children id
+    root: The root id
     parent The parent id
     cpe: The Common Platform Enumeration
     """

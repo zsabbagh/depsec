@@ -1,0 +1,9 @@
+{
+    "pypi": {
+        "jinja2": {
+            "product": "jinja"
+        },
+        "flask": {},
+        "django": {}
+    }
+}
