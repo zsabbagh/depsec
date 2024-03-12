@@ -265,6 +265,9 @@ class Middleware:
                 continue
             processed[pname] = r
             deps = self.get_dependencies(pname, platform=p.platform)
+            if not deps:
+                logger.debug(f"No dependencies for '{pname}', returned {len(deps) if deps is not None else None}")
+                continue
             for dep in deps:
                 count += 1
                 depname = split_brace(dep.name)
