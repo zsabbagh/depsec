@@ -201,6 +201,18 @@ class Middleware:
         project_name: str
         platform: str, default: pypi
         max_depth: int, default: 2 (max depth of the dependency graph)
+
+        Results:
+        {
+            'platform': str,
+            'projects': [ <project_name> ],
+            'graph': {
+                <project_name>: {
+                    <project_name>: {
+                        ...
+                    }
+                }
+        }
         """
         # Force lowercase
         logger.info(f"Getting dependency graph for {project_name} {platform}, max depth {max_depth}")
@@ -208,10 +220,9 @@ class Middleware:
         project = self.get_project(project_name, platform)
         processed = {}
         # results per platform
-        result = {
-            project.platform: {
-                project.name: {}
-            }
+        total = set()
+        graph = {
+            project.name: {}
         }
         queue = [(project, [project.name])]
         count = 0
@@ -222,7 +233,7 @@ class Middleware:
                 logger.warning(f"Max depth reached, skipping {p.name}")
                 continue
             logger.info(f"Currently processed {len(processed)} projects")
-            r = result.get(project.platform, {})
+            r = graph
             for i in range(len(ks)):
                 k = ks[i]
                 r = r.get(k, {})
@@ -234,6 +245,7 @@ class Middleware:
             deps = self.get_dependencies(p.name, platform=p.platform)
             for dep in deps:
                 count += 1
+                total.add(dep.project_name)
                 logger.info(f"Processing dependency {dep.name} {dep.platform}, nr {count}")
                 if dep.name.startswith('pytest') or '[' in dep.name:
                     logger.warning(f"Skipping dependency {dep.name}")
@@ -249,7 +261,7 @@ class Middleware:
                 else:
                     r[dep_project.name] = {}
                     logger.warning(f"No dependencies found for {dep_project.name}: {dep_project.dependencies}")
-        return result
+        return { 'platform': platform, 'projects': sorted(list(total)), 'graph': graph }
     
     def get_releases(self,
                      project_name: str,
