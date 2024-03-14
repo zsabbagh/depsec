@@ -6,6 +6,7 @@ from playhouse.shortcuts import model_to_dict
 from pprint import pprint
 from src.queriers.libraries import LibrariesQuerier
 from src.queriers.snyk import SnykQuerier
+from src.queriers.osi import OSIQuerier
 from src.schemas.projects import *
 from src.utils.tools import *
 from loguru import logger
@@ -57,6 +58,7 @@ class Middleware:
         apis = self.__config.get('apis', {})
         self.libraries = LibrariesQuerier(apis)
         self.snyk = SnykQuerier(apis)
+        self.osi = OSIQuerier(apis)
 
         databases = self.__config.get('databases', {})
         if not databases:
