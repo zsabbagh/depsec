@@ -6,6 +6,21 @@ from pprint import pprint
 
 # Script for migrating data from NVD JSON files to a database
 # They can be downloaded from https://nvd.nist.gov/vuln/data-feeds
+parser = argparse.ArgumentParser(description='Migrate NVD data to a database')
+parser.add_argument('config', metavar='CONFIG', type=str,
+                    help='The configuration file to use')
+parser.add_argument('--debug', action='store_true',
+                    help='Enable debug mode (delays)',
+                    default=False)
+parser.add_argument('xml_files', metavar='XML_FILES', type=str, nargs='+',
+                    help='The XML files to migrate')
+parser.add_argument('-l', '--level',
+                    help='Set the logging level', nargs='+',
+                    default=['INFO'])
+parser.add_argument('-s', '--skip-processed-files', action='store_true',
+                    help='Skip processed files',
+                    default=True)
+args = parser.parse_args()
 
 START_TIME = time.time()
 
@@ -254,21 +269,6 @@ def migrate_data(data: dict, debug: bool = False, filename: str = '', skip_proce
 
 
 if __name__ == '__main__':
-    parser = argparse.ArgumentParser(description='Migrate NVD data to a database')
-    parser.add_argument('config', metavar='CONFIG', type=str,
-                        help='The configuration file to use')
-    parser.add_argument('--debug', action='store_true',
-                        help='Enable debug mode (delays)',
-                        default=False)
-    parser.add_argument('xml_files', metavar='XML_FILES', type=str, nargs='+',
-                        help='The XML files to migrate')
-    parser.add_argument('-l', '--level',
-                        help='Set the logging level', nargs='+',
-                        default=['INFO'])
-    parser.add_argument('-s', '--skip-processed-files', action='store_true',
-                        help='Skip processed files',
-                        default=True)
-    args = parser.parse_args()
 
     logger.remove()
     for level in args.level:
