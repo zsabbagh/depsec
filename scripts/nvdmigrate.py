@@ -20,7 +20,7 @@ parser.add_argument('-s', '--skip-processed-files', action='store_true',
 parser.add_argument('-f', '--force', action='store_true',
                     help='Force',
                     default=False)
-parser.add_argument('-c', '--count', default=100, help='Number of CVEs to process before reporting progress')
+parser.add_argument('-c', '--count', default=100, help='Number of CVEs to process before reporting progress', type=int)
 args = parser.parse_args()
 
 if args.count < 1:
