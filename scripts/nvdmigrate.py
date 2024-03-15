@@ -20,12 +20,24 @@ parser.add_argument('-s', '--skip-processed-files', action='store_true',
 parser.add_argument('-f', '--force', action='store_true',
                     help='Force',
                     default=False)
+parser.add_argument('-c', '--count', default=100, help='Number of CVEs to process before reporting progress')
 args = parser.parse_args()
+
+if args.count < 1:
+    logger.warning("Count must be greater than 0, setting to 100")
+    args.count = 100
 
 # Script for migrating data from NVD JSON files to a database
 # They can be downloaded from https://nvd.nist.gov/vuln/data-feeds
 
-START_TIME = time.time()
+class Global:
+
+    START_TIME = time.time()
+    TOTAL_CVES = 0
+    PROCESSED_CVES = 0
+    CHECKPOINT = 0
+    PROCESSED_SINCE_CHECKPOINT = 0
+    CHECKPOINT_TIME = None
 
 def wrap_in_list(obj):
     """
@@ -296,6 +308,7 @@ def migrate_data(data: dict, debug: bool = False, filename: str = '', skip_proce
         if nvd_file is not None and skip_processed_files:
             if nvd_file.cves_processed == number_of_cves:
                 logger.info(f"File {filename} already processed with {number_of_cves}/{number_of_cves} CVEs, skipping")
+                Global.PROCESSED_CVES += number_of_cves
                 return
             else:
                 logger.info(f"File {filename} already processed, but not all CVEs processed")
@@ -308,12 +321,26 @@ def migrate_data(data: dict, debug: bool = False, filename: str = '', skip_proce
         
     count_processed = 0
     count_skipped = 0
+    if Global.CHECKPOINT_TIME is None:
+        Global.CHECKPOINT_TIME = time.time()
     for entry in data['CVE_Items']:
         count_processed += 1
-        time_since_start = time.time() - START_TIME
+        Global.PROCESSED_CVES += 1
+        time_since_start = time.time() - Global.START_TIME
         # round to 2 decimal places
         cve_id = entry.get('cve', {}).get('CVE_data_meta', {}).get('ID', '')
-        logger.info(f"{cve_id} {time_since_start:.1f}s ({count_processed}/{len(data['CVE_Items'])}) {' in ' + filename if filename != '' else ''}")
+        if Global.PROCESSED_CVES // args.count != Global.CHECKPOINT:
+            Global.CHECKPOINT = Global.PROCESSED_CVES // args.count
+            speed = Global.PROCESSED_SINCE_CHECKPOINT / (time.time() - Global.CHECKPOINT_TIME)
+            time_left = (Global.TOTAL_CVES - Global.PROCESSED_CVES) / speed
+            # format to minutes
+            seconds_left = time_left % 60
+            minutes_left = time_left // 60
+            logger.info(f"{cve_id} {time_since_start:.1f}s {count_processed}/{len(data['CVE_Items'])} {' in ' + filename if filename != '' else ''}, total progress: {Global.PROCESSED_CVES}/{Global.TOTAL_CVES} (speed: {speed:.2f} CVEs/s, time left: {minutes_left:.0f}:{seconds_left:.2f})")
+            Global.CHECKPOINT_TIME = time.time()
+            Global.PROCESSED_SINCE_CHECKPOINT = 0
+        else:
+            Global.PROCESSED_SINCE_CHECKPOINT += 1
         time.sleep(0.01)
         configurations = entry.get('configurations', {})
         if configurations == {}:
@@ -363,6 +390,20 @@ if __name__ == '__main__':
 
     print(f"Using database at {path}/{name}")
     nvd.CONFIG.set(path, name)
+
+    for f in args.json_files:
+        try:
+            with open(f, 'r') as file:
+                data = json.load(file)
+                cves = len(data['CVE_Items'])
+                logger.info(f"File '{f}' has {cves} CVEs")
+                Global.TOTAL_CVES += cves
+        except Exception as e:
+            print(f"Error counting amount {f}: {e}")
+            continue
+    
+    logger.info(f"Total CVEs: {Global.TOTAL_CVES}")
+    time.sleep(1)
 
     for f in args.json_files:
         try:
