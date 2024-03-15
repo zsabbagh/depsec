@@ -78,21 +78,32 @@ def homepage_to_vendor(homepage: str) -> str:
         result = parts[-2]
     return result
 
-def datetime_in_range(dt: datetime.datetime, start: datetime.datetime, end: datetime.datetime):
+def datetime_in_range(dt: datetime.datetime,
+                      start: datetime.datetime,
+                      end: datetime.datetime,
+                      exclude_start: bool = False,
+                      exclude_end: bool = True):
     """
     Check if a datetime is within a range.
 
     dt: The datetime to check
     start: The start of the range
     end: The end of the range (exclusive)
+    exclude_start: Whether to exclude the start of the range (default: False, inclusive)
+    exclude_end: Whether to exclude the end of the range (default: True, exclusive)
     """
+    exclude_start, exclude_end = bool(exclude_start), bool(exclude_end)
+    def comp_start(dt, start):
+        return dt > start if exclude_start else dt >= start
+    def comp_end(dt, end):
+        return dt < end if exclude_end else dt <= end
     if dt is None:
         logger.warning(f"Unexpected 'None' datetime!")
         return False
     if start is None and end is None:
         return True
     elif end is None:
-        return dt >= start
+        return comp_start(dt, start)
     elif start is None:
-        return dt < end
-    return start <= dt < end
+        return comp_end(dt, end)
+    return comp_start(dt, start) and comp_end(dt, end)

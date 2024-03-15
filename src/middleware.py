@@ -13,12 +13,14 @@ from loguru import logger
 from pathlib import Path
 from typing import List, Dict
 
-def printmodel(model: List[Model] | Model, recurse=False):
+def pprintm(model: List[Model] | Model, recurse=False):
     """
     Print a model
     """
-    def fn(model):
-        return model_to_dict(model, recurse=recurse)
+    def fn(m):
+        if isinstance(m, Model):
+            return model_to_dict(m, recurse=recurse)
+        return m
     if isinstance(model, list):
         model = list(map(fn, model))
     else:
@@ -352,10 +354,14 @@ class Middleware:
         vulnset = set()
         release_published_at = release.published_at if release else None
         results = {}
+        processed_versions = {}
+        logger.debug(f"Got {len(cpes)} CPEs for {project.vendor} {project.name} {version}")
         for cpe in cpes:
             logger.debug(f"Processing CPE {cpe.vendor} {cpe.product} {cpe.version_start} - {cpe.version_end}")
             # Get release of versions since some contain letters
-            cve = cpe.node.cve
+            node = cpe.node
+            # extract cve from node
+            cve = node.cve if node else None
             logger.debug(f"Getting release for {cpe.vendor} {cpe.product} {cpe.version_start} - {cpe.version_end}")
             start_release = Release.get_or_none(
                 Release.project == project,
@@ -365,25 +371,39 @@ class Middleware:
                 Release.project == project,
                 Release.version == cpe.version_end
             )
+            exclude_end = cpe.exclude_end_version
+            exclude_start = cpe.exclude_start_version
             vuln_cpe_id = f"{cve.cve_id}:{cpe.version_start}:{cpe.version_end}"
-            if vuln_cpe_id in vulnset:
+            has_exact_version = cpe.version is not None and cpe.version not in ['', '*']
+            if has_exact_version:
+                if cve.cve_id not in processed_versions:
+                    processed_versions[cve.cve_id] = set()
+                elif cpe.version in processed_versions[cve.cve_id]:
+                    logger.warning(f"Vulnerability {vuln_cpe_id} already in set")
+                    continue
+                processed_versions[cve.cve_id].add(cpe.version)
+            if vuln_cpe_id in vulnset and not has_exact_version:
                 logger.warning(f"Vulnerability {vuln_cpe_id} already in set")
                 continue
             start_date: datetime = start_release.published_at if start_release else None
             end_date: datetime = end_release.published_at if end_release else None
-            logger.debug(f"Getting vulnerabilities for {cpe.vendor} {cpe.product} {cpe.version_start} ({start_date}) - {cpe.version_end}({end_date})")
-            node = cpe.node
-            if node.operator != 'OR':
-                logger.warning(f"Operator '{node.operator}' is not OR")
-            if not node.is_root:
-                logger.warning(f"Node {node.id} is not root, getting root")
-            applicability = {
-                'version_start': cpe.version_start if bool(cpe.version_start) else None,
-                'version_end': cpe.version_end if bool(cpe.version_end) else None,
-                'start_date': start_date,
-                'end_date': end_date,
-            }
-            add = datetime_in_range(release_published_at, start_date, end_date) if release_published_at is not None else True
+            logger.debug(f"Getting vulnerabilities for {cpe.vendor}:{cpe.product}:{cpe.version} {cpe.version_start} ({start_date}) - {cpe.version_end}({end_date})")
+            add = False
+            if has_exact_version:
+                applicability = {
+                    'version': cpe.version,
+                }
+                add = cpe.version == release.version if release is not None else True
+            else:
+                applicability = {
+                    'version_start': cpe.version_start if bool(cpe.version_start) else None,
+                    'exclude_start': exclude_start,
+                    'version_end': cpe.version_end if bool(cpe.version_end) else None,
+                    'exclude_end': exclude_end,
+                    'start_date': start_date,
+                    'end_date': end_date,
+                }
+                add = datetime_in_range(release_published_at, start_date, end_date, exclude_start, exclude_end) if release_published_at is not None else True
             if add:
                 vulnset.add(cve.id)
                 if cve.cve_id not in results:
@@ -465,7 +485,16 @@ class Middleware:
                 is_applicable = False
                 for app in applicabilities:
                     start, end = app.get('start_date'), app.get('end_date')
-                    if datetime_in_range(rel_mr.published_at, start, end):
+                    logger.debug(f"Checking applicability for {vuln['cve_id']}, got version {app.get('version')}, {rel_mr.version} {start} - {end}")
+                    if app.get('version') is not None and app.get('version') not in ['', '*']:
+                        # a version is provided, then we directly check if it's applicable
+                        is_applicable = app.get('version') == rel_mr.version
+                        break
+                    exclude_end = app.get('exclude_end')
+                    exclude_start = app.get('exclude_start')
+                    # start and end could be inclusive and exclusive, so we need to check all possibilities
+                    if datetime_in_range(rel_mr.published_at, start, end, exclude_start, exclude_end):
+                        logger.debug(f"Applicable because {rel_mr.published_at} is in range {start} - {end}")
                         is_applicable = True
                         break
                 if is_applicable:

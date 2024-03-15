@@ -256,6 +256,8 @@ def create_nodes(node: dict, cve: nvd.CVE,
         if not vulnerable:
             continue
         cpe = parse_cpe(cpe_uri)
+        end_exclude = cpe_match.get('versionEndExcluding', False)
+        start_exclude = cpe_match.get('versionStartExcluding', False)
         nvd.CPE.create(
             node=node_db,
             uri=cpe_uri,
@@ -268,8 +270,10 @@ def create_nodes(node: dict, cve: nvd.CVE,
             target_sw=cpe.get('target_sw'),
             target_hw=cpe.get('target_hw'),
             other=cpe.get('other'),
-            version_start=cpe_match.get('versionStartIncluding', ''),
-            version_end=cpe_match.get('versionEndExcluding', ''),
+            version_start=cpe_match.get('versionStartIncluding', None) or cpe_match.get('versionStartExcluding', None),
+            version_end=cpe_match.get('versionEndExcluding', None) or cpe_match.get('versionEndIncluding', None),
+            exclude_start_version=bool(start_exclude),
+            exclude_end_version=bool(end_exclude),
         ).save()
         logger.debug(f"Created CPE for {node_db.id}: {cpe['vendor']}:{cpe['product']}:{cpe['version']}")
     logger.debug(f"Trying to create children for {node_db.id}")

@@ -148,7 +148,9 @@ class CPE(Model):
     product: The product of the CPE
     version: The version of the CPE
     version_start: The start version of the CPE
-    version_end: The end version of the CPE, exclusive
+    version_end: The end version of the CPE
+    exclude_start_version: Whether to exclude the start version (default: False)
+    exclude_end_version: Whether to exclude the end version (default: True)
     language: The language of the CPE
     updated_at: The date the row in the database was updated
     """
@@ -167,6 +169,8 @@ class CPE(Model):
 
     version_start = CharField(null=True)
     version_end = CharField(null=True)
+    exclude_start_version = BooleanField(default=False)
+    exclude_end_version = BooleanField(default=True)
     updated_at = DateTimeField(default=datetime.datetime.now)
 
     class Meta:
