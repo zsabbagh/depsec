@@ -105,7 +105,7 @@ class Middleware:
         logger.debug(f"Initalising middleware with config file {config_path}")
         self.config(config_path)
     
-    def load_projects(self, file: str = 'projects.json') -> Project:
+    def load_projects(self, *projects: str, file: str = 'projects.json') -> Project:
         """
         Update the projects
         """
@@ -114,6 +114,12 @@ class Middleware:
         logger.info(f"Loading projects from '{file}'")
         path = Path(file)
         result = []
+        if len(projects) > 0:
+            for project in projects:
+                logger.debug(f"Loading project {project}")
+                project = self.get_project(project)
+                result.append(project)
+            return result
         with open(path) as f:
             data = json.load(f)
             for platform in data:

@@ -47,17 +47,27 @@ plots_dir = output_dir / 'plots'
 json_dir.mkdir(exist_ok=True)
 plots_dir.mkdir(exist_ok=True)
 
+def get_categories(timeline_entry: dict):
+    pass
+
+def get_scores(timeline_entry: dict):
+    pass
+
 def plot_timelines(timelines: dict):
     """
     Expects a dictionary with the following structure:
 
-    <project>: [
-        {
-            date: datetime,
-            release: dict,
-            cves: [dict]
-        }
-    ]
+    <project>: {
+        'cves': { <cve-id>: {} },
+        'releases': { <release-id>: {} }
+        'timeline': [
+            {
+                'date': <date>,
+                'release': <release-id>,
+                'cves': [<cve-id>, <cve-id>, ...]
+            }
+        ]
+    }
     """
     fig, count_ax = plt.subplots()
     fig2, score_ax = plt.subplots()
@@ -88,6 +98,7 @@ def plot_timelines(timelines: dict):
     plt.show()
 
 mw = Middleware(args.config)
+mw.load_projects(*args.projects)
 
 if __name__ == '__main__':
     
