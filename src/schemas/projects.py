@@ -57,7 +57,7 @@ class Release(Model):
     updated_at: The date the row in the database was updated
     """
     id = AutoField()
-    project = ForeignKeyField(Project, backref='releases')
+    project = ForeignKeyField(Project, backref='releases', on_delete='CASCADE')
     published_at = DateTimeField(null=True)
     version = CharField(null=False)
     updated_at = DateTimeField(default=datetime.datetime.now)
@@ -75,14 +75,20 @@ class ReleaseDependency(Model):
     project_name: The name of the project the dependency is on, usually the same as the name
     platform: The platform the dependency is on
     requirements: The version requirements of the dependency
+    version: The version of the dependency (note, not strictly required)
+    depth: The depth of the dependency, as in, how many steps of inheritance
+    inherited_from: The project the dependency is inherited from
     updated_at: The date the row in the database was updated
     """
     
-    release = ForeignKeyField(Release, backref='dependencies')
+    release = ForeignKeyField(Release, backref='dependencies', on_delete='CASCADE')
     name = CharField(null=False)
-    project_name = CharField(null=False)
+    project_name = CharField(null=False) # Is this really necessary?
     platform = CharField(null=True)
     requirements = CharField(null=True)
+    version = CharField(null=True) # Version from OSI
+    depth = BooleanField(default=False, null=True)
+    inherited_from = CharField(null=True)
     updated_at = DateTimeField(default=datetime.datetime.now)
     optional = BooleanField(default=False)
 
@@ -98,7 +104,7 @@ class ReleaseRepo(Model):
     repo_url: The URL of the repository
     updated_at: The date the row in the database was updated
     """
-    release = ForeignKeyField(Release, backref='repos')
+    release = ForeignKeyField(Release, backref='repos', on_delete='CASCADE')
     repo_url = CharField(null=False)
     updated_at = DateTimeField(default=datetime.datetime.now)
 

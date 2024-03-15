@@ -13,6 +13,18 @@ from loguru import logger
 from pathlib import Path
 from typing import List, Dict
 
+def printmodel(model: List[Model] | Model, recurse=False):
+    """
+    Print a model
+    """
+    def fn(model):
+        return model_to_dict(model, recurse=recurse)
+    if isinstance(model, list):
+        model = list(map(fn, model))
+    else:
+        model = fn(model)
+    pprint(model)
+
 class Middleware:
     """
     The middleware to communicate with the databases and the APIs
@@ -489,6 +501,116 @@ class Middleware:
                          version: str = None,
                          platform: str="pypi") -> List[ReleaseDependency]:
         """
+        Get dependencies of a project and a specific version number (release)
+
+        project_name: str
+        version: str, if None, the latest release is used
+        platform: str, default: pypi
+        """
+        # Force lowercase
+        project_name = self.__format_strings(project_name)[0]
+        # Get the project
+        project = self.get_project(project_name)
+        if project is None:
+            logger.error(f"Project {project_name} not found")
+            return None
+        elif project.dependencies == 0:
+            logger.error(f"No dependencies found for {project_name}")
+            return None
+        # Get the release
+        version = version if version else project.latest_release
+        # Get the release
+        release = Release.get_or_none((
+            (Release.project == project) &
+            (Release.version == version)
+        ))
+        if release is None:
+            logger.error(f"Release '{version}' not found for {project_name}")
+            return None
+        dependencies = [ dep for dep in release.dependencies ]
+        if len(dependencies) > 0:
+            # Found dependencies in the database
+            logger.debug(f"Found {len(dependencies)} dependencies for {project_name} {version}")
+            return dependencies
+        # No dependencies in database, query the API
+        logger.debug(f"Querying libraries.io for dependencies of {project_name} {version}")
+        result = self.osi.query_dependencies(project_name, version, platform)
+        if result is None or 'nodes' not in result:
+            logger.error(f"Dependencies not found for {project_name} {version}")
+            return None
+        nodes = result.get('nodes', [])
+        if nodes[0].get('versionKey', {}).get('name', '') != project_name:
+            logger.error(f"First node is not {project_name}! Solve this")
+            return None
+        edges = result.get('edges', [])
+        metadata = {}
+        for edge in edges:
+            req = edge.get('requirement', '')
+            nfr = edge.get('fromNode', None)
+            nto = edge.get('toNode', None)
+            if nto is None:
+                continue
+            node = nodes[nto]
+            node_from = nodes[nfr] if nfr is not None else None
+            node_to_name = node.get('versionKey', {}).get('name', '')
+            if node_from is not None:
+                node_from_name = node_from.get('versionKey', {}).get('name', '')
+            metadata[node_to_name] = {
+                'requirements': req,
+                'inherited_from': node_from_name,
+                'depth': None,
+            }
+        for nname in metadata:
+            depth = 0
+            inherited_from = metadata[nname].get('inherited_from', None)
+            while inherited_from is not None:
+                depth += 1
+                inherited_from = metadata.get(inherited_from, {}).get('inherited_from', None)
+            metadata[nname]['depth'] = depth
+        results = []
+        # Save the dependencies
+        project.dependencies = len(dependencies)
+        project.save()
+        for node in nodes:
+            relation = node.get('relation', '')
+            if relation == 'SELF':
+                logger.warning(f"Skipping self-relation for {project_name} {version}")
+                continue
+            version_key = node.get('versionKey', {})
+            name = version_key.get('name', '').lower()
+            if name == project_name or not name:
+                logger.warning(f"Skipping dependency '{name}' for {project_name} {version}")
+                continue
+            ptfrm = version_key.get('system', '').lower()
+            requirements = metadata.get(name, {}).get('requirements', '')
+            depth = metadata.get(name, {}).get('depth', 0)
+            name, project_name, ptfrm = self.__format_strings(name, project_name, ptfrm)
+            version = version_key.get('version', '')
+            logger.debug(f"Creating dependency {name} {project_name} {ptfrm} {requirements}")
+            inherited_from = metadata.get(name, {}).get('inherited_from', None)
+            dep_instance = ReleaseDependency.create(
+                release=release,
+                name=name,
+                project_name=project_name,
+                platform=ptfrm,
+                version=version,
+                is_direct=relation=='DIRECT',
+                inherited_from=inherited_from if inherited_from != project_name else None,
+                depth=depth,
+                requirements=requirements,
+            )
+            dep_instance.save()
+            results.append(dep_instance)
+        project.dependencies = len(results)
+        project.save()
+        return results
+
+    def get_dependencies_libraries(self,
+                         project_name: str,
+                         version: str = None,
+                         platform: str="pypi") -> List[ReleaseDependency]:
+        """
+        OLD VERSION
         Get dependencies of a project and a specific version number (release)
 
         project_name: str
