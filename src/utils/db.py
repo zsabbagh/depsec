@@ -107,8 +107,11 @@ class NVD:
         categories: Whether to include the (unique) categories of the CWEs (default: truthy)
         to_dict: Whether to return the result as a dictionary (non-recursive)
         """
+        print(f"Getting CWEs for {entry}")
         categories = bool(categories)
         entry = NVD.get(entry, to_dict=False)
+        if entry is None:
+            return None
         cwes = [ c for c in entry.cwes ]
         logger.debug(f"Found {len(cwes)} CWEs")
         results = []

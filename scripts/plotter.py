@@ -167,9 +167,12 @@ def plot_vulnerabilities(vulnerabilities: dict):
         <cve-id>: {}
     }
     """
+    categories = {}
+    cves = {}
     pass
 
 mw = Middleware(args.config)
+# load the projects, arguments are optional
 mw.load_projects(*args.projects)
 
 if __name__ == '__main__':

@@ -4,6 +4,7 @@
             "product": "jinja"
         },
         "flask": {},
-        "django": {}
+        "django": {},
+        "tornado": {}
     }
 }

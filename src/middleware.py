@@ -333,6 +333,22 @@ class Middleware:
                             platform: str="pypi") -> List[nvd.CVE]:
         """
         Get vulnerabilities of a project and a specific version number (release)
+
+        returns: 
+        {
+            'cves': {
+                <cve_id>: <cve>,
+                ...
+            },
+            'cwes': {
+                <cwe_id>: {
+                    <key>: <value>,
+                    ...
+                    'cves': [ <cve_id>, ... ]
+                }
+                ...
+            }
+        }
         """
         # Force lowercase
         project_name, platform = self.__format_strings(project_name, platform)
@@ -360,7 +376,11 @@ class Middleware:
         # We need to find the CPEs that match the version
         vulnset = set()
         release_published_at = release.published_at if release else None
-        results = {}
+        results = {
+            'cves': {},
+            'cwes': {},
+        }
+        cves, cwes = results['cves'], results['cwes']
         processed_versions = {}
         logger.debug(f"Got {len(cpes)} CPEs for {project.vendor} {project.name} {version}")
         for cpe in cpes:
@@ -413,12 +433,21 @@ class Middleware:
                 add = datetime_in_range(release_published_at, start_date, end_date, exclude_start, exclude_end) if release_published_at is not None else True
             if add:
                 vulnset.add(cve.id)
-                if cve.cve_id not in results:
+                if cve.cve_id not in cves:
+                    weaknesses = db.NVD.cwes(cve.cve_id, categories=False, to_dict=False)
+                    # TODO: verify categories
+                    for cwe in weaknesses:
+                        cwe_id = cwe.cwe_id
+                        if cwe_id not in cwes:
+                            cwes[cwe_id] = model_to_dict(cwe, recurse=False)
+                            cwes[cwe_id]['cves'] = [cve.cve_id]
+                        else:
+                            cwes[cwe_id]['cves'].append(cve.cve_id)
                     cve_data = model_to_dict(cve)
                     cve_data['applicability'] = [applicability]
-                    results[cve.cve_id] = cve_data
+                    cves[cve.cve_id] = cve_data
                 else:
-                    results[cve.cve_id]['applicability'].append(applicability)
+                    cves[cve.cve_id]['applicability'].append(applicability)
         return results
     
     def get_vulnerabilities_timeline(self,
@@ -464,8 +493,6 @@ class Middleware:
         else:
             end_date = datetime.datetime.now()
         # for each date in the range, get the most recent releases and check for vulnerabilities
-        def non_recursive_model_to_dict(model):
-            return model_to_dict(model, recurse=False)
         results: list = {
             'cves': {},
             project.name: model_to_dict(project, recurse=False),
@@ -487,7 +514,7 @@ class Middleware:
                 continue
             logger.info(f"Got most recent release {rel_mr.version} for {project.name} at {start_date}")
             vulns = []
-            for vuln in vulnerabilities.values():
+            for vuln in vulnerabilities.get('cves', {}).values():
                 applicabilities = vuln.get('applicability', [])
                 is_applicable = False
                 for app in applicabilities:
