@@ -335,7 +335,8 @@ class Middleware:
         Get vulnerabilities of a project and a specific version number (release)
         """
         # Force lowercase
-        project_name, version, platform = self.__format_strings(project_name, version, platform)
+        project_name, platform = self.__format_strings(project_name, platform)
+        version = version if version else ''
         # Get the project
         project = self.get_project(project_name, platform)
         if project is None:
@@ -379,7 +380,7 @@ class Middleware:
             )
             exclude_end = cpe.exclude_end_version
             exclude_start = cpe.exclude_start_version
-            vuln_cpe_id = f"{cve.cve_id}:{cpe.version_start}:{cpe.version_end}"
+            vuln_cpe_id = f"{cve.cve_id}:{cpe.version}:{cpe.version_start}:{cpe.version_end}"
             has_exact_version = cpe.version is not None and cpe.version not in ['', '*']
             if has_exact_version:
                 if cve.cve_id not in processed_versions:

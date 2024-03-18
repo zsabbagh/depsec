@@ -1,7 +1,4 @@
-import argparse, sys
-import seaborn as sns
-import numpy as np
-import matplotlib.pyplot as plt
+import argparse, sys, time, seaborn as sns, numpy as np, matplotlib.pyplot as plt, pprint
 from pprint import pprint
 from pathlib import Path
 from src.middleware import Middleware
@@ -72,16 +69,19 @@ def plot_timelines(timelines: dict):
     fig, count_ax = plt.subplots()
     fig2, score_ax = plt.subplots()
     pprint(timelines)
-    for project, timeline in timelines.items():
-        dates = [release['date'] for release in timeline]
-        cves = [len(release['cves']) for release in timeline]
+    for project, data in timelines.items():
+        timeline = data.get('timeline')
+        cves = data.get('cves')
+        print(cves)
+        dates = [ entry.get('date') for entry in timeline ]
+        cves_count = [ len(entry.get('cves', [])) for entry in timeline ]
         max_scores = []
         mean_scores = []
         median_scores = []
         for entry in timeline:
             scrs = []
             for cve in entry['cves']:
-                scrs.append(cve['cvss_base_score'])
+                scrs.append(cves.get(cve, {}).get('cvss_base_score'))
             if len(scrs) == 0:
                 max_scores.append(0)
                 mean_scores.append(0)
@@ -90,11 +90,12 @@ def plot_timelines(timelines: dict):
             max_scores.append(max(scrs))
             mean_scores.append(np.mean(scrs))
             median_scores.append(np.std(scrs))
-        count_ax.step(dates, cves, label=project)
+        count_ax.step(dates, cves_count, label=f"{project} # of CVEs")
         # score_ax.step(dates, max_scores, label=f"{project} max")
         score_ax.step(dates, mean_scores, label=f"{project} mean")
         # score_ax.step(dates, median_scores, label=f"{project} med")
-    plt.legend()
+    fig.legend()
+    fig2.legend()
     plt.show()
 
 mw = Middleware(args.config)
@@ -104,6 +105,15 @@ if __name__ == '__main__':
     
     timelines = {}
     for project in args.projects:
-        timeline = mw.get_vulnerabilities_timeline(project, 2014, step='y')
+        # get timeline for each project
+        timeline = mw.get_vulnerabilities_timeline(project, 2014, step='m')
         timelines[project] = timeline
     plot_timelines(timelines)
+
+    vulnerabilities = {}
+    for project in args.projects:
+        # get all the vulnerabilities for the project
+        vulnerabilities[project] = mw.get_vulnerabilities(project)
+
+    # TODO: store the data in a JSON directory
+    # include TIMESTAMP OF NVD FILE
