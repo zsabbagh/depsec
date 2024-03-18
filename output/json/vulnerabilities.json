@@ -1,0 +1,55 @@
+{
+    "flask": {},
+    "django": {
+        "CVE-2024-24680": {
+            "id": 1623,
+            "cve_id": "CVE-2024-24680",
+            "description": "An issue was discovered in Django 3.2 before 3.2.24, 4.2 before 4.2.10, and Django 5.0 before 5.0.2. The intcomma template filter was subject to a potential denial-of-service attack when used with very long strings.",
+            "published_at": "2024-02-06 22:16:00",
+            "last_modified_at": "2024-02-15 18:46:00",
+            "updated_at": "2024-03-18 17:06:35",
+            "cvss_version": "3.1",
+            "cvss_exploitability_score": 3.9,
+            "cvss_impact_score": 3.6,
+            "cvss_vector_string": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:N/I:N/A:H",
+            "cvss_attack_vector": "NETWORK",
+            "cvss_attack_complexity": "LOW",
+            "cvss_privileges_required": "NONE",
+            "cvss_user_interaction": "NONE",
+            "cvss_scope": "UNCHANGED",
+            "cvss_confidentiality_impact": "NONE",
+            "cvss_integrity_impact": "NONE",
+            "cvss_availability_impact": "HIGH",
+            "cvss_base_score": 7.5,
+            "cvss_base_severity": "HIGH",
+            "has_cwe": false,
+            "applicability": [
+                {
+                    "version_start": "5.0",
+                    "exclude_start": false,
+                    "version_end": "5.0.2",
+                    "exclude_end": true,
+                    "start_date": "2023-12-04 13:12:41",
+                    "end_date": "2024-02-06 14:53:28"
+                },
+                {
+                    "version_start": "3.2",
+                    "exclude_start": false,
+                    "version_end": "3.2.24",
+                    "exclude_end": true,
+                    "start_date": "2021-04-06 20:54:41",
+                    "end_date": "2024-02-06 14:54:24"
+                },
+                {
+                    "version_start": "4.2",
+                    "exclude_start": false,
+                    "version_end": "4.2.10",
+                    "exclude_end": true,
+                    "start_date": "2023-04-03 08:38:33",
+                    "end_date": "2024-02-06 14:53:58"
+                }
+            ]
+        }
+    },
+    "tornado": {}
+}

@@ -1,4 +1,4 @@
-import argparse, sys, time, seaborn as sns, numpy as np, matplotlib.pyplot as plt, pprint
+import argparse, sys, time, seaborn as sns, numpy as np, matplotlib.pyplot as plt, pprint, json
 from pprint import pprint
 from pathlib import Path
 from src.middleware import Middleware
@@ -28,6 +28,21 @@ parser.add_argument('-o', '--output', help='The output directory', default='outp
 parser.add_argument('--debug', help='The debug level of the logger', default='INFO')
 
 args = parser.parse_args()
+
+def convert_datetime_to_str(data: dict):
+    """
+    Converts dictionaries with datetime objects to strings
+    """
+    if type(data) != dict:
+        return data
+    for key, value in data.items():
+        if isinstance(value, datetime.datetime):
+            data[key] = value.strftime('%Y-%m-%d %H:%M:%S')
+        elif type(value) == dict:
+            data[key] = convert_datetime_to_str(value)
+        elif type(value) == list:
+            data[key] = [ convert_datetime_to_str(entry) for entry in value ]
+    return data
 
 # set the logger level
 logger.remove()
@@ -136,12 +151,13 @@ def plot_timelines(timelines: dict):
     ax_count.grid(color='gray', linestyle='-', linewidth=0.2, axis='y', zorder=0)
     fig_count.legend()
     fig_count.autofmt_xdate()
+    fig_count.savefig(plots_dir / "cves.png")
     for fig, ax, kw in figures_scores:
         ax.set_ylabel('Score')
         ax.grid(color='gray', linestyle='-', linewidth=0.2, axis='y', zorder=0)
         fig.legend()
         fig.autofmt_xdate()
-    plt.show()
+        fig.savefig(plots_dir / f"{kw}.png")
 
 
 def plot_vulnerabilities(vulnerabilities: dict):
@@ -164,11 +180,18 @@ if __name__ == '__main__':
         timeline = mw.get_vulnerabilities_timeline(project, 2014, step='m')
         timelines[project] = timeline
     plot_timelines(timelines)
+    timelines = convert_datetime_to_str(timelines)
+    with open(json_dir / 'timelines.json', 'w') as f:
+        json.dump(timelines, f, indent=4)
 
     vulnerabilities = {}
     for project in args.projects:
         # get all the vulnerabilities for the project
         vulnerabilities[project] = mw.get_vulnerabilities(project)
+    plot_vulnerabilities(vulnerabilities)
+    vulnerabilities = convert_datetime_to_str(vulnerabilities)
+    with open(json_dir / 'vulnerabilities.json', 'w') as f:
+        json.dump(vulnerabilities, f, indent=4)
 
     # TODO: store the data in a JSON directory
     # include TIMESTAMP OF NVD FILE

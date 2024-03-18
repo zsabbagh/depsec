@@ -4,7 +4,7 @@
 **/config.yaml
 **/config.json
 **/.vscode
-output
+.DS_Store
 data/*
 datasets
 !data/projects.db

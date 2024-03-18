@@ -1,0 +1,3039 @@
+{
+    "flask": {
+        "cves": {},
+        "flask": {
+            "id": 1,
+            "name": "flask",
+            "platform": "pypi",
+            "language": "python",
+            "contributions": 631,
+            "homepage": "https://flask.palletsprojects.com",
+            "vendor": "palletsprojects",
+            "product": null,
+            "stars": 65940,
+            "forks": 15866,
+            "latest_release": "3.0.2",
+            "dependent_repos": 116300,
+            "dependent_projects": null,
+            "dependencies": 8,
+            "updated_at": "2024-03-15 09:14:09",
+            "package_manager_url": "https://pypi.org/project/Flask/",
+            "repository_url": "https://github.com/pallets/flask",
+            "releases": {
+                "0.9": {
+                    "id": 26,
+                    "project": 1,
+                    "published_at": "2012-07-01 13:12:50",
+                    "version": "0.9",
+                    "updated_at": "2024-03-15 09:14:09"
+                },
+                "1.0.1": {
+                    "id": 28,
+                    "project": 1,
+                    "published_at": "2018-04-30 02:28:04",
+                    "version": "1.0.1",
+                    "updated_at": "2024-03-15 09:14:09"
+                },
+                "1.0.2": {
+                    "id": 29,
+                    "project": 1,
+                    "published_at": "2018-05-02 15:33:51",
+                    "version": "1.0.2",
+                    "updated_at": "2024-03-15 09:14:09"
+                },
+                "1.0.3": {
+                    "id": 30,
+                    "project": 1,
+                    "published_at": "2019-05-17 17:59:56",
+                    "version": "1.0.3",
+                    "updated_at": "2024-03-15 09:14:09"
+                },
+                "1.1.1": {
+                    "id": 33,
+                    "project": 1,
+                    "published_at": "2019-07-08 18:01:54",
+                    "version": "1.1.1",
+                    "updated_at": "2024-03-15 09:14:09"
+                },
+                "1.1.2": {
+                    "id": 34,
+                    "project": 1,
+                    "published_at": "2020-04-03 17:21:29",
+                    "version": "1.1.2",
+                    "updated_at": "2024-03-15 09:14:09"
+                },
+                "2.0.1": {
+                    "id": 40,
+                    "project": 1,
+                    "published_at": "2021-05-21 15:55:00",
+                    "version": "2.0.1",
+                    "updated_at": "2024-03-15 09:14:10"
+                },
+                "2.0.2": {
+                    "id": 41,
+                    "project": 1,
+                    "published_at": "2021-10-04 14:36:10",
+                    "version": "2.0.2",
+                    "updated_at": "2024-03-15 09:14:10"
+                },
+                "2.1.1": {
+                    "id": 44,
+                    "project": 1,
+                    "published_at": "2022-03-30 21:40:34",
+                    "version": "2.1.1",
+                    "updated_at": "2024-03-15 09:14:10"
+                },
+                "2.1.2": {
+                    "id": 45,
+                    "project": 1,
+                    "published_at": "2022-05-18 14:08:21",
+                    "version": "2.1.2",
+                    "updated_at": "2024-03-15 09:14:10"
+                },
+                "2.1.3": {
+                    "id": 46,
+                    "project": 1,
+                    "published_at": "2022-07-13 20:58:18",
+                    "version": "2.1.3",
+                    "updated_at": "2024-03-15 09:14:10"
+                },
+                "2.2.2": {
+                    "id": 49,
+                    "project": 1,
+                    "published_at": "2022-08-08 23:28:50",
+                    "version": "2.2.2",
+                    "updated_at": "2024-03-15 09:14:10"
+                },
+                "2.2.3": {
+                    "id": 50,
+                    "project": 1,
+                    "published_at": "2023-02-15 22:45:39",
+                    "version": "2.2.3",
+                    "updated_at": "2024-03-15 09:14:10"
+                },
+                "2.3.1": {
+                    "id": 54,
+                    "project": 1,
+                    "published_at": "2023-04-25 21:21:28",
+                    "version": "2.3.1",
+                    "updated_at": "2024-03-15 09:14:10"
+                },
+                "2.3.2": {
+                    "id": 55,
+                    "project": 1,
+                    "published_at": "2023-05-01 15:43:19",
+                    "version": "2.3.2",
+                    "updated_at": "2024-03-15 09:14:10"
+                },
+                "2.3.3": {
+                    "id": 56,
+                    "project": 1,
+                    "published_at": "2023-08-21 19:52:33",
+                    "version": "2.3.3",
+                    "updated_at": "2024-03-15 09:14:10"
+                },
+                "3.0.0": {
+                    "id": 57,
+                    "project": 1,
+                    "published_at": "2023-09-30 14:36:10",
+                    "version": "3.0.0",
+                    "updated_at": "2024-03-15 09:14:10"
+                },
+                "3.0.1": {
+                    "id": 58,
+                    "project": 1,
+                    "published_at": "2024-01-18 20:02:43",
+                    "version": "3.0.1",
+                    "updated_at": "2024-03-15 09:14:10"
+                },
+                "3.0.2": {
+                    "id": 59,
+                    "project": 1,
+                    "published_at": "2024-02-03 21:11:42",
+                    "version": "3.0.2",
+                    "updated_at": "2024-03-15 09:14:10"
+                }
+            }
+        },
+        "timeline": [
+            {
+                "date": "2014-01-01 00:00:00",
+                "release": "0.9",
+                "cves": []
+            },
+            {
+                "date": "2014-02-01 00:00:00",
+                "release": "0.9",
+                "cves": []
+            },
+            {
+                "date": "2014-03-01 00:00:00",
+                "release": "0.9",
+                "cves": []
+            },
+            {
+                "date": "2014-04-01 00:00:00",
+                "release": "0.9",
+                "cves": []
+            },
+            {
+                "date": "2014-05-01 00:00:00",
+                "release": "0.9",
+                "cves": []
+            },
+            {
+                "date": "2014-06-01 00:00:00",
+                "release": "0.9",
+                "cves": []
+            },
+            {
+                "date": "2014-07-01 00:00:00",
+                "release": "0.9",
+                "cves": []
+            },
+            {
+                "date": "2014-08-01 00:00:00",
+                "release": "0.9",
+                "cves": []
+            },
+            {
+                "date": "2014-09-01 00:00:00",
+                "release": "0.9",
+                "cves": []
+            },
+            {
+                "date": "2014-10-01 00:00:00",
+                "release": "0.9",
+                "cves": []
+            },
+            {
+                "date": "2014-11-01 00:00:00",
+                "release": "0.9",
+                "cves": []
+            },
+            {
+                "date": "2014-12-01 00:00:00",
+                "release": "0.9",
+                "cves": []
+            },
+            {
+                "date": "2015-01-01 00:00:00",
+                "release": "0.9",
+                "cves": []
+            },
+            {
+                "date": "2015-02-01 00:00:00",
+                "release": "0.9",
+                "cves": []
+            },
+            {
+                "date": "2015-03-01 00:00:00",
+                "release": "0.9",
+                "cves": []
+            },
+            {
+                "date": "2015-04-01 00:00:00",
+                "release": "0.9",
+                "cves": []
+            },
+            {
+                "date": "2015-05-01 00:00:00",
+                "release": "0.9",
+                "cves": []
+            },
+            {
+                "date": "2015-06-01 00:00:00",
+                "release": "0.9",
+                "cves": []
+            },
+            {
+                "date": "2015-07-01 00:00:00",
+                "release": "0.9",
+                "cves": []
+            },
+            {
+                "date": "2015-08-01 00:00:00",
+                "release": "0.9",
+                "cves": []
+            },
+            {
+                "date": "2015-09-01 00:00:00",
+                "release": "0.9",
+                "cves": []
+            },
+            {
+                "date": "2015-10-01 00:00:00",
+                "release": "0.9",
+                "cves": []
+            },
+            {
+                "date": "2015-11-01 00:00:00",
+                "release": "0.9",
+                "cves": []
+            },
+            {
+                "date": "2015-12-01 00:00:00",
+                "release": "0.9",
+                "cves": []
+            },
+            {
+                "date": "2016-01-01 00:00:00",
+                "release": "0.9",
+                "cves": []
+            },
+            {
+                "date": "2016-02-01 00:00:00",
+                "release": "0.9",
+                "cves": []
+            },
+            {
+                "date": "2016-03-01 00:00:00",
+                "release": "0.9",
+                "cves": []
+            },
+            {
+                "date": "2016-04-01 00:00:00",
+                "release": "0.9",
+                "cves": []
+            },
+            {
+                "date": "2016-05-01 00:00:00",
+                "release": "0.9",
+                "cves": []
+            },
+            {
+                "date": "2016-06-01 00:00:00",
+                "release": "0.9",
+                "cves": []
+            },
+            {
+                "date": "2016-07-01 00:00:00",
+                "release": "0.9",
+                "cves": []
+            },
+            {
+                "date": "2016-08-01 00:00:00",
+                "release": "0.9",
+                "cves": []
+            },
+            {
+                "date": "2016-09-01 00:00:00",
+                "release": "0.9",
+                "cves": []
+            },
+            {
+                "date": "2016-10-01 00:00:00",
+                "release": "0.9",
+                "cves": []
+            },
+            {
+                "date": "2016-11-01 00:00:00",
+                "release": "0.9",
+                "cves": []
+            },
+            {
+                "date": "2016-12-01 00:00:00",
+                "release": "0.9",
+                "cves": []
+            },
+            {
+                "date": "2017-01-01 00:00:00",
+                "release": "0.9",
+                "cves": []
+            },
+            {
+                "date": "2017-02-01 00:00:00",
+                "release": "0.9",
+                "cves": []
+            },
+            {
+                "date": "2017-03-01 00:00:00",
+                "release": "0.9",
+                "cves": []
+            },
+            {
+                "date": "2017-04-01 00:00:00",
+                "release": "0.9",
+                "cves": []
+            },
+            {
+                "date": "2017-05-01 00:00:00",
+                "release": "0.9",
+                "cves": []
+            },
+            {
+                "date": "2017-06-01 00:00:00",
+                "release": "0.9",
+                "cves": []
+            },
+            {
+                "date": "2017-07-01 00:00:00",
+                "release": "0.9",
+                "cves": []
+            },
+            {
+                "date": "2017-08-01 00:00:00",
+                "release": "0.9",
+                "cves": []
+            },
+            {
+                "date": "2017-09-01 00:00:00",
+                "release": "0.9",
+                "cves": []
+            },
+            {
+                "date": "2017-10-01 00:00:00",
+                "release": "0.9",
+                "cves": []
+            },
+            {
+                "date": "2017-11-01 00:00:00",
+                "release": "0.9",
+                "cves": []
+            },
+            {
+                "date": "2017-12-01 00:00:00",
+                "release": "0.9",
+                "cves": []
+            },
+            {
+                "date": "2018-01-01 00:00:00",
+                "release": "0.9",
+                "cves": []
+            },
+            {
+                "date": "2018-02-01 00:00:00",
+                "release": "0.9",
+                "cves": []
+            },
+            {
+                "date": "2018-03-01 00:00:00",
+                "release": "0.9",
+                "cves": []
+            },
+            {
+                "date": "2018-04-01 00:00:00",
+                "release": "0.9",
+                "cves": []
+            },
+            {
+                "date": "2018-05-01 00:00:00",
+                "release": "1.0.1",
+                "cves": []
+            },
+            {
+                "date": "2018-06-01 00:00:00",
+                "release": "1.0.2",
+                "cves": []
+            },
+            {
+                "date": "2018-07-01 00:00:00",
+                "release": "1.0.2",
+                "cves": []
+            },
+            {
+                "date": "2018-08-01 00:00:00",
+                "release": "1.0.2",
+                "cves": []
+            },
+            {
+                "date": "2018-09-01 00:00:00",
+                "release": "1.0.2",
+                "cves": []
+            },
+            {
+                "date": "2018-10-01 00:00:00",
+                "release": "1.0.2",
+                "cves": []
+            },
+            {
+                "date": "2018-11-01 00:00:00",
+                "release": "1.0.2",
+                "cves": []
+            },
+            {
+                "date": "2018-12-01 00:00:00",
+                "release": "1.0.2",
+                "cves": []
+            },
+            {
+                "date": "2019-01-01 00:00:00",
+                "release": "1.0.2",
+                "cves": []
+            },
+            {
+                "date": "2019-02-01 00:00:00",
+                "release": "1.0.2",
+                "cves": []
+            },
+            {
+                "date": "2019-03-01 00:00:00",
+                "release": "1.0.2",
+                "cves": []
+            },
+            {
+                "date": "2019-04-01 00:00:00",
+                "release": "1.0.2",
+                "cves": []
+            },
+            {
+                "date": "2019-05-01 00:00:00",
+                "release": "1.0.2",
+                "cves": []
+            },
+            {
+                "date": "2019-06-01 00:00:00",
+                "release": "1.0.3",
+                "cves": []
+            },
+            {
+                "date": "2019-07-01 00:00:00",
+                "release": "1.0.3",
+                "cves": []
+            },
+            {
+                "date": "2019-08-01 00:00:00",
+                "release": "1.1.1",
+                "cves": []
+            },
+            {
+                "date": "2019-09-01 00:00:00",
+                "release": "1.1.1",
+                "cves": []
+            },
+            {
+                "date": "2019-10-01 00:00:00",
+                "release": "1.1.1",
+                "cves": []
+            },
+            {
+                "date": "2019-11-01 00:00:00",
+                "release": "1.1.1",
+                "cves": []
+            },
+            {
+                "date": "2019-12-01 00:00:00",
+                "release": "1.1.1",
+                "cves": []
+            },
+            {
+                "date": "2020-01-01 00:00:00",
+                "release": "1.1.1",
+                "cves": []
+            },
+            {
+                "date": "2020-02-01 00:00:00",
+                "release": "1.1.1",
+                "cves": []
+            },
+            {
+                "date": "2020-03-01 00:00:00",
+                "release": "1.1.1",
+                "cves": []
+            },
+            {
+                "date": "2020-04-01 00:00:00",
+                "release": "1.1.1",
+                "cves": []
+            },
+            {
+                "date": "2020-05-01 00:00:00",
+                "release": "1.1.2",
+                "cves": []
+            },
+            {
+                "date": "2020-06-01 00:00:00",
+                "release": "1.1.2",
+                "cves": []
+            },
+            {
+                "date": "2020-07-01 00:00:00",
+                "release": "1.1.2",
+                "cves": []
+            },
+            {
+                "date": "2020-08-01 00:00:00",
+                "release": "1.1.2",
+                "cves": []
+            },
+            {
+                "date": "2020-09-01 00:00:00",
+                "release": "1.1.2",
+                "cves": []
+            },
+            {
+                "date": "2020-10-01 00:00:00",
+                "release": "1.1.2",
+                "cves": []
+            },
+            {
+                "date": "2020-11-01 00:00:00",
+                "release": "1.1.2",
+                "cves": []
+            },
+            {
+                "date": "2020-12-01 00:00:00",
+                "release": "1.1.2",
+                "cves": []
+            },
+            {
+                "date": "2021-01-01 00:00:00",
+                "release": "1.1.2",
+                "cves": []
+            },
+            {
+                "date": "2021-02-01 00:00:00",
+                "release": "1.1.2",
+                "cves": []
+            },
+            {
+                "date": "2021-03-01 00:00:00",
+                "release": "1.1.2",
+                "cves": []
+            },
+            {
+                "date": "2021-04-01 00:00:00",
+                "release": "1.1.2",
+                "cves": []
+            },
+            {
+                "date": "2021-05-01 00:00:00",
+                "release": "1.1.2",
+                "cves": []
+            },
+            {
+                "date": "2021-06-01 00:00:00",
+                "release": "2.0.1",
+                "cves": []
+            },
+            {
+                "date": "2021-07-01 00:00:00",
+                "release": "2.0.1",
+                "cves": []
+            },
+            {
+                "date": "2021-08-01 00:00:00",
+                "release": "2.0.1",
+                "cves": []
+            },
+            {
+                "date": "2021-09-01 00:00:00",
+                "release": "2.0.1",
+                "cves": []
+            },
+            {
+                "date": "2021-10-01 00:00:00",
+                "release": "2.0.1",
+                "cves": []
+            },
+            {
+                "date": "2021-11-01 00:00:00",
+                "release": "2.0.2",
+                "cves": []
+            },
+            {
+                "date": "2021-12-01 00:00:00",
+                "release": "2.0.2",
+                "cves": []
+            },
+            {
+                "date": "2022-01-01 00:00:00",
+                "release": "2.0.2",
+                "cves": []
+            },
+            {
+                "date": "2022-02-01 00:00:00",
+                "release": "2.0.2",
+                "cves": []
+            },
+            {
+                "date": "2022-03-01 00:00:00",
+                "release": "2.0.2",
+                "cves": []
+            },
+            {
+                "date": "2022-04-01 00:00:00",
+                "release": "2.1.1",
+                "cves": []
+            },
+            {
+                "date": "2022-05-01 00:00:00",
+                "release": "2.1.1",
+                "cves": []
+            },
+            {
+                "date": "2022-06-01 00:00:00",
+                "release": "2.1.2",
+                "cves": []
+            },
+            {
+                "date": "2022-07-01 00:00:00",
+                "release": "2.1.2",
+                "cves": []
+            },
+            {
+                "date": "2022-08-01 00:00:00",
+                "release": "2.1.3",
+                "cves": []
+            },
+            {
+                "date": "2022-09-01 00:00:00",
+                "release": "2.2.2",
+                "cves": []
+            },
+            {
+                "date": "2022-10-01 00:00:00",
+                "release": "2.2.2",
+                "cves": []
+            },
+            {
+                "date": "2022-11-01 00:00:00",
+                "release": "2.2.2",
+                "cves": []
+            },
+            {
+                "date": "2022-12-01 00:00:00",
+                "release": "2.2.2",
+                "cves": []
+            },
+            {
+                "date": "2023-01-01 00:00:00",
+                "release": "2.2.2",
+                "cves": []
+            },
+            {
+                "date": "2023-02-01 00:00:00",
+                "release": "2.2.2",
+                "cves": []
+            },
+            {
+                "date": "2023-03-01 00:00:00",
+                "release": "2.2.3",
+                "cves": []
+            },
+            {
+                "date": "2023-04-01 00:00:00",
+                "release": "2.2.3",
+                "cves": []
+            },
+            {
+                "date": "2023-05-01 00:00:00",
+                "release": "2.3.1",
+                "cves": []
+            },
+            {
+                "date": "2023-06-01 00:00:00",
+                "release": "2.3.2",
+                "cves": []
+            },
+            {
+                "date": "2023-07-01 00:00:00",
+                "release": "2.3.2",
+                "cves": []
+            },
+            {
+                "date": "2023-08-01 00:00:00",
+                "release": "2.3.2",
+                "cves": []
+            },
+            {
+                "date": "2023-09-01 00:00:00",
+                "release": "2.3.3",
+                "cves": []
+            },
+            {
+                "date": "2023-10-01 00:00:00",
+                "release": "3.0.0",
+                "cves": []
+            },
+            {
+                "date": "2023-11-01 00:00:00",
+                "release": "3.0.0",
+                "cves": []
+            },
+            {
+                "date": "2023-12-01 00:00:00",
+                "release": "3.0.0",
+                "cves": []
+            },
+            {
+                "date": "2024-01-01 00:00:00",
+                "release": "3.0.0",
+                "cves": []
+            },
+            {
+                "date": "2024-02-01 00:00:00",
+                "release": "3.0.1",
+                "cves": []
+            },
+            {
+                "date": "2024-03-01 00:00:00",
+                "release": "3.0.2",
+                "cves": []
+            }
+        ]
+    },
+    "django": {
+        "cves": {
+            "CVE-2024-24680": {
+                "id": 1623,
+                "cve_id": "CVE-2024-24680",
+                "description": "An issue was discovered in Django 3.2 before 3.2.24, 4.2 before 4.2.10, and Django 5.0 before 5.0.2. The intcomma template filter was subject to a potential denial-of-service attack when used with very long strings.",
+                "published_at": "2024-02-06 22:16:00",
+                "last_modified_at": "2024-02-15 18:46:00",
+                "updated_at": "2024-03-18 17:06:35",
+                "cvss_version": "3.1",
+                "cvss_exploitability_score": 3.9,
+                "cvss_impact_score": 3.6,
+                "cvss_vector_string": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:N/I:N/A:H",
+                "cvss_attack_vector": "NETWORK",
+                "cvss_attack_complexity": "LOW",
+                "cvss_privileges_required": "NONE",
+                "cvss_user_interaction": "NONE",
+                "cvss_scope": "UNCHANGED",
+                "cvss_confidentiality_impact": "NONE",
+                "cvss_integrity_impact": "NONE",
+                "cvss_availability_impact": "HIGH",
+                "cvss_base_score": 7.5,
+                "cvss_base_severity": "HIGH",
+                "has_cwe": false,
+                "applicability": [
+                    {
+                        "version_start": "5.0",
+                        "exclude_start": false,
+                        "version_end": "5.0.2",
+                        "exclude_end": true,
+                        "start_date": "2023-12-04 13:12:41",
+                        "end_date": "2024-02-06 14:53:28"
+                    },
+                    {
+                        "version_start": "3.2",
+                        "exclude_start": false,
+                        "version_end": "3.2.24",
+                        "exclude_end": true,
+                        "start_date": "2021-04-06 20:54:41",
+                        "end_date": "2024-02-06 14:54:24"
+                    },
+                    {
+                        "version_start": "4.2",
+                        "exclude_start": false,
+                        "version_end": "4.2.10",
+                        "exclude_end": true,
+                        "start_date": "2023-04-03 08:38:33",
+                        "end_date": "2024-02-06 14:53:58"
+                    }
+                ]
+            }
+        },
+        "django": {
+            "id": 3,
+            "name": "django",
+            "platform": "pypi",
+            "language": "python",
+            "contributions": 813,
+            "homepage": "https://www.djangoproject.com/",
+            "vendor": "djangoproject",
+            "product": null,
+            "stars": 75902,
+            "forks": 30497,
+            "latest_release": "5.0.3",
+            "dependent_repos": 115375,
+            "dependent_projects": null,
+            "dependencies": null,
+            "updated_at": "2024-03-15 09:24:52",
+            "package_manager_url": "https://pypi.org/project/Django/",
+            "repository_url": "https://github.com/django/django",
+            "releases": {
+                "1.6.1": {
+                    "id": 261,
+                    "project": 3,
+                    "published_at": "2013-12-12 20:04:35",
+                    "version": "1.6.1",
+                    "updated_at": "2024-03-15 09:24:53"
+                },
+                "1.6.2": {
+                    "id": 264,
+                    "project": 3,
+                    "published_at": "2014-02-06 21:51:23",
+                    "version": "1.6.2",
+                    "updated_at": "2024-03-15 09:24:53"
+                },
+                "1.6.4": {
+                    "id": 266,
+                    "project": 3,
+                    "published_at": "2014-04-28 20:40:32",
+                    "version": "1.6.4",
+                    "updated_at": "2024-03-15 09:24:53"
+                },
+                "1.6.5": {
+                    "id": 267,
+                    "project": 3,
+                    "published_at": "2014-05-14 18:33:13",
+                    "version": "1.6.5",
+                    "updated_at": "2024-03-15 09:24:53"
+                },
+                "1.6.6": {
+                    "id": 268,
+                    "project": 3,
+                    "published_at": "2014-08-20 20:17:23",
+                    "version": "1.6.6",
+                    "updated_at": "2024-03-15 09:24:53"
+                },
+                "1.7": {
+                    "id": 272,
+                    "project": 3,
+                    "published_at": "2014-09-02 21:09:27",
+                    "version": "1.7",
+                    "updated_at": "2024-03-15 09:24:53"
+                },
+                "1.7.1": {
+                    "id": 273,
+                    "project": 3,
+                    "published_at": "2014-10-22 16:56:56",
+                    "version": "1.7.1",
+                    "updated_at": "2024-03-15 09:24:53"
+                },
+                "1.7.4": {
+                    "id": 278,
+                    "project": 3,
+                    "published_at": "2015-01-27 17:22:19",
+                    "version": "1.7.4",
+                    "updated_at": "2024-03-15 09:24:53"
+                },
+                "1.7.5": {
+                    "id": 279,
+                    "project": 3,
+                    "published_at": "2015-02-25 13:58:22",
+                    "version": "1.7.5",
+                    "updated_at": "2024-03-15 09:24:53"
+                },
+                "1.7.7": {
+                    "id": 281,
+                    "project": 3,
+                    "published_at": "2015-03-18 23:49:08",
+                    "version": "1.7.7",
+                    "updated_at": "2024-03-15 09:24:53"
+                },
+                "1.8": {
+                    "id": 284,
+                    "project": 3,
+                    "published_at": "2015-04-01 20:22:40",
+                    "version": "1.8",
+                    "updated_at": "2024-03-15 09:24:53"
+                },
+                "1.8.2": {
+                    "id": 296,
+                    "project": 3,
+                    "published_at": "2015-05-20 18:03:35",
+                    "version": "1.8.2",
+                    "updated_at": "2024-03-15 09:24:53"
+                },
+                "1.8.3": {
+                    "id": 297,
+                    "project": 3,
+                    "published_at": "2015-07-08 19:52:26",
+                    "version": "1.8.3",
+                    "updated_at": "2024-03-15 09:24:53"
+                },
+                "1.8.4": {
+                    "id": 298,
+                    "project": 3,
+                    "published_at": "2015-08-18 17:12:29",
+                    "version": "1.8.4",
+                    "updated_at": "2024-03-15 09:24:53"
+                },
+                "1.8.5": {
+                    "id": 299,
+                    "project": 3,
+                    "published_at": "2015-10-04 00:12:42",
+                    "version": "1.8.5",
+                    "updated_at": "2024-03-15 09:24:53"
+                },
+                "1.8.7": {
+                    "id": 301,
+                    "project": 3,
+                    "published_at": "2015-11-24 17:33:44",
+                    "version": "1.8.7",
+                    "updated_at": "2024-03-15 09:24:53"
+                },
+                "1.9": {
+                    "id": 308,
+                    "project": 3,
+                    "published_at": "2015-12-02 00:17:30",
+                    "version": "1.9",
+                    "updated_at": "2024-03-15 09:24:53"
+                },
+                "1.9.1": {
+                    "id": 309,
+                    "project": 3,
+                    "published_at": "2016-01-02 14:30:28",
+                    "version": "1.9.1",
+                    "updated_at": "2024-03-15 09:24:53"
+                },
+                "1.9.2": {
+                    "id": 314,
+                    "project": 3,
+                    "published_at": "2016-02-01 17:24:55",
+                    "version": "1.9.2",
+                    "updated_at": "2024-03-15 09:24:53"
+                },
+                "1.9.4": {
+                    "id": 316,
+                    "project": 3,
+                    "published_at": "2016-03-05 14:44:00",
+                    "version": "1.9.4",
+                    "updated_at": "2024-03-15 09:24:53"
+                },
+                "1.9.5": {
+                    "id": 317,
+                    "project": 3,
+                    "published_at": "2016-04-01 17:54:04",
+                    "version": "1.9.5",
+                    "updated_at": "2024-03-15 09:24:53"
+                },
+                "1.9.6": {
+                    "id": 318,
+                    "project": 3,
+                    "published_at": "2016-05-02 22:44:31",
+                    "version": "1.9.6",
+                    "updated_at": "2024-03-15 09:24:53"
+                },
+                "1.9.7": {
+                    "id": 319,
+                    "project": 3,
+                    "published_at": "2016-06-05 00:06:30",
+                    "version": "1.9.7",
+                    "updated_at": "2024-03-15 09:24:53"
+                },
+                "1.9.8": {
+                    "id": 320,
+                    "project": 3,
+                    "published_at": "2016-07-18 18:24:10",
+                    "version": "1.9.8",
+                    "updated_at": "2024-03-15 09:24:53"
+                },
+                "1.9.9": {
+                    "id": 321,
+                    "project": 3,
+                    "published_at": "2016-08-01 18:14:49",
+                    "version": "1.9.9",
+                    "updated_at": "2024-03-15 09:24:53"
+                },
+                "2.0": {
+                    "id": 326,
+                    "project": 3,
+                    "published_at": "2017-12-02 15:13:56",
+                    "version": "2.0",
+                    "updated_at": "2024-03-15 09:24:53"
+                },
+                "2.0.1": {
+                    "id": 327,
+                    "project": 3,
+                    "published_at": "2018-01-02 00:58:26",
+                    "version": "2.0.1",
+                    "updated_at": "2024-03-15 09:24:53"
+                },
+                "2.0.2": {
+                    "id": 331,
+                    "project": 3,
+                    "published_at": "2018-02-01 14:33:34",
+                    "version": "2.0.2",
+                    "updated_at": "2024-03-15 09:24:53"
+                },
+                "2.0.3": {
+                    "id": 332,
+                    "project": 3,
+                    "published_at": "2018-03-06 14:18:29",
+                    "version": "2.0.3",
+                    "updated_at": "2024-03-15 09:24:53"
+                },
+                "2.0.4": {
+                    "id": 333,
+                    "project": 3,
+                    "published_at": "2018-04-03 03:04:36",
+                    "version": "2.0.4",
+                    "updated_at": "2024-03-15 09:24:53"
+                },
+                "2.0.5": {
+                    "id": 334,
+                    "project": 3,
+                    "published_at": "2018-05-02 01:36:39",
+                    "version": "2.0.5",
+                    "updated_at": "2024-03-15 09:24:53"
+                },
+                "2.0.6": {
+                    "id": 335,
+                    "project": 3,
+                    "published_at": "2018-06-01 15:37:22",
+                    "version": "2.0.6",
+                    "updated_at": "2024-03-15 09:24:53"
+                },
+                "2.0.7": {
+                    "id": 336,
+                    "project": 3,
+                    "published_at": "2018-07-02 09:03:25",
+                    "version": "2.0.7",
+                    "updated_at": "2024-03-15 09:24:53"
+                },
+                "2.1.1": {
+                    "id": 343,
+                    "project": 3,
+                    "published_at": "2018-08-31 08:47:50",
+                    "version": "2.1.1",
+                    "updated_at": "2024-03-15 09:24:53"
+                },
+                "2.1.2": {
+                    "id": 350,
+                    "project": 3,
+                    "published_at": "2018-10-01 09:35:45",
+                    "version": "2.1.2",
+                    "updated_at": "2024-03-15 09:24:53"
+                },
+                "2.1.3": {
+                    "id": 351,
+                    "project": 3,
+                    "published_at": "2018-11-01 14:52:37",
+                    "version": "2.1.3",
+                    "updated_at": "2024-03-15 09:24:53"
+                },
+                "2.1.4": {
+                    "id": 352,
+                    "project": 3,
+                    "published_at": "2018-12-03 17:04:59",
+                    "version": "2.1.4",
+                    "updated_at": "2024-03-15 09:24:53"
+                },
+                "2.1.5": {
+                    "id": 353,
+                    "project": 3,
+                    "published_at": "2019-01-04 13:53:59",
+                    "version": "2.1.5",
+                    "updated_at": "2024-03-15 09:24:53"
+                },
+                "2.2": {
+                    "id": 360,
+                    "project": 3,
+                    "published_at": "2019-04-02 21:09:19",
+                    "version": "2.2",
+                    "updated_at": "2024-03-15 09:24:53"
+                },
+                "2.2.1": {
+                    "id": 361,
+                    "project": 3,
+                    "published_at": "2019-05-01 08:31:13",
+                    "version": "2.2.1",
+                    "updated_at": "2024-03-15 09:24:53"
+                },
+                "2.2.2": {
+                    "id": 372,
+                    "project": 3,
+                    "published_at": "2019-06-05 13:48:44",
+                    "version": "2.2.2",
+                    "updated_at": "2024-03-15 09:24:53"
+                },
+                "2.2.3": {
+                    "id": 382,
+                    "project": 3,
+                    "published_at": "2019-07-01 07:22:04",
+                    "version": "2.2.3",
+                    "updated_at": "2024-03-15 09:24:53"
+                },
+                "2.2.4": {
+                    "id": 383,
+                    "project": 3,
+                    "published_at": "2019-08-01 09:05:51",
+                    "version": "2.2.4",
+                    "updated_at": "2024-03-15 09:24:53"
+                },
+                "2.2.5": {
+                    "id": 384,
+                    "project": 3,
+                    "published_at": "2019-09-02 20:32:28",
+                    "version": "2.2.5",
+                    "updated_at": "2024-03-15 09:24:53"
+                },
+                "2.2.7": {
+                    "id": 386,
+                    "project": 3,
+                    "published_at": "2019-11-04 08:34:43",
+                    "version": "2.2.7",
+                    "updated_at": "2024-03-15 09:24:53"
+                },
+                "3.0.1": {
+                    "id": 393,
+                    "project": 3,
+                    "published_at": "2019-12-18 09:00:53",
+                    "version": "3.0.1",
+                    "updated_at": "2024-03-15 09:24:53"
+                },
+                "3.0.2": {
+                    "id": 399,
+                    "project": 3,
+                    "published_at": "2020-01-02 07:23:40",
+                    "version": "3.0.2",
+                    "updated_at": "2024-03-15 09:24:53"
+                },
+                "3.0.3": {
+                    "id": 400,
+                    "project": 3,
+                    "published_at": "2020-02-03 09:52:40",
+                    "version": "3.0.3",
+                    "updated_at": "2024-03-15 09:24:53"
+                },
+                "3.0.4": {
+                    "id": 401,
+                    "project": 3,
+                    "published_at": "2020-03-04 09:50:58",
+                    "version": "3.0.4",
+                    "updated_at": "2024-03-15 09:24:53"
+                },
+                "3.0.5": {
+                    "id": 402,
+                    "project": 3,
+                    "published_at": "2020-04-01 08:05:17",
+                    "version": "3.0.5",
+                    "updated_at": "2024-03-15 09:24:53"
+                },
+                "3.0.6": {
+                    "id": 403,
+                    "project": 3,
+                    "published_at": "2020-05-14 09:42:14",
+                    "version": "3.0.6",
+                    "updated_at": "2024-03-15 09:24:53"
+                },
+                "3.0.7": {
+                    "id": 404,
+                    "project": 3,
+                    "published_at": "2020-06-03 09:40:22",
+                    "version": "3.0.7",
+                    "updated_at": "2024-03-15 09:24:53"
+                },
+                "3.0.8": {
+                    "id": 405,
+                    "project": 3,
+                    "published_at": "2020-07-01 04:51:08",
+                    "version": "3.0.8",
+                    "updated_at": "2024-03-15 09:24:53"
+                },
+                "3.1": {
+                    "id": 410,
+                    "project": 3,
+                    "published_at": "2020-08-04 08:09:36",
+                    "version": "3.1",
+                    "updated_at": "2024-03-15 09:24:53"
+                },
+                "3.1.1": {
+                    "id": 411,
+                    "project": 3,
+                    "published_at": "2020-09-14 17:26:11",
+                    "version": "3.1.1",
+                    "updated_at": "2024-03-15 09:24:53"
+                },
+                "3.1.2": {
+                    "id": 417,
+                    "project": 3,
+                    "published_at": "2020-10-01 06:18:07",
+                    "version": "3.1.2",
+                    "updated_at": "2024-03-15 09:24:53"
+                },
+                "3.1.3": {
+                    "id": 418,
+                    "project": 3,
+                    "published_at": "2020-11-02 08:33:31",
+                    "version": "3.1.3",
+                    "updated_at": "2024-03-15 09:24:53"
+                },
+                "3.1.4": {
+                    "id": 419,
+                    "project": 3,
+                    "published_at": "2020-12-01 06:05:22",
+                    "version": "3.1.4",
+                    "updated_at": "2024-03-15 09:24:53"
+                },
+                "3.1.5": {
+                    "id": 420,
+                    "project": 3,
+                    "published_at": "2021-01-04 10:47:29",
+                    "version": "3.1.5",
+                    "updated_at": "2024-03-15 09:24:53"
+                },
+                "3.1.7": {
+                    "id": 422,
+                    "project": 3,
+                    "published_at": "2021-02-19 09:09:31",
+                    "version": "3.1.7",
+                    "updated_at": "2024-03-15 09:24:53"
+                },
+                "3.2": {
+                    "id": 428,
+                    "project": 3,
+                    "published_at": "2021-04-06 20:54:41",
+                    "version": "3.2",
+                    "updated_at": "2024-03-15 09:24:53"
+                },
+                "3.2.3": {
+                    "id": 447,
+                    "project": 3,
+                    "published_at": "2021-05-13 07:38:51",
+                    "version": "3.2.3",
+                    "updated_at": "2024-03-15 09:24:53"
+                },
+                "3.2.4": {
+                    "id": 448,
+                    "project": 3,
+                    "published_at": "2021-06-02 08:55:14",
+                    "version": "3.2.4",
+                    "updated_at": "2024-03-15 09:24:53"
+                },
+                "3.2.5": {
+                    "id": 449,
+                    "project": 3,
+                    "published_at": "2021-07-01 07:41:18",
+                    "version": "3.2.5",
+                    "updated_at": "2024-03-15 09:24:53"
+                },
+                "3.2.6": {
+                    "id": 450,
+                    "project": 3,
+                    "published_at": "2021-08-02 06:32:30",
+                    "version": "3.2.6",
+                    "updated_at": "2024-03-15 09:24:53"
+                },
+                "3.2.7": {
+                    "id": 451,
+                    "project": 3,
+                    "published_at": "2021-09-01 07:41:01",
+                    "version": "3.2.7",
+                    "updated_at": "2024-03-15 09:24:53"
+                },
+                "3.2.8": {
+                    "id": 452,
+                    "project": 3,
+                    "published_at": "2021-10-05 07:48:24",
+                    "version": "3.2.8",
+                    "updated_at": "2024-03-15 09:24:53"
+                },
+                "3.2.9": {
+                    "id": 453,
+                    "project": 3,
+                    "published_at": "2021-11-01 09:34:25",
+                    "version": "3.2.9",
+                    "updated_at": "2024-03-15 09:24:53"
+                },
+                "4.0": {
+                    "id": 457,
+                    "project": 3,
+                    "published_at": "2021-12-07 09:20:58",
+                    "version": "4.0",
+                    "updated_at": "2024-03-15 09:24:53"
+                },
+                "4.0.1": {
+                    "id": 458,
+                    "project": 3,
+                    "published_at": "2022-01-04 09:55:32",
+                    "version": "4.0.1",
+                    "updated_at": "2024-03-15 09:24:53"
+                },
+                "4.0.2": {
+                    "id": 460,
+                    "project": 3,
+                    "published_at": "2022-02-01 07:58:40",
+                    "version": "4.0.2",
+                    "updated_at": "2024-03-15 09:24:53"
+                },
+                "4.0.3": {
+                    "id": 461,
+                    "project": 3,
+                    "published_at": "2022-03-01 08:49:46",
+                    "version": "4.0.3",
+                    "updated_at": "2024-03-15 09:24:53"
+                },
+                "4.0.4": {
+                    "id": 462,
+                    "project": 3,
+                    "published_at": "2022-04-11 07:55:03",
+                    "version": "4.0.4",
+                    "updated_at": "2024-03-15 09:24:53"
+                },
+                "4.0.5": {
+                    "id": 463,
+                    "project": 3,
+                    "published_at": "2022-06-01 12:24:17",
+                    "version": "4.0.5",
+                    "updated_at": "2024-03-15 09:24:53"
+                },
+                "4.0.6": {
+                    "id": 464,
+                    "project": 3,
+                    "published_at": "2022-07-04 07:59:32",
+                    "version": "4.0.6",
+                    "updated_at": "2024-03-15 09:24:53"
+                },
+                "4.1": {
+                    "id": 471,
+                    "project": 3,
+                    "published_at": "2022-08-03 08:42:47",
+                    "version": "4.1",
+                    "updated_at": "2024-03-15 09:24:53"
+                },
+                "4.1.1": {
+                    "id": 472,
+                    "project": 3,
+                    "published_at": "2022-09-05 05:04:54",
+                    "version": "4.1.1",
+                    "updated_at": "2024-03-15 09:24:53"
+                },
+                "4.1.2": {
+                    "id": 477,
+                    "project": 3,
+                    "published_at": "2022-10-04 07:56:43",
+                    "version": "4.1.2",
+                    "updated_at": "2024-03-15 09:24:53"
+                },
+                "4.1.3": {
+                    "id": 478,
+                    "project": 3,
+                    "published_at": "2022-11-01 06:20:28",
+                    "version": "4.1.3",
+                    "updated_at": "2024-03-15 09:24:53"
+                },
+                "4.1.4": {
+                    "id": 479,
+                    "project": 3,
+                    "published_at": "2022-12-06 09:18:20",
+                    "version": "4.1.4",
+                    "updated_at": "2024-03-15 09:24:53"
+                },
+                "4.1.5": {
+                    "id": 480,
+                    "project": 3,
+                    "published_at": "2023-01-02 21:40:04",
+                    "version": "4.1.5",
+                    "updated_at": "2024-03-15 09:24:53"
+                },
+                "4.1.7": {
+                    "id": 482,
+                    "project": 3,
+                    "published_at": "2023-02-14 08:26:20",
+                    "version": "4.1.7",
+                    "updated_at": "2024-03-15 09:24:53"
+                },
+                "4.2": {
+                    "id": 488,
+                    "project": 3,
+                    "published_at": "2023-04-03 08:38:33",
+                    "version": "4.2",
+                    "updated_at": "2024-03-15 09:24:53"
+                },
+                "4.2.1": {
+                    "id": 489,
+                    "project": 3,
+                    "published_at": "2023-05-03 13:00:40",
+                    "version": "4.2.1",
+                    "updated_at": "2024-03-15 09:24:53"
+                },
+                "4.2.2": {
+                    "id": 492,
+                    "project": 3,
+                    "published_at": "2023-06-05 14:11:32",
+                    "version": "4.2.2",
+                    "updated_at": "2024-03-15 09:24:53"
+                },
+                "4.2.3": {
+                    "id": 493,
+                    "project": 3,
+                    "published_at": "2023-07-03 08:00:04",
+                    "version": "4.2.3",
+                    "updated_at": "2024-03-15 09:24:53"
+                },
+                "4.2.4": {
+                    "id": 494,
+                    "project": 3,
+                    "published_at": "2023-08-01 17:30:17",
+                    "version": "4.2.4",
+                    "updated_at": "2024-03-15 09:24:53"
+                },
+                "4.2.5": {
+                    "id": 495,
+                    "project": 3,
+                    "published_at": "2023-09-04 10:58:22",
+                    "version": "4.2.5",
+                    "updated_at": "2024-03-15 09:24:53"
+                },
+                "4.2.6": {
+                    "id": 496,
+                    "project": 3,
+                    "published_at": "2023-10-04 14:58:34",
+                    "version": "4.2.6",
+                    "updated_at": "2024-03-15 09:24:53"
+                },
+                "4.2.7": {
+                    "id": 497,
+                    "project": 3,
+                    "published_at": "2023-11-01 06:59:15",
+                    "version": "4.2.7",
+                    "updated_at": "2024-03-15 09:24:53"
+                },
+                "5.0": {
+                    "id": 503,
+                    "project": 3,
+                    "published_at": "2023-12-04 13:12:41",
+                    "version": "5.0",
+                    "updated_at": "2024-03-15 09:24:53"
+                },
+                "5.0.1": {
+                    "id": 504,
+                    "project": 3,
+                    "published_at": "2024-01-02 09:16:20",
+                    "version": "5.0.1",
+                    "updated_at": "2024-03-15 09:24:53"
+                },
+                "5.0.2": {
+                    "id": 505,
+                    "project": 3,
+                    "published_at": "2024-02-06 14:53:28",
+                    "version": "5.0.2",
+                    "updated_at": "2024-03-15 09:24:53"
+                }
+            }
+        },
+        "timeline": [
+            {
+                "date": "2014-01-01 00:00:00",
+                "release": "1.6.1",
+                "cves": []
+            },
+            {
+                "date": "2014-02-01 00:00:00",
+                "release": "1.6.1",
+                "cves": []
+            },
+            {
+                "date": "2014-03-01 00:00:00",
+                "release": "1.6.2",
+                "cves": []
+            },
+            {
+                "date": "2014-04-01 00:00:00",
+                "release": "1.6.2",
+                "cves": []
+            },
+            {
+                "date": "2014-05-01 00:00:00",
+                "release": "1.6.4",
+                "cves": []
+            },
+            {
+                "date": "2014-06-01 00:00:00",
+                "release": "1.6.5",
+                "cves": []
+            },
+            {
+                "date": "2014-07-01 00:00:00",
+                "release": "1.6.5",
+                "cves": []
+            },
+            {
+                "date": "2014-08-01 00:00:00",
+                "release": "1.6.5",
+                "cves": []
+            },
+            {
+                "date": "2014-09-01 00:00:00",
+                "release": "1.6.6",
+                "cves": []
+            },
+            {
+                "date": "2014-10-01 00:00:00",
+                "release": "1.7",
+                "cves": []
+            },
+            {
+                "date": "2014-11-01 00:00:00",
+                "release": "1.7.1",
+                "cves": []
+            },
+            {
+                "date": "2014-12-01 00:00:00",
+                "release": "1.7.1",
+                "cves": []
+            },
+            {
+                "date": "2015-01-01 00:00:00",
+                "release": "1.7.1",
+                "cves": []
+            },
+            {
+                "date": "2015-02-01 00:00:00",
+                "release": "1.7.4",
+                "cves": []
+            },
+            {
+                "date": "2015-03-01 00:00:00",
+                "release": "1.7.5",
+                "cves": []
+            },
+            {
+                "date": "2015-04-01 00:00:00",
+                "release": "1.7.7",
+                "cves": []
+            },
+            {
+                "date": "2015-05-01 00:00:00",
+                "release": "1.8",
+                "cves": []
+            },
+            {
+                "date": "2015-06-01 00:00:00",
+                "release": "1.8.2",
+                "cves": []
+            },
+            {
+                "date": "2015-07-01 00:00:00",
+                "release": "1.8.2",
+                "cves": []
+            },
+            {
+                "date": "2015-08-01 00:00:00",
+                "release": "1.8.3",
+                "cves": []
+            },
+            {
+                "date": "2015-09-01 00:00:00",
+                "release": "1.8.4",
+                "cves": []
+            },
+            {
+                "date": "2015-10-01 00:00:00",
+                "release": "1.8.4",
+                "cves": []
+            },
+            {
+                "date": "2015-11-01 00:00:00",
+                "release": "1.8.5",
+                "cves": []
+            },
+            {
+                "date": "2015-12-01 00:00:00",
+                "release": "1.8.7",
+                "cves": []
+            },
+            {
+                "date": "2016-01-01 00:00:00",
+                "release": "1.9",
+                "cves": []
+            },
+            {
+                "date": "2016-02-01 00:00:00",
+                "release": "1.9.1",
+                "cves": []
+            },
+            {
+                "date": "2016-03-01 00:00:00",
+                "release": "1.9.2",
+                "cves": []
+            },
+            {
+                "date": "2016-04-01 00:00:00",
+                "release": "1.9.4",
+                "cves": []
+            },
+            {
+                "date": "2016-05-01 00:00:00",
+                "release": "1.9.5",
+                "cves": []
+            },
+            {
+                "date": "2016-06-01 00:00:00",
+                "release": "1.9.6",
+                "cves": []
+            },
+            {
+                "date": "2016-07-01 00:00:00",
+                "release": "1.9.7",
+                "cves": []
+            },
+            {
+                "date": "2016-08-01 00:00:00",
+                "release": "1.9.8",
+                "cves": []
+            },
+            {
+                "date": "2016-09-01 00:00:00",
+                "release": "1.9.9",
+                "cves": []
+            },
+            {
+                "date": "2016-10-01 00:00:00",
+                "release": "1.9.9",
+                "cves": []
+            },
+            {
+                "date": "2016-11-01 00:00:00",
+                "release": "1.9.9",
+                "cves": []
+            },
+            {
+                "date": "2016-12-01 00:00:00",
+                "release": "1.9.9",
+                "cves": []
+            },
+            {
+                "date": "2017-01-01 00:00:00",
+                "release": "1.9.9",
+                "cves": []
+            },
+            {
+                "date": "2017-02-01 00:00:00",
+                "release": "1.9.9",
+                "cves": []
+            },
+            {
+                "date": "2017-03-01 00:00:00",
+                "release": "1.9.9",
+                "cves": []
+            },
+            {
+                "date": "2017-04-01 00:00:00",
+                "release": "1.9.9",
+                "cves": []
+            },
+            {
+                "date": "2017-05-01 00:00:00",
+                "release": "1.9.9",
+                "cves": []
+            },
+            {
+                "date": "2017-06-01 00:00:00",
+                "release": "1.9.9",
+                "cves": []
+            },
+            {
+                "date": "2017-07-01 00:00:00",
+                "release": "1.9.9",
+                "cves": []
+            },
+            {
+                "date": "2017-08-01 00:00:00",
+                "release": "1.9.9",
+                "cves": []
+            },
+            {
+                "date": "2017-09-01 00:00:00",
+                "release": "1.9.9",
+                "cves": []
+            },
+            {
+                "date": "2017-10-01 00:00:00",
+                "release": "1.9.9",
+                "cves": []
+            },
+            {
+                "date": "2017-11-01 00:00:00",
+                "release": "1.9.9",
+                "cves": []
+            },
+            {
+                "date": "2017-12-01 00:00:00",
+                "release": "1.9.9",
+                "cves": []
+            },
+            {
+                "date": "2018-01-01 00:00:00",
+                "release": "2.0",
+                "cves": []
+            },
+            {
+                "date": "2018-02-01 00:00:00",
+                "release": "2.0.1",
+                "cves": []
+            },
+            {
+                "date": "2018-03-01 00:00:00",
+                "release": "2.0.2",
+                "cves": []
+            },
+            {
+                "date": "2018-04-01 00:00:00",
+                "release": "2.0.3",
+                "cves": []
+            },
+            {
+                "date": "2018-05-01 00:00:00",
+                "release": "2.0.4",
+                "cves": []
+            },
+            {
+                "date": "2018-06-01 00:00:00",
+                "release": "2.0.5",
+                "cves": []
+            },
+            {
+                "date": "2018-07-01 00:00:00",
+                "release": "2.0.6",
+                "cves": []
+            },
+            {
+                "date": "2018-08-01 00:00:00",
+                "release": "2.0.7",
+                "cves": []
+            },
+            {
+                "date": "2018-09-01 00:00:00",
+                "release": "2.1.1",
+                "cves": []
+            },
+            {
+                "date": "2018-10-01 00:00:00",
+                "release": "2.1.1",
+                "cves": []
+            },
+            {
+                "date": "2018-11-01 00:00:00",
+                "release": "2.1.2",
+                "cves": []
+            },
+            {
+                "date": "2018-12-01 00:00:00",
+                "release": "2.1.3",
+                "cves": []
+            },
+            {
+                "date": "2019-01-01 00:00:00",
+                "release": "2.1.4",
+                "cves": []
+            },
+            {
+                "date": "2019-02-01 00:00:00",
+                "release": "2.1.5",
+                "cves": []
+            },
+            {
+                "date": "2019-03-01 00:00:00",
+                "release": "2.1.5",
+                "cves": []
+            },
+            {
+                "date": "2019-04-01 00:00:00",
+                "release": "2.1.5",
+                "cves": []
+            },
+            {
+                "date": "2019-05-01 00:00:00",
+                "release": "2.2",
+                "cves": []
+            },
+            {
+                "date": "2019-06-01 00:00:00",
+                "release": "2.2.1",
+                "cves": []
+            },
+            {
+                "date": "2019-07-01 00:00:00",
+                "release": "2.2.2",
+                "cves": []
+            },
+            {
+                "date": "2019-08-01 00:00:00",
+                "release": "2.2.3",
+                "cves": []
+            },
+            {
+                "date": "2019-09-01 00:00:00",
+                "release": "2.2.4",
+                "cves": []
+            },
+            {
+                "date": "2019-10-01 00:00:00",
+                "release": "2.2.5",
+                "cves": []
+            },
+            {
+                "date": "2019-11-01 00:00:00",
+                "release": "2.2.5",
+                "cves": []
+            },
+            {
+                "date": "2019-12-01 00:00:00",
+                "release": "2.2.7",
+                "cves": []
+            },
+            {
+                "date": "2020-01-01 00:00:00",
+                "release": "3.0.1",
+                "cves": []
+            },
+            {
+                "date": "2020-02-01 00:00:00",
+                "release": "3.0.2",
+                "cves": []
+            },
+            {
+                "date": "2020-03-01 00:00:00",
+                "release": "3.0.3",
+                "cves": []
+            },
+            {
+                "date": "2020-04-01 00:00:00",
+                "release": "3.0.4",
+                "cves": []
+            },
+            {
+                "date": "2020-05-01 00:00:00",
+                "release": "3.0.5",
+                "cves": []
+            },
+            {
+                "date": "2020-06-01 00:00:00",
+                "release": "3.0.6",
+                "cves": []
+            },
+            {
+                "date": "2020-07-01 00:00:00",
+                "release": "3.0.7",
+                "cves": []
+            },
+            {
+                "date": "2020-08-01 00:00:00",
+                "release": "3.0.8",
+                "cves": []
+            },
+            {
+                "date": "2020-09-01 00:00:00",
+                "release": "3.1",
+                "cves": []
+            },
+            {
+                "date": "2020-10-01 00:00:00",
+                "release": "3.1.1",
+                "cves": []
+            },
+            {
+                "date": "2020-11-01 00:00:00",
+                "release": "3.1.2",
+                "cves": []
+            },
+            {
+                "date": "2020-12-01 00:00:00",
+                "release": "3.1.3",
+                "cves": []
+            },
+            {
+                "date": "2021-01-01 00:00:00",
+                "release": "3.1.4",
+                "cves": []
+            },
+            {
+                "date": "2021-02-01 00:00:00",
+                "release": "3.1.5",
+                "cves": []
+            },
+            {
+                "date": "2021-03-01 00:00:00",
+                "release": "3.1.7",
+                "cves": []
+            },
+            {
+                "date": "2021-04-01 00:00:00",
+                "release": "3.1.7",
+                "cves": []
+            },
+            {
+                "date": "2021-05-01 00:00:00",
+                "release": "3.2",
+                "cves": [
+                    "CVE-2024-24680"
+                ]
+            },
+            {
+                "date": "2021-06-01 00:00:00",
+                "release": "3.2.3",
+                "cves": [
+                    "CVE-2024-24680"
+                ]
+            },
+            {
+                "date": "2021-07-01 00:00:00",
+                "release": "3.2.4",
+                "cves": [
+                    "CVE-2024-24680"
+                ]
+            },
+            {
+                "date": "2021-08-01 00:00:00",
+                "release": "3.2.5",
+                "cves": [
+                    "CVE-2024-24680"
+                ]
+            },
+            {
+                "date": "2021-09-01 00:00:00",
+                "release": "3.2.6",
+                "cves": [
+                    "CVE-2024-24680"
+                ]
+            },
+            {
+                "date": "2021-10-01 00:00:00",
+                "release": "3.2.7",
+                "cves": [
+                    "CVE-2024-24680"
+                ]
+            },
+            {
+                "date": "2021-11-01 00:00:00",
+                "release": "3.2.8",
+                "cves": [
+                    "CVE-2024-24680"
+                ]
+            },
+            {
+                "date": "2021-12-01 00:00:00",
+                "release": "3.2.9",
+                "cves": [
+                    "CVE-2024-24680"
+                ]
+            },
+            {
+                "date": "2022-01-01 00:00:00",
+                "release": "4.0",
+                "cves": [
+                    "CVE-2024-24680"
+                ]
+            },
+            {
+                "date": "2022-02-01 00:00:00",
+                "release": "4.0.1",
+                "cves": [
+                    "CVE-2024-24680"
+                ]
+            },
+            {
+                "date": "2022-03-01 00:00:00",
+                "release": "4.0.2",
+                "cves": [
+                    "CVE-2024-24680"
+                ]
+            },
+            {
+                "date": "2022-04-01 00:00:00",
+                "release": "4.0.3",
+                "cves": [
+                    "CVE-2024-24680"
+                ]
+            },
+            {
+                "date": "2022-05-01 00:00:00",
+                "release": "4.0.4",
+                "cves": [
+                    "CVE-2024-24680"
+                ]
+            },
+            {
+                "date": "2022-06-01 00:00:00",
+                "release": "4.0.4",
+                "cves": [
+                    "CVE-2024-24680"
+                ]
+            },
+            {
+                "date": "2022-07-01 00:00:00",
+                "release": "4.0.5",
+                "cves": [
+                    "CVE-2024-24680"
+                ]
+            },
+            {
+                "date": "2022-08-01 00:00:00",
+                "release": "4.0.6",
+                "cves": [
+                    "CVE-2024-24680"
+                ]
+            },
+            {
+                "date": "2022-09-01 00:00:00",
+                "release": "4.1",
+                "cves": [
+                    "CVE-2024-24680"
+                ]
+            },
+            {
+                "date": "2022-10-01 00:00:00",
+                "release": "4.1.1",
+                "cves": [
+                    "CVE-2024-24680"
+                ]
+            },
+            {
+                "date": "2022-11-01 00:00:00",
+                "release": "4.1.2",
+                "cves": [
+                    "CVE-2024-24680"
+                ]
+            },
+            {
+                "date": "2022-12-01 00:00:00",
+                "release": "4.1.3",
+                "cves": [
+                    "CVE-2024-24680"
+                ]
+            },
+            {
+                "date": "2023-01-01 00:00:00",
+                "release": "4.1.4",
+                "cves": [
+                    "CVE-2024-24680"
+                ]
+            },
+            {
+                "date": "2023-02-01 00:00:00",
+                "release": "4.1.5",
+                "cves": [
+                    "CVE-2024-24680"
+                ]
+            },
+            {
+                "date": "2023-03-01 00:00:00",
+                "release": "4.1.7",
+                "cves": [
+                    "CVE-2024-24680"
+                ]
+            },
+            {
+                "date": "2023-04-01 00:00:00",
+                "release": "4.1.7",
+                "cves": [
+                    "CVE-2024-24680"
+                ]
+            },
+            {
+                "date": "2023-05-01 00:00:00",
+                "release": "4.2",
+                "cves": [
+                    "CVE-2024-24680"
+                ]
+            },
+            {
+                "date": "2023-06-01 00:00:00",
+                "release": "4.2.1",
+                "cves": [
+                    "CVE-2024-24680"
+                ]
+            },
+            {
+                "date": "2023-07-01 00:00:00",
+                "release": "4.2.2",
+                "cves": [
+                    "CVE-2024-24680"
+                ]
+            },
+            {
+                "date": "2023-08-01 00:00:00",
+                "release": "4.2.3",
+                "cves": [
+                    "CVE-2024-24680"
+                ]
+            },
+            {
+                "date": "2023-09-01 00:00:00",
+                "release": "4.2.4",
+                "cves": [
+                    "CVE-2024-24680"
+                ]
+            },
+            {
+                "date": "2023-10-01 00:00:00",
+                "release": "4.2.5",
+                "cves": [
+                    "CVE-2024-24680"
+                ]
+            },
+            {
+                "date": "2023-11-01 00:00:00",
+                "release": "4.2.6",
+                "cves": [
+                    "CVE-2024-24680"
+                ]
+            },
+            {
+                "date": "2023-12-01 00:00:00",
+                "release": "4.2.7",
+                "cves": [
+                    "CVE-2024-24680"
+                ]
+            },
+            {
+                "date": "2024-01-01 00:00:00",
+                "release": "5.0",
+                "cves": [
+                    "CVE-2024-24680"
+                ]
+            },
+            {
+                "date": "2024-02-01 00:00:00",
+                "release": "5.0.1",
+                "cves": [
+                    "CVE-2024-24680"
+                ]
+            },
+            {
+                "date": "2024-03-01 00:00:00",
+                "release": "5.0.2",
+                "cves": [
+                    "CVE-2024-24680"
+                ]
+            }
+        ]
+    },
+    "tornado": {
+        "cves": {},
+        "tornado": {
+            "id": 5,
+            "name": "tornado",
+            "platform": "pypi",
+            "language": "python",
+            "contributions": 384,
+            "homepage": "http://www.tornadoweb.org/",
+            "vendor": "tornadoweb",
+            "product": null,
+            "stars": 21342,
+            "forks": 5559,
+            "latest_release": "6.4",
+            "dependent_repos": 24078,
+            "dependent_projects": null,
+            "dependencies": null,
+            "updated_at": "2024-03-15 13:57:12",
+            "package_manager_url": "https://pypi.org/project/tornado/",
+            "repository_url": "https://github.com/tornadoweb/tornado",
+            "releases": {
+                "3.1.1": {
+                    "id": 577,
+                    "project": 5,
+                    "published_at": "2013-09-01 18:44:56",
+                    "version": "3.1.1",
+                    "updated_at": "2024-03-15 13:57:12"
+                },
+                "3.2": {
+                    "id": 578,
+                    "project": 5,
+                    "published_at": "2014-01-14 13:44:22",
+                    "version": "3.2",
+                    "updated_at": "2024-03-15 13:57:12"
+                },
+                "3.2.1": {
+                    "id": 579,
+                    "project": 5,
+                    "published_at": "2014-05-06 02:37:53",
+                    "version": "3.2.1",
+                    "updated_at": "2024-03-15 13:57:12"
+                },
+                "3.2.2": {
+                    "id": 580,
+                    "project": 5,
+                    "published_at": "2014-06-04 03:40:48",
+                    "version": "3.2.2",
+                    "updated_at": "2024-03-15 13:57:12"
+                },
+                "4.0": {
+                    "id": 581,
+                    "project": 5,
+                    "published_at": "2014-07-15 12:47:07",
+                    "version": "4.0",
+                    "updated_at": "2024-03-15 13:57:12"
+                },
+                "4.0.1": {
+                    "id": 582,
+                    "project": 5,
+                    "published_at": "2014-08-12 13:12:17",
+                    "version": "4.0.1",
+                    "updated_at": "2024-03-15 13:57:12"
+                },
+                "4.0.2": {
+                    "id": 583,
+                    "project": 5,
+                    "published_at": "2014-09-11 03:48:53",
+                    "version": "4.0.2",
+                    "updated_at": "2024-03-15 13:57:12"
+                },
+                "4.1": {
+                    "id": 584,
+                    "project": 5,
+                    "published_at": "2015-02-07 17:59:22",
+                    "version": "4.1",
+                    "updated_at": "2024-03-15 13:57:12"
+                },
+                "4.2": {
+                    "id": 586,
+                    "project": 5,
+                    "published_at": "2015-05-27 01:50:21",
+                    "version": "4.2",
+                    "updated_at": "2024-03-15 13:57:12"
+                },
+                "4.2.1": {
+                    "id": 587,
+                    "project": 5,
+                    "published_at": "2015-07-17 15:52:36",
+                    "version": "4.2.1",
+                    "updated_at": "2024-03-15 13:57:12"
+                },
+                "4.3": {
+                    "id": 589,
+                    "project": 5,
+                    "published_at": "2015-11-06 22:58:14",
+                    "version": "4.3",
+                    "updated_at": "2024-03-15 13:57:12"
+                },
+                "4.4.1": {
+                    "id": 593,
+                    "project": 5,
+                    "published_at": "2016-07-23 17:19:57",
+                    "version": "4.4.1",
+                    "updated_at": "2024-03-15 13:57:12"
+                },
+                "4.4.2": {
+                    "id": 594,
+                    "project": 5,
+                    "published_at": "2016-09-30 23:32:03",
+                    "version": "4.4.2",
+                    "updated_at": "2024-03-15 13:57:12"
+                },
+                "4.4.3": {
+                    "id": 595,
+                    "project": 5,
+                    "published_at": "2017-03-30 14:52:05",
+                    "version": "4.4.3",
+                    "updated_at": "2024-03-15 13:57:12"
+                },
+                "4.5.1": {
+                    "id": 598,
+                    "project": 5,
+                    "published_at": "2017-04-20 13:34:59",
+                    "version": "4.5.1",
+                    "updated_at": "2024-03-15 13:57:12"
+                },
+                "4.5.2": {
+                    "id": 599,
+                    "project": 5,
+                    "published_at": "2017-08-27 20:39:57",
+                    "version": "4.5.2",
+                    "updated_at": "2024-03-15 13:57:12"
+                },
+                "4.5.3": {
+                    "id": 600,
+                    "project": 5,
+                    "published_at": "2018-01-06 18:09:36",
+                    "version": "4.5.3",
+                    "updated_at": "2024-03-15 13:57:12"
+                },
+                "5.0.1": {
+                    "id": 604,
+                    "project": 5,
+                    "published_at": "2018-03-18 15:50:50",
+                    "version": "5.0.1",
+                    "updated_at": "2024-03-15 13:57:12"
+                },
+                "5.0.2": {
+                    "id": 605,
+                    "project": 5,
+                    "published_at": "2018-04-08 00:42:53",
+                    "version": "5.0.2",
+                    "updated_at": "2024-03-15 13:57:12"
+                },
+                "5.1": {
+                    "id": 608,
+                    "project": 5,
+                    "published_at": "2018-07-11 13:42:14",
+                    "version": "5.1",
+                    "updated_at": "2024-03-15 13:57:12"
+                },
+                "5.1.1": {
+                    "id": 609,
+                    "project": 5,
+                    "published_at": "2018-09-16 19:22:58",
+                    "version": "5.1.1",
+                    "updated_at": "2024-03-15 13:57:12"
+                },
+                "6.0.2": {
+                    "id": 613,
+                    "project": 5,
+                    "published_at": "2019-03-23 16:57:11",
+                    "version": "6.0.2",
+                    "updated_at": "2024-03-15 13:57:12"
+                },
+                "6.0.3": {
+                    "id": 614,
+                    "project": 5,
+                    "published_at": "2019-06-23 22:32:30",
+                    "version": "6.0.3",
+                    "updated_at": "2024-03-15 13:57:12"
+                },
+                "6.0.4": {
+                    "id": 615,
+                    "project": 5,
+                    "published_at": "2020-03-04 02:32:23",
+                    "version": "6.0.4",
+                    "updated_at": "2024-03-15 13:57:12"
+                },
+                "6.1": {
+                    "id": 618,
+                    "project": 5,
+                    "published_at": "2020-10-30 19:04:55",
+                    "version": "6.1",
+                    "updated_at": "2024-03-15 13:57:12"
+                },
+                "6.2": {
+                    "id": 621,
+                    "project": 5,
+                    "published_at": "2022-07-03 22:39:25",
+                    "version": "6.2",
+                    "updated_at": "2024-03-15 13:57:12"
+                },
+                "6.3.1": {
+                    "id": 625,
+                    "project": 5,
+                    "published_at": "2023-04-21 23:17:13",
+                    "version": "6.3.1",
+                    "updated_at": "2024-03-15 13:57:12"
+                },
+                "6.3.2": {
+                    "id": 626,
+                    "project": 5,
+                    "published_at": "2023-05-14 03:42:17",
+                    "version": "6.3.2",
+                    "updated_at": "2024-03-15 13:57:12"
+                },
+                "6.3.3": {
+                    "id": 627,
+                    "project": 5,
+                    "published_at": "2023-08-11 15:21:47",
+                    "version": "6.3.3",
+                    "updated_at": "2024-03-15 13:57:12"
+                },
+                "6.4": {
+                    "id": 629,
+                    "project": 5,
+                    "published_at": "2023-11-29 03:39:29",
+                    "version": "6.4",
+                    "updated_at": "2024-03-15 13:57:12"
+                }
+            }
+        },
+        "timeline": [
+            {
+                "date": "2014-01-01 00:00:00",
+                "release": "3.1.1",
+                "cves": []
+            },
+            {
+                "date": "2014-02-01 00:00:00",
+                "release": "3.2",
+                "cves": []
+            },
+            {
+                "date": "2014-03-01 00:00:00",
+                "release": "3.2",
+                "cves": []
+            },
+            {
+                "date": "2014-04-01 00:00:00",
+                "release": "3.2",
+                "cves": []
+            },
+            {
+                "date": "2014-05-01 00:00:00",
+                "release": "3.2",
+                "cves": []
+            },
+            {
+                "date": "2014-06-01 00:00:00",
+                "release": "3.2.1",
+                "cves": []
+            },
+            {
+                "date": "2014-07-01 00:00:00",
+                "release": "3.2.2",
+                "cves": []
+            },
+            {
+                "date": "2014-08-01 00:00:00",
+                "release": "4.0",
+                "cves": []
+            },
+            {
+                "date": "2014-09-01 00:00:00",
+                "release": "4.0.1",
+                "cves": []
+            },
+            {
+                "date": "2014-10-01 00:00:00",
+                "release": "4.0.2",
+                "cves": []
+            },
+            {
+                "date": "2014-11-01 00:00:00",
+                "release": "4.0.2",
+                "cves": []
+            },
+            {
+                "date": "2014-12-01 00:00:00",
+                "release": "4.0.2",
+                "cves": []
+            },
+            {
+                "date": "2015-01-01 00:00:00",
+                "release": "4.0.2",
+                "cves": []
+            },
+            {
+                "date": "2015-02-01 00:00:00",
+                "release": "4.0.2",
+                "cves": []
+            },
+            {
+                "date": "2015-03-01 00:00:00",
+                "release": "4.1",
+                "cves": []
+            },
+            {
+                "date": "2015-04-01 00:00:00",
+                "release": "4.1",
+                "cves": []
+            },
+            {
+                "date": "2015-05-01 00:00:00",
+                "release": "4.1",
+                "cves": []
+            },
+            {
+                "date": "2015-06-01 00:00:00",
+                "release": "4.2",
+                "cves": []
+            },
+            {
+                "date": "2015-07-01 00:00:00",
+                "release": "4.2",
+                "cves": []
+            },
+            {
+                "date": "2015-08-01 00:00:00",
+                "release": "4.2.1",
+                "cves": []
+            },
+            {
+                "date": "2015-09-01 00:00:00",
+                "release": "4.2.1",
+                "cves": []
+            },
+            {
+                "date": "2015-10-01 00:00:00",
+                "release": "4.2.1",
+                "cves": []
+            },
+            {
+                "date": "2015-11-01 00:00:00",
+                "release": "4.2.1",
+                "cves": []
+            },
+            {
+                "date": "2015-12-01 00:00:00",
+                "release": "4.3",
+                "cves": []
+            },
+            {
+                "date": "2016-01-01 00:00:00",
+                "release": "4.3",
+                "cves": []
+            },
+            {
+                "date": "2016-02-01 00:00:00",
+                "release": "4.3",
+                "cves": []
+            },
+            {
+                "date": "2016-03-01 00:00:00",
+                "release": "4.3",
+                "cves": []
+            },
+            {
+                "date": "2016-04-01 00:00:00",
+                "release": "4.3",
+                "cves": []
+            },
+            {
+                "date": "2016-05-01 00:00:00",
+                "release": "4.3",
+                "cves": []
+            },
+            {
+                "date": "2016-06-01 00:00:00",
+                "release": "4.3",
+                "cves": []
+            },
+            {
+                "date": "2016-07-01 00:00:00",
+                "release": "4.3",
+                "cves": []
+            },
+            {
+                "date": "2016-08-01 00:00:00",
+                "release": "4.4.1",
+                "cves": []
+            },
+            {
+                "date": "2016-09-01 00:00:00",
+                "release": "4.4.1",
+                "cves": []
+            },
+            {
+                "date": "2016-10-01 00:00:00",
+                "release": "4.4.2",
+                "cves": []
+            },
+            {
+                "date": "2016-11-01 00:00:00",
+                "release": "4.4.2",
+                "cves": []
+            },
+            {
+                "date": "2016-12-01 00:00:00",
+                "release": "4.4.2",
+                "cves": []
+            },
+            {
+                "date": "2017-01-01 00:00:00",
+                "release": "4.4.2",
+                "cves": []
+            },
+            {
+                "date": "2017-02-01 00:00:00",
+                "release": "4.4.2",
+                "cves": []
+            },
+            {
+                "date": "2017-03-01 00:00:00",
+                "release": "4.4.2",
+                "cves": []
+            },
+            {
+                "date": "2017-04-01 00:00:00",
+                "release": "4.4.3",
+                "cves": []
+            },
+            {
+                "date": "2017-05-01 00:00:00",
+                "release": "4.5.1",
+                "cves": []
+            },
+            {
+                "date": "2017-06-01 00:00:00",
+                "release": "4.5.1",
+                "cves": []
+            },
+            {
+                "date": "2017-07-01 00:00:00",
+                "release": "4.5.1",
+                "cves": []
+            },
+            {
+                "date": "2017-08-01 00:00:00",
+                "release": "4.5.1",
+                "cves": []
+            },
+            {
+                "date": "2017-09-01 00:00:00",
+                "release": "4.5.2",
+                "cves": []
+            },
+            {
+                "date": "2017-10-01 00:00:00",
+                "release": "4.5.2",
+                "cves": []
+            },
+            {
+                "date": "2017-11-01 00:00:00",
+                "release": "4.5.2",
+                "cves": []
+            },
+            {
+                "date": "2017-12-01 00:00:00",
+                "release": "4.5.2",
+                "cves": []
+            },
+            {
+                "date": "2018-01-01 00:00:00",
+                "release": "4.5.2",
+                "cves": []
+            },
+            {
+                "date": "2018-02-01 00:00:00",
+                "release": "4.5.3",
+                "cves": []
+            },
+            {
+                "date": "2018-03-01 00:00:00",
+                "release": "4.5.3",
+                "cves": []
+            },
+            {
+                "date": "2018-04-01 00:00:00",
+                "release": "5.0.1",
+                "cves": []
+            },
+            {
+                "date": "2018-05-01 00:00:00",
+                "release": "5.0.2",
+                "cves": []
+            },
+            {
+                "date": "2018-06-01 00:00:00",
+                "release": "5.0.2",
+                "cves": []
+            },
+            {
+                "date": "2018-07-01 00:00:00",
+                "release": "5.0.2",
+                "cves": []
+            },
+            {
+                "date": "2018-08-01 00:00:00",
+                "release": "5.1",
+                "cves": []
+            },
+            {
+                "date": "2018-09-01 00:00:00",
+                "release": "5.1",
+                "cves": []
+            },
+            {
+                "date": "2018-10-01 00:00:00",
+                "release": "5.1.1",
+                "cves": []
+            },
+            {
+                "date": "2018-11-01 00:00:00",
+                "release": "5.1.1",
+                "cves": []
+            },
+            {
+                "date": "2018-12-01 00:00:00",
+                "release": "5.1.1",
+                "cves": []
+            },
+            {
+                "date": "2019-01-01 00:00:00",
+                "release": "5.1.1",
+                "cves": []
+            },
+            {
+                "date": "2019-02-01 00:00:00",
+                "release": "5.1.1",
+                "cves": []
+            },
+            {
+                "date": "2019-03-01 00:00:00",
+                "release": "5.1.1",
+                "cves": []
+            },
+            {
+                "date": "2019-04-01 00:00:00",
+                "release": "6.0.2",
+                "cves": []
+            },
+            {
+                "date": "2019-05-01 00:00:00",
+                "release": "6.0.2",
+                "cves": []
+            },
+            {
+                "date": "2019-06-01 00:00:00",
+                "release": "6.0.2",
+                "cves": []
+            },
+            {
+                "date": "2019-07-01 00:00:00",
+                "release": "6.0.3",
+                "cves": []
+            },
+            {
+                "date": "2019-08-01 00:00:00",
+                "release": "6.0.3",
+                "cves": []
+            },
+            {
+                "date": "2019-09-01 00:00:00",
+                "release": "6.0.3",
+                "cves": []
+            },
+            {
+                "date": "2019-10-01 00:00:00",
+                "release": "6.0.3",
+                "cves": []
+            },
+            {
+                "date": "2019-11-01 00:00:00",
+                "release": "6.0.3",
+                "cves": []
+            },
+            {
+                "date": "2019-12-01 00:00:00",
+                "release": "6.0.3",
+                "cves": []
+            },
+            {
+                "date": "2020-01-01 00:00:00",
+                "release": "6.0.3",
+                "cves": []
+            },
+            {
+                "date": "2020-02-01 00:00:00",
+                "release": "6.0.3",
+                "cves": []
+            },
+            {
+                "date": "2020-03-01 00:00:00",
+                "release": "6.0.3",
+                "cves": []
+            },
+            {
+                "date": "2020-04-01 00:00:00",
+                "release": "6.0.4",
+                "cves": []
+            },
+            {
+                "date": "2020-05-01 00:00:00",
+                "release": "6.0.4",
+                "cves": []
+            },
+            {
+                "date": "2020-06-01 00:00:00",
+                "release": "6.0.4",
+                "cves": []
+            },
+            {
+                "date": "2020-07-01 00:00:00",
+                "release": "6.0.4",
+                "cves": []
+            },
+            {
+                "date": "2020-08-01 00:00:00",
+                "release": "6.0.4",
+                "cves": []
+            },
+            {
+                "date": "2020-09-01 00:00:00",
+                "release": "6.0.4",
+                "cves": []
+            },
+            {
+                "date": "2020-10-01 00:00:00",
+                "release": "6.0.4",
+                "cves": []
+            },
+            {
+                "date": "2020-11-01 00:00:00",
+                "release": "6.1",
+                "cves": []
+            },
+            {
+                "date": "2020-12-01 00:00:00",
+                "release": "6.1",
+                "cves": []
+            },
+            {
+                "date": "2021-01-01 00:00:00",
+                "release": "6.1",
+                "cves": []
+            },
+            {
+                "date": "2021-02-01 00:00:00",
+                "release": "6.1",
+                "cves": []
+            },
+            {
+                "date": "2021-03-01 00:00:00",
+                "release": "6.1",
+                "cves": []
+            },
+            {
+                "date": "2021-04-01 00:00:00",
+                "release": "6.1",
+                "cves": []
+            },
+            {
+                "date": "2021-05-01 00:00:00",
+                "release": "6.1",
+                "cves": []
+            },
+            {
+                "date": "2021-06-01 00:00:00",
+                "release": "6.1",
+                "cves": []
+            },
+            {
+                "date": "2021-07-01 00:00:00",
+                "release": "6.1",
+                "cves": []
+            },
+            {
+                "date": "2021-08-01 00:00:00",
+                "release": "6.1",
+                "cves": []
+            },
+            {
+                "date": "2021-09-01 00:00:00",
+                "release": "6.1",
+                "cves": []
+            },
+            {
+                "date": "2021-10-01 00:00:00",
+                "release": "6.1",
+                "cves": []
+            },
+            {
+                "date": "2021-11-01 00:00:00",
+                "release": "6.1",
+                "cves": []
+            },
+            {
+                "date": "2021-12-01 00:00:00",
+                "release": "6.1",
+                "cves": []
+            },
+            {
+                "date": "2022-01-01 00:00:00",
+                "release": "6.1",
+                "cves": []
+            },
+            {
+                "date": "2022-02-01 00:00:00",
+                "release": "6.1",
+                "cves": []
+            },
+            {
+                "date": "2022-03-01 00:00:00",
+                "release": "6.1",
+                "cves": []
+            },
+            {
+                "date": "2022-04-01 00:00:00",
+                "release": "6.1",
+                "cves": []
+            },
+            {
+                "date": "2022-05-01 00:00:00",
+                "release": "6.1",
+                "cves": []
+            },
+            {
+                "date": "2022-06-01 00:00:00",
+                "release": "6.1",
+                "cves": []
+            },
+            {
+                "date": "2022-07-01 00:00:00",
+                "release": "6.1",
+                "cves": []
+            },
+            {
+                "date": "2022-08-01 00:00:00",
+                "release": "6.2",
+                "cves": []
+            },
+            {
+                "date": "2022-09-01 00:00:00",
+                "release": "6.2",
+                "cves": []
+            },
+            {
+                "date": "2022-10-01 00:00:00",
+                "release": "6.2",
+                "cves": []
+            },
+            {
+                "date": "2022-11-01 00:00:00",
+                "release": "6.2",
+                "cves": []
+            },
+            {
+                "date": "2022-12-01 00:00:00",
+                "release": "6.2",
+                "cves": []
+            },
+            {
+                "date": "2023-01-01 00:00:00",
+                "release": "6.2",
+                "cves": []
+            },
+            {
+                "date": "2023-02-01 00:00:00",
+                "release": "6.2",
+                "cves": []
+            },
+            {
+                "date": "2023-03-01 00:00:00",
+                "release": "6.2",
+                "cves": []
+            },
+            {
+                "date": "2023-04-01 00:00:00",
+                "release": "6.2",
+                "cves": []
+            },
+            {
+                "date": "2023-05-01 00:00:00",
+                "release": "6.3.1",
+                "cves": []
+            },
+            {
+                "date": "2023-06-01 00:00:00",
+                "release": "6.3.2",
+                "cves": []
+            },
+            {
+                "date": "2023-07-01 00:00:00",
+                "release": "6.3.2",
+                "cves": []
+            },
+            {
+                "date": "2023-08-01 00:00:00",
+                "release": "6.3.2",
+                "cves": []
+            },
+            {
+                "date": "2023-09-01 00:00:00",
+                "release": "6.3.3",
+                "cves": []
+            },
+            {
+                "date": "2023-10-01 00:00:00",
+                "release": "6.3.3",
+                "cves": []
+            },
+            {
+                "date": "2023-11-01 00:00:00",
+                "release": "6.3.3",
+                "cves": []
+            },
+            {
+                "date": "2023-12-01 00:00:00",
+                "release": "6.4",
+                "cves": []
+            },
+            {
+                "date": "2024-01-01 00:00:00",
+                "release": "6.4",
+                "cves": []
+            },
+            {
+                "date": "2024-02-01 00:00:00",
+                "release": "6.4",
+                "cves": []
+            },
+            {
+                "date": "2024-03-01 00:00:00",
+                "release": "6.4",
+                "cves": []
+            }
+        ]
+    }
+}
