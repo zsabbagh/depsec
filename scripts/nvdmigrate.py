@@ -151,7 +151,7 @@ def create_cve(entry: dict) -> int | nvd.CVE:
     # description of the CVE
     description = get_first_eng_value(cve, 'description', 'description_data')
     base_metrics = impact.get('baseMetricV3', {}) if impact.get('baseMetricV3', {}) != {} else impact.get('baseMetricV2', {})
-    cvss_expliotability_score = base_metrics.get('exploitabilityScore', None)
+    cvss_exploitability_score = base_metrics.get('exploitabilityScore', None)
     cvss_impact_score = base_metrics.get('impactScore', None)
     # v2 and v3-3.1 share 'version', 'vectorString', 'confidentialityImpact', 'integrityImpact', 'availabilityImpact', 'baseScore'
     cvss = base_metrics.get('cvssV3', {}) if base_metrics.get('cvssV3', {}) != {} else base_metrics.get('cvssV2', {})
@@ -194,7 +194,7 @@ def create_cve(entry: dict) -> int | nvd.CVE:
         published_at=published_at,
         last_modified_at=last_modified_at,
         cvss_version=cvss_version,
-        cvss_expliotability_score=cvss_expliotability_score,
+        cvss_exploitability_score=cvss_exploitability_score,
         cvss_impact_score=cvss_impact_score,
         cvss_vector_string=cvss_vector_string,
         cvss_attack_vector=cvss_attack_vector,

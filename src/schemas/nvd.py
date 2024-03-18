@@ -16,7 +16,7 @@ class CVE(Model):
     updated_at: The date the row in the database was updated
     cwe: The Common Weakness Enumeration
     cvss_version: The Common Vulnerability Scoring System version
-    cvss_expliotability_score: The CVSS exploitability score
+    cvss_exploitability_score: The CVSS exploitability score
     cvss_impact_score: The CVSS impact score
     cvss_vector_string: The CVSS vector string
     cvss_attack_vector: The CVSS attack vector
@@ -37,7 +37,7 @@ class CVE(Model):
     last_modified_at = DateTimeField(null=True)
     updated_at = DateTimeField(default=datetime.datetime.now)
     cvss_version = CharField(null=True)
-    cvss_expliotability_score = FloatField(null=True) # typo in the field name, should be 'exploitability'
+    cvss_exploitability_score = FloatField(null=True)
     cvss_impact_score = FloatField(null=True)
     cvss_vector_string = CharField(null=True)
     cvss_attack_vector = CharField(null=True)

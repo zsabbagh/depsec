@@ -54,7 +54,9 @@ def impact_to_int(score: str):
     """
     Translates a CVSS score to an integer
     """
-    if type(score) in [int, float]:
+    if score is None:
+        return None
+    elif type(score) in [int, float]:
         return score
     score = score.lower()
     match score:
@@ -87,7 +89,7 @@ def plot_timelines(timelines: dict):
     scores = [
         ('CVSS base score', 'cvss_base_score'),
         ('CVSS impact score', 'cvss_impact_score'),
-        ('CVSS exploitability score', 'cvss_expliotability_score'), # typo in the field name, should be 'exploitability'
+        ('CVSS exploitability score', 'cvss_exploitability_score'),
         ('CVSS confidentiality impact', 'cvss_confidentiality_impact'),
         ('CVSS integrity impact', 'cvss_integrity_impact'),
         ('CVSS availability impact', 'cvss_availability_impact'),
