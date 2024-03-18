@@ -184,6 +184,11 @@ if __name__ == '__main__':
     with open(json_dir / 'timelines.json', 'w') as f:
         json.dump(timelines, f, indent=4)
 
+    # get all the vulnerabilities for the projects
+    # and plot them
+    # 1) by CWE category
+    # 2) by CWE weakness
+    # 3) by severity
     vulnerabilities = {}
     for project in args.projects:
         # get all the vulnerabilities for the project
@@ -192,6 +197,10 @@ if __name__ == '__main__':
     vulnerabilities = convert_datetime_to_str(vulnerabilities)
     with open(json_dir / 'vulnerabilities.json', 'w') as f:
         json.dump(vulnerabilities, f, indent=4)
+    
+    # TODO: do the same above but for each dependencies
+    
+    # TODO: create LaTeX tables with the data
 
     # TODO: store the data in a JSON directory
     # include TIMESTAMP OF NVD FILE
