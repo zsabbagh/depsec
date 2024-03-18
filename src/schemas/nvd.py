@@ -37,7 +37,7 @@ class CVE(Model):
     last_modified_at = DateTimeField(null=True)
     updated_at = DateTimeField(default=datetime.datetime.now)
     cvss_version = CharField(null=True)
-    cvss_expliotability_score = FloatField(null=True)
+    cvss_expliotability_score = FloatField(null=True) # typo in the field name, should be 'exploitability'
     cvss_impact_score = FloatField(null=True)
     cvss_vector_string = CharField(null=True)
     cvss_attack_vector = CharField(null=True)

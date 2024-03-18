@@ -50,6 +50,22 @@ def get_categories(timeline_entry: dict):
 def get_scores(timeline_entry: dict):
     pass
 
+def impact_to_int(score: str):
+    """
+    Translates a CVSS score to an integer
+    """
+    if type(score) in [int, float]:
+        return score
+    score = score.lower()
+    match score:
+        case 'none':
+            return 0
+        case 'low' | 'partial':
+            return 1
+        case 'high' | 'complete':
+            return 2
+    return None
+
 def plot_timelines(timelines: dict):
     """
     Expects a dictionary with the following structure:
@@ -66,37 +82,74 @@ def plot_timelines(timelines: dict):
         ]
     }
     """
-    fig, count_ax = plt.subplots()
-    fig2, score_ax = plt.subplots()
+    fig_count, ax_count = plt.subplots()
+    # the scores to plot
+    scores = [
+        ('CVSS base score', 'cvss_base_score'),
+        ('CVSS impact score', 'cvss_impact_score'),
+        ('CVSS exploitability score', 'cvss_expliotability_score'), # typo in the field name, should be 'exploitability'
+        ('CVSS confidentiality impact', 'cvss_confidentiality_impact'),
+        ('CVSS integrity impact', 'cvss_integrity_impact'),
+        ('CVSS availability impact', 'cvss_availability_impact'),
+    ]
+    figures_scores = []
+    for title, kw in scores:
+        fig, ax = plt.subplots()
+        figures_scores.append((fig, ax, kw))
+        ax.set_title(title)
+        ax.set_ylabel('Score')
     pprint(timelines)
     for project, data in timelines.items():
         timeline = data.get('timeline')
         cves = data.get('cves')
         print(cves)
         dates = [ entry.get('date') for entry in timeline ]
-        cves_count = [ len(entry.get('cves', [])) for entry in timeline ]
-        max_scores = []
-        mean_scores = []
-        median_scores = []
-        for entry in timeline:
-            scrs = []
-            for cve in entry['cves']:
-                scrs.append(cves.get(cve, {}).get('cvss_base_score'))
-            if len(scrs) == 0:
-                max_scores.append(0)
-                mean_scores.append(0)
-                median_scores.append(0)
-                continue
-            max_scores.append(max(scrs))
-            mean_scores.append(np.mean(scrs))
-            median_scores.append(np.std(scrs))
-        count_ax.step(dates, cves_count, label=f"{project} # of CVEs")
-        # score_ax.step(dates, max_scores, label=f"{project} max")
-        score_ax.step(dates, mean_scores, label=f"{project} mean")
-        # score_ax.step(dates, median_scores, label=f"{project} med")
-    fig.legend()
-    fig2.legend()
+        for fig, ax, kw in figures_scores:
+            cves_count = [ len(entry.get('cves', [])) for entry in timeline ]
+            max_scores = []
+            mean_scores = []
+            median_scores = []
+            for entry in timeline:
+                scrs = []
+                for cve in entry['cves']:
+                    val = cves.get(cve, {}).get(kw)
+                    value = impact_to_int(val)
+                    if type(value) not in [int, float]:
+                        logger.warning(f"Unexpected value for {project}, keyword '{kw}' in {cve}: {value}")
+                        continue
+                    scrs.append(value)
+                if len(scrs) == 0:
+                    max_scores.append(0)
+                    mean_scores.append(0)
+                    median_scores.append(0)
+                    continue
+                max_scores.append(max(scrs))
+                mean_scores.append(np.mean(scrs))
+                median_scores.append(np.std(scrs))
+            kw_name = kw.replace('cvss_', '').replace('_', ' ')
+            ax.plot(dates, mean_scores, label=f"{project.title()} mean {kw_name}")
+        ax_count.plot(dates, cves_count, label=f"{project.title()} # of CVEs")
+    ax_count.set_ylabel('Number of CVEs')
+    # add date points to each 5th entry
+    ax_count.grid(color='gray', linestyle='-', linewidth=0.2, axis='y', zorder=0)
+    fig_count.legend()
+    fig_count.autofmt_xdate()
+    for fig, ax, kw in figures_scores:
+        ax.set_ylabel('Score')
+        ax.grid(color='gray', linestyle='-', linewidth=0.2, axis='y', zorder=0)
+        fig.legend()
+        fig.autofmt_xdate()
     plt.show()
+
+
+def plot_vulnerabilities(vulnerabilities: dict):
+    """
+    Expects a dictionary with the following structure:
+    <project>: {
+        <cve-id>: {}
+    }
+    """
+    pass
 
 mw = Middleware(args.config)
 mw.load_projects(*args.projects)
