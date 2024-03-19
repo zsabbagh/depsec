@@ -1,4 +1,4 @@
-import datetime, os
+import datetime
 from peewee import *
 from src.schemas.config import DatabaseConfig
 
@@ -50,7 +50,7 @@ class Entry(Model):
 
     class Meta:
         database = CONFIG.get()
-        table_name = 'weaknesses'
+        table_name = 'entries'
 
 
 class Consequence(Model):

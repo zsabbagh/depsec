@@ -170,10 +170,10 @@ def create_entry(entry: dict, kind: str):
         members = relationships.get('Has_Member', {})
         members = wrap_as_list(members)
         for member in members:
-            print(f"MEMBER: {member}")
             id = member.get('@CWE_ID')
             view = member.get('@View_ID')
             id = f"CWE-{id}"
+            logger.debug(f"Found member {id} of for category {cwe_formatted_id} in view {view}")
             logger.debug(f"Creating relation: {id}, {view}")
             if not_none(id):
                 relation = cwe.Relation.create(
@@ -211,7 +211,6 @@ def create_entry(entry: dict, kind: str):
         logger.debug(f"RELATIONS type: {type(relations).__name__}")
         relations = wrap_as_list(relations)
         for rel in relations:
-            pprint_dict(rel)
             kind, ordinal, view_id, other_id = rel.get('@Nature'), rel.get('@Ordinal'), rel.get('@View_ID'), rel.get('@CWE_ID')
             other_id = f"CWE-{other_id}"
             if not_none(kind, view_id, other_id):

@@ -54,9 +54,11 @@ class CWE:
         entry = CWE.get(entry, to_dict=False)
         if entry is None:
             return
-        relations = [ r for r in entry.relations ]
-        if kind is not None:
-            relations = [ r for r in relations if r.kind == kind ]
+        logger.debug(f"Fetching relations for {entry.cwe_id}")
+        relations = [ r for r in entry.relations if r.kind == kind or kind is None ]
+        for relation in relations:
+            logger.debug(f"Found relation of kind '{relation.kind}', from {relation.main.cwe_id} to {relation.other_id}")
+        logger.debug(f"Got {len(relations)} relations of kind '{kind}'")
         if as_entry:
             result = []
             for relation in relations:
@@ -99,6 +101,7 @@ class NVD:
 
     def cwes(entry: nvd.CVE | str,
              categories: bool = 1,
+             exclude_deprecated: bool = 1,
              to_dict: bool = True) -> List[cwe.Entry] | list[dict] | None:
         """
         This function translates a NVD CVE object to the corresponding CWE object.
@@ -109,25 +112,28 @@ class NVD:
         """
         print(f"Getting CWEs for {entry}")
         categories = bool(categories)
+        exclude_deprecated = bool(exclude_deprecated)
         entry = NVD.get(entry, to_dict=False)
         if entry is None:
             return None
         cwes = [ c for c in entry.cwes ]
         logger.debug(f"Found {len(cwes)} CWEs")
-        results = []
+        results = [ CWE.get(c.cwe_id, to_dict=False) for c in cwes ]
         ids_added = set()
         for cw in cwes:
             if cw.cwe_id in ids_added:
                 continue
-            ids_added.add(cw.cwe_id)
             if categories:
                 cws = CWE.categories(cw.cwe_id, as_entry=True, to_dict=False)
                 cws = [ c for c in cws if c.cwe_id not in ids_added ]
                 for c in cws:
+                    logger.debug(f"Adding CWE {c.cwe_id} to the list, with status {c.status}")
                     ids_added.add(c.cwe_id)
                     results.append(c)
             else:
                 cw = CWE.get(cw.cwe_id, to_dict=False)
                 if cw is not None:
                     results.append(cw)
+            ids_added.add(cw.cwe_id)
+        results = [ res for res in results if not exclude_deprecated or res.status.lower() not in ('deprecated', 'obsolete') ]
         return _map_attrs_dict(results) if to_dict else results

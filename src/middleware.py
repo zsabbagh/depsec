@@ -2,6 +2,7 @@ import time, yaml, json, glob
 import src.schemas.nvd as nvd
 import src.schemas.cwe as cwe
 import src.utils.db as db
+import argparse
 from playhouse.shortcuts import model_to_dict
 from pprint import pprint
 from src.queriers.libraries import LibrariesQuerier
@@ -330,7 +331,8 @@ class Middleware:
     def get_vulnerabilities(self,
                             project_name: str,
                             version: str = None,
-                            platform: str="pypi") -> List[nvd.CVE]:
+                            platform: str="pypi",
+                            include_categories: bool = False) -> List[nvd.CVE]:
         """
         Get vulnerabilities of a project and a specific version number (release)
 
@@ -434,9 +436,10 @@ class Middleware:
             if add:
                 vulnset.add(cve.id)
                 if cve.cve_id not in cves:
-                    weaknesses = db.NVD.cwes(cve.cve_id, categories=False, to_dict=False)
+                    weaknesses = db.NVD.cwes(cve.cve_id, categories=include_categories, to_dict=False)
                     # TODO: verify categories
                     for cwe in weaknesses:
+                        logger.debug(f"Processing CWE {cwe.cwe_id}")
                         cwe_id = cwe.cwe_id
                         if cwe_id not in cwes:
                             cwes[cwe_id] = model_to_dict(cwe, recurse=False)
@@ -742,4 +745,10 @@ class Middleware:
 if __name__ == "__main__":
     # For the purpose of loading in interactive shell
     # e.g., py -i src/middleware.py
+    parser = argparse.ArgumentParser()
+    parser.add_argument('project', type=str, help='The project name', default='jinja2')
+    args = parser.parse_args()
     mw = Middleware("config.yml", debug=True)
+    vulns = mw.get_vulnerabilities(args.project)
+    cwes = [ (c, vulns.get('cwes').get(c, {}).get('status')) for c in vulns.get('cwes', {}) ]
+    cves = [ c for c in vulns.get('cves', {}) ]
