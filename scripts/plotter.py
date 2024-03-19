@@ -2,6 +2,7 @@ import argparse, sys, time, seaborn as sns, numpy as np, matplotlib.pyplot as pl
 from pprint import pprint
 from pathlib import Path
 from src.middleware import Middleware
+import src.schemas.nvd as nvd
 from loguru import logger
 from src.schemas.projects import *
 from pandas import DataFrame
@@ -23,11 +24,30 @@ from playhouse.shortcuts import model_to_dict
 
 parser = argparse.ArgumentParser(description='Plot data from a file')
 parser.add_argument('config', help='The configuration file')
+parser.add_argument('--start', help='The start year', default=2020)
+parser.add_argument('--platform', help='The default platform', default='pypi')
+parser.add_argument('--step', help='The step size', default='m')
 parser.add_argument('-p', '--projects', nargs='+', help='The projects to plot', required=True)
 parser.add_argument('-o', '--output', help='The output directory', default='output')
 parser.add_argument('--debug', help='The debug level of the logger', default='INFO')
+parser.add_argument('--show', help='Show the plots', action='store_true')
 
 args = parser.parse_args()
+
+def get_platform(project: str):
+    """
+    Returns the platforms for a project
+
+    format: <platform>:<project>
+    """
+    platform = 'pypi' if args.platform is None else args.platform
+    if ':' in project:
+        parts = list(filter(bool, project.split(':')))
+        if len(parts) != 2:
+            logger.error(f"Invalid project format: {project}")
+            exit(1)
+        platform, project = parts[0], parts[1]
+    return platform.lower(), project.lower()
 
 def convert_datetime_to_str(data: dict):
     """
@@ -117,6 +137,7 @@ def plot_timelines(timelines: dict):
         ax.set_ylabel('Score')
     pprint(timelines)
     for project, data in timelines.items():
+        _, project = get_platform(project)
         timeline = data.get('timeline')
         cves = data.get('cves')
         print(cves)
@@ -159,7 +180,6 @@ def plot_timelines(timelines: dict):
         fig.autofmt_xdate()
         fig.savefig(plots_dir / f"{kw}.png")
 
-
 def plot_vulnerabilities(vulnerabilities: dict):
     """
     Expects a dictionary with the following structure:
@@ -175,17 +195,50 @@ mw = Middleware(args.config)
 # load the projects, arguments are optional
 mw.load_projects(*args.projects)
 
+
 if __name__ == '__main__':
+
+    # extract the files to present in the JSON
+    # to be transparent about the data
+    # usage of schema here, instead of middleware, as this is straight from the database
+    files = nvd.NVDFile.select().order_by(nvd.NVDFile.timestamp.desc())
+    files = [ model_to_dict(file) for file in files ]
     
+    # timeline plot section
     timelines = {}
     for project in args.projects:
         # get timeline for each project
-        timeline = mw.get_vulnerabilities_timeline(project, 2014, step='m')
-        timelines[project] = timeline
+        platform, project = get_platform(project)
+        logger.info(f"Getting timeline for {project} on {platform}...")
+        timeline = mw.get_vulnerabilities_timeline(project,
+                                                   args.start,
+                                                   step=args.step,
+                                                   platform=platform)
+        timelines[f"{platform}:{project}"] = timeline
     plot_timelines(timelines)
     timelines = convert_datetime_to_str(timelines)
     with open(json_dir / 'timelines.json', 'w') as f:
-        json.dump(timelines, f, indent=4)
+        json.dump({
+            'files': files,
+            'timelines': timelines
+        }, f, indent=4)
+
+    dependency_timelines = {}
+    for project in args.projects:
+        # get timeline for each project
+        platform, project = get_platform(project)
+        logger.info(f"Getting dependencies for {project} on {platform}...")
+        dependencies = mw.get_dependencies(project, platform=platform)
+        dependency_timelines[f"{platform}:{project}"] = {
+            'dependencies': dependencies,
+        }
+        logger.debug(f"Dependencies for {project}: {len(dependencies)}")
+        for dependency in dependencies:
+            timeline = mw.get_vulnerabilities_timeline(dependency,
+                                                       args.start,
+                                                       step=args.step,
+                                                       platform=platform)
+            dependency_timelines[f"{platform}:{project}"][dependency] = timeline
 
     # get all the vulnerabilities for the projects
     # and plot them
@@ -195,11 +248,17 @@ if __name__ == '__main__':
     vulnerabilities = {}
     for project in args.projects:
         # get all the vulnerabilities for the project
-        vulnerabilities[project] = mw.get_vulnerabilities(project)
+        platform, project = get_platform(project)
+        vulnerabilities[project] = mw.get_vulnerabilities(project,
+                                                          platform=platform,
+                                                          include_categories=True)
     plot_vulnerabilities(vulnerabilities)
     vulnerabilities = convert_datetime_to_str(vulnerabilities)
     with open(json_dir / 'vulnerabilities.json', 'w') as f:
-        json.dump(vulnerabilities, f, indent=4)
+        json.dump({
+            'files': files,
+            'vulnerabilities': vulnerabilities
+        }, f, indent=4)
     
     # TODO: do the same above but for each dependencies
     
@@ -207,3 +266,5 @@ if __name__ == '__main__':
 
     # TODO: store the data in a JSON directory
     # include TIMESTAMP OF NVD FILE
+    if args.show:
+        plt.show()

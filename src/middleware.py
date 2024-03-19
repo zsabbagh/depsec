@@ -339,7 +339,14 @@ class Middleware:
         returns: 
         {
             'cves': {
-                <cve_id>: <cve>,
+                <cve_id>: {
+                    'applicability': [
+                        | { 'version': <version> }
+                        | { 'version_start': <version>, 'version_end': <version>, 'start_date': <date>, 'end_date': <date> },
+                        ...
+                    ],
+                    <key>: <value>,
+                }
                 ...
             },
             'cwes': {
@@ -453,6 +460,79 @@ class Middleware:
                     cves[cve.cve_id]['applicability'].append(applicability)
         return results
     
+    def get_indirect_vulnerabilities(self,
+                                     project_name: str,
+                                     version: str = None,
+                                     platform: str="pypi",
+                                     include_categories: bool = False) -> List[nvd.CVE]:
+        """
+        Get indirect vulnerabilities of a project and a specific version number (release)
+        This is done by getting the dependencies of the project and checking for vulnerabilities in them
+
+        returns:
+        {
+            'cves': {
+                <cve_id>: <cve>,
+                ...
+                'applicability': {
+                    <project_name>: [ <version>, ... ]
+                }
+            },
+            'cwes': {
+                <cwe_id>: {
+                    <key>: <value>,
+                    ...
+                    'cves': [ <cve_id>, ... ]
+                }
+                ...
+            },
+            'projects': {
+                <project_name>: {
+                    <key>: <value>,
+                    ...
+                    'cves': [ <cve_id>, ... ]
+                }
+            }
+        }
+        """
+        project_name, platform = self.__format_strings(project_name, platform)
+        results = {
+            'cves': {},
+            'cwes': {},
+            'projects': {},
+        }
+        cves, cwes, projects = results['cves'], results['cwes'], results['projects']
+        dependencies = self.get_dependencies(project_name, version, platform)
+        for dep in dependencies:
+            dname, dplat = self.__format_strings(dep.name, dep.platform)
+            if dname in projects:
+                logger.warning(f"Project {dname} already processed")
+                continue
+            logger.debug(f"Getting project '{dname}' on platform '{dplat}'")
+            project = self.get_project(dname, dplat)
+            project = model_to_dict(project, recurse=False)
+            projects[dname] = project
+            logger.debug(f"Getting vulnerabilities for {dname}")
+            vulns = self.get_vulnerabilities(dname, platform=dplat, include_categories=include_categories)
+            for cve_id, cve in vulns.get('cves', {}).items():
+                if cve_id not in cves:
+                    weaknesses = db.NVD.cwes(cve_id, categories=include_categories, to_dict=False)
+                    for cwe in weaknesses:
+                        logger.debug(f"Processing CWE {cwe.cwe_id}")
+                        cwe_id = cwe.cwe_id
+                        if cwe_id not in cwes:
+                            cwes[cwe_id] = model_to_dict(cwe, recurse=False)
+                            cwes[cwe_id]['cves'] = [cve_id]
+                        else:
+                            cwes[cwe_id]['cves'].append(cve_id)
+                    cve['applicability'] = { dname: cve.get('applicability', [])}
+                    cves[cve_id] = cve
+                else:
+                    if dname not in cves[cve_id]['applicability']:
+                        cves[cve_id]['applicability'][dname] = []
+                    cves[cve_id]['applicability'][dname].extend(vulns.get('applicability', []))
+        return results
+    
     def get_vulnerabilities_timeline(self,
                                      project_name: str | list,
                                      start_date: str = 2019,
@@ -549,19 +629,6 @@ class Middleware:
             start_date = datetime_increment(start_date, step)
         return results
     
-    def get_vulnerabilities_timelines(self,
-                                      project_names: list,
-                                      start_date: str = 2019,
-                                      end_date: str = None,
-                                      step: str = 'y',
-                                      platform: str="pypi") -> List[dict]:
-        """
-        Similar to get_vulnerabilities_timeline, but for multiple projects
-        """
-        results = {
-            'projects': {}
-        }
-    
     def get_dependencies(self,
                          project_name: str,
                          version: str = None,
@@ -574,7 +641,7 @@ class Middleware:
         platform: str, default: pypi
         """
         # Force lowercase
-        project_name = self.__format_strings(project_name)[0]
+        project_name = project_name.strip().lower()
         # Get the project
         project = self.get_project(project_name)
         if project is None:
