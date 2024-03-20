@@ -21,9 +21,6 @@ def get_code_complexity(dir: str | Path, includes: str | list = '**/*.py', exclu
     dir = Path(dir)
     if not dir.exists():
         return None, None, None
-    total_nloc = 0
-    cc = 0
-    functions = 0
     files = []
     includes = [includes] if type(includes) == str else includes
     exclude_set = set(excludes) if excludes else set()
@@ -47,6 +44,9 @@ def get_code_complexity(dir: str | Path, includes: str | list = '**/*.py', exclu
             files = [str(file.name) for file in files]
             logger.warning(f"Files found in {dir}: {', '.join(files)}")
         return None, None, None
+    total_nloc = 0
+    cc = 0
+    functions = 0
     for file in files:
         file = Path(file)
         if file.name == '__init__.py' or 'test' in file.name:
@@ -58,7 +58,7 @@ def get_code_complexity(dir: str | Path, includes: str | list = '**/*.py', exclu
             functions += 1
     avg_cc = cc / functions if functions > 0 else 0
     avg_nloc = total_nloc / functions if functions > 0 else 0
-    return total_nloc, avg_nloc, avg_cc, len(files)
+    return total_nloc, avg_nloc, avg_cc, len(files), functions
 
 parser = argparse.ArgumentParser(description='Iterate git tags and run a command for each tag')
 parser.add_argument('--projects', help='The projects file', default='projects.json')
@@ -141,16 +141,17 @@ for platform, projects in data.items():
                 continue
             tag = versions[ver]
             repo.git.checkout(tag.commit, force=True)
-            if release.total_nloc is not None and release.total_nloc > 0:
-                logger.info(f"{project_name}:{ver} already exists with NLOC {release.total_nloc}, skipping")
+            if release.nloc_total is not None and release.nloc_total > 0:
+                logger.info(f"{project_name}:{ver} already exists with NLOC {release.nloc_total}, skipping")
                 continue
-            total_nloc, avg_nloc, avg_cc, files_counted = get_code_complexity(repo_path.absolute(), includes, excludes)
+            total_nloc, avg_nloc, avg_cc, files_counted, functions_counted = get_code_complexity(repo_path.absolute(), includes, excludes)
             date_time = datetime.datetime.fromtimestamp(tag.commit.committed_date)
             date_str = date_time.strftime('%Y-%m-%d %H:%M:%S')
             release = mw.get_release(repo_name, ver, platform)
-            release.files_counted = files_counted
-            release.total_nloc = round(total_nloc, 2) if total_nloc is not None else None
-            release.avg_nloc = round(avg_nloc, 2) if avg_nloc is not None else None
-            release.avg_cc = round(avg_cc, 2) if avg_cc is not None else None
+            release.counted_files = files_counted
+            release.counted_functions = functions_counted
+            release.nloc_total = round(total_nloc, 2) if total_nloc is not None else None
+            release.nloc_average = round(avg_nloc, 2) if avg_nloc is not None else None
+            release.cc_average = round(avg_cc, 2) if avg_cc is not None else None
             release.save()
             logger.info(f"{project_name}:{ver}, files: {files_counted}, NLOC {total_nloc}")

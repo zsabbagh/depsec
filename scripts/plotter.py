@@ -265,6 +265,8 @@ if __name__ == '__main__':
     # TODO: create LaTeX tables with the data
 
     # TODO: store the data in a JSON directory
+        
+    # TODO: plot complexity of code
     # include TIMESTAMP OF NVD FILE
     if args.show:
         plt.show()
