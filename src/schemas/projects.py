@@ -48,19 +48,29 @@ class Project(Model):
 
 class Release(Model):
     """
-    Release models a release of a project
+    Release models a release of a project. Note nloc and cc excludes test files
     
     id: The release id
     project The project id
     published_at: The date the release was published
     version: The version number of the release
     updated_at: The date the row in the database was updated
+    total_nloc: The total number of lines of code
+    avg_nloc: The average number of lines of code
+    avg_cc: The average cyclomatic complexity
+    commit_at: The date the commit was made
+    commit_hash: The hash of the commit
     """
     id = AutoField()
     project = ForeignKeyField(Project, backref='releases', on_delete='CASCADE')
     published_at = DateTimeField(null=True)
     version = CharField(null=False)
     updated_at = DateTimeField(default=datetime.datetime.now)
+    total_nloc = IntegerField(null=True)
+    avg_nloc = FloatField(null=True)
+    avg_cc = FloatField(null=True)
+    commit_at = DateTimeField(null=True)
+    commit_hash = CharField(null=True)
 
     class Meta:
         database = DB_PROJECTS.get()

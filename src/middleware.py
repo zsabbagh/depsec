@@ -148,6 +148,8 @@ class Middleware:
         When you get a project, it does the following:
 
         1) If the project is in the database, it returns it
+        2) Query API for the project
+        3) Create the project and its releases in the database
         """
         # Force lowercase
         project_name = project_name.strip().lower()
@@ -327,6 +329,24 @@ class Middleware:
         releases = [ release for release in Release.select().where(Release.project == project.id) ]
         releases = list(filter(lambda release: release.version.startswith(version), releases) if version else releases)
         return releases
+    
+    def get_release(self,
+                    project_name: str,
+                    version: str,
+                    platform: str="pypi") -> Release:
+        """
+        Get a specific release of a project
+        """
+        project_name, platform = self.__format_strings(project_name, platform)
+        project = self.get_project(project_name, platform)
+        if project is None:
+            logger.error(f"Project {project_name} not found")
+            return None
+        release = Release.get_or_none(
+            Release.project == project.id,
+            Release.version == version
+        )
+        return release
     
     def get_vulnerabilities(self,
                             project_name: str,
