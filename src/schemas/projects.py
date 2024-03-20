@@ -66,6 +66,7 @@ class Release(Model):
     published_at = DateTimeField(null=True)
     version = CharField(null=False)
     updated_at = DateTimeField(default=datetime.datetime.now)
+    files_counted = IntegerField(null=True)
     total_nloc = IntegerField(null=True)
     avg_nloc = FloatField(null=True)
     avg_cc = FloatField(null=True)
