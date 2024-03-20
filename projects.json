@@ -3,8 +3,25 @@
         "jinja2": {
             "product": "jinja"
         },
-        "flask": {},
-        "django": {},
-        "tornado": {}
+        "flask": {
+            "repo": {
+                "url": "github.com/pallets/flask",
+                "src": ".",
+                "includes": ["flask/**/*.py", "flask.py", "src/**/*.py"],
+                "excludes": ["examples/**"]
+            }
+        },
+        "django": {
+            "repo": {
+                "url": "github.com/django/django",
+                "includes": ["django/**/*.py"]
+            }
+        },
+        "tornado": {
+            "repo": {
+                "url": "github.com/tornadoweb/tornado",
+                "includes": ["tornado/**/*.py"]
+            }
+        }
     }
 }

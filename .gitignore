@@ -7,4 +7,5 @@
 .DS_Store
 data/*
 datasets
+repositories
 !data/projects.db

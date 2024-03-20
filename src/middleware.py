@@ -3,6 +3,7 @@ import src.schemas.nvd as nvd
 import src.schemas.cwe as cwe
 import src.utils.db as db
 import argparse
+from packaging import version
 from playhouse.shortcuts import model_to_dict
 from pprint import pprint
 from src.queriers.libraries import LibrariesQuerier
@@ -317,17 +318,19 @@ class Middleware:
     def get_releases(self,
                      project_name: str,
                      version: str = '',
-                     platform: str="pypi") -> List[Release]:
+                     platform: str="pypi",
+                     reverse: bool = True) -> List[Release]:
         """
         Gets all releases of a project 
+        Returns a sorted list of releases, based on the semantic versioning
         """
         project_name, platform = self.__format_strings(project_name, platform)
         project = self.get_project(project_name, platform)
         if project is None:
             logger.error(f"Project {project_name} not found")
             return None
-        releases = [ release for release in Release.select().where(Release.project == project.id) ]
-        releases = list(filter(lambda release: release.version.startswith(version), releases) if version else releases)
+        releases = [ release for release in Release.select().where(Release.project == project.id & Release.version.startswith(version)) ]
+        releases = sorted(releases, key=lambda x: version.parse(x.version), reverse=reverse)
         return releases
     
     def get_release(self,
@@ -604,7 +607,7 @@ class Middleware:
         results[project.name]['releases'] = {}
         cves, releases, timeline = results['cves'], results[project.name]['releases'], results['timeline']
         vulnerabilities = self.get_vulnerabilities(project.name, platform=platform)
-        rels = [ rel for rel in project.releases.order_by(Release.version.desc()) ]
+        rels = self.get_releases(project.name, platform=platform)
         while start_date <= end_date:
             rel_mr = None
             for rel in rels:

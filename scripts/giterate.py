@@ -1,4 +1,6 @@
-import argparse, re, lizard, glob, datetime
+import argparse, re, lizard, glob, datetime, json, sys
+from packaging import version
+from loguru import logger
 from git import Repo
 from pathlib import Path
 from src.middleware import Middleware
@@ -12,15 +14,40 @@ def is_version_tag(tag: str):
     """
     return bool(re.match(VERSION_TAG, tag))
 
-def get_code_complexity(dir: str | Path):
+def get_code_complexity(dir: str | Path, includes: str | list = '**/*.py', excludes: str | list = None):
     """
     Gets the code complexity of a directory using lizard
     """
     dir = Path(dir)
+    if not dir.exists():
+        return None, None, None
     total_nloc = 0
     cc = 0
     functions = 0
-    for file in glob.glob(str(dir / '**/*.py'), recursive=True):
+    files = []
+    includes = [includes] if type(includes) == str else includes
+    exclude_set = set(excludes) if excludes else set()
+    if excludes:
+        excludes = [excludes] if type(excludes) == str else excludes
+        for exclude in excludes:
+            for file in glob.glob(str(dir / exclude), recursive=True):
+                exclude_set.add(str(file))
+    for include in includes:
+        for file in glob.glob(str(dir / include), recursive=True):
+            if file in exclude_set:
+                continue
+            files.append(file)
+    if not files:
+        logger.warning(f"No files found in {dir} with includes {includes} and excludes {excludes}")
+        # Files in the directory
+        files = list(dir.glob('*'))
+        if not files:
+            logger.warning(f"No files found in {dir}")
+        else:
+            files = [str(file.name) for file in files]
+            logger.warning(f"Files found in {dir}: {', '.join(files)}")
+        return None, None, None
+    for file in files:
         file = Path(file)
         if file.name == '__init__.py' or 'test' in file.name:
             continue
@@ -34,55 +61,95 @@ def get_code_complexity(dir: str | Path):
     return total_nloc, avg_nloc, avg_cc
 
 parser = argparse.ArgumentParser(description='Iterate git tags and run a command for each tag')
-parser.add_argument('directories', help='The directories of the git repositories (dir:src, or platform:dir:src)', nargs='+')
-parser.add_argument('--platform', help='The platform that is used', default='pypi')
+parser.add_argument('--projects', help='The projects file', default='projects.json')
+parser.add_argument('--directory', help='The repositories directory', default='repositories')
 parser.add_argument('--config', help='The configuration file to use', default='config.yml')
+parser.add_argument('--level', help='The logging level to use', default='INFO')
+
 
 args = parser.parse_args()
 
+logger.remove()
+logger.add(sys.stdout, level=args.level.upper())
+
 mw = Middleware(args.config)
 
-platform = args.platform
+directory = Path(args.directory)
+if not directory.exists():
+    logger.error(f"Directory {directory} does not exist")
+    exit(1)
 
-for directory in args.directories:
+data = None
+with open(args.projects, 'r') as f:
+    data = json.load(f)
 
-    if ':' in directory:
-        parts = directory.split(':')
-        if len(parts) == 3:
-            platform, directory, src_name = tuple(parts)
-        elif len(parts) == 2:
-            directory, src_name = tuple(parts)
-    else:
-        src_name = None
+for platform, projects in data.items():
 
-    repo_path = Path(directory)
-    repo_name = repo_path.name
+    for project_name in projects:
 
-    src_name = src_name or repo_name
-    src_path = repo_path / src_name
+        logger.info(f"Processing {platform} project {project_name}")
 
-    repo = Repo(repo_path)
-
-    tags = repo.tags
-
-    versions = {}
-
-    for tag in tags:
-        if not is_version_tag(tag.name):
+        repo = projects.get(project_name, {}).get('repo')
+        if not repo:
             continue
-        tag_version = tag.name.lstrip('v')
-        versions[tag_version] = tag
 
-    print(f"Found {len(versions)} versions")
+        url = repo.get('url')
+        includes = repo.get('includes')
+        excludes = repo.get('excludes')
+        url = re.sub(r'https?://|\.git$', '', url)
+        repo_name = url.split('/')[-1]
+        if '.' in repo_name:
+            repo_name = repo_name.split('.')[0]
+        url = f"https://github.com{url}.git"
 
-    for version in sorted(versions.keys(), reverse=True):
-        release = mw.get_release(repo_name, version, platform)
-        tag = versions[version]
-        repo.git.checkout(tag.commit)
-        total_nloc, avg_nloc, avg_cc = get_code_complexity(src_path)
-        date_time = datetime.datetime.fromtimestamp(tag.commit.committed_date)
-        date_str = date_time.strftime('%Y-%m-%d %H:%M:%S')
-        print(f"{tag.name}: {total_nloc}")
+        # TODO: Add creation of project if it does not exist
 
-        # repo.git.checkout(tag)
-        # Run command here
+        # Get the project
+        project = mw.get_project(project_name, platform)
+        if not project:
+            print(f"Project {project_name} not found")
+            continue
+
+        repo_path = directory / repo_name
+
+        src_name = repo.get('src') or repo_name
+
+        if not repo_path.exists():
+            # TODO: Clone the repository
+            pass
+
+        logger.info(f"Checking out {repo_name} to {repo_path}")
+
+        repo = Repo(repo_path)
+
+        tags = repo.tags
+
+        versions = {}
+
+        for tag in tags:
+            if not is_version_tag(tag.name):
+                continue
+            tag_version = tag.name.lstrip('v')
+            versions[tag_version] = tag
+        
+        logger.info(f"Versions found for {repo_name}: {len(versions)}")
+
+        for ver in sorted(versions.keys(), key=lambda x : version.parse(x), reverse=True):
+            release = mw.get_release(repo_name, ver, platform)
+            if release is None:
+                logger.warning(f"Release {project_name}:{ver} not found by metadata, ignoring")
+                continue
+            tag = versions[ver]
+            repo.git.checkout(tag.commit, force=True)
+            if release.total_nloc is not None and release.total_nloc > 0:
+                logger.info(f"{project_name}:{ver} already exists with NLOC {release.total_nloc}, skipping")
+                continue
+            total_nloc, avg_nloc, avg_cc = get_code_complexity(repo_path.absolute(), includes, excludes)
+            date_time = datetime.datetime.fromtimestamp(tag.commit.committed_date)
+            date_str = date_time.strftime('%Y-%m-%d %H:%M:%S')
+            release = mw.get_release(repo_name, ver, platform)
+            release.total_nloc = round(total_nloc, 2) if total_nloc is not None else None
+            release.avg_nloc = round(avg_nloc, 2) if avg_nloc is not None else None
+            release.avg_cc = round(avg_cc, 2) if avg_cc is not None else None
+            release.save()
+            logger.info(f"{project_name}:{ver} updated at {date_str} with NLOC {total_nloc}")
