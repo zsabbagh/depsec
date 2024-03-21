@@ -67,12 +67,15 @@ parser.add_argument('--config', help='The configuration file to use', default='c
 parser.add_argument('--level', help='The logging level to use', default='INFO')
 parser.add_argument('--force', help='Force the operation', action='store_true')
 parser.add_argument('--no-lizard', help='Do not run lizard', action='store_true')
+parser.add_argument('--only', help='Only do the mentioned projects', default=[], nargs='*')
 
 
 args = parser.parse_args()
 
 logger.remove()
 logger.add(sys.stdout, level=args.level.upper())
+
+only = set(map(str.lower, args.only))
 
 mw = Middleware(args.config)
 
@@ -88,6 +91,10 @@ with open(args.projects, 'r') as f:
 for platform, projects in data.items():
 
     for project_name in projects:
+
+        if only and project_name.lower() not in only:
+            logger.info(f"Skipping {platform} project '{project_name}', only '{', '.join(list(only))}' provided")
+            continue
 
         logger.info(f"Processing {platform} project {project_name}")
 

@@ -15,9 +15,9 @@ from loguru import logger
 from pathlib import Path
 from typing import List, Dict
 
-def pprintm(model: List[Model] | Model, recurse=False):
+def pm(model: List[Model] | Model, recurse=False):
     """
-    Print a model
+    Pretty print a model
     """
     def fn(m):
         if isinstance(m, Model):
@@ -888,7 +888,7 @@ class Middleware:
         return deps
 
 if __name__ == "__main__":
-    # For the purpose of loading in interactive shell
+    # For the purpose of loading in interactive shell and debugging
     # e.g., py -i src/middleware.py
     parser = argparse.ArgumentParser()
     parser.add_argument('project', type=str, help='The project name', default='jinja2')
@@ -900,5 +900,6 @@ if __name__ == "__main__":
     rels = mw.get_releases(args.project)
     vulns = mw.get_vulnerabilities(args.project)
     vulnstl = mw.get_vulnerabilities_timeline(args.project)
+    vers = sorted(rels, key=lambda x: semver.parse(x.version))
     cwes = [ (c, vulns.get('cwes').get(c, {}).get('status')) for c in vulns.get('cwes', {}) ]
     cves = [ c for c in vulns.get('cves', {}) ]

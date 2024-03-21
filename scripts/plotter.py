@@ -325,11 +325,16 @@ def plot_timelines(timelines: dict):
             if value is None:
                 logger.error(f"Could not find KPI '{kpi}' for {project}")
                 continue
-            suffix = kpi.get('y_label').lower()
+            suffix = ''
             if type(value) == dict:
                 value = value.get('mean')
                 suffix = f'{suffix} mean'
             ax.plot(results.get('dates'), value, label=f"{project.title()} {suffix}")
+    for fig, ax, kpi in figures:
+        ax.legend()
+        fig.autofmt_xdate()
+        filename = kpi.get('key', f"kpi-{datetime.datetime.now().strftime('%Y%m%d%H%M%S')}")
+        fig.savefig(plots_dir / f"{kpi.get('key')}.png")
 
 def plot_vulnerabilities(vulnerabilities: dict):
     """

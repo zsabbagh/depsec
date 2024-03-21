@@ -20,7 +20,8 @@
         "tornado": {
             "repo": {
                 "url": "github.com/tornadoweb/tornado",
-                "includes": ["tornado/**/*.py"]
+                "includes": ["tornado/**/*.py"],
+                "excludes": ["tornado/test/**"]
             }
         }
     }
