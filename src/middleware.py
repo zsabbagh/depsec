@@ -340,7 +340,7 @@ class Middleware:
                 logger.warning(f"Skipping deprecated version {release.version} for {project_name}")
                 continue
             releases.append(release)
-        releases = sorted(releases, key=lambda x: semver.parse(x.version), reverse=reverse)
+        releases = sorted(releases, key=lambda x : semver.parse(x.version), reverse=reverse)
         return releases
     
     def get_release(self,
@@ -502,11 +502,11 @@ class Middleware:
                     applicabilities.append(app)
             if versions != set():
                 # go through each minor version and create a range
-                asc_versions = sorted(list(versions), key=lambda x: semver.parse(x))
+                asc_versions = sorted(list(versions), key=semver.parse)
                 previous_version = asc_versions[0]
                 max_version = asc_versions[-1]
                 relselect = Release.select().where(Release.project == project)
-                relselect = sorted([rel for rel in relselect if version_in_range(rel.version, previous_version)], key=lambda x: semver.parse(x.version))
+                relselect = sorted([rel for rel in relselect if version_in_range(rel.version, previous_version)], key=lambda x : semver.parse(x.version))
                 for rel in relselect:
                     # releases are sorted semantically
                     if previous_version not in versions:
@@ -900,6 +900,6 @@ if __name__ == "__main__":
     rels = mw.get_releases(args.project)
     vulns = mw.get_vulnerabilities(args.project)
     vulnstl = mw.get_vulnerabilities_timeline(args.project)
-    vers = sorted(rels, key=lambda x: semver.parse(x.version))
+    vers = sorted(rels, key=lambda x : semver.parse(x.version), reverse=True)
     cwes = [ (c, vulns.get('cwes').get(c, {}).get('status')) for c in vulns.get('cwes', {}) ]
     cves = [ c for c in vulns.get('cves', {}) ]

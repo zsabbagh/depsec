@@ -144,7 +144,7 @@ for platform, projects in data.items():
         
         logger.info(f"Versions found for {repo_name}: {len(versions)}")
 
-        for version in sorted(versions.keys(), key=lambda x : semver.parse(x), reverse=True):
+        for version in sorted(versions.keys(), key=semver.parse, reverse=True):
             release = mw.get_release(repo_name, version, platform)
             if release is None:
                 logger.warning(f"Release {project_name}:{version} not found by metadata, ignoring")
