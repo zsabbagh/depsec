@@ -45,6 +45,16 @@ KPIS = {
         'max': 10,
         'y_label': 'Score',
     },
+    'files': {
+        'key': 'files',
+        'title': 'Number of Files',
+        'y_label': 'Count',
+    },
+    'functions': {
+        'key': 'functions',
+        'title': 'Number of Functions',
+        'y_label': 'Count',
+    },
     'impact': {
         'key': 'cvss_impact_score',
         'title': 'CVSS Impact Score',
@@ -76,7 +86,7 @@ KPIS = {
         'y_label': 'Impact',
     },
     'cves': {
-        'key': 'cves_count',
+        'key': 'cves',
         'title': 'Number of CVEs',
         'y_label': 'Count',
     },
@@ -200,16 +210,21 @@ def get_timeline_kpis(data: dict, *kws: str):
     """
     timeline = data.get('timeline')
     cves = data.get('cves')
-    dates, cves_count, nlocs, ccs, cves_per_10k_nlocs = [], [], [], [], []
+    dates, cves, nlocs, ccs, cves_per_10k_nlocs = [], [], [], [], []
+    files, functions = [], []
     for entry in timeline:
         rel = data.get('releases', {}).get(entry.get('release'))
         count = len(entry.get('cves', []))
         nloc = rel.get('nloc_total', 0) if rel is not None else 0
         nloc = 0 if nloc is None else nloc
+        files_count = rel.get('counted_files', 0) if rel is not None else 0
+        functions_count = rel.get('counted_functions', 0) if rel is not None else 0
+        files.append(files_count)
+        functions.append(functions_count)
         cc = rel.get('cc_average', 0) if rel is not None else 0
         date = entry.get('date')
         dates.append(date)
-        cves_count.append(count)
+        cves.append(count)
         nlocs.append(nloc)
         ccs.append(cc)
         cves_per_10k_nlocs.append(count / (nloc / 10000) if nloc > 0 else 0)
@@ -231,14 +246,16 @@ def get_timeline_kpis(data: dict, *kws: str):
             prev_cc = cc
         if nloc is None or nloc == 0:
             nlocs[i] = prev_nloc
-            cves_per_10k_nlocs[i] = cves_count[i] / (prev_nloc / 10000) if prev_nloc > 0 else 0
+            cves_per_10k_nlocs[i] = cves[i] / (prev_nloc / 10000) if prev_nloc > 0 else 0
         else:
             prev_nloc = nloc
     results = {
         'dates': dates,
-        'cves_count': cves_count,
+        'cves': cves,
         'nlocs': nlocs,
         'ccs': ccs,
+        'files': files,
+        'functions': functions,
         'cves_per_10k_nlocs': cves_per_10k_nlocs,
     }
     for kw in kws:

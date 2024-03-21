@@ -48,9 +48,9 @@ def get_code_complexity(dir: str | Path, includes: str | list = '**/*.py', exclu
     cc = 0
     functions = 0
     for file in files:
+        # we check all files
+        # do not remove test or __init__.py files unless stated in excludes
         file = Path(file)
-        if file.name == '__init__.py' or 'test' in file.name:
-            continue
         lizard_result = lizard.analyze_file(str(file))
         total_nloc += lizard_result.nloc
         for func in lizard_result.function_list:

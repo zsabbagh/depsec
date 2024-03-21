@@ -7,8 +7,7 @@
             "repo": {
                 "url": "github.com/pallets/flask",
                 "src": ".",
-                "includes": ["flask/**/*.py", "flask.py", "src/**/*.py"],
-                "excludes": ["examples/**"]
+                "includes": ["flask/**/*.py", "flask.py", "src/**/*.py"]
             }
         },
         "django": {
