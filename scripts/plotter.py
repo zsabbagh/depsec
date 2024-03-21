@@ -206,23 +206,30 @@ def get_timeline_kpis(data: dict, *kws: str):
         count = len(entry.get('cves', []))
         nloc = rel.get('nloc_total', 0) if rel is not None else 0
         nloc = 0 if nloc is None else nloc
-        cc = rel.get('cc_mean', 0) if rel is not None else 0
+        cc = rel.get('cc_average', 0) if rel is not None else 0
         date = entry.get('date')
-        print(f"{project} {rel.get('version')}, {date}, {count} CVEs, {nloc} NLOC")
         dates.append(date)
         cves_count.append(count)
         nlocs.append(nloc)
         ccs.append(cc)
         cves_per_10k_nlocs.append(count / (nloc / 10000) if nloc > 0 else 0)
     prev_cc, prev_nloc = 0, 0
+    for cc in ccs:
+        if cc is not None and cc > 0:
+            prev_cc = cc
+            break
+    for nloc in nlocs:
+        if nloc is not None and nloc > 0:
+            prev_nloc = nloc
+            break
     for i in range(len(dates)):
         cc = ccs[i]
         nloc = nlocs[i]
-        if cc == 0:
+        if cc is None or cc == 0:
             ccs[i] = prev_cc
         else:
             prev_cc = cc
-        if nloc == 0:
+        if nloc is None or nloc == 0:
             nlocs[i] = prev_nloc
             cves_per_10k_nlocs[i] = cves_count[i] / (prev_nloc / 10000) if prev_nloc > 0 else 0
         else:
@@ -314,8 +321,6 @@ def plot_timelines(timelines: dict):
         for fig, ax, kpi in figures:
             ax: plt.Axes
             kpi_key = kpi.get('key')
-            if kpi_key == 'nlocs':
-                print(f"{project} NLOCs: {results.get(kpi_key)}")
             value = results.get(kpi_key)
             if value is None:
                 logger.error(f"Could not find KPI '{kpi}' for {project}")
