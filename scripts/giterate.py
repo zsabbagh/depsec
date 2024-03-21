@@ -65,6 +65,7 @@ parser.add_argument('--projects', help='The projects file', default='projects.js
 parser.add_argument('--directory', help='The repositories directory', default='repositories')
 parser.add_argument('--config', help='The configuration file to use', default='config.yml')
 parser.add_argument('--level', help='The logging level to use', default='INFO')
+parser.add_argument('--force', help='Force the operation', action='store_true')
 
 
 args = parser.parse_args()
@@ -141,11 +142,13 @@ for platform, projects in data.items():
                 continue
             tag = versions[ver]
             repo.git.checkout(tag.commit, force=True)
-            if release.nloc_total is not None and release.nloc_total > 0:
+            if not args.force and release.nloc_total is not None and release.nloc_total > 0:
                 logger.info(f"{project_name}:{ver} already exists with NLOC {release.nloc_total}, skipping")
                 continue
             total_nloc, avg_nloc, avg_cc, files_counted, functions_counted = get_code_complexity(repo_path.absolute(), includes, excludes)
             date_time = datetime.datetime.fromtimestamp(tag.commit.committed_date)
+            release.commit_at = date_time
+            release.commit_hash = tag.commit
             date_str = date_time.strftime('%Y-%m-%d %H:%M:%S')
             release = mw.get_release(repo_name, ver, platform)
             release.counted_files = files_counted
