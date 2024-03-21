@@ -1,4 +1,4 @@
-import argparse, re, lizard, glob, datetime, json, sys
+import argparse, re, lizard, glob, datetime, json, sys, subprocess, time
 from packaging import version as semver
 from loguru import logger
 from git import Repo
@@ -8,15 +8,41 @@ from src.middleware import Middleware
 
 VERSION_TAG = r'^v?\d+\.\d+\.\d+$'
 
-def is_version_tag(tag: str):
-    """
-    Checks if a tag is a version tag
-    """
-    return bool(re.match(VERSION_TAG, tag))
+parser = argparse.ArgumentParser(description='Iterate git tags and run a command for each tag')
+parser.add_argument('--projects', help='The projects file', default='projects.json')
+parser.add_argument('--directory', help='The repositories directory', default='repositories')
+parser.add_argument('--config', help='The configuration file to use', default='config.yml')
+parser.add_argument('--level', help='The logging level to use', default='INFO')
+parser.add_argument('--force', help='Force the operation', action='store_true')
+parser.add_argument('--do', help='The operation to do', default=[], nargs='*')
+parser.add_argument('--only', help='Only do the mentioned projects', default=[], nargs='*')
 
-def get_code_complexity(dir: str | Path, includes: str | list = '**/*.py', excludes: str | list = None):
+
+args = parser.parse_args()
+
+logger.remove()
+logger.add(sys.stdout, level=args.level.upper())
+
+only = set(map(str.lower, args.only))
+
+mw = Middleware(args.config)
+
+directory = Path(args.directory)
+if not directory.exists():
+    logger.error(f"Directory {directory} does not exist")
+    exit(1)
+
+temp_dir = directory / '__temp__'
+if not temp_dir.exists():
+    temp_dir.mkdir()
+
+data = None
+with open(args.projects, 'r') as f:
+    data = json.load(f)
+
+def get_files(dir: str | Path, includes: str | list = '**/*.py', excludes: str | list = None):
     """
-    Gets the code complexity of a directory using lizard
+    Get the files in the directory
     """
     dir = Path(dir)
     if not dir.exists():
@@ -34,6 +60,37 @@ def get_code_complexity(dir: str | Path, includes: str | list = '**/*.py', exclu
             if file in exclude_set:
                 continue
             files.append(file)
+    return files
+
+def run_bandit(files: list | str):
+    """
+    Run bandit on the files
+    """
+    if type(files) == str:
+        files = [files]
+    data = {}
+    for file in files:
+        path = Path(file)
+        if not path.exists():
+            continue
+        # get output
+        subprocess.run(['bandit', file, '-f', 'json', '-o', temp_dir / f'{path.stem}.json'])
+        with open(temp_dir / f'{path.stem}.json', 'r') as f:
+            d = json.load(f)
+            data[file] = d
+            # save data
+    return d
+
+def is_version_tag(tag: str):
+    """
+    Checks if a tag is a version tag
+    """
+    return bool(re.match(VERSION_TAG, tag))
+
+def run_lizard(files: list):
+    """
+    Gets the code complexity of a directory using lizard
+    """
     if not files:
         logger.warning(f"No files found in {dir} with includes {includes} and excludes {excludes}")
         # Files in the directory
@@ -59,34 +116,6 @@ def get_code_complexity(dir: str | Path, includes: str | list = '**/*.py', exclu
     avg_cc = cc / functions if functions > 0 else 0
     avg_nloc = total_nloc / functions if functions > 0 else 0
     return total_nloc, avg_nloc, avg_cc, len(files), functions
-
-parser = argparse.ArgumentParser(description='Iterate git tags and run a command for each tag')
-parser.add_argument('--projects', help='The projects file', default='projects.json')
-parser.add_argument('--directory', help='The repositories directory', default='repositories')
-parser.add_argument('--config', help='The configuration file to use', default='config.yml')
-parser.add_argument('--level', help='The logging level to use', default='INFO')
-parser.add_argument('--force', help='Force the operation', action='store_true')
-parser.add_argument('--no-lizard', help='Do not run lizard', action='store_true')
-parser.add_argument('--only', help='Only do the mentioned projects', default=[], nargs='*')
-
-
-args = parser.parse_args()
-
-logger.remove()
-logger.add(sys.stdout, level=args.level.upper())
-
-only = set(map(str.lower, args.only))
-
-mw = Middleware(args.config)
-
-directory = Path(args.directory)
-if not directory.exists():
-    logger.error(f"Directory {directory} does not exist")
-    exit(1)
-
-data = None
-with open(args.projects, 'r') as f:
-    data = json.load(f)
 
 for platform, projects in data.items():
 
@@ -151,20 +180,23 @@ for platform, projects in data.items():
                 continue
             tag = versions[version]
             repo.git.checkout(tag.commit, force=True)
-            if not args.force and release.nloc_total is not None and release.nloc_total > 0:
-                logger.info(f"{project_name}:{version} already exists with NLOC {release.nloc_total}, skipping")
-                continue
             date_time = datetime.datetime.fromtimestamp(tag.commit.committed_date)
             release.commit_at = date_time
             release.commit_hash = str(tag.commit)
             date_str = date_time.strftime('%Y-%m-%d %H:%M:%S')
             release = mw.get_release(repo_name, version, platform)
-            if not args.no_lizard:
-                total_nloc, avg_nloc, avg_cc, files_counted, functions_counted = get_code_complexity(repo_path.absolute(), includes, excludes)
+            files = get_files(repo_path, includes, excludes)
+            if 'lizard' in args.do:
+                total_nloc, avg_nloc, avg_cc, files_counted, functions_counted = run_lizard(files)
                 release.counted_files = files_counted
                 release.counted_functions = functions_counted
                 release.nloc_total = round(total_nloc, 2) if total_nloc is not None else None
                 release.nloc_average = round(avg_nloc, 2) if avg_nloc is not None else None
                 release.cc_average = round(avg_cc, 2) if avg_cc is not None else None
                 logger.info(f"{project_name}:{version}, files: {files_counted}, NLOC {total_nloc}")
+            if 'bandit' in args.do:
+                bandit_data = run_bandit(files)
+                print(bandit_data)
+                time.sleep(1)
+                release.bandit_data = bandit_data
             release.save()

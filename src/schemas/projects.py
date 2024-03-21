@@ -78,6 +78,14 @@ class Release(Model):
         database = DB_PROJECTS.get()
         table_name = 'releases'
 
+class BanditIssue(Model):
+    """
+    TODO: Model a bandit issue
+    """
+    id = AutoField()
+    release = ForeignKeyField(Release, backref='bandit_issues', on_delete='CASCADE')
+    pass
+
 class ReleaseDependency(Model):
     """
     ReleaseDependency models a release's dependencies
