@@ -3,7 +3,7 @@ import src.schemas.nvd as nvd
 import src.schemas.cwe as cwe
 import src.utils.db as db
 import argparse
-from packaging import version
+from packaging import version as semver
 from playhouse.shortcuts import model_to_dict
 from pprint import pprint
 from src.queriers.libraries import LibrariesQuerier
@@ -330,7 +330,7 @@ class Middleware:
             logger.error(f"Project {project_name} not found")
             return None
         releases = [ release for release in Release.select().where(Release.project == project.id & Release.version.startswith(version)) ]
-        releases = sorted(releases, key=lambda x: version.parse(x.version), reverse=reverse)
+        releases = sorted(releases, key=lambda x: semver.parse(x.version), reverse=reverse)
         return releases
     
     def get_release(self,

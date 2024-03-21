@@ -1,0 +1,114 @@
+[
+    {
+        "id": 7,
+        "file": "nvdcve-1.1-2018.json",
+        "created_at": "2024-03-19 07:01:00",
+        "updated_at": "2024-03-19 16:39:28",
+        "cves_processed": 17349,
+        "cves_skipped": 1616
+    },
+    {
+        "id": 12,
+        "file": "nvdcve-1.1-2013.json",
+        "created_at": "2024-03-19 07:01:00",
+        "updated_at": "2024-03-19 17:59:30",
+        "cves_processed": 6780,
+        "cves_skipped": 605
+    },
+    {
+        "id": 1,
+        "file": "nvdcve-1.1-2024.json",
+        "created_at": "2024-03-19 07:00:00",
+        "updated_at": "2024-03-19 14:51:48",
+        "cves_processed": 4250,
+        "cves_skipped": 2384
+    },
+    {
+        "id": 2,
+        "file": "nvdcve-1.1-2023.json",
+        "created_at": "2024-03-19 07:00:00",
+        "updated_at": "2024-03-19 15:05:24",
+        "cves_processed": 26263,
+        "cves_skipped": 1218
+    },
+    {
+        "id": 3,
+        "file": "nvdcve-1.1-2022.json",
+        "created_at": "2024-03-19 07:00:00",
+        "updated_at": "2024-03-19 15:18:06",
+        "cves_processed": 24598,
+        "cves_skipped": 865
+    },
+    {
+        "id": 4,
+        "file": "nvdcve-1.1-2021.json",
+        "created_at": "2024-03-19 07:00:00",
+        "updated_at": "2024-03-19 15:30:55",
+        "cves_processed": 22336,
+        "cves_skipped": 1016
+    },
+    {
+        "id": 9,
+        "file": "nvdcve-1.1-2016.json",
+        "created_at": "2024-03-16 07:01:00",
+        "updated_at": "2024-03-19 16:50:26",
+        "cves_processed": 10547,
+        "cves_skipped": 1278
+    },
+    {
+        "id": 11,
+        "file": "nvdcve-1.1-2014.json",
+        "created_at": "2024-03-15 07:02:00",
+        "updated_at": "2024-03-19 17:55:31",
+        "cves_processed": 8979,
+        "cves_skipped": 574
+    },
+    {
+        "id": 13,
+        "file": "nvdcve-1.1-2012.json",
+        "created_at": "2024-03-15 07:02:00",
+        "updated_at": "2024-03-19 18:02:59",
+        "cves_processed": 5891,
+        "cves_skipped": 451
+    },
+    {
+        "id": 6,
+        "file": "nvdcve-1.1-2019.json",
+        "created_at": "2024-03-15 07:01:00",
+        "updated_at": "2024-03-19 16:32:50",
+        "cves_processed": 16976,
+        "cves_skipped": 1470
+    },
+    {
+        "id": 8,
+        "file": "nvdcve-1.1-2017.json",
+        "created_at": "2024-03-15 07:01:00",
+        "updated_at": "2024-03-19 16:46:08",
+        "cves_processed": 16979,
+        "cves_skipped": 2333
+    },
+    {
+        "id": 10,
+        "file": "nvdcve-1.1-2015.json",
+        "created_at": "2024-03-15 07:01:00",
+        "updated_at": "2024-03-19 16:53:58",
+        "cves_processed": 8745,
+        "cves_skipped": 670
+    },
+    {
+        "id": 5,
+        "file": "nvdcve-1.1-2020.json",
+        "created_at": "2024-03-15 07:00:00",
+        "updated_at": "2024-03-19 15:43:10",
+        "cves_processed": 20453,
+        "cves_skipped": 1622
+    },
+    {
+        "id": 14,
+        "file": "nvdcve-1.1-2011.json",
+        "created_at": "2024-02-29 08:03:00",
+        "updated_at": "2024-03-19 18:05:54",
+        "cves_processed": 4860,
+        "cves_skipped": 252
+    }
+]

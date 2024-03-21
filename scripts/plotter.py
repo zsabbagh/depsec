@@ -32,6 +32,8 @@ parser.add_argument('-o', '--output', help='The output directory', default='outp
 parser.add_argument('--debug', help='The debug level of the logger', default='INFO')
 parser.add_argument('--show', help='Show the plots', action='store_true')
 
+FLASK_COLOURS = sns.color_palette('Set1', 9)
+
 args = parser.parse_args()
 
 def get_platform(project: str):
@@ -49,20 +51,40 @@ def get_platform(project: str):
         platform, project = parts[0], parts[1]
     return platform.lower(), project.lower()
 
+
 def convert_datetime_to_str(data: dict):
     """
     Converts dictionaries with datetime objects to strings
     """
-    if type(data) != dict:
+    if isinstance(data, Model):
+        data = model_to_dict(data)
+    if type(data) == list:
+        return [ convert_datetime_to_str(entry) for entry in data ]
+    elif type(data) != dict:
         return data
     for key, value in data.items():
         if isinstance(value, datetime.datetime):
             data[key] = value.strftime('%Y-%m-%d %H:%M:%S')
-        elif type(value) == dict:
+        else:
             data[key] = convert_datetime_to_str(value)
-        elif type(value) == list:
-            data[key] = [ convert_datetime_to_str(entry) for entry in value ]
     return data
+
+def try_json_dump(data: dict, path: Path):
+    """
+    Tries to dump a dictionary to a JSON file
+    """
+    if type(path) == str:
+        path = Path(path)
+        if not path.absolute().parent.exists():
+            logger.error(f"Parent directory '{path.absolute().parent}' does not exist.")
+            exit(1)
+    data = convert_datetime_to_str(data)
+    try:
+        with open(path, 'w') as f:
+            json.dump(data, f, indent=4)
+    except Exception as e:
+        logger.error(f"Could not store data to path '{path.name}': {e}")
+        exit(1)
 
 # set the logger level
 logger.remove()
@@ -195,14 +217,16 @@ mw = Middleware(args.config)
 # load the projects, arguments are optional
 mw.load_projects(*args.projects)
 
-
 if __name__ == '__main__':
 
     # extract the files to present in the JSON
     # to be transparent about the data
     # usage of schema here, instead of middleware, as this is straight from the database
-    files = nvd.NVDFile.select().order_by(nvd.NVDFile.timestamp.desc())
+    files = nvd.NVDFile.select().order_by(nvd.NVDFile.created_at.desc())
     files = [ model_to_dict(file) for file in files ]
+    files = convert_datetime_to_str(files)
+    with open(json_dir / 'files.json', 'w') as f:
+        json.dump(files, f, indent=4)
     
     # timeline plot section
     timelines = {}
@@ -216,12 +240,12 @@ if __name__ == '__main__':
                                                    platform=platform)
         timelines[f"{platform}:{project}"] = timeline
     plot_timelines(timelines)
-    timelines = convert_datetime_to_str(timelines)
-    with open(json_dir / 'timelines.json', 'w') as f:
-        json.dump({
-            'files': files,
-            'timelines': timelines
-        }, f, indent=4)
+    try_json_dump(timelines, json_dir / 'timelines.json')
+
+    if args.show:
+        plt.show()
+
+    exit(0)
 
     dependency_timelines = {}
     for project in args.projects:
@@ -234,7 +258,7 @@ if __name__ == '__main__':
         }
         logger.debug(f"Dependencies for {project}: {len(dependencies)}")
         for dependency in dependencies:
-            timeline = mw.get_vulnerabilities_timeline(dependency,
+            timeline = mw.get_vulnerabilities_timeline(dependency.name,
                                                        args.start,
                                                        step=args.step,
                                                        platform=platform)
@@ -253,13 +277,8 @@ if __name__ == '__main__':
                                                           platform=platform,
                                                           include_categories=True)
     plot_vulnerabilities(vulnerabilities)
-    vulnerabilities = convert_datetime_to_str(vulnerabilities)
-    with open(json_dir / 'vulnerabilities.json', 'w') as f:
-        json.dump({
-            'files': files,
-            'vulnerabilities': vulnerabilities
-        }, f, indent=4)
-    
+    try_json_dump(vulnerabilities, json_dir / 'vulnerabilities.json')
+        
     # TODO: do the same above but for each dependencies
     
     # TODO: create LaTeX tables with the data
