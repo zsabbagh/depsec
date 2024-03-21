@@ -1,5 +1,5 @@
 import argparse, re, lizard, glob, datetime, json, sys
-from packaging import version
+from packaging import version as semver
 from loguru import logger
 from git import Repo
 from pathlib import Path
@@ -66,6 +66,7 @@ parser.add_argument('--directory', help='The repositories directory', default='r
 parser.add_argument('--config', help='The configuration file to use', default='config.yml')
 parser.add_argument('--level', help='The logging level to use', default='INFO')
 parser.add_argument('--force', help='Force the operation', action='store_true')
+parser.add_argument('--no-lizard', help='Do not run lizard', action='store_true')
 
 
 args = parser.parse_args()
@@ -135,26 +136,28 @@ for platform, projects in data.items():
         
         logger.info(f"Versions found for {repo_name}: {len(versions)}")
 
-        for ver in sorted(versions.keys(), key=lambda x : version.parse(x), reverse=True):
-            release = mw.get_release(repo_name, ver, platform)
+        for version in sorted(versions.keys(), key=lambda x : semver.parse(x), reverse=True):
+            release = mw.get_release(repo_name, version, platform)
             if release is None:
-                logger.warning(f"Release {project_name}:{ver} not found by metadata, ignoring")
+                logger.warning(f"Release {project_name}:{version} not found by metadata, ignoring")
                 continue
-            tag = versions[ver]
+            tag = versions[version]
             repo.git.checkout(tag.commit, force=True)
             if not args.force and release.nloc_total is not None and release.nloc_total > 0:
-                logger.info(f"{project_name}:{ver} already exists with NLOC {release.nloc_total}, skipping")
+                logger.info(f"{project_name}:{version} already exists with NLOC {release.nloc_total}, skipping")
                 continue
-            total_nloc, avg_nloc, avg_cc, files_counted, functions_counted = get_code_complexity(repo_path.absolute(), includes, excludes)
             date_time = datetime.datetime.fromtimestamp(tag.commit.committed_date)
             release.commit_at = date_time
-            release.commit_hash = tag.commit
+            release.commit_hash = str(tag.commit)
+            print(f"Version {version} commited: {tag.commit} at {date_time}")
             date_str = date_time.strftime('%Y-%m-%d %H:%M:%S')
-            release = mw.get_release(repo_name, ver, platform)
-            release.counted_files = files_counted
-            release.counted_functions = functions_counted
-            release.nloc_total = round(total_nloc, 2) if total_nloc is not None else None
-            release.nloc_average = round(avg_nloc, 2) if avg_nloc is not None else None
-            release.cc_average = round(avg_cc, 2) if avg_cc is not None else None
+            release = mw.get_release(repo_name, version, platform)
+            if not args.no_lizard:
+                total_nloc, avg_nloc, avg_cc, files_counted, functions_counted = get_code_complexity(repo_path.absolute(), includes, excludes)
+                release.counted_files = files_counted
+                release.counted_functions = functions_counted
+                release.nloc_total = round(total_nloc, 2) if total_nloc is not None else None
+                release.nloc_average = round(avg_nloc, 2) if avg_nloc is not None else None
+                release.cc_average = round(avg_cc, 2) if avg_cc is not None else None
+                logger.info(f"{project_name}:{version}, files: {files_counted}, NLOC {total_nloc}")
             release.save()
-            logger.info(f"{project_name}:{ver}, files: {files_counted}, NLOC {total_nloc}")
