@@ -235,6 +235,7 @@ class Middleware:
                                 platform: str="pypi",
                                 max_depth: int = 2) -> List[Project]:
         """
+        DEPRECATED:
         Get all dependencies of a project
 
         project_name: str
@@ -336,7 +337,7 @@ class Middleware:
             if version is None:
                 logger.warning(f"Invalid version {release.version} for {project_name}")
                 continue
-            if exclude_deprecated and version.major < 1:
+            if exclude_deprecated and version_deprecated(version):
                 logger.warning(f"Skipping deprecated version {release.version} for {project_name}")
                 continue
             releases.append(release)
@@ -616,7 +617,8 @@ class Middleware:
                                      start_date: str = 2019,
                                      end_date: str = None,
                                      step: str = 'y',
-                                     platform: str="pypi") -> List[dict]:
+                                     platform: str="pypi",
+                                     exclude_deprecated: bool = False) -> List[dict]:
         """
         Returns a list of vulnerabilities for a project in a specific time range.
         For each date, the most recent release is used to check for vulnerabilities.
@@ -662,7 +664,7 @@ class Middleware:
         results['releases'] = {}
         cves, releases, timeline = results['cves'], results['releases'], results['timeline']
         vulnerabilities = self.get_vulnerabilities(project.name, platform=platform)
-        rels = self.get_releases(project.name, platform=platform)
+        rels = self.get_releases(project.name, platform=platform, exclude_deprecated=exclude_deprecated)
         while start_date <= end_date:
             rel_mr = None
             for rel in rels:

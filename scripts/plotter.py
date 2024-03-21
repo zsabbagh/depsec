@@ -210,7 +210,7 @@ def get_timeline_kpis(data: dict, *kws: str):
     """
     timeline = data.get('timeline')
     cves = data.get('cves')
-    dates, cves, nlocs, ccs, cves_per_10k_nlocs = [], [], [], [], []
+    dates, cves_count, nlocs, ccs, cves_per_10k_nlocs = [], [], [], [], []
     files, functions = [], []
     for entry in timeline:
         rel = data.get('releases', {}).get(entry.get('release'))
@@ -224,11 +224,11 @@ def get_timeline_kpis(data: dict, *kws: str):
         cc = rel.get('cc_average', 0) if rel is not None else 0
         date = entry.get('date')
         dates.append(date)
-        cves.append(count)
+        cves_count.append(count)
         nlocs.append(nloc)
         ccs.append(cc)
         cves_per_10k_nlocs.append(count / (nloc / 10000) if nloc > 0 else 0)
-    prev_cc, prev_nloc = 0, 0
+    prev_cc = prev_nloc = prev_filec = prev_funcc = 0
     for cc in ccs:
         if cc is not None and cc > 0:
             prev_cc = cc
@@ -237,21 +237,32 @@ def get_timeline_kpis(data: dict, *kws: str):
         if nloc is not None and nloc > 0:
             prev_nloc = nloc
             break
+    # eliminate None values
     for i in range(len(dates)):
         cc = ccs[i]
         nloc = nlocs[i]
+        filec = files[i]
+        funcc = functions[i]
+        if filec is None or filec == 0:
+            files[i] = prev_filec
+        else:
+            prev_filec = filec
+        if funcc is None or funcc == 0:
+            functions[i] = prev_funcc
+        else:
+            prev_funcc = funcc
         if cc is None or cc == 0:
             ccs[i] = prev_cc
         else:
             prev_cc = cc
         if nloc is None or nloc == 0:
             nlocs[i] = prev_nloc
-            cves_per_10k_nlocs[i] = cves[i] / (prev_nloc / 10000) if prev_nloc > 0 else 0
+            cves_per_10k_nlocs[i] = cves_count[i] / (prev_nloc / 10000) if prev_nloc > 0 else 0
         else:
             prev_nloc = nloc
     results = {
         'dates': dates,
-        'cves': cves,
+        'cves': cves_count,
         'nlocs': nlocs,
         'ccs': ccs,
         'files': files,
@@ -280,7 +291,7 @@ def get_timeline_kpis(data: dict, *kws: str):
                         max_value = 10
                 value = impact_to_int(val)
                 if type(value) not in [int, float]:
-                    logger.warning(f"Unexpected value for {project}, keyword '{kw}' in {cve}: {value}")
+                    logger.warning(f"Unexpected value keyword '{kw}' in {cve}: {value}")
                     continue
                 scrs.append(value)
             if len(scrs) == 0:
@@ -343,15 +354,20 @@ def plot_timelines(timelines: dict):
                 logger.error(f"Could not find KPI '{kpi}' for {project}")
                 continue
             suffix = ''
+            lower = upper = None
             if type(value) == dict:
+                lower = value.get('min')
+                upper = value.get('max')
                 value = value.get('mean')
                 suffix = f'{suffix} mean'
             ax.plot(results.get('dates'), value, label=f"{project.title()} {suffix}")
+            if lower is not None and upper is not None:
+                ax.fill_between(results.get('dates'), lower, upper, alpha=0.1, label=f"{project.title()} std")
     for fig, ax, kpi in figures:
         ax.legend()
         fig.autofmt_xdate()
         filename = kpi.get('key', f"kpi-{datetime.datetime.now().strftime('%Y%m%d%H%M%S')}")
-        fig.savefig(plots_dir / f"{kpi.get('key')}.png")
+        fig.savefig(plots_dir / f"{filename}.png")
 
 def plot_vulnerabilities(vulnerabilities: dict):
     """
