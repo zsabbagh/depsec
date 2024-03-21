@@ -1,4 +1,4 @@
-import time, yaml, json, glob
+import time, yaml, json, glob, sys
 import src.schemas.nvd as nvd
 import src.schemas.cwe as cwe
 import src.utils.db as db
@@ -262,7 +262,7 @@ class Middleware:
                 name = name[0]
             return name
         # Force lowercase
-        logger.info(f"Getting dependency graph for {project_name} {platform}, max depth {max_depth}")
+        logger.debug(f"Getting dependency graph for {project_name} {platform}, max depth {max_depth}")
         project_name, platform = self.__format_strings(project_name, platform)
         project = self.get_project(project_name, platform)
         processed = {}
@@ -275,11 +275,11 @@ class Middleware:
         count = 0
         while len(queue) > 0:
             p, ks = queue.pop(0)
-            logger.info(f"Getting dependencies for {p.name} {p.platform}, depth {len(ks)}")
+            logger.debug(f"Getting dependencies for {p.name} {p.platform}, depth {len(ks)}")
             if max_depth > 0 and len(ks) > max_depth:
                 logger.warning(f"Max depth reached, skipping {p.name}")
                 continue
-            logger.info(f"Currently processed {len(processed)} projects")
+            logger.debug(f"Currently processed {len(processed)} projects")
             r = graph
             pname = split_brace(p.name)
             for i in range(len(ks)):
@@ -298,7 +298,7 @@ class Middleware:
                 count += 1
                 depname = split_brace(dep.name)
                 total.add(depname)
-                logger.info(f"Processing dependency {depname} {dep.platform}, nr {count}")
+                logger.debug(f"Processing dependency {depname} {dep.platform}, nr {count}")
                 if depname.startswith('pytest'):
                     logger.warning(f"Skipping dependency {depname}")
                     continue
@@ -319,7 +319,8 @@ class Middleware:
                      project_name: str,
                      version: str = '',
                      platform: str="pypi",
-                     reverse: bool = True) -> List[Release]:
+                     reverse: bool = True,
+                     exclude_deprecated: bool = True) -> List[Release]:
         """
         Gets all releases of a project 
         Returns a sorted list of releases, based on the semantic versioning
@@ -329,7 +330,16 @@ class Middleware:
         if project is None:
             logger.error(f"Project {project_name} not found")
             return None
-        releases = [ release for release in Release.select().where(Release.project == project.id) ]
+        releases = []
+        for release in Release.select().where(Release.project == project.id):
+            version = semver.parse(release.version)
+            if version is None:
+                logger.warning(f"Invalid version {release.version} for {project_name}")
+                continue
+            if exclude_deprecated and version.major < 1:
+                logger.warning(f"Skipping deprecated version {release.version} for {project_name}")
+                continue
+            releases.append(release)
         releases = sorted(releases, key=lambda x: semver.parse(x.version), reverse=reverse)
         return releases
     
@@ -438,11 +448,11 @@ class Middleware:
                 if cve.cve_id not in processed_versions:
                     processed_versions[cve.cve_id] = set()
                 elif cpe.version in processed_versions[cve.cve_id]:
-                    logger.warning(f"Vulnerability {vuln_cpe_id} already in set")
+                    logger.debug(f"Vulnerability {vuln_cpe_id} already in set")
                     continue
                 processed_versions[cve.cve_id].add(cpe.version)
             if vuln_cpe_id in vulnset and not has_exact_version:
-                logger.warning(f"Vulnerability {vuln_cpe_id} already in set")
+                logger.debug(f"Vulnerability {vuln_cpe_id} already in set")
                 continue
             start_date: datetime = start_release.published_at if start_release else None
             end_date: datetime = end_release.published_at if end_release else None
@@ -481,6 +491,51 @@ class Middleware:
                     cves[cve.cve_id] = cve_data
                 else:
                     cves[cve.cve_id]['applicability'].append(applicability)
+        # translate 'version' applicability to 'version_start' and 'version_end'
+        for cve_id, cve in cves.items():
+            versions = set()
+            applicabilities = []
+            for app in cve.get('applicability', []):
+                if 'version' in app:
+                    versions.add(app['version'])
+                else:
+                    applicabilities.append(app)
+            if versions != set():
+                # go through each minor version and create a range
+                asc_versions = sorted(list(versions), key=lambda x: semver.parse(x))
+                previous_version = asc_versions[0]
+                max_version = asc_versions[-1]
+                relselect = Release.select().where(Release.project == project)
+                relselect = sorted([rel for rel in relselect if version_in_range(rel.version, previous_version)], key=lambda x: semver.parse(x.version))
+                for rel in relselect:
+                    # releases are sorted semantically
+                    if previous_version not in versions:
+                        if rel.version in versions:
+                            previous_version = rel.version
+                        elif version_in_range(rel.version, max_version):
+                            previous_version = rel.version
+                            break
+                        continue
+                    elif rel.version in versions:
+                        continue
+                    start_rel = Release.get_or_none(
+                        Release.project == project,
+                        Release.version == previous_version
+                    )
+                    end_rel = Release.get_or_none(
+                        Release.project == project,
+                        Release.version == rel.version
+                    )
+                    applicabilities.append({
+                        'version_start': str(previous_version),
+                        'version_end': rel.version,
+                        'start_date': start_rel.published_at if start_rel else None,
+                        'exclude_start': False,
+                        'end_date': end_rel.published_at if end_rel else None,
+                        'exclude_end': True,
+                    })
+                    previous_version = rel.version
+            cve['applicability'] = applicabilities
         return results
     
     def get_indirect_vulnerabilities(self,
@@ -618,7 +673,7 @@ class Middleware:
                 logger.warning(f"No release found for {project.name} at {start_date}")
                 start_date = datetime_increment(start_date, step)
                 continue
-            logger.info(f"Got most recent release {rel_mr.version} for {project.name} at {start_date}")
+            logger.debug(f"Got most recent release {rel_mr.version} for {project.name} at {start_date}")
             vulns = []
             for vuln in vulnerabilities.get('cves', {}).values():
                 applicabilities = vuln.get('applicability', [])
@@ -837,7 +892,10 @@ if __name__ == "__main__":
     # e.g., py -i src/middleware.py
     parser = argparse.ArgumentParser()
     parser.add_argument('project', type=str, help='The project name', default='jinja2')
+    parser.add_argument('--debug', action='store_true', help='Debug mode')
+    logger.remove()
     args = parser.parse_args()
+    logger.add(sys.stdout, colorize=True, backtrace=True, diagnose=True, level='DEBUG' if args.debug else 'INFO')
     mw = Middleware("config.yml", debug=True)
     rels = mw.get_releases(args.project)
     vulns = mw.get_vulnerabilities(args.project)

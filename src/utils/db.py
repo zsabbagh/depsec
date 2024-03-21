@@ -110,7 +110,6 @@ class NVD:
         categories: Whether to include the (unique) categories of the CWEs (default: truthy)
         to_dict: Whether to return the result as a dictionary (non-recursive)
         """
-        print(f"Getting CWEs for {entry}")
         categories = bool(categories)
         exclude_deprecated = bool(exclude_deprecated)
         entry = NVD.get(entry, to_dict=False)

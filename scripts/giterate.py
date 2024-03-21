@@ -118,7 +118,8 @@ for platform, projects in data.items():
 
         if not repo_path.exists():
             # TODO: Clone the repository
-            pass
+            logger.error(f"Repository {repo_name} does not exist. Cloning not implemented, do manually")
+            continue
 
         logger.info(f"Checking out {repo_name} to {repo_path}")
 
@@ -149,7 +150,6 @@ for platform, projects in data.items():
             date_time = datetime.datetime.fromtimestamp(tag.commit.committed_date)
             release.commit_at = date_time
             release.commit_hash = str(tag.commit)
-            print(f"Version {version} commited: {tag.commit} at {date_time}")
             date_str = date_time.strftime('%Y-%m-%d %H:%M:%S')
             release = mw.get_release(repo_name, version, platform)
             if not args.no_lizard:

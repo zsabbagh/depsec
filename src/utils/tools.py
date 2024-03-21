@@ -1,6 +1,19 @@
 import re, datetime
+from packaging import version as semver
 from pathlib import Path
 from loguru import logger
+
+def version_in_range(v: str, start: str = None, end: str = None, exclude_start: bool = False, exclude_end: bool = False) -> bool:
+    """
+    Compare two versions using semver.
+    Defaults to inclusive start and inclusive end.
+    """
+    v = semver.parse(v) if type(v) == str else v
+    start = semver.parse(start) if type(start) == str else start
+    end = semver.parse(end) if type(end) == str else end
+    is_after_start = start is None or (v > start if exclude_start else v >= start)
+    is_before_end = end is None or (v < end if exclude_end else v <= end)
+    return is_after_start and is_before_end
 
 def datetime_increment(dt: datetime.datetime, step: str = 'm'):
     """
