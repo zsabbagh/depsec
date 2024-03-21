@@ -1,11 +1,14 @@
-import argparse, sys, time, seaborn as sns, numpy as np, matplotlib.pyplot as plt, pprint, json
+import argparse, sys, time, pprint, json, datetime
+import seaborn as sns
+import numpy as np
+import matplotlib.pyplot as plt
+import pandas as pd
 from pprint import pprint
 from pathlib import Path
 from src.middleware import Middleware
 import src.schemas.nvd as nvd
 from loguru import logger
 from src.schemas.projects import *
-from pandas import DataFrame
 # model_to_dict translates PeeWee models to dictionaries for JSON serialisation
 # the purpose is to make the data that have produced the plots available to readers of the report
 from playhouse.shortcuts import model_to_dict
@@ -29,12 +32,72 @@ parser.add_argument('--platform', help='The default platform', default='pypi')
 parser.add_argument('--step', help='The step size', default='m')
 parser.add_argument('-p', '--projects', nargs='+', help='The projects to plot', required=True)
 parser.add_argument('-o', '--output', help='The output directory', default='output')
+parser.add_argument('--kpis', nargs='+', help='The key performance indicators to plot', default=['count', 'base', 'nloc'])
 parser.add_argument('--debug', help='The debug level of the logger', default='INFO')
 parser.add_argument('--show', help='Show the plots', action='store_true')
 
-sns.color_palette('Paired')
-
 args = parser.parse_args()
+
+KPIS = {
+    'base': {
+        'key': 'cvss_base_score',
+        'title': 'CVSS Base Score',
+        'max': 10,
+        'y_label': 'Score',
+    },
+    'impact': {
+        'key': 'cvss_impact_score',
+        'title': 'CVSS Impact Score',
+        'max': 10,
+        'y_label': 'Score',
+    },
+    'exploitability': {
+        'key': 'cvss_exploitability_score',
+        'title': 'CVSS Exploitability Score',
+        'max': 10,
+        'y_label': 'Score',
+    },
+    'confidentiality': {
+        'key': 'cvss_confidentiality_impact',
+        'title': 'CVSS Confidentiality Impact',
+        'max': 2,
+        'y_label': 'Impact',
+    },
+    'integrity': {
+        'key': 'cvss_integrity_impact',
+        'title': 'CVSS Integrity Impact',
+        'max': 2,
+        'y_label': 'Impact',
+    },
+    'availability': {
+        'key': 'cvss_availability_impact',
+        'title': 'CVSS Availability Impact',
+        'max': 2,
+        'y_label': 'Impact',
+    },
+    'cves': {
+        'key': 'cves_count',
+        'title': 'Number of CVEs',
+        'y_label': 'Count',
+    },
+    'nloc': {
+        'key': 'nlocs',
+        'title': 'Number of Lines of Code',
+        'y_label': 'NLOC',
+    },
+    'cves/nloc': {
+        'key': 'cves_per_10k_nlocs',
+        'title': 'CVEs per 10k NLOC',
+        'y_label': 'CVEs per 10k NLOC',
+    },
+    'cc': {
+        'key': 'ccs',
+        'title': 'Cyclomatic Complexity (CC) average',
+        'y_label': 'CC',
+    },
+}
+
+sns.set_theme(style='darkgrid')
 
 def get_platform(project: str):
     """
@@ -125,6 +188,98 @@ def impact_to_int(score: str):
             return 2
     return None
 
+def get_name_from_kpi(kpi: str):
+    """
+    Gets the name from a KPI
+    """
+    return kpi.replace('_', ' ').title().replace('Cvss', 'CVSS')
+
+def get_timeline_kpis(data: dict, *kws: str):
+    """
+    Gets the key performance indicators for a timeline
+    """
+    timeline = data.get('timeline')
+    cves = data.get('cves')
+    dates, cves_count, nlocs, ccs, cves_per_10k_nlocs = [], [], [], [], []
+    for entry in timeline:
+        rel = data.get('releases', {}).get(entry.get('release'))
+        count = len(entry.get('cves', []))
+        nloc = rel.get('nloc_total', 0) if rel is not None else 0
+        nloc = 0 if nloc is None else nloc
+        cc = rel.get('cc_mean', 0) if rel is not None else 0
+        date = entry.get('date')
+        print(f"{project} {rel.get('version')}, {date}, {count} CVEs, {nloc} NLOC")
+        dates.append(date)
+        cves_count.append(count)
+        nlocs.append(nloc)
+        ccs.append(cc)
+        cves_per_10k_nlocs.append(count / (nloc / 10000) if nloc > 0 else 0)
+    prev_cc, prev_nloc = 0, 0
+    for i in range(len(dates)):
+        cc = ccs[i]
+        nloc = nlocs[i]
+        if cc == 0:
+            ccs[i] = prev_cc
+        else:
+            prev_cc = cc
+        if nloc == 0:
+            nlocs[i] = prev_nloc
+            cves_per_10k_nlocs[i] = cves_count[i] / (prev_nloc / 10000) if prev_nloc > 0 else 0
+        else:
+            prev_nloc = nloc
+    results = {
+        'dates': dates,
+        'cves_count': cves_count,
+        'nlocs': nlocs,
+        'ccs': ccs,
+        'cves_per_10k_nlocs': cves_per_10k_nlocs,
+    }
+    for kw in kws:
+        if kw in results:
+            continue
+        max_scores = []
+        min_scores = []
+        std_scores = []
+        mean_scores = []
+        median_scores = []
+        max_value = None
+        for entry in timeline:
+            scrs = []
+            for cve in entry['cves']:
+                if kw not in cves.get(cve, {}):
+                    continue
+                val = cves.get(cve, {}).get(kw)
+                if max_value is None:
+                    if type(val) == str:
+                        max_value = 2
+                    else:
+                        max_value = 10
+                value = impact_to_int(val)
+                if type(value) not in [int, float]:
+                    logger.warning(f"Unexpected value for {project}, keyword '{kw}' in {cve}: {value}")
+                    continue
+                scrs.append(value)
+            if len(scrs) == 0:
+                max_scores.append(0)
+                std_scores.append(0)
+                mean_scores.append(0)
+                median_scores.append(0)
+                min_scores.append(0)
+                continue
+            std_scores.append(np.std(scrs))
+            max_scores.append(max(scrs))
+            min_scores.append(min(scrs))
+            mean_scores.append(np.mean(scrs))
+            median_scores.append(np.std(scrs))
+        results[kw] = {
+            'max': max_scores,
+            'min': min_scores,
+            'mean': mean_scores,
+            'median': median_scores,
+            'std': std_scores,
+        }
+    return results
+
 def plot_timelines(timelines: dict):
     """
     Expects a dictionary with the following structure:
@@ -141,76 +296,35 @@ def plot_timelines(timelines: dict):
         ]
     }
     """
-    fig_count, ax_count = plt.subplots()
     # the scores to plot
-    scores = [
-        ('CVSS base score', 'cvss_base_score'),
-        ('CVSS impact score', 'cvss_impact_score'),
-        ('CVSS exploitability score', 'cvss_exploitability_score'),
-        ('CVSS confidentiality impact', 'cvss_confidentiality_impact'),
-        ('CVSS integrity impact', 'cvss_integrity_impact'),
-        ('CVSS availability impact', 'cvss_availability_impact'),
-    ]
-    figures_scores = []
-    for title, kw in scores:
+    figures = []
+    for kpi in args.kpis:
+        kpi = KPIS.get(kpi)
+        if kpi is None:
+            logger.error(f"Could not find KPI '{kpi}'")
+            continue
         fig, ax = plt.subplots()
-        figures_scores.append((fig, ax, kw))
-        ax.set_title(title)
-        ax.set_ylabel('Score')
-    max_values = {}
+        figures.append((fig, ax, kpi))
+        ax.set_title(kpi.get('title'))
+        ax.set_ylabel(kpi.get('y_label'))
+    kpi_keys = [ kpi.get('key') for _, _, kpi in figures ]
     for project, data in timelines.items():
         _, project = get_platform(project)
-        timeline = data.get('timeline')
-        cves = data.get('cves')
-        dates = [ entry.get('date') for entry in timeline ]
-        for fig, ax, kw in figures_scores:
-            cves_count = [ len(entry.get('cves', [])) for entry in timeline ]
-            max_scores = []
-            mean_scores = []
-            median_scores = []
-            max_value = None
-            for entry in timeline:
-                scrs = []
-                for cve in entry['cves']:
-                    val = cves.get(cve, {}).get(kw)
-                    if max_value is None:
-                        if type(val) == str:
-                            max_value = 2
-                        else:
-                            max_value = 10
-                    value = impact_to_int(val)
-                    if type(value) not in [int, float]:
-                        logger.warning(f"Unexpected value for {project}, keyword '{kw}' in {cve}: {value}")
-                        continue
-                    scrs.append(value)
-                if len(scrs) == 0:
-                    max_scores.append(0)
-                    mean_scores.append(0)
-                    median_scores.append(0)
-                    continue
-                max_scores.append(max(scrs))
-                mean_scores.append(np.mean(scrs))
-                median_scores.append(np.std(scrs))
-            max_values[kw] = max_value
-            kw_name = kw.replace('cvss_', '').replace('_', ' ')
-            ax.plot(dates, mean_scores, label=f"{project.title()} mean {kw_name}")
-        ax_count.plot(dates, cves_count, label=f"{project.title()} # of CVEs")
-    ax_count.set_ylabel('Number of CVEs')
-    # add date points to each 5th entry
-    ax_count.grid(color='gray', linestyle='-', linewidth=0.2, axis='y', zorder=0)
-    fig_count.legend()
-    fig_count.autofmt_xdate()
-    fig_count.savefig(plots_dir / "cves.png")
-    for fig, ax, kw in figures_scores:
-        max_value = max_values[kw]
-        ax.set_ylabel(f'Score')
-        step = 0.5 if max_value < 10 else 1
-        ax.yaxis.set_ticks(np.arange(0, max_value+0.1, step))
-        ax.yaxis.set_tick_params(labelleft='on')
-        ax.grid(color='gray', linestyle='-', linewidth=0.2, axis='y', zorder=0, alpha=step)
-        fig.legend()
-        fig.autofmt_xdate()
-        fig.savefig(plots_dir / f"{kw}.png")
+        results = get_timeline_kpis(data, *kpi_keys)
+        for fig, ax, kpi in figures:
+            ax: plt.Axes
+            kpi_key = kpi.get('key')
+            if kpi_key == 'nlocs':
+                print(f"{project} NLOCs: {results.get(kpi_key)}")
+            value = results.get(kpi_key)
+            if value is None:
+                logger.error(f"Could not find KPI '{kpi}' for {project}")
+                continue
+            suffix = kpi.get('y_label').lower()
+            if type(value) == dict:
+                value = value.get('mean')
+                suffix = f'{suffix} mean'
+            ax.plot(results.get('dates'), value, label=f"{project.title()} {suffix}")
 
 def plot_vulnerabilities(vulnerabilities: dict):
     """
@@ -235,6 +349,7 @@ if __name__ == '__main__':
     files = nvd.NVDFile.select().order_by(nvd.NVDFile.created_at.desc())
     files = [ model_to_dict(file) for file in files ]
     files = convert_datetime_to_str(files)
+
     with open(json_dir / 'files.json', 'w') as f:
         json.dump(files, f, indent=4)
     
@@ -249,6 +364,7 @@ if __name__ == '__main__':
                                                    step=args.step,
                                                    platform=platform)
         timelines[f"{platform}:{project}"] = timeline
+
     plot_timelines(timelines)
     try_json_dump(timelines, json_dir / 'timelines.json')
 

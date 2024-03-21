@@ -329,7 +329,7 @@ class Middleware:
         if project is None:
             logger.error(f"Project {project_name} not found")
             return None
-        releases = [ release for release in Release.select().where(Release.project == project.id & Release.version.startswith(version)) ]
+        releases = [ release for release in Release.select().where(Release.project == project.id) ]
         releases = sorted(releases, key=lambda x: semver.parse(x.version), reverse=reverse)
         return releases
     
@@ -601,11 +601,11 @@ class Middleware:
         # for each date in the range, get the most recent releases and check for vulnerabilities
         results: list = {
             'cves': {},
-            project.name: model_to_dict(project, recurse=False),
+            'releases': model_to_dict(project, recurse=False),
             'timeline': []
         }
-        results[project.name]['releases'] = {}
-        cves, releases, timeline = results['cves'], results[project.name]['releases'], results['timeline']
+        results['releases'] = {}
+        cves, releases, timeline = results['cves'], results['releases'], results['timeline']
         vulnerabilities = self.get_vulnerabilities(project.name, platform=platform)
         rels = self.get_releases(project.name, platform=platform)
         while start_date <= end_date:
@@ -839,6 +839,8 @@ if __name__ == "__main__":
     parser.add_argument('project', type=str, help='The project name', default='jinja2')
     args = parser.parse_args()
     mw = Middleware("config.yml", debug=True)
+    rels = mw.get_releases(args.project)
     vulns = mw.get_vulnerabilities(args.project)
+    vulnstl = mw.get_vulnerabilities_timeline(args.project)
     cwes = [ (c, vulns.get('cwes').get(c, {}).get('status')) for c in vulns.get('cwes', {}) ]
     cves = [ c for c in vulns.get('cves', {}) ]
