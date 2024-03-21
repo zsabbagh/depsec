@@ -32,7 +32,7 @@ parser.add_argument('-o', '--output', help='The output directory', default='outp
 parser.add_argument('--debug', help='The debug level of the logger', default='INFO')
 parser.add_argument('--show', help='Show the plots', action='store_true')
 
-FLASK_COLOURS = sns.color_palette('Set1', 9)
+sns.color_palette('Paired')
 
 args = parser.parse_args()
 
@@ -157,22 +157,27 @@ def plot_timelines(timelines: dict):
         figures_scores.append((fig, ax, kw))
         ax.set_title(title)
         ax.set_ylabel('Score')
-    pprint(timelines)
+    max_values = {}
     for project, data in timelines.items():
         _, project = get_platform(project)
         timeline = data.get('timeline')
         cves = data.get('cves')
-        print(cves)
         dates = [ entry.get('date') for entry in timeline ]
         for fig, ax, kw in figures_scores:
             cves_count = [ len(entry.get('cves', [])) for entry in timeline ]
             max_scores = []
             mean_scores = []
             median_scores = []
+            max_value = None
             for entry in timeline:
                 scrs = []
                 for cve in entry['cves']:
                     val = cves.get(cve, {}).get(kw)
+                    if max_value is None:
+                        if type(val) == str:
+                            max_value = 2
+                        else:
+                            max_value = 10
                     value = impact_to_int(val)
                     if type(value) not in [int, float]:
                         logger.warning(f"Unexpected value for {project}, keyword '{kw}' in {cve}: {value}")
@@ -186,6 +191,7 @@ def plot_timelines(timelines: dict):
                 max_scores.append(max(scrs))
                 mean_scores.append(np.mean(scrs))
                 median_scores.append(np.std(scrs))
+            max_values[kw] = max_value
             kw_name = kw.replace('cvss_', '').replace('_', ' ')
             ax.plot(dates, mean_scores, label=f"{project.title()} mean {kw_name}")
         ax_count.plot(dates, cves_count, label=f"{project.title()} # of CVEs")
@@ -196,8 +202,12 @@ def plot_timelines(timelines: dict):
     fig_count.autofmt_xdate()
     fig_count.savefig(plots_dir / "cves.png")
     for fig, ax, kw in figures_scores:
-        ax.set_ylabel('Score')
-        ax.grid(color='gray', linestyle='-', linewidth=0.2, axis='y', zorder=0)
+        max_value = max_values[kw]
+        ax.set_ylabel(f'Score')
+        step = 0.5 if max_value < 10 else 1
+        ax.yaxis.set_ticks(np.arange(0, max_value+0.1, step))
+        ax.yaxis.set_tick_params(labelleft='on')
+        ax.grid(color='gray', linestyle='-', linewidth=0.2, axis='y', zorder=0, alpha=step)
         fig.legend()
         fig.autofmt_xdate()
         fig.savefig(plots_dir / f"{kw}.png")
