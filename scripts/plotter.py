@@ -92,7 +92,7 @@ KPIS = {
     },
     'nloc': {
         'key': 'nlocs',
-        'title': 'Number of Lines of Code',
+        'title': 'Number of Lines of Code (NLOC)',
         'y_label': 'NLOC',
     },
     'cves/nloc': {
@@ -102,7 +102,7 @@ KPIS = {
     },
     'cc': {
         'key': 'ccs',
-        'title': 'Cyclomatic Complexity (CC) average',
+        'title': 'Cyclomatic Complexity (CC) / Function',
         'y_label': 'CC',
     },
 }
@@ -343,6 +343,7 @@ def plot_timelines(timelines: dict):
         ax.set_title(kpi.get('title'))
         ax.set_ylabel(kpi.get('y_label'))
     kpi_keys = [ kpi.get('key') for _, _, kpi in figures ]
+    max_values = {}
     for project, data in timelines.items():
         _, project = get_platform(project)
         results = get_timeline_kpis(data, *kpi_keys)
@@ -355,15 +356,28 @@ def plot_timelines(timelines: dict):
                 continue
             suffix = ''
             lower = upper = None
+            has_max = 'max' in kpi
+            max_value = kpi.get('max', None)
             if type(value) == dict:
                 lower = value.get('min')
                 upper = value.get('max')
                 value = value.get('mean')
+                max_value = max(value) if not has_max else max_value
                 suffix = f'{suffix} mean'
+            else:
+                max_value = max(value) if not has_max else max_value
+            if not has_max:
+                max_value = max_value * 1.1
+            if max_values.get(kpi_key) is None:
+                max_values[kpi_key] = max_value
+            else:
+                max_values[kpi_key] = max(max_values[kpi_key], max_value)
             ax.plot(results.get('dates'), value, label=f"{project.title()} {suffix}")
             if lower is not None and upper is not None:
                 ax.fill_between(results.get('dates'), lower, upper, alpha=0.1, label=f"{project.title()} std")
     for fig, ax, kpi in figures:
+        kpi_key = kpi.get('key')
+        ax.set_ylim(ymin=0, ymax=max_values[kpi_key])
         ax.legend()
         fig.autofmt_xdate()
         filename = kpi.get('key', f"kpi-{datetime.datetime.now().strftime('%Y%m%d%H%M%S')}")
