@@ -899,6 +899,8 @@ if __name__ == "__main__":
     args = parser.parse_args()
     logger.add(sys.stdout, colorize=True, backtrace=True, diagnose=True, level='DEBUG' if args.debug else 'INFO')
     mw = Middleware("config.yml", debug=True)
+    mw.load_projects()
+    p = mw.get_project(args.project)
     rels = mw.get_releases(args.project)
     vulns = mw.get_vulnerabilities(args.project)
     vulnstl = mw.get_vulnerabilities_timeline(args.project)

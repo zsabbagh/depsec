@@ -22,6 +22,13 @@
                 "includes": ["tornado/**/*.py"],
                 "excludes": ["tornado/test/**"]
             }
+        },
+        "tensorflow": {
+            "repo": {
+                "url": "github.com/tensorflow/tensorflow",
+                "includes": ["tensorflow/**/*.py"]
+            },
+            "vendor": "google"
         }
     }
 }
