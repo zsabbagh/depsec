@@ -1,17 +1,20 @@
 # Master Thesis Implementation part
 
 This is a collection of tools and scripts used to collect data and perform analysis for my master thesis.
+A project run, tested, and developed with Python 3.11.6.
 
 ## Running the code
 
 To run the code, you need to have the following installed:
 ```
 argparse
+argparse
 gitpython
 lizard
 loguru
 matplotlib
 numpy
+packaging
 pandas
 peewee
 requests
