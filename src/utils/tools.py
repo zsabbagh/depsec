@@ -20,7 +20,7 @@ def version_deprecated(v: str) -> bool:
     Check if a version is deprecated.
     """
     v = semver.parse(v) if type(v) == str else v
-    return v.major > 0 if v else False
+    return v.major < 1 if v else False
 
 def datetime_increment(dt: datetime.datetime, step: str = 'm'):
     """

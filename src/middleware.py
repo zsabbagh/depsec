@@ -902,6 +902,8 @@ if __name__ == "__main__":
     mw.load_projects()
     p = mw.get_project(args.project)
     rels = mw.get_releases(args.project)
+    rel: Release = mw.get_release(args.project, p.latest_release)
+    bandit_report = rel.bandit_report.first()
     vulns = mw.get_vulnerabilities(args.project)
     vulnstl = mw.get_vulnerabilities_timeline(args.project)
     vers = sorted(rels, key=lambda x : semver.parse(x.version), reverse=True)

@@ -82,7 +82,7 @@ def run_bandit(dir: str | Path,
     result = {}
     output_dir = Path(output).absolute() if output else Path(os.getcwd()) / '__temp__'
     if not output_dir.parent.exists():
-        logger.error(f"Directory '{output_dir.parent}' does not exist!")
+        logger.error(f"Output directory '{output_dir.parent}' does not exist!")
         exit(1)
     if not output_dir.exists():
         output_dir.mkdir()
@@ -96,8 +96,13 @@ def run_bandit(dir: str | Path,
     all_issues = []
     files_skipped = 0
     for incldir in includes:
-        if str(incldir.absolute()) in processed_dirs:
-            logger.warning(f"Skipping directory '{incldir.absolute()}' as it has already been counted.")
+        skipdir = False
+        for procdir in processed_dirs:
+            if str(incldir.absolute()).startswith(str(procdir)):
+                logger.warning(f"Skipping directory '{incldir.absolute()}' as it has already been counted.")
+                skipdir = True
+                break
+        if skipdir:
             continue
         processed_dirs.add(str(incldir.absolute()))
         dirname = str(incldir).lstrip(str(dir.absolute()))
@@ -107,7 +112,7 @@ def run_bandit(dir: str | Path,
         dt = datetime.datetime.now().strftime('%Y%m%d%H%M%S')
         fn = output_dir / f'bandit-{dt}.json'
         if not incldir.exists():
-            logger.error(f"Directory '{incldir}' does not exist!")
+            logger.debug(f"Skipping '{incldir}' as it does not exist.")
             continue
         logger.info("Running Bandit...")
         data = None

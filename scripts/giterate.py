@@ -20,7 +20,7 @@ parser.add_argument('--level', help='The logging level to use', default='INFO')
 parser.add_argument('--force', help='Force the operation', action='store_true')
 parser.add_argument('--do', help='The operation to do', default=[], nargs='*')
 parser.add_argument('--only', help='Only do the mentioned projects', default=[], nargs='*')
-
+parser.add_argument('--clone', help='Clone if the repository does not exist', action='store_true', default=False)
 
 args = parser.parse_args()
 
@@ -30,6 +30,7 @@ logger.add(sys.stdout, level=args.level.upper())
 only = set(map(str.lower, args.only))
 
 mw = Middleware(args.config)
+mw.load_projects()
 
 directory = Path(args.directory)
 if not directory.exists():
@@ -59,21 +60,20 @@ for platform, projects in data.items():
             continue
 
         logger.info(f"Processing {platform} project {project_name}")
-
         repo = projects.get(project_name, {}).get('repo')
         if not repo:
+            logger.warning(f"Repository not found for {project_name}, skipping...")
             continue
 
         url = repo.get('url')
         includes = repo.get('includes')
         excludes = repo.get('excludes')
-        url = re.sub(r'https?://|\.git$', '', url)
+        url = re.sub(r'https?://', '', url)
+        url = re.sub(r'.git$', '', url)
         repo_name = url.split('/')[-1]
         if '.' in repo_name:
             repo_name = repo_name.split('.')[0]
-        url = f"https://github.com{url}.git"
-
-        # TODO: Add creation of project if it does not exist
+        url = f"https://{url}.git"
 
         # Get the project
         project = mw.get_project(project_name, platform)
@@ -87,15 +87,21 @@ for platform, projects in data.items():
 
         if not repo_path.exists():
             # TODO: Clone the repository
-            logger.error(f"Repository {repo_name} does not exist. Cloning not implemented, do manually")
-            continue
+            if args.clone:
+                logger.info(f"Cloning {repo_name} to {repo_path}... (url: {url})")
+                try:
+                    repo = Repo.clone_from(url, repo_path)
+                except Exception as e:
+                    logger.error(f"Failed to clone {project_name} to '{repo_path}', error: {e}")
+                    exit(1)
+                logger.info(f"Cloned {project_name} to '{repo_path}'!")
+            else:
+                logger.error(f"Repository {repo_name} does not exist, skipping, clone with --clone")
+                continue
 
         logger.info(f"Checking out {repo_name} to {repo_path}")
-
         repo = Repo(repo_path)
-
         tags = repo.tags
-
         versions = {}
 
         for tag in tags:
@@ -105,16 +111,18 @@ for platform, projects in data.items():
             versions[tag_version] = tag
         
         logger.info(f"Versions found for {repo_name}: {len(versions)}")
-
         processed = 0
+        rels = mw.get_releases(project_name, platform)
+        rels = [ rel.version for rel in rels]
+        logger.info(f"Releases found for {repo_name}: {', '.join(rels)}")
 
         for version in sorted(versions.keys(), key=semver.parse, reverse=True):
             if bool(args.limit) and processed > args.limit:
                 logger.info(f"Limit of {args.limit} reached, stopping")
                 break
-            release: Release = mw.get_release(repo_name, version, platform)
+            release: Release = mw.get_release(project_name, version, platform)
             if release is None:
-                logger.warning(f"Release {project_name}:{version} not found by metadata, ignoring")
+                logger.warning(f"Release '{version}' for {project_name} not found by metadata, ignoring")
                 continue
             processed += 1
             tag = versions[version]
@@ -123,7 +131,6 @@ for platform, projects in data.items():
             release.commit_at = date_time
             release.commit_hash = str(tag.commit)
             date_str = date_time.strftime('%Y-%m-%d %H:%M:%S')
-            release = mw.get_release(repo_name, version, platform)
             if 'lizard' in args.do:
                 res = run_lizard(repo_path, includes, excludes)
                 nloc = res.get('nloc')
@@ -145,13 +152,13 @@ for platform, projects in data.items():
                 previous_report = BanditReport.get_or_none(BanditReport.release == release)
                 if previous_report:
                     previous_report.delete_instance()
-                time.sleep(1)
                 sevconf = res.get('severity_confidence', {})
+                logger.info(f"{project_name}:{version}, files: {res.get('files_counted')}, issues: {res.get('issues_total')}")
                 report = BanditReport.create(
                     release=release,
                     files_counted=res.get('files_counted'),
                     files_skipped=res.get('files_skipped'),
-                    issues_total=res.get('total_issues'),
+                    issues_total=res.get('issues_total'),
                     confidence_high_count=res.get('confidence_high_count'),
                     confidence_medium_count=res.get('confidence_medium_count'),
                     confidence_low_count=res.get('confidence_low_count'),

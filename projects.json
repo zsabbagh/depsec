@@ -1,7 +1,12 @@
 {
     "pypi": {
         "jinja2": {
-            "product": "jinja"
+            "product": "jinja",
+            "repo": {
+                "url": "github.com/pallets/jinja",
+                "tags": "jinja2:@version",
+                "includes": ["jinja2/"]
+            }
         },
         "flask": {
             "repo": {
