@@ -62,7 +62,8 @@ def run_lizard(dir: str | Path, includes: list = None, excludes: list = None) ->
 def run_bandit(dir: str | Path,
                includes: str | list = None,
                excludes: str | list = None,
-               output: str | Path = None) -> None:
+               output: str | Path = None,
+               skips: str = '') -> None:
     """
     Run Bandit on the codebase.
 
@@ -117,7 +118,10 @@ def run_bandit(dir: str | Path,
         logger.info("Running Bandit...")
         data = None
         try:
-            subprocess.run(["bandit", "-r", str(incldir), '-f', 'json', '-o', str(fn)])
+            command = ["bandit", "-r", str(incldir), '-f', 'json', '-o', str(fn)]
+            if bool(skips):
+                command.extend(['-s', skips.upper()])
+            subprocess.run(command)
             with open(fn, 'r') as f:
                 data = json.load(f)
                 for err in data.get('errors', []):

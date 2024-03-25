@@ -62,6 +62,8 @@ class Release(Model):
     ccn_average: The average cyclomatic complexity
     commit_at: The date the commit was made
     commit_hash: The hash of the commit
+    includes: The files included in the release for analysis
+    excludes: The files excluded from the release for analysis
     """
     id = AutoField()
     project = ForeignKeyField(Project, backref='releases', on_delete='CASCADE')
@@ -75,7 +77,8 @@ class Release(Model):
     ccn_average = FloatField(null=True)
     commit_at = DateTimeField(null=True)
     commit_hash = CharField(null=True)
-
+    includes = TextField(null=True)
+    excludes = TextField(null=True)
     class Meta:
         database = DB_PROJECTS.get()
         table_name = 'releases'

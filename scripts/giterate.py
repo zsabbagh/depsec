@@ -12,17 +12,24 @@ from src.schemas.projects import *
 VERSION_TAG = r'^v?\d+\.\d+\.\d+$'
 
 parser = argparse.ArgumentParser(description='Iterate git tags and run a command for each tag')
-parser.add_argument('--projects', help='The projects file', default='projects.json')
-parser.add_argument('--limit', help='The number of most recent releases to process', type=int, default=0)
-parser.add_argument('--directory', help='The repositories directory', default='repositories')
+parser.add_argument('-p', '--projects', help='The projects file', default='projects.json')
+parser.add_argument('-l', '--limit', help='The number of most recent releases to process', type=int, default=0)
+parser.add_argument('-d', '--directory', help='The repositories directory', default='repositories')
 parser.add_argument('--config', help='The configuration file to use', default='config.yml')
 parser.add_argument('--level', help='The logging level to use', default='INFO')
 parser.add_argument('--force', help='Force the operation', action='store_true')
 parser.add_argument('--do', help='The operation to do', default=[], nargs='*')
-parser.add_argument('--only', help='Only do the mentioned projects', default=[], nargs='*')
-parser.add_argument('--clone', help='Clone if the repository does not exist', action='store_true', default=False)
+parser.add_argument('-o', '--only', help='Only do the mentioned projects', default=[], nargs='*')
+parser.add_argument('-c', '--clone', help='Clone if the repository does not exist', action='store_true', default=False)
+parser.add_argument('-s', '--skips', help='Tests to skip, in Bandit test IDs (b?\d{3})', default='')
 
 args = parser.parse_args()
+
+skips = args.skips
+if bool(skips):
+    skips = skips.split(',')
+    skips = list(map(lambda x: f"B{x}" if not x.upper().startswith('B') else x.upper(), skips))
+args.skips = ','.join(skips)
 
 logger.remove()
 logger.add(sys.stdout, level=args.level.upper())
@@ -124,6 +131,12 @@ for platform, projects in data.items():
             if release is None:
                 logger.warning(f"Release '{version}' for {project_name} not found by metadata, ignoring")
                 continue
+            if excludes:
+                release.excludes = ', '.join(list(map(str, excludes)))
+                release.save()
+            if includes:
+                release.includes = ', '.join(list(map(str, includes)))
+                release.save()
             processed += 1
             tag = versions[version]
             repo.git.checkout(tag.commit, force=True)
@@ -145,7 +158,7 @@ for platform, projects in data.items():
                 release.ccn_average = round(avg_ccn, 2) if avg_ccn is not None else None
                 logger.info(f"{project_name}:{version}, files: {files_counted}, NLOC {nloc}")
             if 'bandit' in args.do:
-                res = run_bandit(repo_path, includes, excludes, temp_dir)
+                res = run_bandit(repo_path, includes, excludes, temp_dir, skips=args.skips)
                 if not res:
                     logger.error(f"Bandit failed for {project_name}:{version}")
                     continue
