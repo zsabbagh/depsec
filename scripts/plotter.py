@@ -420,6 +420,8 @@ if __name__ == '__main__':
                                                    args.start,
                                                    step=args.step,
                                                    platform=platform)
+        cves = timeline.get('cves', {})
+        logger.info(f"Found {len(cves)} CVEs for {project}")
         timelines[f"{platform}:{project}"] = timeline
 
     plot_timelines(timelines)

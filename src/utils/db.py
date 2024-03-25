@@ -1,11 +1,32 @@
 import src.schemas.cwe as cwe
 import src.schemas.nvd as nvd
-from src.utils.tools import version_in_range
+from src.utils.tools import version_in_range, datetime_in_range
 from packaging import version as semver
 from playhouse.shortcuts import model_to_dict
 from loguru import logger
 from src.schemas.projects import *
 from typing import List
+
+def is_applicable(release: Release | str, applicability: dict) -> bool:
+    """
+    Checks if a release is applicable to a specific version range.
+    """
+    version = release.version if isinstance(release, Release) else (
+        semver.parse(release) if isinstance(release, str) else release
+    )
+    version_start = applicability.get('version_start')
+    version_start = semver.parse(version_start.strip('.')) if version_start is not None else version_start
+    version_end = applicability.get('version_end')
+    version_end = semver.parse(version_end.strip('.')) if version_end is not None else version_end
+    exclude_start = applicability.get('exclude_start', False)
+    exclude_end = applicability.get('exclude_end', False)
+    if version_start is not None or version_end is not None:
+        return version_in_range(version, version_start, version_end, exclude_start, exclude_end)
+    start_date = applicability.get('start_date')
+    end_date = applicability.get('end_date')
+    release_date = release.published_at
+    return datetime_in_range(release_date, start_date, end_date, exclude_start, exclude_end)
+        
 
 # This file contains utility functions
 # to translate data structures of PeeWee models

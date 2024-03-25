@@ -413,7 +413,8 @@ class Middleware:
                     cves[cve.cve_id]['applicability'].append(applicability)
         # translate 'version' applicability to 'version_start' and 'version_end'
         for _, cve in cves.items():
-            apps = db.compute_version_ranges(project, cve.get('appliability', []))
+            apps = cve.get('applicability', [])
+            apps = db.compute_version_ranges(project, apps)
             cve['applicability'] = apps
         return results
     
@@ -543,6 +544,7 @@ class Middleware:
         cves, releases, timeline = results['cves'], results['releases'], results['timeline']
         vulnerabilities = self.get_vulnerabilities(project.name, platform=platform)
         rels = self.get_releases(project.name, platform=platform, exclude_deprecated=exclude_deprecated)
+        logger.info(f"Generating timeline with {len(rels)} releases for {project.name}, got: {len(vulnerabilities.get('cves', {}))} vulnerabilities")
         while start_date <= end_date:
             rel_mr = None
             for rel in rels:
@@ -553,7 +555,7 @@ class Middleware:
                 logger.warning(f"No release found for {project.name} at {start_date}")
                 start_date = datetime_increment(start_date, step)
                 continue
-            logger.debug(f"Got most recent release {rel_mr.version} for {project.name} at {start_date}")
+            logger.info(f"Got most recent release {rel_mr.version} for {project.name} at {start_date}")
             vulns = []
             for vuln in vulnerabilities.get('cves', {}).values():
                 applicabilities = vuln.get('applicability', [])
@@ -561,14 +563,8 @@ class Middleware:
                 for app in applicabilities:
                     start, end = app.get('start_date'), app.get('end_date')
                     logger.debug(f"Checking applicability for {vuln['cve_id']}, got version {app.get('version')}, {rel_mr.version} {start} - {end}")
-                    if app.get('version') is not None and app.get('version') not in ['', '*']:
-                        # a version is provided, then we directly check if it's applicable
-                        is_applicable = app.get('version') == rel_mr.version
-                        break
-                    exclude_end = app.get('exclude_end')
-                    exclude_start = app.get('exclude_start')
                     # start and end could be inclusive and exclusive, so we need to check all possibilities
-                    if datetime_in_range(rel_mr.published_at, start, end, exclude_start, exclude_end):
+                    if db.is_applicable(rel_mr, app):
                         logger.debug(f"Applicable because {rel_mr.published_at} is in range {start} - {end}")
                         is_applicable = True
                         break
