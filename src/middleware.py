@@ -152,15 +152,17 @@ class Middleware:
         2) Query API for the project
         3) Create the project and its releases in the database
         """
+        if isinstance(project_name, Project):
+            return project_name
         # Force lowercase
         project_name = project_name.strip().lower()
         platform = platform.strip().lower()
         logger.debug(f"Getting {project_name} from database with platform {platform}")
         # Query the database
-        project = Project.get_or_none((
-            (Project.name == project_name) & 
-            (Project.platform == platform)
-        ))
+        project = Project.get_or_none(
+            Project.name == project_name,
+            Project.platform == platform
+        )
         if project is not None and project.releases.count() > 0:
             # If the package is in the database, return it
             logger.debug(f"Found {project_name} in database")
@@ -230,132 +232,51 @@ class Middleware:
             project.save()
         return project
 
-    def get_dependency_graph(self,
-                                project_name: str,
-                                platform: str="pypi",
-                                max_depth: int = 2) -> List[Project]:
-        """
-        DEPRECATED:
-        Get all dependencies of a project
-
-        project_name: str
-        platform: str, default: pypi
-        max_depth: int, default: 2 (max depth of the dependency graph)
-
-        Results:
-        {
-            'platform': str,
-            'projects': [ <project_name> ],
-            'graph': {
-                <project_name>: {
-                    <project_name>: {
-                        ...
-                    }
-                }
-        }
-        """
-        def split_brace(name):
-            if '[' in name:
-                name = list(filter(bool, name.split('[')))
-                if len(name)< 1:
-                    logger.error(f"Unexpected name {name}")
-                    return None
-                name = name[0]
-            return name
-        # Force lowercase
-        logger.debug(f"Getting dependency graph for {project_name} {platform}, max depth {max_depth}")
-        project_name, platform = self.__format_strings(project_name, platform)
-        project = self.get_project(project_name, platform)
-        processed = {}
-        # results per platform
-        total = set()
-        graph = {
-            project.name: {}
-        }
-        queue = [(project, [project.name])]
-        count = 0
-        while len(queue) > 0:
-            p, ks = queue.pop(0)
-            logger.debug(f"Getting dependencies for {p.name} {p.platform}, depth {len(ks)}")
-            if max_depth > 0 and len(ks) > max_depth:
-                logger.warning(f"Max depth reached, skipping {p.name}")
-                continue
-            logger.debug(f"Currently processed {len(processed)} projects")
-            r = graph
-            pname = split_brace(p.name)
-            for i in range(len(ks)):
-                k = ks[i]
-                r = r.get(k, {})
-            if pname in processed:
-                logger.warning(f"Project {pname} already processed, skipping")
-                r[pname] = processed[pname]
-                continue
-            processed[pname] = r
-            deps = self.get_dependencies(pname, platform=p.platform)
-            if not deps:
-                logger.debug(f"No dependencies for '{pname}', returned {len(deps) if deps is not None else None}")
-                continue
-            for dep in deps:
-                count += 1
-                depname = split_brace(dep.name)
-                total.add(depname)
-                logger.debug(f"Processing dependency {depname} {dep.platform}, nr {count}")
-                if depname.startswith('pytest'):
-                    logger.warning(f"Skipping dependency {depname}")
-                    continue
-                logger.debug(f"Getting project {depname} {dep.platform}")
-                dep_project = self.get_project(depname, dep.platform)
-                if dep_project is None:
-                    logger.error(f"Project {depname} not found")
-                    continue
-                if dep_project.dependencies is None or dep_project.dependencies > 0:
-                    r[depname] = {}
-                    queue.append((dep_project, ks + [depname]))
-                else:
-                    r[dep_project.name] = {}
-                    logger.warning(f"No dependencies found for {depname}: {dep_project.dependencies}")
-        return { 'platform': platform, 'projects': sorted(list(total)), 'graph': graph }
-    
     def get_releases(self,
-                     project_name: str,
-                     version: str = '',
+                     project: str | Project,
                      platform: str="pypi",
-                     reverse: bool = True,
+                     descending: bool = True,
                      exclude_deprecated: bool = True) -> List[Release]:
         """
         Gets all releases of a project 
         Returns a sorted list of releases, based on the semantic versioning
+
+        project: str | Project, the project name or the project object
+        platform: str, default: pypi
+        descending: bool, default: True
+        exclude_deprecated: bool, default: True
         """
-        project_name, platform = self.__format_strings(project_name, platform)
-        project = self.get_project(project_name, platform)
+        project = self.get_project(project, platform)
         if project is None:
-            logger.error(f"Project {project_name} not found")
             return None
+        project_name = project.name
         releases = []
-        for release in Release.select().where(Release.project == project.id):
+        for release in project.releases:
             version = semver.parse(release.version)
             if version is None:
-                logger.warning(f"Invalid version {release.version} for {project_name}")
+                logger.error(f"Invalid version {release.version} for {project_name}")
                 continue
             if exclude_deprecated and version_deprecated(version):
                 logger.warning(f"Skipping deprecated version {release.version} for {project_name}")
                 continue
             releases.append(release)
-        releases = sorted(releases, key=lambda x : semver.parse(x.version), reverse=reverse)
+        releases = sorted(releases, key=lambda x : semver.parse(x.version), reverse=descending)
         return releases
     
     def get_release(self,
-                    project_name: str,
-                    version: str,
+                    project: str | Project,
+                    version: str = None,
                     platform: str="pypi") -> Release:
         """
         Get a specific release of a project
+
+        project: str | Project, the project name or the project object
+        version: str, the version number, if None, the latest release is used
         """
-        project_name, platform = self.__format_strings(project_name, platform)
-        project = self.get_project(project_name, platform)
+        project = self.get_project(project, platform)
         if project is None:
-            logger.error(f"Project {project_name} not found")
             return None
+        version = version if version else project.latest_release
         release = Release.get_or_none(
             Release.project == project.id,
             Release.version == version
@@ -363,7 +284,7 @@ class Middleware:
         return release
     
     def get_vulnerabilities(self,
-                            project_name: str,
+                            project: str | Project,
                             version: str = None,
                             platform: str="pypi",
                             include_categories: bool = False) -> List[nvd.CVE]:
@@ -394,25 +315,24 @@ class Middleware:
         }
         """
         # Force lowercase
-        project_name, platform = self.__format_strings(project_name, platform)
         version = version if version else ''
         # Get the project
-        project = self.get_project(project_name, platform)
+        project = self.get_project(project, platform)
         if project is None:
-            logger.error(f"Project {project_name} not found")
             return None
+        project_name = project.name
         # Get the release
         release = None
         if version:
-            release = Release.get_or_none((
-                (Release.project == project) &
-                (Release.version == version)
-            ))
+            release = Release.get_or_none(
+                Release.project == project,
+                Release.version == version
+            )
             if release is None:
                 logger.error(f"Release '{version}' not found for {project_name}")
                 return None
         logger.debug(f"Querying databases for vulnerabilities of {project_name} {version}")
-        product_name = project.name if project.product is None else project.product
+        product_name = project.product or project_name
         logger.debug(f"Getting CPEs for {project.vendor} {product_name}")
         cpes = nvd.CPE.select().where((nvd.CPE.vendor == project.vendor) & (nvd.CPE.product == product_name))
         logger.debug(f"Found {len(cpes)} CPEs for {project.vendor} {project.name}")
@@ -494,49 +414,8 @@ class Middleware:
                     cves[cve.cve_id]['applicability'].append(applicability)
         # translate 'version' applicability to 'version_start' and 'version_end'
         for cve_id, cve in cves.items():
-            versions = set()
-            applicabilities = []
-            for app in cve.get('applicability', []):
-                if 'version' in app:
-                    versions.add(app['version'])
-                else:
-                    applicabilities.append(app)
-            if versions != set():
-                # go through each minor version and create a range
-                asc_versions = sorted(list(versions), key=semver.parse)
-                previous_version = asc_versions[0]
-                max_version = asc_versions[-1]
-                relselect = Release.select().where(Release.project == project)
-                relselect = sorted([rel for rel in relselect if version_in_range(rel.version, previous_version)], key=lambda x : semver.parse(x.version))
-                for rel in relselect:
-                    # releases are sorted semantically
-                    if previous_version not in versions:
-                        if rel.version in versions:
-                            previous_version = rel.version
-                        elif version_in_range(rel.version, max_version):
-                            previous_version = rel.version
-                            break
-                        continue
-                    elif rel.version in versions:
-                        continue
-                    start_rel = Release.get_or_none(
-                        Release.project == project,
-                        Release.version == previous_version
-                    )
-                    end_rel = Release.get_or_none(
-                        Release.project == project,
-                        Release.version == rel.version
-                    )
-                    applicabilities.append({
-                        'version_start': str(previous_version),
-                        'version_end': rel.version,
-                        'start_date': start_rel.published_at if start_rel else None,
-                        'exclude_start': False,
-                        'end_date': end_rel.published_at if end_rel else None,
-                        'exclude_end': True,
-                    })
-                    previous_version = rel.version
-            cve['applicability'] = applicabilities
+            apps = db.compute_version_ranges(project, cve.get('appliability', []))
+            cve['applicability'] = apps
         return results
     
     def get_indirect_vulnerabilities(self,

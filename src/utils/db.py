@@ -1,5 +1,7 @@
 import src.schemas.cwe as cwe
 import src.schemas.nvd as nvd
+from src.utils.tools import version_in_range
+from packaging import version as semver
 from playhouse.shortcuts import model_to_dict
 from loguru import logger
 from src.schemas.projects import *
@@ -8,6 +10,58 @@ from typing import List
 # This file contains utility functions
 # to translate data structures of PeeWee models
 # to other data structures.
+def compute_version_ranges(project: Project, apps: list):
+    """
+    Computes the specific version window for a CVE.
+    That is, it will convert a list of versions to a list of ranges.
+
+    project: The project object
+    apps: The list of applications, with dictionaries of version applicabilities.
+    Converts { 'version': ... } to { 'version_start': ..., 'version_end': ... }
+    """
+    versions = set()
+    applicabilities = []
+    for app in apps:
+        if 'version' in app:
+            versions.add(app['version'])
+        else:
+            applicabilities.append(app)
+    if versions != set():
+        # go through each minor version and create a range
+        asc_versions = sorted(list(versions), key=semver.parse)
+        previous_version = asc_versions[0]
+        max_version = asc_versions[-1]
+        relselect = Release.select().where(Release.project == project)
+        relselect = sorted([rel for rel in relselect if version_in_range(rel.version, previous_version)], key=lambda x : semver.parse(x.version))
+        for rel in relselect:
+            # releases are sorted semantically
+            if previous_version not in versions:
+                if rel.version in versions:
+                    previous_version = rel.version
+                elif version_in_range(rel.version, max_version):
+                    previous_version = rel.version
+                    break
+                continue
+            elif rel.version in versions:
+                continue
+            start_rel = Release.get_or_none(
+                Release.project == project,
+                Release.version == previous_version
+            )
+            end_rel = Release.get_or_none(
+                Release.project == project,
+                Release.version == rel.version
+            )
+            applicabilities.append({
+                'version_start': str(previous_version),
+                'version_end': rel.version,
+                'start_date': start_rel.published_at if start_rel else None,
+                'exclude_start': False,
+                'end_date': end_rel.published_at if end_rel else None,
+                'exclude_end': True,
+            })
+            previous_version = rel.version
+    return applicabilities
 
 def _map_attrs_dict(objs: list) -> list:
     """
