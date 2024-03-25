@@ -7,18 +7,43 @@ This is a collection of tools and scripts used to collect data and perform analy
 To run the code, you need to have the following installed:
 ```
 argparse
+gitpython
+lizard
 loguru
-peewee
-requests
-seaborn
 matplotlib
 numpy
 pandas
+peewee
+requests
+seaborn
 ```
 
 Then you need to add the `src` folder to your `PYTHONPATH`:
 ```
 export PYTHONPATH=$PYTHONPATH:/path/to/securipy/src
+```
+
+## Project file structure
+
+For each project wanting to be processed, one should define them in a `projects.json` file.
+For examples, see `projects.json` in the root of the repository.
+This is structured:
+
+```
+{
+  <platform-name>: {
+    <project-name>: {
+      "vendor": <vendor-name>,      -- optional for defining CPE vendor
+      "product": <product-name>,    -- optional for defining CPE product
+      "repo": {
+        "url": <url>,               -- URL to the repository, format github.com/<user>/<repo>
+        "includes": <list> | <str>, -- optional, list of directories to include in the analysis
+        "excludes": <list> | <str>  -- optional, list of directories to exclude in the analysis
+      }
+    }
+  }
+}
+
 ```
 
 ## Config format
@@ -39,8 +64,14 @@ databases:
     path: <path>
 ```
 
-### Data collection
+### Scripts
 
-There are two main scripts for populating the database.
-They are located in `src/scripts` and are called `cwemigrate.py` and `nvdmigrate.py`.
-Each of them handle the migration of data from the respective sources to the database, that use downloaded data from the NVD and the CWE.
+There are four main scripts for collecting data, whereof three are for migrating data.
+Use `--help` to see the available options for each script.
+They are located in `scripts/`.
+
+- `giterate.py` handles iteration over GitHub repositories, running Bandit and Lizard on each commit associated with a release tag.
+  At time of writing, it supports release tags in the format `^v?\d+\.\d+\.\d+$`. So to expand the search space, the regex should be updated.
+- `cwemigrate.py` migrates data from a downloaded CWE XML file to a SQLite database defined in `weaknesses` in the config file.
+- `nvdmigrate.py` migrates data from a downloaded NVD JSON file to a SQLite database defined in `vulnerabilities` in the config file.
+- `plotter.py` is the plotting script for the thesis.
