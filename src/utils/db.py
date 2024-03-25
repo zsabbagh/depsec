@@ -1,15 +1,122 @@
 import src.schemas.cwe as cwe
 import src.schemas.nvd as nvd
+from typing import Dict, List
 from src.utils.tools import version_in_range
 from packaging import version as semver
 from playhouse.shortcuts import model_to_dict
 from loguru import logger
 from src.schemas.projects import *
 from typing import List
-
+from src.utils.tools import datetime_in_range
 # This file contains utility functions
 # to translate data structures of PeeWee models
 # to other data structures.
+
+def is_applicable(release: Release, apps: List[dict] | dict) -> bool:
+    """
+    Checks if a release is applicable to a list of applications.
+    """
+    if type(apps) == dict:
+        apps = [apps]
+    if type(apps) != list:
+        raise ValueError(f"Invalid type for apps: {type(apps)}")
+    for app in apps:
+        if type(app) != dict:
+            raise ValueError(f"Invalid type for app: {type(app)}")
+        if 'version' in app:
+            if app['version'] == release.version:
+                return True
+        else:
+            if version_in_range(release.version, app['version_start'], app['version_end']):
+                return True
+    return False
+
+def get_vulnerabilities(project: Project, release: Release = None) -> bool:
+    """
+    Gets the vulnerabilities for a project and release.
+    If the release is not provided, it will get all vulnerabilities for the project.
+    """
+    vulnset = set()
+    processed_versions = {}
+    project_name = project.name
+    version = release.version if release is not None else None
+    release_published_at = release.published_at if release else None
+    product_name = project.product or project_name
+    cpes = nvd.CPE.select().where((nvd.CPE.vendor == project.vendor) & (nvd.CPE.product == product_name))
+    logger.debug(f"Got {len(cpes)} CPEs for {project.vendor} {project.name} {version}")
+    apps = {}
+    cves = {}
+    cwes = {}
+    for cpe in cpes:
+        logger.debug(f"Processing CPE {cpe.vendor} {cpe.product} {cpe.version_start} - {cpe.version_end}")
+        # Get release of versions since some contain letters
+        node = cpe.node
+        # extract cve from node
+        cve = node.cve if node else None
+        logger.debug(f"Getting release for {cpe.vendor} {cpe.product} {cpe.version_start} - {cpe.version_end}")
+        start_release = Release.get_or_none(
+            Release.project == project,
+            Release.version == cpe.version_start
+        )
+        end_release = Release.get_or_none(
+            Release.project == project,
+            Release.version == cpe.version_end
+        )
+        exclude_end = cpe.exclude_end_version
+        exclude_start = cpe.exclude_start_version
+        has_exact_version = cpe.version is not None and cpe.version not in ['', '*']
+        vuln_cpe_id = f"{cve.cve_id}:{cpe.version}" if has_exact_version else f"{cve.cve_id}:{cpe.version_start}-{cpe.version_end}"
+        if has_exact_version:
+            if cve.cve_id not in processed_versions:
+                processed_versions[cve.cve_id] = set()
+            elif cpe.version in processed_versions[cve.cve_id]:
+                logger.debug(f"Vulnerability {vuln_cpe_id} already in set")
+                continue
+            processed_versions[cve.cve_id].add(cpe.version)
+        if vuln_cpe_id in vulnset and not has_exact_version:
+            logger.debug(f"Vulnerability {vuln_cpe_id} already in set")
+            continue
+        start_date: datetime = start_release.published_at if start_release else None
+        end_date: datetime = end_release.published_at if end_release else None
+        logger.debug(f"Getting vulnerabilities for {cpe.vendor}:{cpe.product}:{cpe.version} {cpe.version_start} ({start_date}) - {cpe.version_end}({end_date})")
+        is_applicable = False
+        app = None
+        if has_exact_version:
+            app = {
+                'version': cpe.version,
+            }
+            is_applicable = cpe.version == release.version if release is not None else True
+        else:
+            app = {
+                'version_start': cpe.version_start if bool(cpe.version_start) else None,
+                'exclude_start': exclude_start,
+                'version_end': cpe.version_end if bool(cpe.version_end) else None,
+                'exclude_end': exclude_end,
+                'start_date': start_date,
+                'end_date': end_date,
+            }
+            is_applicable = datetime_in_range(release_published_at, start_date, end_date, exclude_start, exclude_end) if release_published_at is not None else True
+        if is_applicable:
+            vulnset.add(cve.id)
+            if cve.cve_id not in cves:
+                weaknesses = NVD.cwes(cve.cve_id, categories=False, to_dict=False)
+                # TODO: verify categories
+                for cwe in weaknesses:
+                    logger.debug(f"Processing CWE {cwe.cwe_id}")
+                    cwe_id = cwe.cwe_id
+                    if cwe_id not in cwes:
+                        cwes[cwe_id] = cwe
+                cve_data = cve
+                apps[cve.cve_id] = [app]
+                cves[cve.cve_id] = cve_data
+            else:
+                apps[cve.cve_id].append(app)
+    return {
+        'cves': cves,
+        'cwes': cwes,
+        'apps': apps,
+    }
+
 def compute_version_ranges(project: Project, apps: list):
     """
     Computes the specific version window for a CVE.

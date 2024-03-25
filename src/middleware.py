@@ -284,7 +284,7 @@ class Middleware:
         return release
     
     def get_vulnerabilities(self,
-                            project: str | Project,
+                            project_or_release: str | Project | Release,
                             version: str = None,
                             platform: str="pypi",
                             include_categories: bool = False) -> List[nvd.CVE]:
@@ -316,105 +316,57 @@ class Middleware:
         # Force lowercase
         version = version if version else ''
         # Get the project
-        project = self.get_project(project, platform)
+        release = None
+        if isinstance(project_or_release, Release):
+            project = project_or_release.project.get()
+            release = project_or_release
+        else:
+            project = self.get_project(project_or_release, platform)
         if project is None:
             return None
         project_name = project.name
         # Get the release
-        release = None
-        if version:
-            release = Release.get_or_none(
-                Release.project == project,
-                Release.version == version
-            )
-            if release is None:
-                logger.error(f"Release '{version}' not found for {project_name}")
-                return None
+        if release is None:
+            if version:
+                release = Release.get_or_none(
+                    Release.project == project,
+                    Release.version == version
+                )
+                if release is None:
+                    logger.error(f"Release '{version}' not found for {project_name}")
+                    return None
+        # TODO: If the release has applicabilities, return them
         logger.debug(f"Querying databases for vulnerabilities of {project_name} {version}")
-        product_name = project.product or project_name
-        logger.debug(f"Getting CPEs for {project.vendor} {product_name}")
-        cpes = nvd.CPE.select().where((nvd.CPE.vendor == project.vendor) & (nvd.CPE.product == product_name))
-        logger.debug(f"Found {len(cpes)} CPEs for {project.vendor} {project.name}")
         # We need to find the CPEs that match the version
-        vulnset = set()
-        release_published_at = release.published_at if release else None
-        results = {
-            'cves': {},
-            'cwes': {},
-        }
-        cves, cwes = results['cves'], results['cwes']
-        processed_versions = {}
-        logger.debug(f"Got {len(cpes)} CPEs for {project.vendor} {project.name} {version}")
-        for cpe in cpes:
-            logger.debug(f"Processing CPE {cpe.vendor} {cpe.product} {cpe.version_start} - {cpe.version_end}")
-            # Get release of versions since some contain letters
-            node = cpe.node
-            # extract cve from node
-            cve = node.cve if node else None
-            logger.debug(f"Getting release for {cpe.vendor} {cpe.product} {cpe.version_start} - {cpe.version_end}")
-            start_release = Release.get_or_none(
-                Release.project == project,
-                Release.version == cpe.version_start
-            )
-            end_release = Release.get_or_none(
-                Release.project == project,
-                Release.version == cpe.version_end
-            )
-            exclude_end = cpe.exclude_end_version
-            exclude_start = cpe.exclude_start_version
-            vuln_cpe_id = f"{cve.cve_id}:{cpe.version}:{cpe.version_start}:{cpe.version_end}"
-            has_exact_version = cpe.version is not None and cpe.version not in ['', '*']
-            if has_exact_version:
-                if cve.cve_id not in processed_versions:
-                    processed_versions[cve.cve_id] = set()
-                elif cpe.version in processed_versions[cve.cve_id]:
-                    logger.debug(f"Vulnerability {vuln_cpe_id} already in set")
-                    continue
-                processed_versions[cve.cve_id].add(cpe.version)
-            if vuln_cpe_id in vulnset and not has_exact_version:
-                logger.debug(f"Vulnerability {vuln_cpe_id} already in set")
-                continue
-            start_date: datetime = start_release.published_at if start_release else None
-            end_date: datetime = end_release.published_at if end_release else None
-            logger.debug(f"Getting vulnerabilities for {cpe.vendor}:{cpe.product}:{cpe.version} {cpe.version_start} ({start_date}) - {cpe.version_end}({end_date})")
-            add = False
-            if has_exact_version:
-                applicability = {
-                    'version': cpe.version,
-                }
-                add = cpe.version == release.version if release is not None else True
-            else:
-                applicability = {
-                    'version_start': cpe.version_start if bool(cpe.version_start) else None,
-                    'exclude_start': exclude_start,
-                    'version_end': cpe.version_end if bool(cpe.version_end) else None,
-                    'exclude_end': exclude_end,
-                    'start_date': start_date,
-                    'end_date': end_date,
-                }
-                add = datetime_in_range(release_published_at, start_date, end_date, exclude_start, exclude_end) if release_published_at is not None else True
-            if add:
-                vulnset.add(cve.id)
-                if cve.cve_id not in cves:
-                    weaknesses = db.NVD.cwes(cve.cve_id, categories=include_categories, to_dict=False)
-                    # TODO: verify categories
-                    for cwe in weaknesses:
-                        logger.debug(f"Processing CWE {cwe.cwe_id}")
-                        cwe_id = cwe.cwe_id
-                        if cwe_id not in cwes:
-                            cwes[cwe_id] = model_to_dict(cwe, recurse=False)
-                            cwes[cwe_id]['cves'] = [cve.cve_id]
-                        else:
-                            cwes[cwe_id]['cves'].append(cve.cve_id)
-                    cve_data = model_to_dict(cve)
-                    cve_data['applicability'] = [applicability]
-                    cves[cve.cve_id] = cve_data
-                else:
-                    cves[cve.cve_id]['applicability'].append(applicability)
+        results = db.get_vulnerabilities(project, release)
         # translate 'version' applicability to 'version_start' and 'version_end'
-        for _, cve in cves.items():
-            apps = db.compute_version_ranges(project, cve.get('appliability', []))
-            cve['applicability'] = apps
+        for cve_id in results.get('apps', {}):
+            app = results['apps'][cve_id]
+            logger.debug(f"Processing applicability for {cve_id}: {app}")
+            apps = db.compute_version_ranges(project, app)
+            results['apps'][cve_id] = apps
+        releases = [release] if release else self.get_releases(project)
+        for rel in releases:
+            cve_count = 0
+            for cve_id, apps in results.get('apps', {}).items():
+                for app in apps:
+                    if db.is_applicable(rel, app):
+                        cve_count += 1
+                        logger.debug(f"App: {app}")
+                        Applicability.create(
+                            cve_id=cve_id,
+                            project=project,
+                            release=rel,
+                            version_start=app.get('version_start'),
+                            version_end=app.get('version_end'),
+                            exclude_start=app.get('exclude_start'),
+                            exclude_end=app.get('exclude_end'),
+                            start_date=app.get('start_date'),
+                            end_date=app.get('end_date')
+                        ).save()
+            if rel.cve_count != cve_count:
+                rel.cve_count = cve_count
+                rel.save()
         return results
     
     def get_indirect_vulnerabilities(self,
@@ -544,46 +496,33 @@ class Middleware:
         vulnerabilities = self.get_vulnerabilities(project.name, platform=platform)
         rels = self.get_releases(project.name, platform=platform, exclude_deprecated=exclude_deprecated)
         while start_date <= end_date:
-            rel_mr = None
+            rel_most_recent = None
             for rel in rels:
                 if rel.published_at is not None and re.match(r'^([0-9]\.?)+$', rel.version) and rel.published_at <= start_date:
-                    rel_mr = rel
+                    rel_most_recent = rel
                     break
-            if rel_mr is None:
+            if rel_most_recent is None:
                 logger.warning(f"No release found for {project.name} at {start_date}")
                 start_date = datetime_increment(start_date, step)
                 continue
-            logger.debug(f"Got most recent release {rel_mr.version} for {project.name} at {start_date}")
+            logger.debug(f"Got most recent release {rel_most_recent.version} for {project.name} at {start_date}")
             vulns = []
             for vuln in vulnerabilities.get('cves', {}).values():
-                applicabilities = vuln.get('applicability', [])
-                is_applicable = False
-                for app in applicabilities:
-                    start, end = app.get('start_date'), app.get('end_date')
-                    logger.debug(f"Checking applicability for {vuln['cve_id']}, got version {app.get('version')}, {rel_mr.version} {start} - {end}")
-                    if app.get('version') is not None and app.get('version') not in ['', '*']:
-                        # a version is provided, then we directly check if it's applicable
-                        is_applicable = app.get('version') == rel_mr.version
-                        break
-                    exclude_end = app.get('exclude_end')
-                    exclude_start = app.get('exclude_start')
-                    # start and end could be inclusive and exclusive, so we need to check all possibilities
-                    if datetime_in_range(rel_mr.published_at, start, end, exclude_start, exclude_end):
-                        logger.debug(f"Applicable because {rel_mr.published_at} is in range {start} - {end}")
-                        is_applicable = True
-                        break
-                if is_applicable:
+                vuln: nvd.CVE = vuln
+                cve_id = vuln.cve_id
+                apps = vulnerabilities.get('apps', {}).get(cve_id, [])
+                if db.is_applicable(rel_most_recent, apps):
                     vulns.append(vuln)
             timeline.append({
                 'date': start_date,
-                'release': rel_mr.version,
-                'cves': [ cve['cve_id'] for cve in vulns if cve is not None ]
+                'release': rel_most_recent.version,
+                'cves': [ cve.cve_id for cve in vulns if cve is not None ]
             })
             for cve in vulns:
-                cve_id = cve.get('cve_id')
+                cve_id = cve.cve_id
                 if cve_id:
-                    cves[cve_id] = cve
-            releases[rel_mr.version] = model_to_dict(rel_mr, recurse=False)
+                    cves[cve_id] = model_to_dict(cve, recurse=False)
+            releases[rel_most_recent.version] = model_to_dict(rel_most_recent, recurse=False)
             start_date = datetime_increment(start_date, step)
         return results
     
@@ -714,5 +653,3 @@ if __name__ == "__main__":
     vulns = mw.get_vulnerabilities(args.project)
     vulnstl = mw.get_vulnerabilities_timeline(args.project)
     vers = sorted(rels, key=lambda x : semver.parse(x.version), reverse=True)
-    cwes = [ (c, vulns.get('cwes').get(c, {}).get('status')) for c in vulns.get('cwes', {}) ]
-    cves = [ c for c in vulns.get('cves', {}) ]

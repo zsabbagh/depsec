@@ -10,6 +10,8 @@ def version_in_range(v: str, start: str = None, end: str = None, exclude_start: 
     Defaults to inclusive start and inclusive end.
     """
     v = semver.parse(v) if type(v) == str else v
+    start = start.rstrip('.') if start else start
+    end = end.rstrip('.') if end else end
     start = semver.parse(start) if type(start) == str else start
     end = semver.parse(end) if type(end) == str else end
     is_after_start = start is None or (v > start if exclude_start else v >= start)

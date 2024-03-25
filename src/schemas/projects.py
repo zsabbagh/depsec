@@ -1,4 +1,5 @@
 import datetime, os
+import src.schemas.nvd as nvd
 from peewee import *
 from src.schemas.config import DatabaseConfig
 
@@ -79,9 +80,36 @@ class Release(Model):
     commit_hash = CharField(null=True)
     includes = TextField(null=True)
     excludes = TextField(null=True)
+    cve_count = IntegerField(null=True)
+
     class Meta:
         database = DB_PROJECTS.get()
         table_name = 'releases'
+
+class Applicability(Model):
+    """
+    Applicability models the applicability of a vulnerability
+
+    id: The vulnerability applicability id
+    vulnerability The vulnerability id
+    release: The release id
+    updated_at: The date the row in the database was updated
+    """
+    id = AutoField()
+    project = ForeignKeyField(Project, backref='applicabilities', on_delete='CASCADE')
+    release = ForeignKeyField(Release, backref='applicabilities', on_delete='CASCADE')
+    cve_id = CharField(null=False)
+    version_start = CharField(null=True)
+    version_end = CharField(null=True)
+    exclude_start = BooleanField(default=False, null=True)
+    exclude_end = BooleanField(default=False, null=True)
+    start_date = DateTimeField(null=True)
+    end_date = DateTimeField(null=True)
+    days_until_fixed = IntegerField(null=True)
+    updated_at = DateTimeField(default=datetime.datetime.now)
+    class Meta:
+        database = DB_PROJECTS.get()
+        table_name = 'applicabilities'
     
 class BanditReport(Model):
     """
@@ -198,5 +226,6 @@ DB_PROJECTS.add_tables(
     ReleaseDependency,
     ReleaseRepo,
     BanditReport,
-    BanditIssue
+    BanditIssue,
+    Applicability
 )
