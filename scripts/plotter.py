@@ -100,10 +100,10 @@ KPIS = {
         'title': 'CVEs per 10k NLOC',
         'y_label': 'CVEs per 10k NLOC',
     },
-    'cc': {
-        'key': 'ccs',
-        'title': 'Cyclomatic Complexity (CC) / Function',
-        'y_label': 'CC',
+    'ccn': {
+        'key': 'ccns',
+        'title': 'Cyclomatic Complexity (CCN) / Function',
+        'y_label': 'CCN',
     },
 }
 
@@ -210,7 +210,7 @@ def get_timeline_kpis(data: dict, *kws: str):
     """
     timeline = data.get('timeline')
     cves = data.get('cves')
-    dates, cves_count, nlocs, ccs, cves_per_10k_nlocs = [], [], [], [], []
+    dates, cves_count, nlocs, ccns, cves_per_10k_nlocs = [], [], [], [], []
     files, functions = [], []
     for entry in timeline:
         rel = data.get('releases', {}).get(entry.get('release'))
@@ -221,17 +221,17 @@ def get_timeline_kpis(data: dict, *kws: str):
         functions_count = rel.get('counted_functions', 0) if rel is not None else 0
         files.append(files_count)
         functions.append(functions_count)
-        cc = rel.get('cc_average', 0) if rel is not None else 0
+        ccn = rel.get('ccn_average', 0) if rel is not None else 0
         date = entry.get('date')
         dates.append(date)
         cves_count.append(count)
         nlocs.append(nloc)
-        ccs.append(cc)
+        ccns.append(ccn)
         cves_per_10k_nlocs.append(count / (nloc / 10000) if nloc > 0 else 0)
-    prev_cc = prev_nloc = prev_filec = prev_funcc = 0
-    for cc in ccs:
-        if cc is not None and cc > 0:
-            prev_cc = cc
+    prev_ccn = prev_nloc = prev_filec = prev_funcc = 0
+    for ccn in ccns:
+        if ccn is not None and ccn > 0:
+            prev_ccn = ccn
             break
     for nloc in nlocs:
         if nloc is not None and nloc > 0:
@@ -239,7 +239,7 @@ def get_timeline_kpis(data: dict, *kws: str):
             break
     # eliminate None values
     for i in range(len(dates)):
-        cc = ccs[i]
+        ccn = ccns[i]
         nloc = nlocs[i]
         filec = files[i]
         funcc = functions[i]
@@ -251,10 +251,10 @@ def get_timeline_kpis(data: dict, *kws: str):
             functions[i] = prev_funcc
         else:
             prev_funcc = funcc
-        if cc is None or cc == 0:
-            ccs[i] = prev_cc
+        if ccn is None or ccn == 0:
+            ccns[i] = prev_ccn
         else:
-            prev_cc = cc
+            prev_ccn = ccn
         if nloc is None or nloc == 0:
             nlocs[i] = prev_nloc
             cves_per_10k_nlocs[i] = cves_count[i] / (prev_nloc / 10000) if prev_nloc > 0 else 0
@@ -264,7 +264,7 @@ def get_timeline_kpis(data: dict, *kws: str):
         'dates': dates,
         'cves': cves_count,
         'nlocs': nlocs,
-        'ccs': ccs,
+        'ccns': ccns,
         'files': files,
         'functions': functions,
         'cves_per_10k_nlocs': cves_per_10k_nlocs,

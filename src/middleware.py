@@ -296,8 +296,7 @@ class Middleware:
             'cves': {
                 <cve_id>: {
                     'applicability': [
-                        | { 'version': <version> }
-                        | { 'version_start': <version>, 'version_end': <version>, 'start_date': <date>, 'end_date': <date> },
+                        { 'version_start': <version>, 'version_end': <version>, 'start_date': <date>, 'end_date': <date> },
                         ...
                     ],
                     <key>: <value>,
@@ -413,7 +412,7 @@ class Middleware:
                 else:
                     cves[cve.cve_id]['applicability'].append(applicability)
         # translate 'version' applicability to 'version_start' and 'version_end'
-        for cve_id, cve in cves.items():
+        for _, cve in cves.items():
             apps = db.compute_version_ranges(project, cve.get('appliability', []))
             cve['applicability'] = apps
         return results
@@ -589,26 +588,26 @@ class Middleware:
         return results
     
     def get_dependencies(self,
-                         project_name: str,
+                         project: str | Project,
                          version: str = None,
                          platform: str="pypi") -> List[ReleaseDependency]:
         """
-        Get dependencies of a project and a specific version number (release)
+        Get dependencies of a project and a specific version number (release).
+        Includes indirect dependencies.
 
         project_name: str
         version: str, if None, the latest release is used
         platform: str, default: pypi
         """
         # Force lowercase
-        project_name = project_name.strip().lower()
         # Get the project
         project = self.get_project(project_name)
         if project is None:
-            logger.error(f"Project {project_name} not found")
             return None
         elif project.dependencies == 0:
-            logger.error(f"No dependencies found for {project_name}")
+            logger.info(f"No dependencies found for {project_name}")
             return None
+        project_name = project.name
         # Get the release
         version = version if version else project.latest_release
         # Get the release
@@ -696,77 +695,6 @@ class Middleware:
         project.dependencies = len(results)
         project.save()
         return results
-
-    def get_dependencies_libraries(self,
-                         project_name: str,
-                         version: str = None,
-                         platform: str="pypi") -> List[ReleaseDependency]:
-        """
-        OLD VERSION
-        Get dependencies of a project and a specific version number (release)
-
-        project_name: str
-        version: str, if None, the latest release is used
-        platform: str, default: pypi
-        """
-        # Force lowercase
-        project_name = self.__format_strings(project_name)[0]
-        # Get the project
-        project = self.get_project(project_name)
-        if project is None:
-            logger.error(f"Project {project_name} not found")
-            return None
-        elif project.dependencies == 0:
-            logger.error(f"No dependencies found for {project_name}")
-            return None
-        # Get the release
-        version = version if version else project.latest_release
-        # Get the release
-        release = Release.get_or_none((
-            (Release.project == project) &
-            (Release.version == version)
-        ))
-        if release is None:
-            logger.error(f"Release '{version}' not found for {project_name}")
-            return None
-        dependencies = [ dep for dep in ReleaseDependency.select().where(ReleaseDependency.release == release) ]
-        if len(dependencies) > 0:
-            # Found dependencies in the database
-            logger.debug(f"Found {len(dependencies)} dependencies for {project_name} {version}")
-            return dependencies
-        # No dependencies in database, query the API
-        logger.debug(f"Querying libraries.io for dependencies of {project_name} {version}")
-        result = self.libraries.query_dependencies(project_name, version, platform)
-        if result is None or 'dependencies' not in result:
-            logger.error(f"Dependencies not found for {project_name} {version}")
-            return None
-        dependencies = result['dependencies']
-        deps = []
-        # Save the dependencies
-        project.dependencies = len(dependencies)
-        project.save()
-        for dependency in dependencies:
-            name = dependency.get('name', '')
-            project_name = dependency.get('project_name', '')
-            if name == '':
-                logger.error(f"Dependency name not found for {project_name} {version}")
-                continue
-            ptfrm = dependency.get('platform', '')
-            reqs = dependency.get('requirements', '')
-            optional = dependency.get('optional', False)
-            name, project_name, ptfrm = self.__format_strings(name, project_name, ptfrm)
-            logger.debug(f"Creating dependency {name} {project_name} {ptfrm} {reqs} {optional}")
-            dep_instance = ReleaseDependency.create(
-                release=release,
-                name=name,
-                project_name=project_name,
-                platform=ptfrm,
-                requirements=reqs,
-                optional=optional
-            )
-            dep_instance.save()
-            deps.append(dep_instance)
-        return deps
 
 if __name__ == "__main__":
     # For the purpose of loading in interactive shell and debugging
