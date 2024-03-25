@@ -7,26 +7,26 @@
             "repo": {
                 "url": "github.com/pallets/flask",
                 "src": ".",
-                "includes": ["flask/**/*.py", "flask.py", "src/**/*.py"]
+                "includes": ["flask/", "flask.py", "src/"]
             }
         },
         "django": {
             "repo": {
                 "url": "github.com/django/django",
-                "includes": ["django/**/*.py"]
+                "includes": ["django/"]
             }
         },
         "tornado": {
             "repo": {
                 "url": "github.com/tornadoweb/tornado",
-                "includes": ["tornado/**/*.py"],
-                "excludes": ["tornado/test/**"]
+                "includes": ["tornado/"],
+                "excludes": ["tornado/test/"]
             }
         },
         "tensorflow": {
             "repo": {
                 "url": "github.com/tensorflow/tensorflow",
-                "includes": ["tensorflow/**/*.py"]
+                "includes": ["tensorflow/"]
             },
             "vendor": "google"
         }

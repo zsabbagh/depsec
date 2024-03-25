@@ -55,9 +55,11 @@ class Release(Model):
     published_at: The date the release was published
     version: The version number of the release
     updated_at: The date the row in the database was updated
-    total_nloc: The total number of lines of code
-    avg_nloc: The average number of lines of code
-    avg_cc: The average cyclomatic complexity
+    counted_functions: The number of functions counted
+    counted_files: The number of files counted
+    nloc_total: The total NLOC
+    nloc_average: The average NLOC
+    ccn_average: The average cyclomatic complexity
     commit_at: The date the commit was made
     commit_hash: The hash of the commit
     """
@@ -70,21 +72,75 @@ class Release(Model):
     counted_files = IntegerField(null=True)
     nloc_total = IntegerField(null=True)
     nloc_average = FloatField(null=True)
-    cc_average = FloatField(null=True)
+    ccn_average = FloatField(null=True)
     commit_at = DateTimeField(null=True)
     commit_hash = CharField(null=True)
 
     class Meta:
         database = DB_PROJECTS.get()
         table_name = 'releases'
+    
+class BanditReport(Model):
+    """
+    BanditReport models a bandit report
+
+    id: The bandit result id
+    release: The release id
+    issue: The issue
+    filename: The filename
+    line: The line number
+    code: The code
+    updated_at: The date the row in the database was updated
+    """
+    id = AutoField()
+    release = ForeignKeyField(Release, backref='bandit_report', on_delete='CASCADE', unique=True)
+    updated_at = DateTimeField(default=datetime.datetime.now)
+    issues_total = IntegerField(null=True)
+    files_counted = IntegerField(null=True)
+    files_skipped = IntegerField(null=True)
+    confidence_high_count = IntegerField(null=True)
+    confidence_medium_count = IntegerField(null=True)
+    confidence_low_count = IntegerField(null=True)
+    confidence_undefined_count = IntegerField(null=True)
+    severity_high_count = IntegerField(null=True)
+    severity_medium_count = IntegerField(null=True)
+    severity_low_count = IntegerField(null=True)
+    severity_undefined_count = IntegerField(null=True)
+    severity_h_confidence_h_count = IntegerField(null=True)
+    severity_h_confidence_m_count = IntegerField(null=True)
+    severity_h_confidence_l_count = IntegerField(null=True)
+    severity_m_confidence_h_count = IntegerField(null=True)
+    severity_m_confidence_m_count = IntegerField(null=True)
+    severity_m_confidence_l_count = IntegerField(null=True)
+    severity_l_confidence_h_count = IntegerField(null=True)
+    severity_l_confidence_m_count = IntegerField(null=True)
+    severity_l_confidence_l_count = IntegerField(null=True)
+    loc = IntegerField(null=True)
+    nosec = IntegerField(null=True)
+    skipped_tests = IntegerField(null=True)
+    class Meta:
+        database = DB_PROJECTS.get()
+        table_name = 'bandit_reports'
 
 class BanditIssue(Model):
     """
-    TODO: Model a bandit issue
+    Models a bandit issue, that is, an issue found in a Bandit report
     """
     id = AutoField()
-    release = ForeignKeyField(Release, backref='bandit_issues', on_delete='CASCADE')
-    pass
+    report = ForeignKeyField(BanditReport, backref='issues', on_delete='CASCADE')
+    description = TextField(null=False)
+    filename = CharField(null=False)
+    confidence = CharField(null=True)
+    severity = CharField(null=True)
+    more_info = CharField(null=True)
+    test_id = CharField(null=False)
+    test_name = CharField(null=False)
+    code = TextField(null=True)
+    lines = CharField(null=True)
+    cwe_id = CharField(null=True)
+    class Meta:
+        database = DB_PROJECTS.get()
+        table_name = 'bandit_issues'
 
 class ReleaseDependency(Model):
     """
@@ -137,5 +193,7 @@ DB_PROJECTS.add_tables(
     Project,
     Release,
     ReleaseDependency,
-    ReleaseRepo
+    ReleaseRepo,
+    BanditReport,
+    BanditIssue
 )
