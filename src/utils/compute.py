@@ -121,6 +121,7 @@ KPIS = {
     },
     'cves': {
         'default': 'sum', # sum of all CVEs for all releases
+        'suffix': 'total', # suffix of the legend description
         # assume that the key is a function that takes (data, elem) as arguments
         'key': lambda *args: len(args[1].get('cves', [])),
         'title': 'Number of CVEs',

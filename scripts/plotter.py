@@ -182,7 +182,7 @@ def plot_timelines(timelines: dict):
                 logger.error(f"Could not find KPI '{kpi}' for {project}")
                 continue
             values = compute.values_to_stats(values)
-            suffix = ''
+            suffix = kpi_dict.get('suffix', default_value_key)
             prev = {
                 k: 0 for k in values
             }
@@ -205,7 +205,6 @@ def plot_timelines(timelines: dict):
                 values = values.get(default_value_key)
                 max_value = max(values) if not has_max else max_value
                 min_value = min(values) if not has_min else min_value
-                suffix = f'{suffix} {default_value_key}'
             else:
                 max_value = max(values) if not has_max else max_value
                 min_value = min(values) if not has_min else min_value
