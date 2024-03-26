@@ -282,6 +282,49 @@ class Middleware:
             Release.version == version
         )
         return release
+
+    def get_release_timeline(self,
+                                project_name: str,
+                                start_date: str = 2019,
+                                end_date: str = None,
+                                step: str = 'y',
+                                platform: str="pypi",
+                                exclude_deprecated: bool = False) -> List[tuple]:
+        """
+        Computes the release timeline of a project in a specific time range
+
+        returns: list of tuples (datetime, Release)
+        """
+        start_date = str(start_date)
+        if end_date:
+            end_date = str(end_date)
+        step = step.strip().lower()
+        project = self.get_project(project_name, platform)
+        if project is None:
+            logger.error(f"Project {project_name} not found")
+            return None
+        start_date: datetime.datetime = datetime.datetime.strptime(start_date, '%Y-%m' if '-' in start_date else '%Y')
+        if end_date:
+            end_date = datetime.datetime.strptime(end_date, '%Y-%m' if '-' in end_date else '%Y')
+        else:
+            end_date = datetime.datetime.now()
+        # for each date in the range, get the most recent releases and check for vulnerabilities
+        results: list = []
+        rels = self.get_releases(project.name, platform=platform, exclude_deprecated=exclude_deprecated)
+        while start_date <= end_date:
+            rel_mr = None
+            for rel in rels:
+                if rel.published_at is not None and re.match(r'^([0-9]\.?)+$', rel.version) and rel.published_at <= start_date:
+                    rel_mr = rel
+                    break
+            if rel_mr is None:
+                logger.warning(f"No release found for {project.name} at {start_date}")
+                start_date = datetime_increment(start_date, step)
+                results.append((start_date, None))
+                continue
+            results.append((start_date, rel_mr))
+            start_date = datetime_increment(start_date, step)
+        return results
     
     def get_vulnerabilities(self,
                             project: str | Project,
@@ -494,13 +537,14 @@ class Middleware:
                     cves[cve_id]['applicability'][dname].extend(vulns.get('applicability', []))
         return results
     
+    
     def get_vulnerabilities_timeline(self,
                                      project_name: str | list,
                                      start_date: str = 2019,
                                      end_date: str = None,
                                      step: str = 'y',
                                      platform: str="pypi",
-                                     exclude_deprecated: bool = False) -> List[dict]:
+                                     exclude_deprecated: bool = False) -> List[tuple]:
         """
         Returns a list of vulnerabilities for a project in a specific time range.
         For each date, the most recent release is used to check for vulnerabilities.
@@ -511,33 +555,7 @@ class Middleware:
         step: str, format: y(ear) / m(month), needs to match the format of the dates' lowest precision
         platform: str, default: pypi
 
-        Returns:
-        {
-            'cwe': {
-                <cwe_id>: {
-                    <key>: <value>,
-                    ...
-                    'cves': [ <cve_id>, ... ]
-                }
-            },
-            'cves': { <cve_id>: {
-                <key>: <value>,
-                ...
-                'applicability': [
-                    { 'version_start': <version>, 'version_end': <version>, 'start_date': <date>, 'end_date': <date> },
-                    ...
-                ]
-                <cwes>: [ <cwe_id>, ... ]
-            } },
-            'releases': { <version>: <release> },
-            'timeline': [
-                {
-                    'date': <date>,
-                    'release': <version>,
-                    'cves': [ <cve_id> ]
-                }
-            ]
-        }
+        Returns: tuple of (date, release, cves)
         """
         start_date = str(start_date)
         if end_date:

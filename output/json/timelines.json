@@ -824,9 +824,9 @@
                         "end_date": "2016-05-02 22:54:06"
                     },
                     {
-                        "version_start": "1.9.0",
+                        "version_start": "1.9",
                         "version_end": "1.9.8",
-                        "start_date": null,
+                        "start_date": "2015-12-02 00:17:30",
                         "exclude_start": false,
                         "end_date": "2016-07-18 18:24:10",
                         "exclude_end": true

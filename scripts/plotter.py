@@ -3,6 +3,8 @@ import seaborn as sns
 import numpy as np
 import matplotlib.pyplot as plt
 import pandas as pd
+import src.utils.compute as compute
+from copy import deepcopy
 from pprint import pprint
 from pathlib import Path
 from src.middleware import Middleware
@@ -59,101 +61,12 @@ def impact_to_int(score: str):
 
 # These are the key performance indicators for the releases
 
-KPIS = {
-    'base': {
-        'default': 'mean',
-        'key': 'cvss_base_score',
-        'max': 10,
-        'source': 'cve',
-        'title': 'CVSS Base Score',
-        'y_label': 'Score',
-    },
-    'files': {
-        'default': 'sum', # all files for all releases (generalise for dependencies)
-        'key': 'files',
-        'source': 'releases',
-        'title': 'Number of Files',
-        'source': 'release',
-        'y_label': 'Count',
-    },
-    'functions': {
-        'default': 'sum',
-        'key': 'functions',
-        'title': 'Number of Functions',
-        'source': 'release',
-        'y_label': 'Count',
-    },
-    'impact': {
-        'default': 'mean',
-        'key': 'cvss_impact_score',
-        'title': 'CVSS Impact Score',
-        'max': 10,
-        'source': 'cve',
-        'y_label': 'Score',
-    },
-    'exploitability': {
-        'default': 'mean',
-        'key': 'cvss_exploitability_score',
-        'title': 'CVSS Exploitability Score',
-        'max': 10,
-        'source': 'cve',
-        'y_label': 'Score',
-    },
-    'confidentiality': {
-        'default': 'mean', # mean impact of all CVEs
-        'key': 'cvss_confidentiality_impact',
-        'title': 'CVSS Confidentiality Impact',
-        'max': 2,
-        'source': 'cve',
-        'y_label': 'Impact',
-    },
-    'integrity': {
-        'default': 'mean',
-        'key': 'cvss_integrity_impact',
-        'title': 'CVSS Integrity Impact',
-        'max': 2,
-        'source': 'cve',
-        'y_label': 'Impact',
-    },
-    'availability': {
-        'default': 'mean',
-        'key': 'cvss_availability_impact',
-        'title': 'CVSS Availability Impact',
-        'max': 2,
-        'source': 'cve',
-        'y_label': 'Impact',
-    },
-    'cves': {
-        'default': 'sum', # sum of all CVEs for all releases
-        'key': lambda *args: len(args[2].get('cves', [])),
-        'title': 'Number of CVEs',
-        'source': 'entry',
-        'y_label': 'Count',
-    },
-    'nloc': {
-        'default': 'sum',
-        'key': 'nloc_total',
-        'title': 'Number of Lines of Code (NLOC)',
-        'source': 'release', # 'entry' or 'release
-        'y_label': 'NLOC',
-    },
-    'cves/nloc': {
-        'default': 'mean',
-        'key': 'cves_per_10k_nlocs',
-        'title': 'CVEs per 10k NLOC',
-        'y_label': 'CVEs per 10k NLOC',
-    },
-    'ccn': {
-        'key': 'ccns',
-        'title': 'Cyclomatic Complexity (CCN) / Function',
-        'y_label': 'CCN',
-    },
-    'days': {
-        'key': 'days',
-        'title': 'Days to Patch',
-        'y_label': 'Days',
-    },
-}
+kpiset = set(list(map(lambda x: x.lower(), args.kpis)))
+valid_kpis = set(compute.KPIS.keys())
+if not kpiset.issubset(valid_kpis):
+    invalid_kpis = list(kpiset - valid_kpis)
+    logger.error(f"Invalid KPIs: {', '.join(invalid_kpis)}. Valid KPIs are: {', '.join(valid_kpis)}")
+    exit(1)
 
 sns.set_theme(style='darkgrid')
 
@@ -228,104 +141,6 @@ def get_categories(timeline_entry: dict):
 def get_scores(timeline_entry: dict):
     pass
 
-
-def get_name_from_kpi(kpi: str):
-    """
-    Gets the name from a KPI
-    """
-    return kpi.replace('_', ' ').title().replace('Cvss', 'CVSS')
-
-def get_timeline_kpis(data: dict, *kpi_args: str):
-    """
-    Gets the key performance indicators for a timeline
-    """
-    timeline = data.get('timeline')
-    cves = data.get('cves')
-    results = {}
-    dates = []
-    kpi_args = list(kpi_args)
-    kpi_argset = set(kpi_args)
-    # first, we compute release-related KPIs
-    for entry in timeline:
-        dates.append(entry.get('date'))
-        rel = entry.get('release')
-        # make sure we have a list of releases, even if it is a single release
-        # this is to make the code more extensible
-        relvs = [rel] if type(rel) == str else rel
-        if type(relvs) != list:
-            logger.error(f"Unexpected release type: {type(relvs).__name__}")
-            continue
-        for k in KPIS:
-            if k not in kpi_argset:
-                continue
-            # expect keywords type, source, function
-            kpi: dict = KPIS.get(k)
-            source_name: str = kpi.get('source')
-            source, ids = None, None
-            match source_name:
-                case 'cve':
-                    source = cves
-                    ids = entry.get('cves')
-                case 'entry':
-                    source = entry
-                case 'release':
-                    source = releases
-                    ids = relvs
-                case _:
-                    logger.error(f"Unexpected source name: {source_name}")
-                    continue
-            if ids is None:
-                ids = source if type(source) == list else [source]
-            scores = []
-            for id in ids:
-                elem = id if type(id) == dict else (
-                    source.get(id) if type(id) == str else None
-                )
-                if elem is None:
-                    logger.error(f"Could not find {source} for {id}")
-                    continue
-                key = kpi.get('key')
-                if key is None:
-                    logger.error(f"Could not find function for KPI '{k}'")
-                    continue
-                if type(key) == str:
-                    # when given a string, the key is a dictionary key
-                    val = elem.get(key)
-                    if val:
-                        scores.append(val)
-                    else:
-                        scores.append(0)
-                elif type(key) == function:
-                    # when given a function, the key is a function with args (data, elem)
-                    try:
-                        value = key(data, elem)
-                        scores.append(value)
-                    except Exception as e:
-                        logger.error(f"Could not compute KPI '{k}' for {id}: {e}")
-                        continue
-                else:
-                    logger.error(f"Unexpected function type: {type(key).__name__}")
-                    continue
-            if k not in results:
-                results[k] = []
-            results[k] = {
-                'sum': sum(scores),
-                'min': min(scores),
-                'max': max(scores),
-                'mean': np.mean(scores),
-                'std': np.std(scores),
-            }
-    # eliminate None values
-    for kpi in results:
-        prev_val = 0
-        kpis = results[kpi]
-        for i in range(kpis):
-            if kpis[i] is None:
-                kpis[i] = prev_val
-            prev_val = kpis[i]
-    # then we compute the KPIs for the CVEs
-    return results
-
 def plot_timelines(timelines: dict):
     """
     Expects a dictionary with the following structure:
@@ -336,62 +151,69 @@ def plot_timelines(timelines: dict):
         'timeline': [
             {
                 'date': <date>,
-                'release': <release-id>,
+                'release': <release-id> | [ <release-id>, <release-id>, ...],
                 'cves': [<cve-id>, <cve-id>, ...]
             }
         ]
     }
     """
     # the scores to plot
-    figures = []
+    figures = {}
     for kpi in args.kpis:
-        kpi = KPIS.get(kpi)
-        if kpi is None:
-            logger.error(f"Could not find KPI '{kpi}'")
-            continue
         fig, ax = plt.subplots()
-        figures.append((fig, ax, kpi))
-        ax.set_title(kpi.get('title'))
-        ax.set_ylabel(kpi.get('y_label'))
-    kpi_keys = [ kpi.get('key') for _, _, kpi in figures ]
+        title = compute.KPIS.get(kpi).get('title')
+        y_label = compute.KPIS.get(kpi).get('y_label')
+        ax.set_title(title)
+        ax.set_ylabel(y_label)
+        figures[kpi] = (fig, ax)
     max_values = {}
     for project, data in timelines.items():
         _, project = get_platform(project)
-        results = get_timeline_kpis(data, *kpi_keys)
-        for fig, ax, kpi in figures:
+        results = compute.timeline_kpis(data, *args.kpis)
+        for kpi in args.kpis:
+            fig, ax = figures.get(kpi, (None, None))
+            logger.info(f"Processing kpi '{kpi}' for {project}")
+            if fig is None or ax is None:
+                logger.error(f"Could not find figure for KPI '{kpi}'")
+                continue
             ax: plt.Axes
-            kpi_key = kpi.get('key')
-            value = results.get(kpi_key)
-            if value is None:
+            kpi_dict = results.get(kpi)
+            if kpi_dict is None:
+                logger.error(f"Could not find KPI '{kpi}' for {project}")
+                continue
+            default_value_key = kpi_dict.get('default', 'sum')
+            values = kpi_dict.get('values', [])
+            if values is None:
                 logger.error(f"Could not find KPI '{kpi}' for {project}")
                 continue
             suffix = ''
             lower = upper = None
-            has_max = 'max' in kpi
-            max_value = kpi.get('max', None)
-            if type(value) == dict:
-                lower = value.get('min')
-                upper = value.get('max')
-                value = value.get('mean')
-                max_value = max(value) if not has_max else max_value
+            has_max = 'max' in kpi_dict
+            max_value = kpi_dict.get('max', None)
+            if type(values) == dict:
+                lower = values.get('min')
+                upper = values.get('max')
+                values = values.get(default_value_key)
+                max_value = max(values) if not has_max else max_value
                 suffix = f'{suffix} mean'
             else:
-                max_value = max(value) if not has_max else max_value
+                max_value = max(values) if not has_max else max_value
             if not has_max:
                 max_value = max_value * 1.1
-            if max_values.get(kpi_key) is None:
-                max_values[kpi_key] = max_value
+            if max_values.get(kpi) is None:
+                max_values[kpi] = max_value
             else:
-                max_values[kpi_key] = max(max_values[kpi_key], max_value)
-            ax.plot(results.get('dates'), value, label=f"{project.title()} {suffix}")
-            if lower is not None and upper is not None:
-                ax.fill_between(results.get('dates'), lower, upper, alpha=0.1, label=f"{project.title()} std")
-    for fig, ax, kpi in figures:
-        kpi_key = kpi.get('key')
-        ax.set_ylim(ymin=0, ymax=max_values[kpi_key])
+                max_values[kpi] = max(max_values[kpi], max_value)
+            ax.plot(results.get('dates'), values, label=f"{project.title()} {suffix}")
+            if default_value_key in ['mean', 'median']:
+                if lower is not None and upper is not None:
+                    ax.fill_between(results.get('dates'), lower, upper, alpha=0.1, label=f"{project.title()} std")
+    for kpi in args.kpis:
+        fig, ax = figures.get(kpi, (None, None))
+        ax.set_ylim(ymin=0, ymax=max_values[kpi])
         ax.legend()
         fig.autofmt_xdate()
-        filename = kpi.get('key', f"kpi-{datetime.datetime.now().strftime('%Y%m%d%H%M%S')}")
+        filename = f"{kpi.replace('/', '-')}"
         fig.savefig(plots_dir / f"{filename}.png")
 
 def plot_vulnerabilities(vulnerabilities: dict):
