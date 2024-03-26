@@ -3,6 +3,14 @@ import src.utils.db as db
 from copy import deepcopy
 from loguru import logger
 
+def _get_entry(*args, element='entry'):
+    if element != 'entry':
+        return args[2]
+    return args[1]
+
+def _get_data(*args):
+    return args[0]
+
 def patch_lag(data: dict, entry: dict, *args, format='days', start: str = 'release'):
     """
     Asserts that the data has 'cves' and 'releases' keys.
@@ -28,6 +36,21 @@ def patch_lag(data: dict, entry: dict, *args, format='days', start: str = 'relea
                         )
                         values.append(diff)
     return values
+
+def cves_per_nloc(data: dict, entry: dict, *args):
+    """
+    CVEs per 10k NLOC
+    """
+    rels = entry.get('release', [])
+    rels = rels if type(rels) == list else [rels]
+    total_nloc = 0
+    releases = data.get('releases', {})
+    for rel in rels:
+        nloc = releases.get(rel, {}).get('nloc_total', 0)
+        if nloc:
+            total_nloc += nloc
+    total_cves = len(entry.get('cves', []))
+    return total_cves / (total_nloc / 10000.0) if total_nloc else None
 
 # This file helps with computing KPIs for certain data structures
 # *args are in the order (data, elem, entry)
@@ -136,14 +159,15 @@ KPIS = {
         'y_label': 'NLOC',
     },
     'cves/nloc': {
-        'default': 'mean',
-        'key': 'cves_per_10k_nlocs',
+        'default': 'sum',
+        'key': lambda *args: cves_per_nloc(*args),
+        'element': 'entry',
         'title': 'CVEs per 10k NLOC',
         'y_label': 'CVEs per 10k NLOC',
     },
     'ccn': {
         'default': 'mean',
-        'key': 'ccns',
+        'key': 'ccn_average',
         'title': 'Cyclomatic Complexity (CCN) / Function',
         'element': 'release',
         'y_label': 'CCN',
