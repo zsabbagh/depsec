@@ -37,6 +37,7 @@ parser.add_argument('-o', '--output', help='The output directory', default='outp
 parser.add_argument('--kpis', nargs='+', help='The key performance indicators to plot', default=['count', 'base', 'nloc'])
 parser.add_argument('--debug', help='The debug level of the logger', default='INFO')
 parser.add_argument('--show', help='Show the plots', action='store_true')
+parser.add_argument('--dependencies', help='Generate plots on dependencies as well', action='store_true')
 
 args = parser.parse_args()
 
@@ -135,12 +136,6 @@ plots_dir = output_dir / 'plots'
 json_dir.mkdir(exist_ok=True)
 plots_dir.mkdir(exist_ok=True)
 
-def get_categories(timeline_entry: dict):
-    pass
-
-def get_scores(timeline_entry: dict):
-    pass
-
 def plot_timelines(timelines: dict):
     """
     Expects a dictionary with the following structure:
@@ -167,6 +162,7 @@ def plot_timelines(timelines: dict):
         ax.set_ylabel(y_label)
         figures[kpi] = (fig, ax)
     max_values = {}
+    min_values = {}
     for project, data in timelines.items():
         _, project = get_platform(project)
         results = compute.timeline_kpis(data, *args.kpis)
@@ -190,27 +186,40 @@ def plot_timelines(timelines: dict):
             lower = upper = None
             has_max = 'max' in kpi_dict
             max_value = kpi_dict.get('max', None)
+            has_min = 'min' in kpi_dict
+            min_value = kpi_dict.get('min', None)
             if type(values) == dict:
                 lower = values.get('min')
                 upper = values.get('max')
                 values = values.get(default_value_key)
                 max_value = max(values) if not has_max else max_value
-                suffix = f'{suffix} mean'
+                min_value = min(values) if not has_min else min_value
+                suffix = f'{suffix} {default_value_key}'
             else:
                 max_value = max(values) if not has_max else max_value
+                min_value = min(values) if not has_min else min_value
             if not has_max:
                 max_value = max_value * 1.1
+                min_value = min_value * 1.1
             if max_values.get(kpi) is None:
                 max_values[kpi] = max_value
             else:
                 max_values[kpi] = max(max_values[kpi], max_value)
+            if min_values.get(kpi) is None:
+                min_values[kpi] = min_value
+            else:
+                min_values[kpi] = min(min_values[kpi], min_value)
             ax.plot(results.get('dates'), values, label=f"{project.title()} {suffix}")
-            if default_value_key in ['mean', 'median']:
+            fill = kpi_dict.get('fill', True)
+            if fill and default_value_key in ['mean', 'median']:
                 if lower is not None and upper is not None:
                     ax.fill_between(results.get('dates'), lower, upper, alpha=0.1, label=f"{project.title()} std")
     for kpi in args.kpis:
         fig, ax = figures.get(kpi, (None, None))
-        ax.set_ylim(ymin=0, ymax=max_values[kpi])
+        min_val = min_values.get(kpi)
+        if min_val is None or min_val > 0:
+            min_val = 0
+        ax.set_ylim(ymin=min_val, ymax=max_values[kpi])
         ax.legend()
         fig.autofmt_xdate()
         filename = f"{kpi.replace('/', '-')}"
@@ -266,34 +275,35 @@ if __name__ == '__main__':
     plot_timelines(timelines)
     try_json_dump(timelines, json_dir / 'timelines.json')
 
+    if args.dependencies:
+        dependency_timelines = {}
+        # TODO: get the dependencies for each project and plot the timeline
+        for project in args.projects:
+            # get timeline for each project
+            data = timelines.get(project)
+            if data is None:
+                logger.error(f"Could not find timeline for {project}")
+                continue
+            releases = data.get('releases')
+            timeline = data.get('timeline')
+            for entry in timeline:
+                rel = releases.get(entry.get('release'))
+                if rel is None:
+                    continue
+                version = rel.get('version')
+                dependencies = mw.get_dependencies(project, version, platform=platform)
+                for dep in rel.get('dependencies', []):
+                    platform, project = get_platform(dep)
+                    if dependency_timelines.get(project) is None:
+                        dependency_timelines[project] = {}
+                    if dependency_timelines[project].get('timeline') is None:
+                        dependency_timelines[project]['timeline'] = []
+                    dependency_timelines[project]['timeline'].append(entry)
+
     if args.show:
         plt.show()
 
-    exit(0)
-
-    dependency_timelines = {}
-    # TODO: get the dependencies for each project and plot the timeline
-    for project in args.projects:
-        # get timeline for each project
-        data = timelines.get(project)
-        if data is None:
-            logger.error(f"Could not find timeline for {project}")
-            continue
-        releases = data.get('releases')
-        timeline = data.get('timeline')
-        for entry in timeline:
-            rel = releases.get(entry.get('release'))
-            if rel is None:
-                continue
-            version = rel.get('version')
-            dependencies = mw.get_dependencies(project, version, platform=platform)
-            for dep in rel.get('dependencies', []):
-                platform, project = get_platform(dep)
-                if dependency_timelines.get(project) is None:
-                    dependency_timelines[project] = {}
-                if dependency_timelines[project].get('timeline') is None:
-                    dependency_timelines[project]['timeline'] = []
-                dependency_timelines[project]['timeline'].append(entry)
+    exit(1)
 
     # get all the vulnerabilities for the projects
     # and plot them

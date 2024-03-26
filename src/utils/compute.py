@@ -1,37 +1,82 @@
 import numpy as np
+import src.utils.db as db
 from copy import deepcopy
 from loguru import logger
 
+def patch_lag(data: dict, entry: dict, *args, format='days', start: str = 'release'):
+    """
+    Asserts that the data has 'cves' and 'releases' keys.
+    """
+    releases = entry.get('release', {})
+    releases = releases if type(releases) == list else [releases]
+    cves = data.get('cves', {})
+    entry_cves = entry.get('cves', {})
+    values = []
+    for rel in releases:
+        rel_published_at = data.get('releases', {}).get(rel, {}).get('published_at')
+        for cve in entry_cves:
+            cve = cves.get(cve)
+            apps = cve.get('applicability', [])
+            for app in apps:
+                if db.is_applicable(rel, app):
+                    app_end = app.get('end_date')
+                    start = rel_published_at if start == 'release' else cve.get('published_at')
+                    if app_end and start:
+                        diff = (app_end - start).days
+                        diff = diff / 30.0 if format == 'months' else (
+                            diff / 365.0 if format == 'years' else diff
+                        )
+                        values.append(diff)
+    return values
+
 # This file helps with computing KPIs for certain data structures
+# *args are in the order (data, elem, entry)
 KPIS = {
     'base': {
         'default': 'mean',
         'key': 'cvss_base_score',
         'max': 10,
-        'source': 'cve',
+        'element': 'cve',
         'title': 'CVSS Base Score',
         'y_label': 'Score',
     },
+    'lag/release': {
+        'default': 'mean',
+        'returns_values': True,
+        'key': lambda *args : patch_lag(*args, format='days'),
+        'title': 'Days: Release to Patched Release',
+        'fill': False,
+        'element': 'cve',
+        'y_label': 'Days',
+    },
+    'lag/cve': {
+        'default': 'mean',
+        'returns_values': True,
+        'key': lambda *args : patch_lag(*args, format='days', start='cve'),
+        'title': 'Days: CVE Published to Patched Release',
+        'fill': False,
+        'element': 'cve',
+        'y_label': 'Days',
+    },
     'issues': {
         'default': 'sum',
-        'key': lambda *args: args[1].get('bandit_report', {}).get('issues_total'),
+        'key': lambda *args: args[1].get('bandit_report', {}).get('issues_total'), # return None to ignore the entry
         'title': 'Bandit Issues',
-        'source': 'release',
+        'element': 'release',
         'y_label': 'Count',
     },
     'files': {
         'default': 'sum', # all files for all releases (generalise for dependencies)
         'key': 'counted_files', # TODO: inconsistent naming, should be files_counted
-        'source': 'releases',
         'title': 'Number of Files',
-        'source': 'release',
+        'element': 'release',
         'y_label': 'Count',
     },
     'functions': {
         'default': 'sum',
         'key': 'counted_functions',
         'title': 'Number of Functions',
-        'source': 'release',
+        'element': 'release',
         'y_label': 'Count',
     },
     'impact': {
@@ -39,7 +84,7 @@ KPIS = {
         'key': 'cvss_impact_score',
         'title': 'CVSS Impact Score',
         'max': 10,
-        'source': 'cve',
+        'element': 'cve',
         'y_label': 'Score',
     },
     'exploitability': {
@@ -47,7 +92,7 @@ KPIS = {
         'key': 'cvss_exploitability_score',
         'title': 'CVSS Exploitability Score',
         'max': 10,
-        'source': 'cve',
+        'element': 'cve',
         'y_label': 'Score',
     },
     'confidentiality': {
@@ -55,7 +100,7 @@ KPIS = {
         'key': 'cvss_confidentiality_impact',
         'title': 'CVSS Confidentiality Impact',
         'max': 2,
-        'source': 'cve',
+        'element': 'cve',
         'y_label': 'Impact',
     },
     'integrity': {
@@ -63,7 +108,7 @@ KPIS = {
         'key': 'cvss_integrity_impact',
         'title': 'CVSS Integrity Impact',
         'max': 2,
-        'source': 'cve',
+        'element': 'cve',
         'y_label': 'Impact',
     },
     'availability': {
@@ -71,7 +116,7 @@ KPIS = {
         'key': 'cvss_availability_impact',
         'title': 'CVSS Availability Impact',
         'max': 2,
-        'source': 'cve',
+        'element': 'cve',
         'y_label': 'Impact',
     },
     'cves': {
@@ -79,14 +124,14 @@ KPIS = {
         # assume that the key is a function that takes (data, elem) as arguments
         'key': lambda *args: len(args[1].get('cves', [])),
         'title': 'Number of CVEs',
-        'source': 'entry',
+        'element': 'entry',
         'y_label': 'Count',
     },
     'nloc': {
         'default': 'sum',
         'key': 'nloc_total',
         'title': 'Number of Lines of Code (NLOC)',
-        'source': 'release', # 'entry' or 'release
+        'element': 'release', # 'entry' or 'release
         'y_label': 'NLOC',
     },
     'cves/nloc': {
@@ -96,14 +141,11 @@ KPIS = {
         'y_label': 'CVEs per 10k NLOC',
     },
     'ccn': {
+        'default': 'mean',
         'key': 'ccns',
         'title': 'Cyclomatic Complexity (CCN) / Function',
+        'element': 'release',
         'y_label': 'CCN',
-    },
-    'days': {
-        'key': 'days',
-        'title': 'Days to Patch',
-        'y_label': 'Days',
     },
 }
 
@@ -143,10 +185,10 @@ def timeline_kpis(data: dict, *kpis: str):
         for k in results:
             if k not in kpi_argset:
                 continue
-            # expect keywords type, source, function
+            # expect keywords type, element, function
             kpi: dict = KPIS.get(k)
-            source_name: str = kpi.get('source')
-            source = ids = None
+            element_name: str = kpi.get('element')
+            element = ids = None
             if 'values' not in results[k]:
                 results[k]['values'] = {
                     'sum': [],
@@ -155,27 +197,52 @@ def timeline_kpis(data: dict, *kpis: str):
                     'mean': [],
                     'std': [],
                 }
-            match source_name:
+            returns_values = kpi.get('returns_values')
+            if returns_values:
+                logger.info(f"Returns values for KPI '{k}'")
+                key = kpi.get('key')
+                if not callable(key):
+                    logger.error(f"Expected function for KPI '{k}'")
+                    continue
+                try:
+                    values = key(data, entry)
+                    non_null = previous_non_null.get(k)
+                    if len(values) > 0:
+                        previous_non_null[k] = {
+                            'sum': sum(values),
+                            'min': min(values),
+                            'max': max(values),
+                            'mean': np.mean(values),
+                            'std': np.std(values),
+                        }
+                    for k2 in results[k]['values']:
+                        results[k]['values'][k2].append(non_null[k2])
+                    continue
+                except Exception as e:
+                    logger.error(f"Could not compute KPI '{k}': {e}")
+                    continue
+            match element_name:
                 case 'cve':
-                    source = cves
+                    element = cves
                     ids = entry.get('cves')
                 case 'entry':
-                    source = entry
+                    element = entry
                 case 'release':
-                    source = releases
+                    element = releases
                     ids = relvs
                 case _:
-                    logger.error(f"Unexpected source name: {source_name}")
+                    logger.error(f"Unexpected element name: {element_name}")
                     continue
+            # if ids is None, we assume the element is a list of elements or an element
             if ids is None:
-                ids = source if type(source) == list else [source]
+                ids = element if type(element) == list else [element]
             scores = []
             for id in ids:
                 elem = id if type(id) == dict else (
-                    source.get(id) if type(id) == str else None
+                    element.get(id) if type(id) == str else None
                 )
                 if elem is None:
-                    logger.error(f"Could not find {source} for {id}")
+                    logger.error(f"Could not find {element} for {id}")
                     continue
                 key = kpi.get('key')
                 if key is None:
