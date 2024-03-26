@@ -149,6 +149,30 @@ KPIS = {
     },
 }
 
+def values_to_stats(list_of_values: list):
+    """
+    Converts a list of values to a dictionary of statistics.
+    """
+    result = {
+        'sum': [],
+        'mean': [],
+        'std': [],
+        'min': [],
+        'max': [],
+    }
+    for values in list_of_values:
+        if not values:
+            for k in result:
+                result[k].append(None)
+        else:
+            result['sum'].append(np.sum(values))
+            result['mean'].append(np.mean(values))
+            result['std'].append(np.std(values))
+            result['min'].append(np.min(values))
+            result['max'].append(np.max(values))
+    return result
+    
+
 def timeline_kpis(data: dict, *kpis: str):
     """
     Computes KPIs for a timeline data structure.
@@ -164,15 +188,6 @@ def timeline_kpis(data: dict, *kpis: str):
     kpi_args = list(kpis)
     kpi_argset = set(kpi_args)
     # first, we compute release-related KPIs
-    previous_non_null = {
-        k: {
-            'sum': 0,
-            'min': 0,
-            'max': 0,
-            'mean': 0,
-            'std': 0,
-        } for k in kpi_argset
-    }
     for entry in timeline:
         dates.append(entry.get('date'))
         rel = entry.get('release')
@@ -190,13 +205,7 @@ def timeline_kpis(data: dict, *kpis: str):
             element_name: str = kpi.get('element')
             element = ids = None
             if 'values' not in results[k]:
-                results[k]['values'] = {
-                    'sum': [],
-                    'min': [],
-                    'max': [],
-                    'mean': [],
-                    'std': [],
-                }
+                results[k]['values'] = []
             returns_values = kpi.get('returns_values')
             if returns_values:
                 logger.info(f"Returns values for KPI '{k}'")
@@ -206,17 +215,7 @@ def timeline_kpis(data: dict, *kpis: str):
                     continue
                 try:
                     values = key(data, entry)
-                    non_null = previous_non_null.get(k)
-                    if len(values) > 0:
-                        previous_non_null[k] = {
-                            'sum': sum(values),
-                            'min': min(values),
-                            'max': max(values),
-                            'mean': np.mean(values),
-                            'std': np.std(values),
-                        }
-                    for k2 in results[k]['values']:
-                        results[k]['values'][k2].append(non_null[k2])
+                    results[k]['values'].append(values)
                     continue
                 except Exception as e:
                     logger.error(f"Could not compute KPI '{k}': {e}")
@@ -268,19 +267,10 @@ def timeline_kpis(data: dict, *kpis: str):
                     logger.error(f"Unexpected function type: {type(key).__name__}")
                     continue
             scores = [s for s in scores if s is not None]
-            non_null = previous_non_null.get(k)
-            vals = results[k]['values']
-            if len(scores) > 0:
-                # replace the previous values with the new ones
-                previous_non_null[k] = {
-                    'sum': sum(scores),
-                    'min': min(scores),
-                    'max': max(scores),
-                    'mean': np.mean(scores),
-                    'std': np.std(scores),
-                }
-            for k2 in vals:
-                vals[k2].append(non_null[k2])
+            results[k]['values'].append(scores)
     # then we compute the KPIs for the CVEs
     results['dates'] = dates
     return results
+
+def overall_kpis(data: dict, *kpis):
+    pass

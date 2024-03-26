@@ -86,7 +86,6 @@ def get_platform(project: str):
         platform, project = parts[0], parts[1]
     return platform.lower(), project.lower()
 
-
 def convert_datetime_to_str(data: dict):
     """
     Converts dictionaries with datetime objects to strings
@@ -182,7 +181,19 @@ def plot_timelines(timelines: dict):
             if values is None:
                 logger.error(f"Could not find KPI '{kpi}' for {project}")
                 continue
+            values = compute.values_to_stats(values)
             suffix = ''
+            prev = {
+                k: 0 for k in values
+            }
+            for i in range(1, len(values.get(default_value_key))):
+                if values.get(default_value_key)[i] is None:
+                    for k in values:
+                        values.get(k)[i] = prev.get(k)
+                else:
+                    prev = {
+                        k: values.get(k)[i] for k in values
+                    }
             lower = upper = None
             has_max = 'max' in kpi_dict
             max_value = kpi_dict.get('max', None)
