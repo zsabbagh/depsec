@@ -398,15 +398,18 @@ class Middleware:
                 if cve.cve_id not in cves:
                     weaknesses = db.NVD.cwes(cve.cve_id, categories=include_categories, to_dict=False)
                     # TODO: verify categories
+                    cwe_ids = set()
                     for cwe in weaknesses:
                         logger.debug(f"Processing CWE {cwe.cwe_id}")
                         cwe_id = cwe.cwe_id
+                        cwe_ids.add(cwe_id)
                         if cwe_id not in cwes:
                             cwes[cwe_id] = model_to_dict(cwe, recurse=False)
                             cwes[cwe_id]['cves'] = [cve.cve_id]
                         else:
                             cwes[cwe_id]['cves'].append(cve.cve_id)
                     cve_data = model_to_dict(cve)
+                    cve_data['cwes'] = sorted(list(cwe_ids))
                     cve_data['applicability'] = [applicability]
                     cves[cve.cve_id] = cve_data
                 else:
@@ -510,7 +513,22 @@ class Middleware:
 
         Returns:
         {
-            'cves': { <cve_id>: <cve> },
+            'cwe': {
+                <cwe_id>: {
+                    <key>: <value>,
+                    ...
+                    'cves': [ <cve_id>, ... ]
+                }
+            },
+            'cves': { <cve_id>: {
+                <key>: <value>,
+                ...
+                'applicability': [
+                    { 'version_start': <version>, 'version_end': <version>, 'start_date': <date>, 'end_date': <date> },
+                    ...
+                ]
+                <cwes>: [ <cwe_id>, ... ]
+            } },
             'releases': { <version>: <release> },
             'timeline': [
                 {
@@ -536,12 +554,14 @@ class Middleware:
             end_date = datetime.datetime.now()
         # for each date in the range, get the most recent releases and check for vulnerabilities
         results: list = {
+            'cwes': {},
             'cves': {},
             'releases': model_to_dict(project, recurse=False),
             'timeline': []
         }
         results['releases'] = {}
         cves, releases, timeline = results['cves'], results['releases'], results['timeline']
+        cwes = results['cwes']
         vulnerabilities = self.get_vulnerabilities(project.name, platform=platform)
         rels = self.get_releases(project.name, platform=platform, exclude_deprecated=exclude_deprecated)
         logger.info(f"Generating timeline with {len(rels)} releases for {project.name}, got: {len(vulnerabilities.get('cves', {}))} vulnerabilities")
@@ -570,6 +590,9 @@ class Middleware:
                         break
                 if is_applicable:
                     vulns.append(vuln)
+                    for cwe_id in vuln.get('cwes', []):
+                        if cwe_id not in cwes:
+                            cwes[cwe_id] = vulnerabilities.get('cwes', {}).get(cwe_id, {})
             timeline.append({
                 'date': start_date,
                 'release': rel_mr.version,
