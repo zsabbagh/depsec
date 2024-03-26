@@ -603,6 +603,9 @@ class Middleware:
                 if cve_id:
                     cves[cve_id] = cve
             releases[rel_mr.version] = model_to_dict(rel_mr, recurse=False)
+            bandit_report = rel_mr.bandit_report.first()
+            if bandit_report:
+                results['releases'][rel_mr.version]['bandit_report'] = model_to_dict(bandit_report, recurse=False)
             start_date = datetime_increment(start_date, step)
         return results
     

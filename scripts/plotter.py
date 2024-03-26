@@ -38,64 +38,107 @@ parser.add_argument('--show', help='Show the plots', action='store_true')
 
 args = parser.parse_args()
 
+def impact_to_int(score: str):
+    """
+    Translates a CVSS score to an integer
+    """
+    if score is None:
+        return None
+    elif type(score) in [int, float]:
+        return score
+    score = score.lower()
+    match score:
+        case 'none':
+            return 0
+        case 'low' | 'partial':
+            return 1
+        case 'high' | 'complete':
+            return 2
+    return None
+
+
+# These are the key performance indicators for the releases
+
 KPIS = {
     'base': {
+        'default': 'mean',
         'key': 'cvss_base_score',
-        'title': 'CVSS Base Score',
         'max': 10,
+        'source': 'cve',
+        'title': 'CVSS Base Score',
         'y_label': 'Score',
     },
     'files': {
+        'default': 'sum', # all files for all releases (generalise for dependencies)
         'key': 'files',
+        'source': 'releases',
         'title': 'Number of Files',
+        'source': 'release',
         'y_label': 'Count',
     },
     'functions': {
+        'default': 'sum',
         'key': 'functions',
         'title': 'Number of Functions',
+        'source': 'release',
         'y_label': 'Count',
     },
     'impact': {
+        'default': 'mean',
         'key': 'cvss_impact_score',
         'title': 'CVSS Impact Score',
         'max': 10,
+        'source': 'cve',
         'y_label': 'Score',
     },
     'exploitability': {
+        'default': 'mean',
         'key': 'cvss_exploitability_score',
         'title': 'CVSS Exploitability Score',
         'max': 10,
+        'source': 'cve',
         'y_label': 'Score',
     },
     'confidentiality': {
+        'default': 'mean', # mean impact of all CVEs
         'key': 'cvss_confidentiality_impact',
         'title': 'CVSS Confidentiality Impact',
         'max': 2,
+        'source': 'cve',
         'y_label': 'Impact',
     },
     'integrity': {
+        'default': 'mean',
         'key': 'cvss_integrity_impact',
         'title': 'CVSS Integrity Impact',
         'max': 2,
+        'source': 'cve',
         'y_label': 'Impact',
     },
     'availability': {
+        'default': 'mean',
         'key': 'cvss_availability_impact',
         'title': 'CVSS Availability Impact',
         'max': 2,
+        'source': 'cve',
         'y_label': 'Impact',
     },
     'cves': {
-        'key': 'cves',
+        'default': 'sum', # sum of all CVEs for all releases
+        'key': lambda *args: len(args[2].get('cves', [])),
         'title': 'Number of CVEs',
+        'source': 'entry',
         'y_label': 'Count',
     },
     'nloc': {
-        'key': 'nlocs',
+        'default': 'sum',
+        'key': 'nloc_total',
         'title': 'Number of Lines of Code (NLOC)',
+        'source': 'release', # 'entry' or 'release
         'y_label': 'NLOC',
     },
     'cves/nloc': {
+        'default': 'mean',
         'key': 'cves_per_10k_nlocs',
         'title': 'CVEs per 10k NLOC',
         'y_label': 'CVEs per 10k NLOC',
@@ -104,6 +147,11 @@ KPIS = {
         'key': 'ccns',
         'title': 'Cyclomatic Complexity (CCN) / Function',
         'y_label': 'CCN',
+    },
+    'days': {
+        'key': 'days',
+        'title': 'Days to Patch',
+        'y_label': 'Days',
     },
 }
 
@@ -180,23 +228,6 @@ def get_categories(timeline_entry: dict):
 def get_scores(timeline_entry: dict):
     pass
 
-def impact_to_int(score: str):
-    """
-    Translates a CVSS score to an integer
-    """
-    if score is None:
-        return None
-    elif type(score) in [int, float]:
-        return score
-    score = score.lower()
-    match score:
-        case 'none':
-            return 0
-        case 'low' | 'partial':
-            return 1
-        case 'high' | 'complete':
-            return 2
-    return None
 
 def get_name_from_kpi(kpi: str):
     """
@@ -204,115 +235,95 @@ def get_name_from_kpi(kpi: str):
     """
     return kpi.replace('_', ' ').title().replace('Cvss', 'CVSS')
 
-def get_timeline_kpis(data: dict, *kws: str):
+def get_timeline_kpis(data: dict, *kpi_args: str):
     """
     Gets the key performance indicators for a timeline
     """
     timeline = data.get('timeline')
     cves = data.get('cves')
-    dates, cves_count, nlocs, ccns, cves_per_10k_nlocs = [], [], [], [], []
-    files, functions = [], []
+    results = {}
+    dates = []
+    kpi_args = list(kpi_args)
+    kpi_argset = set(kpi_args)
+    # first, we compute release-related KPIs
     for entry in timeline:
-        rel = data.get('releases', {}).get(entry.get('release'))
-        count = len(entry.get('cves', []))
-        nloc = rel.get('nloc_total', 0) if rel is not None else 0
-        nloc = 0 if nloc is None else nloc
-        files_count = rel.get('counted_files', 0) if rel is not None else 0
-        functions_count = rel.get('counted_functions', 0) if rel is not None else 0
-        files.append(files_count)
-        functions.append(functions_count)
-        ccn = rel.get('ccn_average', 0) if rel is not None else 0
-        date = entry.get('date')
-        dates.append(date)
-        cves_count.append(count)
-        nlocs.append(nloc)
-        ccns.append(ccn)
-        cves_per_10k_nlocs.append(count / (nloc / 10000) if nloc > 0 else 0)
-    prev_ccn = prev_nloc = prev_filec = prev_funcc = 0
-    for ccn in ccns:
-        if ccn is not None and ccn > 0:
-            prev_ccn = ccn
-            break
-    for nloc in nlocs:
-        if nloc is not None and nloc > 0:
-            prev_nloc = nloc
-            break
-    # eliminate None values
-    for i in range(len(dates)):
-        ccn = ccns[i]
-        nloc = nlocs[i]
-        filec = files[i]
-        funcc = functions[i]
-        if filec is None or filec == 0:
-            files[i] = prev_filec
-        else:
-            prev_filec = filec
-        if funcc is None or funcc == 0:
-            functions[i] = prev_funcc
-        else:
-            prev_funcc = funcc
-        if ccn is None or ccn == 0:
-            ccns[i] = prev_ccn
-        else:
-            prev_ccn = ccn
-        if nloc is None or nloc == 0:
-            nlocs[i] = prev_nloc
-            cves_per_10k_nlocs[i] = cves_count[i] / (prev_nloc / 10000) if prev_nloc > 0 else 0
-        else:
-            prev_nloc = nloc
-    results = {
-        'dates': dates,
-        'cves': cves_count,
-        'nlocs': nlocs,
-        'ccns': ccns,
-        'files': files,
-        'functions': functions,
-        'cves_per_10k_nlocs': cves_per_10k_nlocs,
-    }
-    for kw in kws:
-        if kw in results:
+        dates.append(entry.get('date'))
+        rel = entry.get('release')
+        # make sure we have a list of releases, even if it is a single release
+        # this is to make the code more extensible
+        relvs = [rel] if type(rel) == str else rel
+        if type(relvs) != list:
+            logger.error(f"Unexpected release type: {type(relvs).__name__}")
             continue
-        max_scores = []
-        min_scores = []
-        std_scores = []
-        mean_scores = []
-        median_scores = []
-        max_value = None
-        for entry in timeline:
-            scrs = []
-            for cve in entry['cves']:
-                if kw not in cves.get(cve, {}):
-                    continue
-                val = cves.get(cve, {}).get(kw)
-                if max_value is None:
-                    if type(val) == str:
-                        max_value = 2
-                    else:
-                        max_value = 10
-                value = impact_to_int(val)
-                if type(value) not in [int, float]:
-                    logger.warning(f"Unexpected value keyword '{kw}' in {cve}: {value}")
-                    continue
-                scrs.append(value)
-            if len(scrs) == 0:
-                max_scores.append(0)
-                std_scores.append(0)
-                mean_scores.append(0)
-                median_scores.append(0)
-                min_scores.append(0)
+        for k in KPIS:
+            if k not in kpi_argset:
                 continue
-            std_scores.append(np.std(scrs))
-            max_scores.append(max(scrs))
-            min_scores.append(min(scrs))
-            mean_scores.append(np.mean(scrs))
-            median_scores.append(np.std(scrs))
-        results[kw] = {
-            'max': max_scores,
-            'min': min_scores,
-            'mean': mean_scores,
-            'median': median_scores,
-            'std': std_scores,
-        }
+            # expect keywords type, source, function
+            kpi: dict = KPIS.get(k)
+            source_name: str = kpi.get('source')
+            source, ids = None, None
+            match source_name:
+                case 'cve':
+                    source = cves
+                    ids = entry.get('cves')
+                case 'entry':
+                    source = entry
+                case 'release':
+                    source = releases
+                    ids = relvs
+                case _:
+                    logger.error(f"Unexpected source name: {source_name}")
+                    continue
+            if ids is None:
+                ids = source if type(source) == list else [source]
+            scores = []
+            for id in ids:
+                elem = id if type(id) == dict else (
+                    source.get(id) if type(id) == str else None
+                )
+                if elem is None:
+                    logger.error(f"Could not find {source} for {id}")
+                    continue
+                key = kpi.get('key')
+                if key is None:
+                    logger.error(f"Could not find function for KPI '{k}'")
+                    continue
+                if type(key) == str:
+                    # when given a string, the key is a dictionary key
+                    val = elem.get(key)
+                    if val:
+                        scores.append(val)
+                    else:
+                        scores.append(0)
+                elif type(key) == function:
+                    # when given a function, the key is a function with args (data, elem)
+                    try:
+                        value = key(data, elem)
+                        scores.append(value)
+                    except Exception as e:
+                        logger.error(f"Could not compute KPI '{k}' for {id}: {e}")
+                        continue
+                else:
+                    logger.error(f"Unexpected function type: {type(key).__name__}")
+                    continue
+            if k not in results:
+                results[k] = []
+            results[k] = {
+                'sum': sum(scores),
+                'min': min(scores),
+                'max': max(scores),
+                'mean': np.mean(scores),
+                'std': np.std(scores),
+            }
+    # eliminate None values
+    for kpi in results:
+        prev_val = 0
+        kpis = results[kpi]
+        for i in range(kpis):
+            if kpis[i] is None:
+                kpis[i] = prev_val
+            prev_val = kpis[i]
+    # then we compute the KPIs for the CVEs
     return results
 
 def plot_timelines(timelines: dict):
@@ -394,6 +405,12 @@ def plot_vulnerabilities(vulnerabilities: dict):
     cves = {}
     pass
 
+def combine_timeline_data(data: dict):
+    """
+    Combines timeline data to a single dictionary
+    """
+    pass
+
 mw = Middleware(args.config)
 # load the projects, arguments are optional
 mw.load_projects(*args.projects)
@@ -433,21 +450,28 @@ if __name__ == '__main__':
     exit(0)
 
     dependency_timelines = {}
+    # TODO: get the dependencies for each project and plot the timeline
     for project in args.projects:
         # get timeline for each project
-        platform, project = get_platform(project)
-        logger.info(f"Getting dependencies for {project} on {platform}...")
-        dependencies = mw.get_dependencies(project, platform=platform)
-        dependency_timelines[f"{platform}:{project}"] = {
-            'dependencies': dependencies,
-        }
-        logger.debug(f"Dependencies for {project}: {len(dependencies)}")
-        for dependency in dependencies:
-            timeline = mw.get_vulnerabilities_timeline(dependency.name,
-                                                       args.start,
-                                                       step=args.step,
-                                                       platform=platform)
-            dependency_timelines[f"{platform}:{project}"][dependency] = timeline
+        data = timelines.get(project)
+        if data is None:
+            logger.error(f"Could not find timeline for {project}")
+            continue
+        releases = data.get('releases')
+        timeline = data.get('timeline')
+        for entry in timeline:
+            rel = releases.get(entry.get('release'))
+            if rel is None:
+                continue
+            version = rel.get('version')
+            dependencies = mw.get_dependencies(project, version, platform=platform)
+            for dep in rel.get('dependencies', []):
+                platform, project = get_platform(dep)
+                if dependency_timelines.get(project) is None:
+                    dependency_timelines[project] = {}
+                if dependency_timelines[project].get('timeline') is None:
+                    dependency_timelines[project]['timeline'] = []
+                dependency_timelines[project]['timeline'].append(entry)
 
     # get all the vulnerabilities for the projects
     # and plot them

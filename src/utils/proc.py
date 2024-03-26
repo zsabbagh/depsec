@@ -130,6 +130,7 @@ def run_bandit(dir: str | Path,
                 issues = data.get('results', [])
                 for issue in issues:
                     filename = issue.get('filename')
+                    # TODO: this is not the true measurement of files counted, this is for those that have issues
                     if filename is not None:
                         counted_files.add(filename)
                     # count issues
