@@ -186,7 +186,7 @@ def plot_timelines(timelines: dict):
             prev = {
                 k: 0 for k in values
             }
-            for i in range(1, len(values.get(default_value_key))):
+            for i in range(0, len(values.get(default_value_key))):
                 if values.get(default_value_key)[i] is None:
                     for k in values:
                         values.get(k)[i] = prev.get(k)
