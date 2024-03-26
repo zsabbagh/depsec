@@ -287,6 +287,7 @@ if __name__ == '__main__':
 
     if args.dependencies:
         dependency_timelines = {}
+        timeline_entries = {}
         # TODO: get the dependencies for each project and plot the timeline
         for project in args.projects:
             # get timeline for each project
@@ -296,6 +297,10 @@ if __name__ == '__main__':
                 continue
             releases = data.get('releases')
             timeline = data.get('timeline')
+            # TODO:
+            # 1) 1 release per dependency. 
+            #    Pick the one that is closest to the release date and 
+            #    satisfies the constraint
             for entry in timeline:
                 rel = releases.get(entry.get('release'))
                 if rel is None:
