@@ -641,6 +641,7 @@ class Middleware:
         """
         # Force lowercase
         # Get the project
+        project_name = project.name if isinstance(project, Project) else project
         project = self.get_project(project_name)
         if project is None:
             return None

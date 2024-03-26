@@ -289,24 +289,31 @@ if __name__ == '__main__':
         dependency_timelines = {}
         timeline_entries = {}
         # TODO: get the dependencies for each project and plot the timeline
-        for project in args.projects:
-            # get timeline for each project
+        for project in timelines:
             data = timelines.get(project)
+            platform, project = get_platform(project)
+            # get timeline for each project
             if data is None:
                 logger.error(f"Could not find timeline for {project}")
                 continue
             releases = data.get('releases')
             timeline = data.get('timeline')
             # TODO:
-            # 1) 1 release per dependency. 
+            # 1) 1 release per dependency, which accounts for the release date
             #    Pick the one that is closest to the release date and 
             #    satisfies the constraint
+            # 2) Each applicability should have 'project': 'project_name' as a key to identify the project
+            # 3) Each release ID should 
             for entry in timeline:
                 rel = releases.get(entry.get('release'))
                 if rel is None:
                     continue
                 version = rel.get('version')
                 dependencies = mw.get_dependencies(project, version, platform=platform)
+                if dependencies is None:
+                    logger.error(f"Could not find dependencies for {project} {version}")
+                    continue
+                continue
                 for dep in rel.get('dependencies', []):
                     platform, project = get_platform(dep)
                     if dependency_timelines.get(project) is None:
