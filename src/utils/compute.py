@@ -63,6 +63,15 @@ KPIS = {
         'title': 'CVSS Base Score',
         'y_label': 'Score',
     },
+    'releases': {
+        'default': 'sum',
+        # first is data, second is the element
+        'key': lambda *args: len(args[1].get('release', [])) if type(args[1].get('release')) == list else 1,
+        'title': 'Number of Releases',
+        'element': 'entry',
+        'suffix': 'total',
+        'y_label': 'Count',
+    },
     'lag/release': {
         'default': 'mean',
         'returns_values': True,

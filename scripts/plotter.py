@@ -40,6 +40,8 @@ parser.add_argument('--show', help='Show the plots', action='store_true')
 parser.add_argument('--dependencies', help='Generate plots on dependencies as well', action='store_true')
 parser.add_argument('--force', help='Force reload of dependencies', action='store_true')
 
+# TODO: Add possibility to combine KPIs as left and right y-axis
+
 args = parser.parse_args()
 
 def impact_to_int(score: str):
@@ -225,7 +227,7 @@ def plot_timelines(timelines: dict, title_prefix: str = ''):
             fill = kpi_dict.get('fill', True)
             if fill and default_value_key in ['mean', 'median']:
                 if lower is not None and upper is not None:
-                    ax.fill_between(results.get('dates'), lower, upper, alpha=0.1, label=f"{project.title()} std")
+                    ax.fill_between(results.get('dates'), lower, upper, alpha=0.1, label=f"{project.title()} min - max")
     for kpi in args.kpis:
         fig, ax = figures.get(kpi, (None, None))
         min_val = min_values.get(kpi)
@@ -290,7 +292,6 @@ if __name__ == '__main__':
     if args.dependencies:
         dependency_timelines = {}
         timeline_entries = {}
-        # TODO: get the dependencies for each project and plot the timeline
         for project in timelines:
             platform, project = get_platform(project)
             # get timeline for each project
