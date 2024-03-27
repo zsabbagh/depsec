@@ -27,10 +27,10 @@ def patch_lag(data: dict, entry: dict, *args, format='days', start: str = 'relea
             apps = cve.get('applicability', [])
             for app in apps:
                 if db.is_applicable(rel, app):
-                    app_end = app.get('end_date')
+                    patched_at = app.get('patched_at')
                     start = rel_published_at if start == 'release' else cve.get('published_at')
-                    if app_end and start:
-                        diff = (app_end - start).days
+                    if patched_at and start:
+                        diff = (patched_at - start).days
                         diff = diff / 30.0 if format == 'months' else (
                             diff / 365.0 if format == 'years' else diff
                         )

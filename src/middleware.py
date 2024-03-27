@@ -239,6 +239,7 @@ class Middleware:
                      exclude_deprecated: bool = True,
                      sort_semantically: bool = True,
                      before: str | int | datetime.datetime = None,
+                     after: str | int | datetime.datetime = None,
                      requirements: str = None) -> List[Release]:
         """
         Gets all releases of a project 
@@ -249,6 +250,8 @@ class Middleware:
         descending: bool, default: True
         exclude_deprecated: bool, default: True
         sort_semantically: bool, default: True, this will sort the releases based on the semantic versioning
+        before: str | int | datetime.datetime, default: None, if provided, only the releases before the date are returned
+        after: str | int | datetime.datetime, default: None, if provided, only the releases after the date are returned
         requirements: str, default: None, if provided (a comma separated list of requirements), only the releases that satisfy the requirements are returned
         """
         project = self.get_project(project, platform)
@@ -257,9 +260,12 @@ class Middleware:
         project_name = project.name
         releases = []
         before_date = strint_to_date(before)
+        after_date = strint_to_date(after)
         for release in project.releases:
             version = semver.parse(release.version)
             if before_date is not None and release.published_at > before_date:
+                continue
+            if after_date is not None and release.published_at < after_date:
                 continue
             if version is None:
                 logger.error(f"Invalid version {release.version} for {project_name}")
@@ -282,6 +288,8 @@ class Middleware:
     def get_release(self,
                     project: str | Project,
                     version: str = None,
+                    before: str | int | datetime.datetime = None,
+                    after: str | int | datetime.datetime = None,
                     platform: str="pypi") -> Release:
         """
         Get a specific release of a project, uses latest release if version is None
@@ -293,6 +301,11 @@ class Middleware:
         if project is None:
             return None
         version = version if version else project.latest_release
+        before_date = strint_to_date(before)
+        after_date = strint_to_date(after)
+        if before_date is not None or after_date is not None:
+            releases = self.get_releases(project.name, platform=platform, before=before_date, after=after, sort_semantically=True)
+            return releases[0] if len(releases) > 0 else None
         release = Release.get_or_none(
             Release.project == project.id,
             Release.version == version
@@ -665,86 +678,86 @@ class Middleware:
                                                 step: str = 'y',
                                                 platform: str="pypi",
                                                 exclude_deprecated: bool = False) -> List[tuple]:
-            """
-            Returns a list of vulnerabilities for a project in a specific time range.
-            For each date, the most recent release is used to check for vulnerabilities.
-    
-            project_name: str, or list of str
-            start_date: str, format: YYYY[-MM]
-            end_date: str, format: YYYY[-MM] or falsy value
-            step: str, format: y(ear) / m(month), needs to match the format of the dates' lowest precision
-            platform: str, default: pypi
-    
-            Returns: tuple of (date, release, cves)
-            """
-            project = self.get_project(project_name, platform)
-            if project is None:
-                logger.error(f"Project {project_name} not found")
-                return None
-            # for each date in the range, get the most recent releases and check for vulnerabilities
-            results: list = {
-                'cwes': {},
-                'cves': {},
-                'releases': model_to_dict(project, recurse=False),
-                'timeline': []
-            }
-            results['releases'] = {}
-            dependencies = {}
-            cves, releases, timeline = results['cves'], results['releases'], results['timeline']
-            cwes = results['cwes']
-            vulnerabilities = self.get_indirect_vulnerabilities(project.name, platform=platform)
-            rels = self.get_releases(project.name, platform=platform, exclude_deprecated=exclude_deprecated)
-            logger.info(f"Generating timeline with {len(rels)} releases for {project.name}, got: {len(vulnerabilities.get('cves', {}))} vulnerabilities")
-            rel_timeline = self.get_release_timeline(project.name, start_date=start_date, end_date=end_date, step=step, platform=platform, exclude_deprecated=exclude_deprecated)
-            previous_deps = []
-            for date, rel in rel_timeline:
-                if rel is None:
-                    logger.warning(f"No release found for {project.name} at {start_date}")
-                    start_date = datetime_increment(start_date, step)
-                    results['timeline'].append({
-                        'date': date,
-                        'release': None,
-                        'cves': []
-                    })
-                    continue
-                logger.info(f"Got most recent release {rel.version} for {project.name} at {date}")
-                deps = self.get_dependencies(project.name, rel.version, platform)
-                if len(previous_deps) > 0 and deps is None:
-                    # some versions do not have dependencies as they are unsupported releases
-                    # assume the dependencies are the same as the previous release
-                    deps = previous_deps
-                elif deps is not None:
-                    previous_deps = deps
-                else:
-                    logger.warning(f"No dependencies found for {project.name} {rel.version}")
-                    deps = []
-                for dep in deps:
-                    depname = dep.name
-                    if depname not in dependencies:
-                        dependencies[depname] = self.get_vulnerabilities(depname, platform=dep.platform)
-                vulns = []
-                for vuln in vulnerabilities.get('cves', {}).values():
-                    applicabilities = vuln.get('applicability', [])
-                    is_applicable = db.is_applicable(rel, applicabilities)
-                    if is_applicable:
-                        vulns.append(vuln)
-                        for cwe_id in vuln.get('cwes', []):
-                            if cwe_id not in cwes:
-                                cwes[cwe_id] = vulnerabilities.get('cwes', {}).get(cwe_id, {})
-                timeline.append({
+        """
+        Returns a list of vulnerabilities for a project in a specific time range.
+        For each date, the most recent release is used to check for vulnerabilities.
+
+        project_name: str, or list of str
+        start_date: str, format: YYYY[-MM]
+        end_date: str, format: YYYY[-MM] or falsy value
+        step: str, format: y(ear) / m(month), needs to match the format of the dates' lowest precision
+        platform: str, default: pypi
+
+        Returns: tuple of (date, release, cves)
+        """
+        project = self.get_project(project_name, platform)
+        if project is None:
+            logger.error(f"Project {project_name} not found")
+            return None
+        # for each date in the range, get the most recent releases and check for vulnerabilities
+        results: list = {
+            'cwes': {},
+            'cves': {},
+            'releases': model_to_dict(project, recurse=False),
+            'timeline': []
+        }
+        results['releases'] = {}
+        dependencies = {}
+        cves, releases, timeline = results['cves'], results['releases'], results['timeline']
+        cwes = results['cwes']
+        vulnerabilities = self.get_indirect_vulnerabilities(project.name, platform=platform)
+        rels = self.get_releases(project.name, platform=platform, exclude_deprecated=exclude_deprecated)
+        logger.info(f"Generating timeline with {len(rels)} releases for {project.name}, got: {len(vulnerabilities.get('cves', {}))} vulnerabilities")
+        rel_timeline = self.get_release_timeline(project.name, start_date=start_date, end_date=end_date, step=step, platform=platform, exclude_deprecated=exclude_deprecated)
+        previous_deps = []
+        for date, rel in rel_timeline:
+            if rel is None:
+                logger.warning(f"No release found for {project.name} at {start_date}")
+                start_date = datetime_increment(start_date, step)
+                results['timeline'].append({
                     'date': date,
-                    'release': rel.version,
-                    'cves': [ cve['cve_id'] for cve in vulns if cve is not None ]
+                    'release': None,
+                    'cves': []
                 })
-                for cve in vulns:
-                    cve_id = cve.get('cve_id')
-                    if cve_id:
-                        cves[cve_id] = cve
-                releases[rel.version] = model_to_dict(rel, recurse=False)
-                bandit_report = rel.bandit_report.first()
-                if bandit_report:
-                    results['releases'][rel.version]['bandit_report'] = model_to_dict(bandit_report, recurse=False)
-                date = datetime_increment(date, step)
+                continue
+            logger.info(f"Got most recent release {rel.version} for {project.name} at {date}")
+            deps = self.get_dependencies(project.name, rel.version, platform)
+            if len(previous_deps) > 0 and deps is None:
+                # some versions do not have dependencies as they are unsupported releases
+                # assume the dependencies are the same as the previous release
+                deps = previous_deps
+            elif deps is not None:
+                previous_deps = deps
+            else:
+                logger.warning(f"No dependencies found for {project.name} {rel.version}")
+                deps = []
+            for dep in deps:
+                depname = dep.name
+                if depname not in dependencies:
+                    dependencies[depname] = self.get_vulnerabilities(depname, platform=dep.platform)
+            vulns = []
+            for vuln in vulnerabilities.get('cves', {}).values():
+                applicabilities = vuln.get('applicability', [])
+                is_applicable = db.is_applicable(rel, applicabilities)
+                if is_applicable:
+                    vulns.append(vuln)
+                    for cwe_id in vuln.get('cwes', []):
+                        if cwe_id not in cwes:
+                            cwes[cwe_id] = vulnerabilities.get('cwes', {}).get(cwe_id, {})
+            timeline.append({
+                'date': date,
+                'release': rel.version,
+                'cves': [ cve['cve_id'] for cve in vulns if cve is not None ]
+            })
+            for cve in vulns:
+                cve_id = cve.get('cve_id')
+                if cve_id:
+                    cves[cve_id] = cve
+            releases[rel.version] = model_to_dict(rel, recurse=False)
+            bandit_report = rel.bandit_report.first()
+            if bandit_report:
+                results['releases'][rel.version]['bandit_report'] = model_to_dict(bandit_report, recurse=False)
+            date = datetime_increment(date, step)
     
     def get_dependencies(self,
                          project: str | Project,
