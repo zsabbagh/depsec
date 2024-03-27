@@ -7,19 +7,25 @@ from loguru import logger
 from src.schemas.projects import *
 from typing import List
 
-def is_applicable(release: Release | str, applicability: dict | list) -> bool:
+def is_applicable(release: Release | str | dict, applicability: dict | list) -> bool:
     """
     Checks if a release is applicable to a specific version range.
 
-    release: The release object or the version string
+    release: Release object | version string | dictionary with version and published_at, at least version
     applicability: The version range or the list of version ranges
     """
     apps = applicability if type(applicability) == list else [applicability]
     applies = False
+    version = release.version if isinstance(release, Release) else (
+        semver.parse(release) if isinstance(release, str) else semver.parse(release['version']) if 'version' in release else None
+    )
+    release_date = release.published_at if isinstance(release, Release) else (
+        release['published_at'] if (type(release) == dict and 'published_at' in release) else None
+    )
+    if version is None:
+        logger.error(f"Could not parse version from release type: {type(release).__name__}")
+        return False
     for app in apps:
-        version = release.version if isinstance(release, Release) else (
-            semver.parse(release) if isinstance(release, str) else release
-        )
         version_start = app.get('version_start')
         version_start = semver.parse(version_start.strip('.')) if version_start is not None else version_start
         version_end = app.get('version_end')
@@ -30,9 +36,10 @@ def is_applicable(release: Release | str, applicability: dict | list) -> bool:
             if version_in_range(version, version_start, version_end, exclude_start, exclude_end):
                 applies = True
                 break
+        if release_date is None:
+            continue
         start_date = app.get('start_date')
         end_date = app.get('end_date')
-        release_date = release.published_at
         if datetime_in_range(release_date, start_date, end_date, exclude_start, exclude_end):
             applies = True
             break

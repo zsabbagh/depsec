@@ -93,7 +93,7 @@
             "vendor": "jaraco",
             "repo": {
                 "url": "github.com/jaraco/zipp",
-                "includes": ["src/"]
+                "includes": ["src/", "zipp.py"]
             }
         }
     }

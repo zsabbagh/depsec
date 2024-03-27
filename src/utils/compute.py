@@ -33,18 +33,25 @@ def patch_lag(data: dict, entry: dict, *args, format='days', start: str = 'relea
     """
     Asserts that the data has 'cves' and 'releases' keys.
     """
-    releases = entry.get('release', {})
+    releases = entry.get('release', [])
     releases = releases if type(releases) == list else [releases]
     cves = data.get('cves', {})
     entry_cves = entry.get('cves', {})
     values = []
     for rel in releases:
-        rel_published_at = data.get('releases', {}).get(rel, {}).get('published_at')
-        for cve in entry_cves:
-            cve = cves.get(cve)
+        release = data.get('releases', {}).get(rel)
+        if type(release) != dict:
+            continue
+        rel_published_at = release.get('published_at')
+        if not rel_published_at:
+            continue
+        for cve_id in entry_cves:
+            cve = cves.get(cve_id)
+            if type(cve) == str:
+                continue
             apps = cve.get('applicability', [])
             for app in apps:
-                if db.is_applicable(rel, app):
+                if db.is_applicable(release, app):
                     patched_at = app.get('patched_at')
                     start = rel_published_at if start == 'release' else cve.get('published_at')
                     if patched_at and start:
@@ -270,7 +277,7 @@ def timeline_kpis(data: dict, *kpis: str):
                     results[k]['values'].append(values)
                     continue
                 except Exception as e:
-                    logger.error(f"Could not compute KPI '{k}': {e}")
+                    logger.error(f"Could not compute returns_values KPI '{k}': {e}")
                     continue
             match element_name:
                 case 'cve':
