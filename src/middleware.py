@@ -262,7 +262,11 @@ class Middleware:
         before_date = strint_to_date(before)
         after_date = strint_to_date(after)
         for release in project.releases:
-            version = semver.parse(release.version)
+            try:
+                version = semver.parse(release.version)
+            except Exception as e:
+                logger.error(f"Error parsing version {release.version} for {project_name}: {e}")
+                continue
             if before_date is not None and release.published_at > before_date:
                 continue
             if after_date is not None and release.published_at < after_date:
@@ -566,6 +570,9 @@ class Middleware:
         }
         cves, cwes, releases = results['cves'], results['cwes'], results['releases']
         dependencies = self.get_dependencies(project_name, version, platform)
+        if dependencies is None:
+            logger.error(f"Dependencies not found for {project_name}")
+            return results
         for dep in dependencies:
             logger.info(f"Getting vulnerabilities for {dep.name}")
             depname = dep.name
@@ -680,7 +687,8 @@ class Middleware:
                                                 end_date: str = None,
                                                 step: str = 'y',
                                                 platform: str="pypi",
-                                                exclude_deprecated: bool = False) -> List[tuple]:
+                                                exclude_deprecated: bool = False,
+                                                force: bool = False) -> List[tuple]:
         """
         Returns a list of vulnerabilities for a project in a specific time range.
         For each date, the most recent release is used to check for vulnerabilities.
@@ -721,7 +729,7 @@ class Middleware:
                 })
                 continue
             logger.info(f"Got most recent release {rel.version} for {project.name} at {date}")
-            deps = self.get_dependencies(project.name, rel.version, platform)
+            deps = self.get_dependencies(project.name, rel.version, platform, force=force)
             if len(previous_deps) > 0 and deps is None:
                 # some versions do not have dependencies as they are unsupported releases
                 # assume the dependencies are the same as the previous release
@@ -743,7 +751,7 @@ class Middleware:
                     dep_vulns[depname] = vulns if vulns is not None else {}
                 # process each existing vulnerability
                 requirements = dep.requirements
-                dep_release = mw.get_release(depname, platform=dep.platform, before=date, requirements=requirements)
+                dep_release = self.get_release(depname, platform=dep.platform, before=date, requirements=requirements)
                 if dep_release is None:
                     logger.warning(f"No release found for {depname} at {date}")
                     continue
@@ -794,28 +802,29 @@ class Middleware:
         project = self.get_project(project_name)
         if project is None:
             return None
-        elif project.dependencies == 0 and not force:
-            logger.info(f"No dependencies found for {project_name}")
-            return None
         project_name = project.name
         # Get the release
         version = version if version else project.latest_release
         # Get the release
-        release = Release.get_or_none((
-            (Release.project == project) &
-            (Release.version == version)
-        ))
+        release = Release.get_or_none(
+            Release.project == project,
+            Release.version == version
+        )
         if release is None:
             logger.error(f"Release '{version}' not found for {project_name}")
             return None
-        dependencies = [ dep for dep in release.dependencies ]
-        if len(dependencies) > 0 and not force:
-            # Found dependencies in the database
-            logger.debug(f"Found {len(dependencies)} dependencies for {project_name} {version}")
-            return dependencies
-        elif force:
+        if not force:
+            if release.dependency_count == 0:
+                logger.debug(f"No dependencies found for {project_name} {version}")
+                return None
+            elif release.dependency_count is not None:
+                dependencies = [ dep for dep in release.dependencies ]
+                # Found dependencies in the database
+                logger.debug(f"Found {len(dependencies)} dependencies for {project_name} {version}")
+                return dependencies
+        else:
             # Delete the dependencies
-            for dep in dependencies:
+            for dep in release.dependencies:
                 dep.delete_instance()
         # No dependencies in database, query the API
         logger.debug(f"Querying libraries.io for dependencies of {project_name} {version}")
@@ -856,8 +865,6 @@ class Middleware:
             metadata[nname]['depth'] = depth
         results = []
         # Save the dependencies
-        project.dependencies = len(dependencies)
-        project.save()
         for node in nodes:
             relation = node.get('relation', '')
             if relation == 'SELF':
@@ -888,8 +895,8 @@ class Middleware:
             )
             dep_instance.save()
             results.append(dep_instance)
-        project.dependencies = len(results)
-        project.save()
+        release.dependency_count = len(results)
+        release.save()
         return results
 
 if __name__ == "__main__":

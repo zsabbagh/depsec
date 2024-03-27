@@ -38,6 +38,7 @@ parser.add_argument('--kpis', nargs='+', help='The key performance indicators to
 parser.add_argument('--debug', help='The debug level of the logger', default='INFO')
 parser.add_argument('--show', help='Show the plots', action='store_true')
 parser.add_argument('--dependencies', help='Generate plots on dependencies as well', action='store_true')
+parser.add_argument('--force', help='Force reload of dependencies', action='store_true')
 
 args = parser.parse_args()
 
@@ -135,7 +136,7 @@ plots_dir = output_dir / 'plots'
 json_dir.mkdir(exist_ok=True)
 plots_dir.mkdir(exist_ok=True)
 
-def plot_timelines(timelines: dict):
+def plot_timelines(timelines: dict, title_prefix: str = ''):
     """
     Expects a dictionary with the following structure:
 
@@ -153,11 +154,12 @@ def plot_timelines(timelines: dict):
     """
     # the scores to plot
     figures = {}
+    title_prefix = f"{title_prefix.strip()} "
     for kpi in args.kpis:
         fig, ax = plt.subplots()
         title = compute.KPIS.get(kpi).get('title')
         y_label = compute.KPIS.get(kpi).get('y_label')
-        ax.set_title(title)
+        ax.set_title(f"{title_prefix}{title}")
         ax.set_ylabel(y_label)
         figures[kpi] = (fig, ax)
     max_values = {}
@@ -290,37 +292,16 @@ if __name__ == '__main__':
         timeline_entries = {}
         # TODO: get the dependencies for each project and plot the timeline
         for project in timelines:
-            data = timelines.get(project)
             platform, project = get_platform(project)
             # get timeline for each project
-            if data is None:
-                logger.error(f"Could not find timeline for {project}")
-                continue
-            releases = data.get('releases')
-            timeline = data.get('timeline')
-            # TODO:
-            # 1) 1 release per dependency, which accounts for the release date
-            #    Pick the one that is closest to the release date and 
-            #    satisfies the constraint
-            # 2) Each applicability should have 'project': 'project_name' as a key to identify the project
-            # 3) Each release ID should 
-            for entry in timeline:
-                rel = releases.get(entry.get('release'))
-                if rel is None:
-                    continue
-                version = rel.get('version')
-                dependencies = mw.get_dependencies(project, version, platform=platform)
-                if dependencies is None:
-                    logger.error(f"Could not find dependencies for {project} {version}")
-                    continue
-                continue
-                for dep in rel.get('dependencies', []):
-                    platform, project = get_platform(dep)
-                    if dependency_timelines.get(project) is None:
-                        dependency_timelines[project] = {}
-                    if dependency_timelines[project].get('timeline') is None:
-                        dependency_timelines[project]['timeline'] = []
-                    dependency_timelines[project]['timeline'].append(entry)
+            logger.info(f"Getting dependencies for {project} on {platform}...")
+            indirect_timelines = mw.get_indirect_vulnerabilities_timeline(project,
+                                                                          args.start,
+                                                                          step=args.step,
+                                                                          platform=platform)
+            dependency_timelines[f"{platform}:{project}"] = indirect_timelines
+        plot_timelines(dependency_timelines, "Dependency")
+        try_json_dump(dependency_timelines, json_dir / 'dependency_timelines.json')
 
     if args.show:
         plt.show()

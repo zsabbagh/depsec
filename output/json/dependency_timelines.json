@@ -1,0 +1,5855 @@
+{
+    "pypi:django": {
+        "cwes": {},
+        "cves": {},
+        "releases": {
+            "pytz:2017.2": {
+                "id": 1329,
+                "project": 16,
+                "published_at": "2017-03-30 08:35:56",
+                "version": "2017.2",
+                "updated_at": "2024-03-27 11:38:13",
+                "counted_functions": null,
+                "counted_files": null,
+                "nloc_total": null,
+                "nloc_average": null,
+                "ccn_average": null,
+                "commit_at": null,
+                "commit_hash": null,
+                "includes": null,
+                "excludes": null,
+                "dependency_count": null
+            },
+            "pytz:2017.3": {
+                "id": 1330,
+                "project": 16,
+                "published_at": "2017-10-30 14:10:09",
+                "version": "2017.3",
+                "updated_at": "2024-03-27 11:38:13",
+                "counted_functions": null,
+                "counted_files": null,
+                "nloc_total": null,
+                "nloc_average": null,
+                "ccn_average": null,
+                "commit_at": null,
+                "commit_hash": null,
+                "includes": null,
+                "excludes": null,
+                "dependency_count": null
+            },
+            "pytz:2018.3": {
+                "id": 1331,
+                "project": 16,
+                "published_at": "2018-02-09 07:58:26",
+                "version": "2018.3",
+                "updated_at": "2024-03-27 11:38:13",
+                "counted_functions": null,
+                "counted_files": null,
+                "nloc_total": null,
+                "nloc_average": null,
+                "ccn_average": null,
+                "commit_at": null,
+                "commit_hash": null,
+                "includes": null,
+                "excludes": null,
+                "dependency_count": null
+            },
+            "pytz:2018.4": {
+                "id": 1332,
+                "project": 16,
+                "published_at": "2018-04-10 10:48:11",
+                "version": "2018.4",
+                "updated_at": "2024-03-27 11:38:13",
+                "counted_functions": null,
+                "counted_files": null,
+                "nloc_total": null,
+                "nloc_average": null,
+                "ccn_average": null,
+                "commit_at": null,
+                "commit_hash": null,
+                "includes": null,
+                "excludes": null,
+                "dependency_count": null
+            },
+            "pytz:2018.5": {
+                "id": 1333,
+                "project": 16,
+                "published_at": "2018-06-29 06:53:04",
+                "version": "2018.5",
+                "updated_at": "2024-03-27 11:38:13",
+                "counted_functions": null,
+                "counted_files": null,
+                "nloc_total": null,
+                "nloc_average": null,
+                "ccn_average": null,
+                "commit_at": null,
+                "commit_hash": null,
+                "includes": null,
+                "excludes": null,
+                "dependency_count": null
+            },
+            "pytz:2018.7": {
+                "id": 1335,
+                "project": 16,
+                "published_at": "2018-10-29 10:11:56",
+                "version": "2018.7",
+                "updated_at": "2024-03-27 11:38:13",
+                "counted_functions": null,
+                "counted_files": null,
+                "nloc_total": null,
+                "nloc_average": null,
+                "ccn_average": null,
+                "commit_at": null,
+                "commit_hash": null,
+                "includes": null,
+                "excludes": null,
+                "dependency_count": null
+            },
+            "pytz:2018.9": {
+                "id": 1336,
+                "project": 16,
+                "published_at": "2019-01-07 07:54:53",
+                "version": "2018.9",
+                "updated_at": "2024-03-27 11:38:13",
+                "counted_functions": null,
+                "counted_files": null,
+                "nloc_total": null,
+                "nloc_average": null,
+                "ccn_average": null,
+                "commit_at": null,
+                "commit_hash": null,
+                "includes": null,
+                "excludes": null,
+                "dependency_count": null
+            },
+            "pytz:2019.1": {
+                "id": 1337,
+                "project": 16,
+                "published_at": "2019-04-10 02:12:32",
+                "version": "2019.1",
+                "updated_at": "2024-03-27 11:38:13",
+                "counted_functions": null,
+                "counted_files": null,
+                "nloc_total": null,
+                "nloc_average": null,
+                "ccn_average": null,
+                "commit_at": null,
+                "commit_hash": null,
+                "includes": null,
+                "excludes": null,
+                "dependency_count": null
+            },
+            "pytz:2019.2": {
+                "id": 1338,
+                "project": 16,
+                "published_at": "2019-07-31 16:29:10",
+                "version": "2019.2",
+                "updated_at": "2024-03-27 11:38:13",
+                "counted_functions": null,
+                "counted_files": null,
+                "nloc_total": null,
+                "nloc_average": null,
+                "ccn_average": null,
+                "commit_at": null,
+                "commit_hash": null,
+                "includes": null,
+                "excludes": null,
+                "dependency_count": null
+            },
+            "pytz:2019.3": {
+                "id": 1339,
+                "project": 16,
+                "published_at": "2019-10-07 03:18:16",
+                "version": "2019.3",
+                "updated_at": "2024-03-27 11:38:13",
+                "counted_functions": null,
+                "counted_files": null,
+                "nloc_total": null,
+                "nloc_average": null,
+                "ccn_average": null,
+                "commit_at": null,
+                "commit_hash": null,
+                "includes": null,
+                "excludes": null,
+                "dependency_count": null
+            },
+            "asgiref:3.2.3": {
+                "id": 770,
+                "project": 6,
+                "published_at": "2019-10-23 19:24:16",
+                "version": "3.2.3",
+                "updated_at": "2024-03-27 10:13:11",
+                "counted_functions": null,
+                "counted_files": null,
+                "nloc_total": null,
+                "nloc_average": null,
+                "ccn_average": null,
+                "commit_at": null,
+                "commit_hash": null,
+                "includes": null,
+                "excludes": null,
+                "dependency_count": null
+            },
+            "asgiref:3.2.7": {
+                "id": 774,
+                "project": 6,
+                "published_at": "2020-03-24 17:57:20",
+                "version": "3.2.7",
+                "updated_at": "2024-03-27 10:13:11",
+                "counted_functions": null,
+                "counted_files": null,
+                "nloc_total": null,
+                "nloc_average": null,
+                "ccn_average": null,
+                "commit_at": null,
+                "commit_hash": null,
+                "includes": null,
+                "excludes": null,
+                "dependency_count": null
+            },
+            "pytz:2020.1": {
+                "id": 1340,
+                "project": 16,
+                "published_at": "2020-04-28 08:28:21",
+                "version": "2020.1",
+                "updated_at": "2024-03-27 11:38:13",
+                "counted_functions": null,
+                "counted_files": null,
+                "nloc_total": null,
+                "nloc_average": null,
+                "ccn_average": null,
+                "commit_at": null,
+                "commit_hash": null,
+                "includes": null,
+                "excludes": null,
+                "dependency_count": null
+            },
+            "asgiref:3.2.10": {
+                "id": 768,
+                "project": 6,
+                "published_at": "2020-06-18 18:49:07",
+                "version": "3.2.10",
+                "updated_at": "2024-03-27 10:13:11",
+                "counted_functions": null,
+                "counted_files": null,
+                "nloc_total": null,
+                "nloc_average": null,
+                "ccn_average": null,
+                "commit_at": null,
+                "commit_hash": null,
+                "includes": null,
+                "excludes": null,
+                "dependency_count": null
+            },
+            "asgiref:3.3.0": {
+                "id": 777,
+                "project": 6,
+                "published_at": "2020-10-09 16:44:30",
+                "version": "3.3.0",
+                "updated_at": "2024-03-27 10:13:11",
+                "counted_functions": null,
+                "counted_files": null,
+                "nloc_total": null,
+                "nloc_average": null,
+                "ccn_average": null,
+                "commit_at": null,
+                "commit_hash": null,
+                "includes": null,
+                "excludes": null,
+                "dependency_count": null
+            },
+            "asgiref:3.3.1": {
+                "id": 778,
+                "project": 6,
+                "published_at": "2020-11-09 15:58:48",
+                "version": "3.3.1",
+                "updated_at": "2024-03-27 10:13:11",
+                "counted_functions": null,
+                "counted_files": null,
+                "nloc_total": null,
+                "nloc_average": null,
+                "ccn_average": null,
+                "commit_at": null,
+                "commit_hash": null,
+                "includes": null,
+                "excludes": null,
+                "dependency_count": null
+            },
+            "pytz:2020.4": {
+                "id": 1341,
+                "project": 16,
+                "published_at": "2020-11-02 05:25:55",
+                "version": "2020.4",
+                "updated_at": "2024-03-27 11:38:13",
+                "counted_functions": null,
+                "counted_files": null,
+                "nloc_total": null,
+                "nloc_average": null,
+                "ccn_average": null,
+                "commit_at": null,
+                "commit_hash": null,
+                "includes": null,
+                "excludes": null,
+                "dependency_count": null
+            },
+            "pytz:2020.5": {
+                "id": 1342,
+                "project": 16,
+                "published_at": "2020-12-24 20:58:04",
+                "version": "2020.5",
+                "updated_at": "2024-03-27 11:38:13",
+                "counted_functions": null,
+                "counted_files": null,
+                "nloc_total": null,
+                "nloc_average": null,
+                "ccn_average": null,
+                "commit_at": null,
+                "commit_hash": null,
+                "includes": null,
+                "excludes": null,
+                "dependency_count": null
+            },
+            "pytz:2021.1": {
+                "id": 1343,
+                "project": 16,
+                "published_at": "2021-02-01 08:07:15",
+                "version": "2021.1",
+                "updated_at": "2024-03-27 11:38:13",
+                "counted_functions": null,
+                "counted_files": null,
+                "nloc_total": null,
+                "nloc_average": null,
+                "ccn_average": null,
+                "commit_at": null,
+                "commit_hash": null,
+                "includes": null,
+                "excludes": null,
+                "dependency_count": null
+            },
+            "asgiref:3.3.4": {
+                "id": 781,
+                "project": 6,
+                "published_at": "2021-04-06 18:40:04",
+                "version": "3.3.4",
+                "updated_at": "2024-03-27 10:13:11",
+                "counted_functions": null,
+                "counted_files": null,
+                "nloc_total": null,
+                "nloc_average": null,
+                "ccn_average": null,
+                "commit_at": null,
+                "commit_hash": null,
+                "includes": null,
+                "excludes": null,
+                "dependency_count": null
+            },
+            "asgiref:3.4.0": {
+                "id": 782,
+                "project": 6,
+                "published_at": "2021-06-27 20:35:30",
+                "version": "3.4.0",
+                "updated_at": "2024-03-27 10:13:11",
+                "counted_functions": null,
+                "counted_files": null,
+                "nloc_total": null,
+                "nloc_average": null,
+                "ccn_average": null,
+                "commit_at": null,
+                "commit_hash": null,
+                "includes": null,
+                "excludes": null,
+                "dependency_count": null
+            },
+            "asgiref:3.4.1": {
+                "id": 783,
+                "project": 6,
+                "published_at": "2021-07-01 16:17:40",
+                "version": "3.4.1",
+                "updated_at": "2024-03-27 10:13:11",
+                "counted_functions": null,
+                "counted_files": null,
+                "nloc_total": null,
+                "nloc_average": null,
+                "ccn_average": null,
+                "commit_at": null,
+                "commit_hash": null,
+                "includes": null,
+                "excludes": null,
+                "dependency_count": null
+            },
+            "typing-extensions:4.0.0": {
+                "id": 837,
+                "project": 8,
+                "published_at": "2021-11-14 22:11:20",
+                "version": "4.0.0",
+                "updated_at": "2024-03-27 10:14:24",
+                "counted_functions": null,
+                "counted_files": null,
+                "nloc_total": null,
+                "nloc_average": null,
+                "ccn_average": null,
+                "commit_at": null,
+                "commit_hash": null,
+                "includes": null,
+                "excludes": null,
+                "dependency_count": null
+            },
+            "typing-extensions:4.0.1": {
+                "id": 838,
+                "project": 8,
+                "published_at": "2021-12-01 01:45:37",
+                "version": "4.0.1",
+                "updated_at": "2024-03-27 10:14:24",
+                "counted_functions": null,
+                "counted_files": null,
+                "nloc_total": null,
+                "nloc_average": null,
+                "ccn_average": null,
+                "commit_at": null,
+                "commit_hash": null,
+                "includes": null,
+                "excludes": null,
+                "dependency_count": null
+            },
+            "asgiref:3.5.0": {
+                "id": 784,
+                "project": 6,
+                "published_at": "2022-01-22 16:58:09",
+                "version": "3.5.0",
+                "updated_at": "2024-03-27 10:13:11",
+                "counted_functions": null,
+                "counted_files": null,
+                "nloc_total": null,
+                "nloc_average": null,
+                "ccn_average": null,
+                "commit_at": null,
+                "commit_hash": null,
+                "includes": null,
+                "excludes": null,
+                "dependency_count": null
+            },
+            "typing-extensions:4.1.1": {
+                "id": 842,
+                "project": 8,
+                "published_at": "2022-02-14 03:19:55",
+                "version": "4.1.1",
+                "updated_at": "2024-03-27 10:14:24",
+                "counted_functions": null,
+                "counted_files": null,
+                "nloc_total": null,
+                "nloc_average": null,
+                "ccn_average": null,
+                "commit_at": null,
+                "commit_hash": null,
+                "includes": null,
+                "excludes": null,
+                "dependency_count": null
+            },
+            "asgiref:3.5.1": {
+                "id": 785,
+                "project": 6,
+                "published_at": "2022-04-30 21:20:01",
+                "version": "3.5.1",
+                "updated_at": "2024-03-27 10:13:11",
+                "counted_functions": null,
+                "counted_files": null,
+                "nloc_total": null,
+                "nloc_average": null,
+                "ccn_average": null,
+                "commit_at": null,
+                "commit_hash": null,
+                "includes": null,
+                "excludes": null,
+                "dependency_count": null
+            },
+            "typing-extensions:4.2.0": {
+                "id": 844,
+                "project": 8,
+                "published_at": "2022-04-17 21:27:21",
+                "version": "4.2.0",
+                "updated_at": "2024-03-27 10:14:24",
+                "counted_functions": null,
+                "counted_files": null,
+                "nloc_total": null,
+                "nloc_average": null,
+                "ccn_average": null,
+                "commit_at": null,
+                "commit_hash": null,
+                "includes": null,
+                "excludes": null,
+                "dependency_count": null
+            },
+            "asgiref:3.5.2": {
+                "id": 786,
+                "project": 6,
+                "published_at": "2022-05-16 20:39:27",
+                "version": "3.5.2",
+                "updated_at": "2024-03-27 10:13:11",
+                "counted_functions": null,
+                "counted_files": null,
+                "nloc_total": null,
+                "nloc_average": null,
+                "ccn_average": null,
+                "commit_at": null,
+                "commit_hash": null,
+                "includes": null,
+                "excludes": null,
+                "dependency_count": null
+            },
+            "typing-extensions:4.3.0": {
+                "id": 845,
+                "project": 8,
+                "published_at": "2022-07-01 14:56:11",
+                "version": "4.3.0",
+                "updated_at": "2024-03-27 10:14:24",
+                "counted_functions": null,
+                "counted_files": null,
+                "nloc_total": null,
+                "nloc_average": null,
+                "ccn_average": null,
+                "commit_at": null,
+                "commit_hash": null,
+                "includes": null,
+                "excludes": null,
+                "dependency_count": null
+            },
+            "typing-extensions:4.4.0": {
+                "id": 846,
+                "project": 8,
+                "published_at": "2022-10-06 22:41:40",
+                "version": "4.4.0",
+                "updated_at": "2024-03-27 10:14:24",
+                "counted_functions": null,
+                "counted_files": null,
+                "nloc_total": null,
+                "nloc_average": null,
+                "ccn_average": null,
+                "commit_at": null,
+                "commit_hash": null,
+                "includes": null,
+                "excludes": null,
+                "dependency_count": null
+            },
+            "asgiref:3.6.0": {
+                "id": 787,
+                "project": 6,
+                "published_at": "2022-12-20 09:06:56",
+                "version": "3.6.0",
+                "updated_at": "2024-03-27 10:13:11",
+                "counted_functions": null,
+                "counted_files": null,
+                "nloc_total": null,
+                "nloc_average": null,
+                "ccn_average": null,
+                "commit_at": null,
+                "commit_hash": null,
+                "includes": null,
+                "excludes": null,
+                "dependency_count": null
+            },
+            "typing-extensions:4.5.0": {
+                "id": 847,
+                "project": 8,
+                "published_at": "2023-02-15 00:19:36",
+                "version": "4.5.0",
+                "updated_at": "2024-03-27 10:14:24",
+                "counted_functions": null,
+                "counted_files": null,
+                "nloc_total": null,
+                "nloc_average": null,
+                "ccn_average": null,
+                "commit_at": null,
+                "commit_hash": null,
+                "includes": null,
+                "excludes": null,
+                "dependency_count": null
+            },
+            "asgiref:3.7.2": {
+                "id": 790,
+                "project": 6,
+                "published_at": "2023-05-27 17:22:06",
+                "version": "3.7.2",
+                "updated_at": "2024-03-27 10:13:11",
+                "counted_functions": null,
+                "counted_files": null,
+                "nloc_total": null,
+                "nloc_average": null,
+                "ccn_average": null,
+                "commit_at": null,
+                "commit_hash": null,
+                "includes": null,
+                "excludes": null,
+                "dependency_count": null
+            },
+            "typing-extensions:4.6.2": {
+                "id": 850,
+                "project": 8,
+                "published_at": "2023-05-25 13:21:48",
+                "version": "4.6.2",
+                "updated_at": "2024-03-27 10:14:24",
+                "counted_functions": null,
+                "counted_files": null,
+                "nloc_total": null,
+                "nloc_average": null,
+                "ccn_average": null,
+                "commit_at": null,
+                "commit_hash": null,
+                "includes": null,
+                "excludes": null,
+                "dependency_count": null
+            },
+            "typing-extensions:4.7.0": {
+                "id": 852,
+                "project": 8,
+                "published_at": "2023-06-28 21:02:07",
+                "version": "4.7.0",
+                "updated_at": "2024-03-27 10:14:24",
+                "counted_functions": null,
+                "counted_files": null,
+                "nloc_total": null,
+                "nloc_average": null,
+                "ccn_average": null,
+                "commit_at": null,
+                "commit_hash": null,
+                "includes": null,
+                "excludes": null,
+                "dependency_count": null
+            },
+            "typing-extensions:4.7.1": {
+                "id": 854,
+                "project": 8,
+                "published_at": "2023-07-02 14:23:25",
+                "version": "4.7.1",
+                "updated_at": "2024-03-27 10:14:24",
+                "counted_functions": null,
+                "counted_files": null,
+                "nloc_total": null,
+                "nloc_average": null,
+                "ccn_average": null,
+                "commit_at": null,
+                "commit_hash": null,
+                "includes": null,
+                "excludes": null,
+                "dependency_count": null
+            },
+            "typing-extensions:4.8.0": {
+                "id": 855,
+                "project": 8,
+                "published_at": "2023-09-18 04:01:55",
+                "version": "4.8.0",
+                "updated_at": "2024-03-27 10:14:24",
+                "counted_functions": null,
+                "counted_files": null,
+                "nloc_total": null,
+                "nloc_average": null,
+                "ccn_average": null,
+                "commit_at": null,
+                "commit_hash": null,
+                "includes": null,
+                "excludes": null,
+                "dependency_count": null
+            },
+            "typing-extensions:4.9.0rc1": {
+                "id": 858,
+                "project": 8,
+                "published_at": "2023-11-29 18:15:58",
+                "version": "4.9.0rc1",
+                "updated_at": "2024-03-27 10:14:24",
+                "counted_functions": null,
+                "counted_files": null,
+                "nloc_total": null,
+                "nloc_average": null,
+                "ccn_average": null,
+                "commit_at": null,
+                "commit_hash": null,
+                "includes": null,
+                "excludes": null,
+                "dependency_count": null
+            },
+            "typing-extensions:4.9.0": {
+                "id": 857,
+                "project": 8,
+                "published_at": "2023-12-10 01:14:20",
+                "version": "4.9.0",
+                "updated_at": "2024-03-27 10:14:24",
+                "counted_functions": null,
+                "counted_files": null,
+                "nloc_total": null,
+                "nloc_average": null,
+                "ccn_average": null,
+                "commit_at": null,
+                "commit_hash": null,
+                "includes": null,
+                "excludes": null,
+                "dependency_count": null
+            },
+            "typing-extensions:4.10.0": {
+                "id": 840,
+                "project": 8,
+                "published_at": "2024-02-25 22:12:47",
+                "version": "4.10.0",
+                "updated_at": "2024-03-27 10:14:24",
+                "counted_functions": null,
+                "counted_files": null,
+                "nloc_total": null,
+                "nloc_average": null,
+                "ccn_average": null,
+                "commit_at": null,
+                "commit_hash": null,
+                "includes": null,
+                "excludes": null,
+                "dependency_count": null
+            }
+        },
+        "timeline": [
+            {
+                "date": "2012-01-01 00:00:00",
+                "release": [],
+                "cves": []
+            },
+            {
+                "date": "2012-02-01 00:00:00",
+                "release": [],
+                "cves": []
+            },
+            {
+                "date": "2012-03-01 00:00:00",
+                "release": [],
+                "cves": []
+            },
+            {
+                "date": "2012-04-01 00:00:00",
+                "release": [],
+                "cves": []
+            },
+            {
+                "date": "2012-05-01 00:00:00",
+                "release": [],
+                "cves": []
+            },
+            {
+                "date": "2012-06-01 00:00:00",
+                "release": [],
+                "cves": []
+            },
+            {
+                "date": "2012-07-01 00:00:00",
+                "release": [],
+                "cves": []
+            },
+            {
+                "date": "2012-08-01 00:00:00",
+                "release": [],
+                "cves": []
+            },
+            {
+                "date": "2012-09-01 00:00:00",
+                "release": [],
+                "cves": []
+            },
+            {
+                "date": "2012-10-01 00:00:00",
+                "release": [],
+                "cves": []
+            },
+            {
+                "date": "2012-11-01 00:00:00",
+                "release": [],
+                "cves": []
+            },
+            {
+                "date": "2012-12-01 00:00:00",
+                "release": [],
+                "cves": []
+            },
+            {
+                "date": "2013-01-01 00:00:00",
+                "release": [],
+                "cves": []
+            },
+            {
+                "date": "2013-02-01 00:00:00",
+                "release": [],
+                "cves": []
+            },
+            {
+                "date": "2013-03-01 00:00:00",
+                "release": [],
+                "cves": []
+            },
+            {
+                "date": "2013-04-01 00:00:00",
+                "release": [],
+                "cves": []
+            },
+            {
+                "date": "2013-05-01 00:00:00",
+                "release": [],
+                "cves": []
+            },
+            {
+                "date": "2013-06-01 00:00:00",
+                "release": [],
+                "cves": []
+            },
+            {
+                "date": "2013-07-01 00:00:00",
+                "release": [],
+                "cves": []
+            },
+            {
+                "date": "2013-08-01 00:00:00",
+                "release": [],
+                "cves": []
+            },
+            {
+                "date": "2013-09-01 00:00:00",
+                "release": [],
+                "cves": []
+            },
+            {
+                "date": "2013-10-01 00:00:00",
+                "release": [],
+                "cves": []
+            },
+            {
+                "date": "2013-11-01 00:00:00",
+                "release": [],
+                "cves": []
+            },
+            {
+                "date": "2013-12-01 00:00:00",
+                "release": [],
+                "cves": []
+            },
+            {
+                "date": "2014-01-01 00:00:00",
+                "release": [],
+                "cves": []
+            },
+            {
+                "date": "2014-02-01 00:00:00",
+                "release": [],
+                "cves": []
+            },
+            {
+                "date": "2014-03-01 00:00:00",
+                "release": [],
+                "cves": []
+            },
+            {
+                "date": "2014-04-01 00:00:00",
+                "release": [],
+                "cves": []
+            },
+            {
+                "date": "2014-05-01 00:00:00",
+                "release": [],
+                "cves": []
+            },
+            {
+                "date": "2014-06-01 00:00:00",
+                "release": [],
+                "cves": []
+            },
+            {
+                "date": "2014-07-01 00:00:00",
+                "release": [],
+                "cves": []
+            },
+            {
+                "date": "2014-08-01 00:00:00",
+                "release": [],
+                "cves": []
+            },
+            {
+                "date": "2014-09-01 00:00:00",
+                "release": [],
+                "cves": []
+            },
+            {
+                "date": "2014-10-01 00:00:00",
+                "release": [],
+                "cves": []
+            },
+            {
+                "date": "2014-11-01 00:00:00",
+                "release": [],
+                "cves": []
+            },
+            {
+                "date": "2014-12-01 00:00:00",
+                "release": [],
+                "cves": []
+            },
+            {
+                "date": "2015-01-01 00:00:00",
+                "release": [],
+                "cves": []
+            },
+            {
+                "date": "2015-02-01 00:00:00",
+                "release": [],
+                "cves": []
+            },
+            {
+                "date": "2015-03-01 00:00:00",
+                "release": [],
+                "cves": []
+            },
+            {
+                "date": "2015-04-01 00:00:00",
+                "release": [],
+                "cves": []
+            },
+            {
+                "date": "2015-05-01 00:00:00",
+                "release": [],
+                "cves": []
+            },
+            {
+                "date": "2015-06-01 00:00:00",
+                "release": [],
+                "cves": []
+            },
+            {
+                "date": "2015-07-01 00:00:00",
+                "release": [],
+                "cves": []
+            },
+            {
+                "date": "2015-08-01 00:00:00",
+                "release": [],
+                "cves": []
+            },
+            {
+                "date": "2015-09-01 00:00:00",
+                "release": [],
+                "cves": []
+            },
+            {
+                "date": "2015-10-01 00:00:00",
+                "release": [],
+                "cves": []
+            },
+            {
+                "date": "2015-11-01 00:00:00",
+                "release": [],
+                "cves": []
+            },
+            {
+                "date": "2015-12-01 00:00:00",
+                "release": [],
+                "cves": []
+            },
+            {
+                "date": "2016-01-01 00:00:00",
+                "release": [],
+                "cves": []
+            },
+            {
+                "date": "2016-02-01 00:00:00",
+                "release": [],
+                "cves": []
+            },
+            {
+                "date": "2016-03-01 00:00:00",
+                "release": [],
+                "cves": []
+            },
+            {
+                "date": "2016-04-01 00:00:00",
+                "release": [],
+                "cves": []
+            },
+            {
+                "date": "2016-05-01 00:00:00",
+                "release": [],
+                "cves": []
+            },
+            {
+                "date": "2016-06-01 00:00:00",
+                "release": [],
+                "cves": []
+            },
+            {
+                "date": "2016-07-01 00:00:00",
+                "release": [],
+                "cves": []
+            },
+            {
+                "date": "2016-08-01 00:00:00",
+                "release": [],
+                "cves": []
+            },
+            {
+                "date": "2016-09-01 00:00:00",
+                "release": [],
+                "cves": []
+            },
+            {
+                "date": "2016-10-01 00:00:00",
+                "release": [],
+                "cves": []
+            },
+            {
+                "date": "2016-11-01 00:00:00",
+                "release": [],
+                "cves": []
+            },
+            {
+                "date": "2016-12-01 00:00:00",
+                "release": [],
+                "cves": []
+            },
+            {
+                "date": "2017-01-01 00:00:00",
+                "release": [],
+                "cves": []
+            },
+            {
+                "date": "2017-02-01 00:00:00",
+                "release": [],
+                "cves": []
+            },
+            {
+                "date": "2017-03-01 00:00:00",
+                "release": [],
+                "cves": []
+            },
+            {
+                "date": "2017-04-01 00:00:00",
+                "release": [
+                    "pytz:2017.2"
+                ],
+                "cves": []
+            },
+            {
+                "date": "2017-05-01 00:00:00",
+                "release": [
+                    "pytz:2017.2"
+                ],
+                "cves": []
+            },
+            {
+                "date": "2017-06-01 00:00:00",
+                "release": [
+                    "pytz:2017.2"
+                ],
+                "cves": []
+            },
+            {
+                "date": "2017-07-01 00:00:00",
+                "release": [
+                    "pytz:2017.2"
+                ],
+                "cves": []
+            },
+            {
+                "date": "2017-08-01 00:00:00",
+                "release": [
+                    "pytz:2017.2"
+                ],
+                "cves": []
+            },
+            {
+                "date": "2017-09-01 00:00:00",
+                "release": [
+                    "pytz:2017.2"
+                ],
+                "cves": []
+            },
+            {
+                "date": "2017-10-01 00:00:00",
+                "release": [
+                    "pytz:2017.2"
+                ],
+                "cves": []
+            },
+            {
+                "date": "2017-11-01 00:00:00",
+                "release": [
+                    "pytz:2017.3"
+                ],
+                "cves": []
+            },
+            {
+                "date": "2017-12-01 00:00:00",
+                "release": [
+                    "pytz:2017.3"
+                ],
+                "cves": []
+            },
+            {
+                "date": "2018-01-01 00:00:00",
+                "release": [
+                    "pytz:2017.3"
+                ],
+                "cves": []
+            },
+            {
+                "date": "2018-02-01 00:00:00",
+                "release": [
+                    "pytz:2017.3"
+                ],
+                "cves": []
+            },
+            {
+                "date": "2018-03-01 00:00:00",
+                "release": [
+                    "pytz:2018.3"
+                ],
+                "cves": []
+            },
+            {
+                "date": "2018-04-01 00:00:00",
+                "release": [
+                    "pytz:2018.3"
+                ],
+                "cves": []
+            },
+            {
+                "date": "2018-05-01 00:00:00",
+                "release": [
+                    "pytz:2018.4"
+                ],
+                "cves": []
+            },
+            {
+                "date": "2018-06-01 00:00:00",
+                "release": [
+                    "pytz:2018.4"
+                ],
+                "cves": []
+            },
+            {
+                "date": "2018-07-01 00:00:00",
+                "release": [
+                    "pytz:2018.5"
+                ],
+                "cves": []
+            },
+            {
+                "date": "2018-08-01 00:00:00",
+                "release": [
+                    "pytz:2018.5"
+                ],
+                "cves": []
+            },
+            {
+                "date": "2018-09-01 00:00:00",
+                "release": [
+                    "pytz:2018.5"
+                ],
+                "cves": []
+            },
+            {
+                "date": "2018-10-01 00:00:00",
+                "release": [
+                    "pytz:2018.5"
+                ],
+                "cves": []
+            },
+            {
+                "date": "2018-11-01 00:00:00",
+                "release": [
+                    "pytz:2018.7"
+                ],
+                "cves": []
+            },
+            {
+                "date": "2018-12-01 00:00:00",
+                "release": [
+                    "pytz:2018.7"
+                ],
+                "cves": []
+            },
+            {
+                "date": "2019-01-01 00:00:00",
+                "release": [
+                    "pytz:2018.7"
+                ],
+                "cves": []
+            },
+            {
+                "date": "2019-02-01 00:00:00",
+                "release": [
+                    "pytz:2018.9"
+                ],
+                "cves": []
+            },
+            {
+                "date": "2019-03-01 00:00:00",
+                "release": [
+                    "pytz:2018.9"
+                ],
+                "cves": []
+            },
+            {
+                "date": "2019-04-01 00:00:00",
+                "release": [
+                    "pytz:2018.9"
+                ],
+                "cves": []
+            },
+            {
+                "date": "2019-05-01 00:00:00",
+                "release": [
+                    "pytz:2019.1"
+                ],
+                "cves": []
+            },
+            {
+                "date": "2019-06-01 00:00:00",
+                "release": [
+                    "pytz:2019.1"
+                ],
+                "cves": []
+            },
+            {
+                "date": "2019-07-01 00:00:00",
+                "release": [
+                    "pytz:2019.1"
+                ],
+                "cves": []
+            },
+            {
+                "date": "2019-08-01 00:00:00",
+                "release": [
+                    "pytz:2019.2"
+                ],
+                "cves": []
+            },
+            {
+                "date": "2019-09-01 00:00:00",
+                "release": [
+                    "pytz:2019.2"
+                ],
+                "cves": []
+            },
+            {
+                "date": "2019-10-01 00:00:00",
+                "release": [
+                    "pytz:2019.2"
+                ],
+                "cves": []
+            },
+            {
+                "date": "2019-11-01 00:00:00",
+                "release": [
+                    "pytz:2019.3"
+                ],
+                "cves": []
+            },
+            {
+                "date": "2019-12-01 00:00:00",
+                "release": [
+                    "asgiref:3.2.3",
+                    "pytz:2019.3"
+                ],
+                "cves": []
+            },
+            {
+                "date": "2020-01-01 00:00:00",
+                "release": [
+                    "asgiref:3.2.3",
+                    "pytz:2019.3"
+                ],
+                "cves": []
+            },
+            {
+                "date": "2020-02-01 00:00:00",
+                "release": [
+                    "asgiref:3.2.3",
+                    "pytz:2019.3"
+                ],
+                "cves": []
+            },
+            {
+                "date": "2020-03-01 00:00:00",
+                "release": [
+                    "asgiref:3.2.3",
+                    "pytz:2019.3"
+                ],
+                "cves": []
+            },
+            {
+                "date": "2020-04-01 00:00:00",
+                "release": [
+                    "asgiref:3.2.7",
+                    "pytz:2019.3"
+                ],
+                "cves": []
+            },
+            {
+                "date": "2020-05-01 00:00:00",
+                "release": [
+                    "asgiref:3.2.7",
+                    "pytz:2020.1"
+                ],
+                "cves": []
+            },
+            {
+                "date": "2020-06-01 00:00:00",
+                "release": [
+                    "asgiref:3.2.7",
+                    "pytz:2020.1"
+                ],
+                "cves": []
+            },
+            {
+                "date": "2020-07-01 00:00:00",
+                "release": [
+                    "asgiref:3.2.10",
+                    "pytz:2020.1"
+                ],
+                "cves": []
+            },
+            {
+                "date": "2020-08-01 00:00:00",
+                "release": [
+                    "asgiref:3.2.10",
+                    "pytz:2020.1"
+                ],
+                "cves": []
+            },
+            {
+                "date": "2020-09-01 00:00:00",
+                "release": [
+                    "asgiref:3.2.10",
+                    "pytz:2020.1"
+                ],
+                "cves": []
+            },
+            {
+                "date": "2020-10-01 00:00:00",
+                "release": [
+                    "asgiref:3.2.10",
+                    "pytz:2020.1"
+                ],
+                "cves": []
+            },
+            {
+                "date": "2020-11-01 00:00:00",
+                "release": [
+                    "asgiref:3.3.0",
+                    "pytz:2020.1"
+                ],
+                "cves": []
+            },
+            {
+                "date": "2020-12-01 00:00:00",
+                "release": [
+                    "asgiref:3.3.1",
+                    "pytz:2020.4"
+                ],
+                "cves": []
+            },
+            {
+                "date": "2021-01-01 00:00:00",
+                "release": [
+                    "asgiref:3.3.1",
+                    "pytz:2020.5"
+                ],
+                "cves": []
+            },
+            {
+                "date": "2021-02-01 00:00:00",
+                "release": [
+                    "asgiref:3.3.1",
+                    "pytz:2020.5"
+                ],
+                "cves": []
+            },
+            {
+                "date": "2021-03-01 00:00:00",
+                "release": [
+                    "asgiref:3.3.1",
+                    "pytz:2021.1"
+                ],
+                "cves": []
+            },
+            {
+                "date": "2021-04-01 00:00:00",
+                "release": [
+                    "asgiref:3.3.1",
+                    "pytz:2021.1"
+                ],
+                "cves": []
+            },
+            {
+                "date": "2021-05-01 00:00:00",
+                "release": [
+                    "asgiref:3.3.4",
+                    "pytz:2021.1"
+                ],
+                "cves": []
+            },
+            {
+                "date": "2021-06-01 00:00:00",
+                "release": [
+                    "asgiref:3.3.4",
+                    "pytz:2021.1"
+                ],
+                "cves": []
+            },
+            {
+                "date": "2021-07-01 00:00:00",
+                "release": [
+                    "asgiref:3.4.0",
+                    "pytz:2021.1"
+                ],
+                "cves": []
+            },
+            {
+                "date": "2021-08-01 00:00:00",
+                "release": [
+                    "asgiref:3.4.1",
+                    "pytz:2021.1"
+                ],
+                "cves": []
+            },
+            {
+                "date": "2021-09-01 00:00:00",
+                "release": [
+                    "asgiref:3.4.1",
+                    "pytz:2021.1"
+                ],
+                "cves": []
+            },
+            {
+                "date": "2021-10-01 00:00:00",
+                "release": [
+                    "asgiref:3.4.1"
+                ],
+                "cves": []
+            },
+            {
+                "date": "2021-11-01 00:00:00",
+                "release": [
+                    "asgiref:3.4.1"
+                ],
+                "cves": []
+            },
+            {
+                "date": "2021-12-01 00:00:00",
+                "release": [
+                    "asgiref:3.4.1",
+                    "typing-extensions:4.0.0"
+                ],
+                "cves": []
+            },
+            {
+                "date": "2022-01-01 00:00:00",
+                "release": [
+                    "asgiref:3.4.1",
+                    "typing-extensions:4.0.1"
+                ],
+                "cves": []
+            },
+            {
+                "date": "2022-02-01 00:00:00",
+                "release": [
+                    "asgiref:3.5.0",
+                    "typing-extensions:4.0.1"
+                ],
+                "cves": []
+            },
+            {
+                "date": "2022-03-01 00:00:00",
+                "release": [
+                    "asgiref:3.5.0",
+                    "typing-extensions:4.1.1"
+                ],
+                "cves": []
+            },
+            {
+                "date": "2022-04-01 00:00:00",
+                "release": [
+                    "asgiref:3.5.0",
+                    "typing-extensions:4.1.1"
+                ],
+                "cves": []
+            },
+            {
+                "date": "2022-05-01 00:00:00",
+                "release": [
+                    "asgiref:3.5.1",
+                    "typing-extensions:4.2.0"
+                ],
+                "cves": []
+            },
+            {
+                "date": "2022-06-01 00:00:00",
+                "release": [
+                    "asgiref:3.5.2",
+                    "typing-extensions:4.2.0"
+                ],
+                "cves": []
+            },
+            {
+                "date": "2022-07-01 00:00:00",
+                "release": [
+                    "asgiref:3.5.2",
+                    "typing-extensions:4.2.0"
+                ],
+                "cves": []
+            },
+            {
+                "date": "2022-08-01 00:00:00",
+                "release": [
+                    "asgiref:3.5.2",
+                    "typing-extensions:4.3.0"
+                ],
+                "cves": []
+            },
+            {
+                "date": "2022-09-01 00:00:00",
+                "release": [
+                    "asgiref:3.5.2",
+                    "typing-extensions:4.3.0"
+                ],
+                "cves": []
+            },
+            {
+                "date": "2022-10-01 00:00:00",
+                "release": [
+                    "asgiref:3.5.2",
+                    "typing-extensions:4.3.0"
+                ],
+                "cves": []
+            },
+            {
+                "date": "2022-11-01 00:00:00",
+                "release": [
+                    "asgiref:3.5.2",
+                    "typing-extensions:4.4.0"
+                ],
+                "cves": []
+            },
+            {
+                "date": "2022-12-01 00:00:00",
+                "release": [
+                    "asgiref:3.5.2",
+                    "typing-extensions:4.4.0"
+                ],
+                "cves": []
+            },
+            {
+                "date": "2023-01-01 00:00:00",
+                "release": [
+                    "asgiref:3.6.0",
+                    "typing-extensions:4.4.0"
+                ],
+                "cves": []
+            },
+            {
+                "date": "2023-02-01 00:00:00",
+                "release": [
+                    "asgiref:3.6.0",
+                    "typing-extensions:4.4.0"
+                ],
+                "cves": []
+            },
+            {
+                "date": "2023-03-01 00:00:00",
+                "release": [
+                    "asgiref:3.6.0",
+                    "typing-extensions:4.5.0"
+                ],
+                "cves": []
+            },
+            {
+                "date": "2023-04-01 00:00:00",
+                "release": [
+                    "asgiref:3.6.0",
+                    "typing-extensions:4.5.0"
+                ],
+                "cves": []
+            },
+            {
+                "date": "2023-05-01 00:00:00",
+                "release": [
+                    "asgiref:3.6.0",
+                    "typing-extensions:4.5.0"
+                ],
+                "cves": []
+            },
+            {
+                "date": "2023-06-01 00:00:00",
+                "release": [
+                    "asgiref:3.7.2",
+                    "typing-extensions:4.6.2"
+                ],
+                "cves": []
+            },
+            {
+                "date": "2023-07-01 00:00:00",
+                "release": [
+                    "asgiref:3.7.2",
+                    "typing-extensions:4.7.0"
+                ],
+                "cves": []
+            },
+            {
+                "date": "2023-08-01 00:00:00",
+                "release": [
+                    "asgiref:3.7.2",
+                    "typing-extensions:4.7.1"
+                ],
+                "cves": []
+            },
+            {
+                "date": "2023-09-01 00:00:00",
+                "release": [
+                    "asgiref:3.7.2",
+                    "typing-extensions:4.7.1"
+                ],
+                "cves": []
+            },
+            {
+                "date": "2023-10-01 00:00:00",
+                "release": [
+                    "asgiref:3.7.2",
+                    "typing-extensions:4.8.0"
+                ],
+                "cves": []
+            },
+            {
+                "date": "2023-11-01 00:00:00",
+                "release": [
+                    "asgiref:3.7.2",
+                    "typing-extensions:4.8.0"
+                ],
+                "cves": []
+            },
+            {
+                "date": "2023-12-01 00:00:00",
+                "release": [
+                    "asgiref:3.7.2",
+                    "typing-extensions:4.9.0rc1"
+                ],
+                "cves": []
+            },
+            {
+                "date": "2024-01-01 00:00:00",
+                "release": [
+                    "asgiref:3.7.2",
+                    "typing-extensions:4.9.0"
+                ],
+                "cves": []
+            },
+            {
+                "date": "2024-02-01 00:00:00",
+                "release": [
+                    "asgiref:3.7.2",
+                    "typing-extensions:4.9.0"
+                ],
+                "cves": []
+            },
+            {
+                "date": "2024-03-01 00:00:00",
+                "release": [
+                    "asgiref:3.7.2",
+                    "typing-extensions:4.10.0"
+                ],
+                "cves": []
+            }
+        ]
+    },
+    "pypi:flask": {
+        "cwes": {
+            "CWE-79": {},
+            "CWE-400": {},
+            "CWE-134": {},
+            "CWE-20": {},
+            "CWE-770": {},
+            "CWE-787": {},
+            "CWE-444": {}
+        },
+        "cves": {
+            "CVE-2024-22195": {
+                "id": 1103,
+                "cve_id": "CVE-2024-22195",
+                "description": "Jinja is an extensible templating engine. Special placeholders in the template allow writing code similar to Python syntax. It is possible to inject arbitrary HTML attributes into the rendered HTML template, potentially leading to Cross-Site Scripting (XSS). The Jinja `xmlattr` filter can be abused to inject arbitrary HTML attribute keys and values, bypassing the auto escaping mechanism and potentially leading to XSS. It may also be possible to bypass attribute validation checks if they are blacklist-based.\n",
+                "published_at": "2024-01-11 03:15:00",
+                "last_modified_at": "2024-01-27 03:15:00",
+                "updated_at": "2024-03-19 14:51:13",
+                "cvss_version": "3.1",
+                "cvss_exploitability_score": 2.8,
+                "cvss_impact_score": 2.7,
+                "cvss_vector_string": "CVSS:3.1/AV:N/AC:L/PR:N/UI:R/S:C/C:L/I:L/A:N",
+                "cvss_attack_vector": "NETWORK",
+                "cvss_attack_complexity": "LOW",
+                "cvss_privileges_required": "NONE",
+                "cvss_user_interaction": "REQUIRED",
+                "cvss_scope": "CHANGED",
+                "cvss_confidentiality_impact": "LOW",
+                "cvss_integrity_impact": "LOW",
+                "cvss_availability_impact": "NONE",
+                "cvss_base_score": 6.1,
+                "cvss_base_severity": "MEDIUM",
+                "has_cwe": true,
+                "cwes": [
+                    "CWE-79"
+                ],
+                "applicability": [
+                    {
+                        "version_start": null,
+                        "exclude_start": false,
+                        "version_end": "3.1.3",
+                        "exclude_end": true,
+                        "start_date": null,
+                        "end_date": "2024-01-10 23:12:19",
+                        "project": "jinja2",
+                        "patched_at": "2024-01-10 23:12:19",
+                        "patched_version": "3.1.3"
+                    }
+                ]
+            },
+            "CVE-2020-28493": {
+                "id": 83668,
+                "cve_id": "CVE-2020-28493",
+                "description": "This affects the package jinja2 from 0.0.0 and before 2.11.3. The ReDoS vulnerability is mainly due to the `_punctuation_re regex` operator and its use of multiple wildcards. The last wildcard is the most exploitable as it searches for trailing punctuation. This issue can be mitigated by Markdown to format user content instead of the urlize filter, or by implementing request timeouts and limiting process memory.",
+                "published_at": "2021-02-01 20:15:00",
+                "last_modified_at": "2023-11-07 03:21:00",
+                "updated_at": "2024-03-19 15:39:52",
+                "cvss_version": "3.1",
+                "cvss_exploitability_score": 3.9,
+                "cvss_impact_score": 1.4,
+                "cvss_vector_string": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:N/I:N/A:L",
+                "cvss_attack_vector": "NETWORK",
+                "cvss_attack_complexity": "LOW",
+                "cvss_privileges_required": "NONE",
+                "cvss_user_interaction": "NONE",
+                "cvss_scope": "UNCHANGED",
+                "cvss_confidentiality_impact": "NONE",
+                "cvss_integrity_impact": "NONE",
+                "cvss_availability_impact": "LOW",
+                "cvss_base_score": 5.3,
+                "cvss_base_severity": "MEDIUM",
+                "has_cwe": true,
+                "cwes": [
+                    "CWE-400"
+                ],
+                "applicability": [
+                    {
+                        "version_start": null,
+                        "exclude_start": false,
+                        "version_end": "2.11.3",
+                        "exclude_end": true,
+                        "start_date": null,
+                        "end_date": "2021-01-31 16:33:07",
+                        "project": "jinja2",
+                        "patched_at": "2021-01-31 16:33:07",
+                        "patched_version": "2.11.3"
+                    }
+                ]
+            },
+            "CVE-2019-10906": {
+                "id": 92679,
+                "cve_id": "CVE-2019-10906",
+                "description": "In Pallets Jinja before 2.10.1, str.format_map allows a sandbox escape.",
+                "published_at": "2019-04-07 00:29:00",
+                "last_modified_at": "2023-11-07 03:02:00",
+                "updated_at": "2024-03-19 16:26:18",
+                "cvss_version": "3.1",
+                "cvss_exploitability_score": 3.9,
+                "cvss_impact_score": 4.0,
+                "cvss_vector_string": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:C/C:H/I:N/A:N",
+                "cvss_attack_vector": "NETWORK",
+                "cvss_attack_complexity": "LOW",
+                "cvss_privileges_required": "NONE",
+                "cvss_user_interaction": "NONE",
+                "cvss_scope": "CHANGED",
+                "cvss_confidentiality_impact": "HIGH",
+                "cvss_integrity_impact": "NONE",
+                "cvss_availability_impact": "NONE",
+                "cvss_base_score": 8.6,
+                "cvss_base_severity": "HIGH",
+                "has_cwe": false,
+                "cwes": [],
+                "applicability": [
+                    {
+                        "version_start": null,
+                        "exclude_start": false,
+                        "version_end": "2.10.1",
+                        "exclude_end": true,
+                        "start_date": null,
+                        "end_date": "2019-04-06 18:59:59",
+                        "project": "jinja2",
+                        "patched_at": "2019-04-06 18:59:59",
+                        "patched_version": "2.10.1"
+                    }
+                ]
+            },
+            "CVE-2016-10745": {
+                "id": 138440,
+                "cve_id": "CVE-2016-10745",
+                "description": "In Pallets Jinja before 2.8.1, str.format allows a sandbox escape.",
+                "published_at": "2019-04-08 13:29:00",
+                "last_modified_at": "2019-06-06 16:29:00",
+                "updated_at": "2024-03-19 16:47:00",
+                "cvss_version": "3.0",
+                "cvss_exploitability_score": 3.9,
+                "cvss_impact_score": 4.0,
+                "cvss_vector_string": "CVSS:3.0/AV:N/AC:L/PR:N/UI:N/S:C/C:H/I:N/A:N",
+                "cvss_attack_vector": "NETWORK",
+                "cvss_attack_complexity": "LOW",
+                "cvss_privileges_required": "NONE",
+                "cvss_user_interaction": "NONE",
+                "cvss_scope": "CHANGED",
+                "cvss_confidentiality_impact": "HIGH",
+                "cvss_integrity_impact": "NONE",
+                "cvss_availability_impact": "NONE",
+                "cvss_base_score": 8.6,
+                "cvss_base_severity": "HIGH",
+                "has_cwe": true,
+                "cwes": [
+                    "CWE-134"
+                ],
+                "applicability": [
+                    {
+                        "version_start": null,
+                        "exclude_start": false,
+                        "version_end": "2.8.1",
+                        "exclude_end": true,
+                        "start_date": null,
+                        "end_date": "2016-12-29 13:16:24",
+                        "project": "jinja2",
+                        "patched_at": "2016-12-29 13:16:24",
+                        "patched_version": "2.8.1"
+                    }
+                ]
+            },
+            "CVE-2023-23934": {
+                "id": 6987,
+                "cve_id": "CVE-2023-23934",
+                "description": "Werkzeug is a comprehensive WSGI web application library. Browsers may allow \"nameless\" cookies that look like `=value` instead of `key=value`. A vulnerable browser may allow a compromised application on an adjacent subdomain to exploit this to set a cookie like `=__Host-test=bad` for another subdomain. Werkzeug prior to 2.2.3 will parse the cookie `=__Host-test=bad` as __Host-test=bad`. If a Werkzeug application is running next to a vulnerable or malicious subdomain which sets such a cookie using a vulnerable browser, the Werkzeug application will see the bad cookie value but the valid cookie key. The issue is fixed in Werkzeug 2.2.3.",
+                "published_at": "2023-02-14 20:15:00",
+                "last_modified_at": "2023-08-18 14:15:00",
+                "updated_at": "2024-03-19 14:55:01",
+                "cvss_version": "3.1",
+                "cvss_exploitability_score": 2.1,
+                "cvss_impact_score": 1.4,
+                "cvss_vector_string": "CVSS:3.1/AV:A/AC:L/PR:N/UI:R/S:U/C:N/I:L/A:N",
+                "cvss_attack_vector": "ADJACENT_NETWORK",
+                "cvss_attack_complexity": "LOW",
+                "cvss_privileges_required": "NONE",
+                "cvss_user_interaction": "REQUIRED",
+                "cvss_scope": "UNCHANGED",
+                "cvss_confidentiality_impact": "NONE",
+                "cvss_integrity_impact": "LOW",
+                "cvss_availability_impact": "NONE",
+                "cvss_base_score": 3.5,
+                "cvss_base_severity": "LOW",
+                "has_cwe": true,
+                "cwes": [
+                    "CWE-20"
+                ],
+                "applicability": [
+                    {
+                        "version_start": null,
+                        "exclude_start": false,
+                        "version_end": "2.2.3",
+                        "exclude_end": true,
+                        "start_date": null,
+                        "end_date": "2023-02-14 17:20:13",
+                        "project": "werkzeug",
+                        "patched_at": "2023-02-14 17:20:13",
+                        "patched_version": "2.2.3"
+                    }
+                ]
+            },
+            "CVE-2023-25577": {
+                "id": 8200,
+                "cve_id": "CVE-2023-25577",
+                "description": "Werkzeug is a comprehensive WSGI web application library. Prior to version 2.2.3, Werkzeug's multipart form data parser will parse an unlimited number of parts, including file parts. Parts can be a small amount of bytes, but each requires CPU time to parse and may use more memory as Python data. If a request can be made to an endpoint that accesses `request.data`, `request.form`, `request.files`, or `request.get_data(parse_form_data=False)`, it can cause unexpectedly high resource usage. This allows an attacker to cause a denial of service by sending crafted multipart data to an endpoint that will parse it. The amount of CPU time required can block worker processes from handling legitimate requests. The amount of RAM required can trigger an out of memory kill of the process. Unlimited file parts can use up memory and file handles. If many concurrent requests are sent continuously, this can exhaust or kill all available workers. Version 2.2.3 contains a patch for this issue.",
+                "published_at": "2023-02-14 20:15:00",
+                "last_modified_at": "2023-08-18 14:15:00",
+                "updated_at": "2024-03-19 14:55:35",
+                "cvss_version": "3.1",
+                "cvss_exploitability_score": 3.9,
+                "cvss_impact_score": 3.6,
+                "cvss_vector_string": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:N/I:N/A:H",
+                "cvss_attack_vector": "NETWORK",
+                "cvss_attack_complexity": "LOW",
+                "cvss_privileges_required": "NONE",
+                "cvss_user_interaction": "NONE",
+                "cvss_scope": "UNCHANGED",
+                "cvss_confidentiality_impact": "NONE",
+                "cvss_integrity_impact": "NONE",
+                "cvss_availability_impact": "HIGH",
+                "cvss_base_score": 7.5,
+                "cvss_base_severity": "HIGH",
+                "has_cwe": true,
+                "cwes": [
+                    "CWE-770"
+                ],
+                "applicability": [
+                    {
+                        "version_start": null,
+                        "exclude_start": false,
+                        "version_end": "2.2.3",
+                        "exclude_end": true,
+                        "start_date": null,
+                        "end_date": "2023-02-14 17:20:13",
+                        "project": "werkzeug",
+                        "patched_at": "2023-02-14 17:20:13",
+                        "patched_version": "2.2.3"
+                    }
+                ]
+            },
+            "CVE-2023-46136": {
+                "id": 21909,
+                "cve_id": "CVE-2023-46136",
+                "description": "Werkzeug is a comprehensive WSGI web application library. If an upload of a file that starts with CR or LF and then is followed by megabytes of data without these characters: all of these bytes are appended chunk by chunk into internal bytearray and lookup for boundary is performed on growing buffer. This allows an attacker to cause a denial of service by sending crafted multipart data to an endpoint that will parse it. The amount of CPU time required can block worker processes from handling legitimate requests. This vulnerability has been patched in version 3.0.1.",
+                "published_at": "2023-10-25 18:17:00",
+                "last_modified_at": "2024-01-10 18:58:00",
+                "updated_at": "2024-03-19 15:03:31",
+                "cvss_version": "3.1",
+                "cvss_exploitability_score": 3.9,
+                "cvss_impact_score": 3.6,
+                "cvss_vector_string": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:N/I:N/A:H",
+                "cvss_attack_vector": "NETWORK",
+                "cvss_attack_complexity": "LOW",
+                "cvss_privileges_required": "NONE",
+                "cvss_user_interaction": "NONE",
+                "cvss_scope": "UNCHANGED",
+                "cvss_confidentiality_impact": "NONE",
+                "cvss_integrity_impact": "NONE",
+                "cvss_availability_impact": "HIGH",
+                "cvss_base_score": 7.5,
+                "cvss_base_severity": "HIGH",
+                "has_cwe": true,
+                "cwes": [
+                    "CWE-787"
+                ],
+                "applicability": [
+                    {
+                        "version_start": null,
+                        "exclude_start": false,
+                        "version_end": "2.3.8",
+                        "exclude_end": true,
+                        "start_date": null,
+                        "end_date": "2023-11-08 18:37:01",
+                        "project": "werkzeug",
+                        "patched_at": "2023-11-08 18:37:01",
+                        "patched_version": "2.3.8"
+                    },
+                    {
+                        "version_start": "3.0.0",
+                        "version_end": "3.0.1",
+                        "start_date": "2023-09-30 13:58:46",
+                        "exclude_start": false,
+                        "end_date": "2023-10-24 20:57:47",
+                        "exclude_end": true,
+                        "project": "werkzeug",
+                        "patched_at": "2023-10-24 20:57:47",
+                        "patched_version": "3.0.1"
+                    }
+                ]
+            },
+            "CVE-2022-29361": {
+                "id": 36786,
+                "cve_id": "CVE-2022-29361",
+                "description": "Improper parsing of HTTP requests in Pallets Werkzeug v2.1.0 and below allows attackers to perform HTTP Request Smuggling using a crafted HTTP request with multiple requests included inside the body. NOTE: the vendor's position is that this behavior can only occur in unsupported configurations involving development mode and an HTTP server from outside the Werkzeug project",
+                "published_at": "2022-05-25 01:15:00",
+                "last_modified_at": "2023-11-07 03:46:00",
+                "updated_at": "2024-03-19 15:10:46",
+                "cvss_version": "3.1",
+                "cvss_exploitability_score": 3.9,
+                "cvss_impact_score": 5.9,
+                "cvss_vector_string": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:H/I:H/A:H",
+                "cvss_attack_vector": "NETWORK",
+                "cvss_attack_complexity": "LOW",
+                "cvss_privileges_required": "NONE",
+                "cvss_user_interaction": "NONE",
+                "cvss_scope": "UNCHANGED",
+                "cvss_confidentiality_impact": "HIGH",
+                "cvss_integrity_impact": "HIGH",
+                "cvss_availability_impact": "HIGH",
+                "cvss_base_score": 9.8,
+                "cvss_base_severity": "CRITICAL",
+                "has_cwe": true,
+                "cwes": [
+                    "CWE-444"
+                ],
+                "applicability": [
+                    {
+                        "version_start": null,
+                        "exclude_start": false,
+                        "version_end": "2.1.0",
+                        "exclude_end": false,
+                        "start_date": null,
+                        "end_date": "2022-03-28 17:57:06",
+                        "project": "werkzeug",
+                        "patched_at": "2022-04-01 16:17:26",
+                        "patched_version": "2.1.1"
+                    }
+                ]
+            }
+        },
+        "releases": {
+            "click:6.5": {
+                "id": 902,
+                "project": 10,
+                "published_at": "2016-04-04 16:48:55",
+                "version": "6.5",
+                "updated_at": "2024-03-27 10:22:49",
+                "counted_functions": null,
+                "counted_files": null,
+                "nloc_total": null,
+                "nloc_average": null,
+                "ccn_average": null,
+                "commit_at": null,
+                "commit_hash": null,
+                "includes": null,
+                "excludes": null,
+                "dependency_count": null
+            },
+            "jinja2:2.8": {
+                "id": 30,
+                "project": 1,
+                "published_at": "2015-07-26 17:52:06",
+                "version": "2.8",
+                "updated_at": "2024-03-25 17:46:06",
+                "counted_functions": null,
+                "counted_files": null,
+                "nloc_total": null,
+                "nloc_average": null,
+                "ccn_average": null,
+                "commit_at": null,
+                "commit_hash": null,
+                "includes": null,
+                "excludes": null,
+                "dependency_count": null
+            },
+            "click:6.6": {
+                "id": 903,
+                "project": 10,
+                "published_at": "2016-11-21 13:29:30",
+                "version": "6.6",
+                "updated_at": "2024-03-27 10:22:49",
+                "counted_functions": null,
+                "counted_files": null,
+                "nloc_total": null,
+                "nloc_average": null,
+                "ccn_average": null,
+                "commit_at": null,
+                "commit_hash": null,
+                "includes": null,
+                "excludes": null,
+                "dependency_count": null
+            },
+            "jinja2:2.8.1": {
+                "id": 31,
+                "project": 1,
+                "published_at": "2016-12-29 13:16:24",
+                "version": "2.8.1",
+                "updated_at": "2024-03-25 17:46:06",
+                "counted_functions": null,
+                "counted_files": null,
+                "nloc_total": null,
+                "nloc_average": null,
+                "ccn_average": null,
+                "commit_at": null,
+                "commit_hash": null,
+                "includes": null,
+                "excludes": null,
+                "dependency_count": null
+            },
+            "click:6.7": {
+                "id": 904,
+                "project": 10,
+                "published_at": "2017-01-06 22:41:15",
+                "version": "6.7",
+                "updated_at": "2024-03-27 10:22:49",
+                "counted_functions": null,
+                "counted_files": null,
+                "nloc_total": null,
+                "nloc_average": null,
+                "ccn_average": null,
+                "commit_at": null,
+                "commit_hash": null,
+                "includes": null,
+                "excludes": null,
+                "dependency_count": null
+            },
+            "jinja2:2.9.5": {
+                "id": 37,
+                "project": 1,
+                "published_at": "2017-01-28 14:42:38",
+                "version": "2.9.5",
+                "updated_at": "2024-03-25 17:46:06",
+                "counted_functions": null,
+                "counted_files": null,
+                "nloc_total": null,
+                "nloc_average": null,
+                "ccn_average": null,
+                "commit_at": null,
+                "commit_hash": null,
+                "includes": null,
+                "excludes": null,
+                "dependency_count": null
+            },
+            "jinja2:2.9.6": {
+                "id": 38,
+                "project": 1,
+                "published_at": "2017-04-03 13:11:27",
+                "version": "2.9.6",
+                "updated_at": "2024-03-25 17:46:06",
+                "counted_functions": null,
+                "counted_files": null,
+                "nloc_total": null,
+                "nloc_average": null,
+                "ccn_average": null,
+                "commit_at": null,
+                "commit_hash": null,
+                "includes": null,
+                "excludes": null,
+                "dependency_count": null
+            },
+            "jinja2:2.10": {
+                "id": 4,
+                "project": 1,
+                "published_at": "2017-11-08 20:13:42",
+                "version": "2.10",
+                "updated_at": "2024-03-25 17:46:06",
+                "counted_functions": null,
+                "counted_files": null,
+                "nloc_total": null,
+                "nloc_average": null,
+                "ccn_average": null,
+                "commit_at": null,
+                "commit_hash": null,
+                "includes": null,
+                "excludes": null,
+                "dependency_count": null
+            },
+            "click:7.0": {
+                "id": 906,
+                "project": 10,
+                "published_at": "2018-09-25 20:57:05",
+                "version": "7.0",
+                "updated_at": "2024-03-27 10:22:49",
+                "counted_functions": null,
+                "counted_files": null,
+                "nloc_total": null,
+                "nloc_average": null,
+                "ccn_average": null,
+                "commit_at": null,
+                "commit_hash": null,
+                "includes": null,
+                "excludes": null,
+                "dependency_count": null
+            },
+            "itsdangerous:1.1.0": {
+                "id": 1057,
+                "project": 12,
+                "published_at": "2018-10-27 00:17:35",
+                "version": "1.1.0",
+                "updated_at": "2024-03-27 10:22:53",
+                "counted_functions": null,
+                "counted_files": null,
+                "nloc_total": null,
+                "nloc_average": null,
+                "ccn_average": null,
+                "commit_at": null,
+                "commit_hash": null,
+                "includes": null,
+                "excludes": null,
+                "dependency_count": null
+            },
+            "jinja2:2.10.1": {
+                "id": 5,
+                "project": 1,
+                "published_at": "2019-04-06 18:59:59",
+                "version": "2.10.1",
+                "updated_at": "2024-03-25 17:46:06",
+                "counted_functions": null,
+                "counted_files": null,
+                "nloc_total": null,
+                "nloc_average": null,
+                "ccn_average": null,
+                "commit_at": null,
+                "commit_hash": null,
+                "includes": null,
+                "excludes": null,
+                "dependency_count": null
+            },
+            "jinja2:2.10.3": {
+                "id": 7,
+                "project": 1,
+                "published_at": "2019-10-04 18:52:37",
+                "version": "2.10.3",
+                "updated_at": "2024-03-25 17:46:06",
+                "counted_functions": null,
+                "counted_files": null,
+                "nloc_total": null,
+                "nloc_average": null,
+                "ccn_average": null,
+                "commit_at": null,
+                "commit_hash": null,
+                "includes": null,
+                "excludes": null,
+                "dependency_count": null
+            },
+            "jinja2:2.11.1": {
+                "id": 10,
+                "project": 1,
+                "published_at": "2020-01-30 18:09:32",
+                "version": "2.11.1",
+                "updated_at": "2024-03-25 17:46:06",
+                "counted_functions": null,
+                "counted_files": null,
+                "nloc_total": null,
+                "nloc_average": null,
+                "ccn_average": null,
+                "commit_at": null,
+                "commit_hash": null,
+                "includes": null,
+                "excludes": null,
+                "dependency_count": null
+            },
+            "werkzeug:1.0.0rc1": {
+                "id": 1162,
+                "project": 14,
+                "published_at": "2020-01-31 17:00:19",
+                "version": "1.0.0rc1",
+                "updated_at": "2024-03-27 10:41:15",
+                "counted_functions": null,
+                "counted_files": null,
+                "nloc_total": null,
+                "nloc_average": null,
+                "ccn_average": null,
+                "commit_at": null,
+                "commit_hash": null,
+                "includes": null,
+                "excludes": null,
+                "dependency_count": null
+            },
+            "jinja2:3.0.0a1": {
+                "id": 40,
+                "project": 1,
+                "published_at": "2020-02-05 22:36:18",
+                "version": "3.0.0a1",
+                "updated_at": "2024-03-25 17:46:06",
+                "counted_functions": null,
+                "counted_files": null,
+                "nloc_total": null,
+                "nloc_average": null,
+                "ccn_average": null,
+                "commit_at": null,
+                "commit_hash": null,
+                "includes": null,
+                "excludes": null,
+                "dependency_count": null
+            },
+            "werkzeug:1.0.0": {
+                "id": 1161,
+                "project": 14,
+                "published_at": "2020-02-06 20:26:09",
+                "version": "1.0.0",
+                "updated_at": "2024-03-27 10:41:15",
+                "counted_functions": null,
+                "counted_files": null,
+                "nloc_total": null,
+                "nloc_average": null,
+                "ccn_average": null,
+                "commit_at": null,
+                "commit_hash": null,
+                "includes": null,
+                "excludes": null,
+                "dependency_count": null
+            },
+            "click:7.1.1": {
+                "id": 908,
+                "project": 10,
+                "published_at": "2020-03-09 18:50:57",
+                "version": "7.1.1",
+                "updated_at": "2024-03-27 10:22:49",
+                "counted_functions": null,
+                "counted_files": null,
+                "nloc_total": null,
+                "nloc_average": null,
+                "ccn_average": null,
+                "commit_at": null,
+                "commit_hash": null,
+                "includes": null,
+                "excludes": null,
+                "dependency_count": null
+            },
+            "werkzeug:1.0.1": {
+                "id": 1163,
+                "project": 14,
+                "published_at": "2020-03-31 18:05:51",
+                "version": "1.0.1",
+                "updated_at": "2024-03-27 10:41:15",
+                "counted_functions": null,
+                "counted_files": null,
+                "nloc_total": null,
+                "nloc_average": null,
+                "ccn_average": null,
+                "commit_at": null,
+                "commit_hash": null,
+                "includes": null,
+                "excludes": null,
+                "dependency_count": null
+            },
+            "click:7.1.2": {
+                "id": 909,
+                "project": 10,
+                "published_at": "2020-04-27 20:22:42",
+                "version": "7.1.2",
+                "updated_at": "2024-03-27 10:22:49",
+                "counted_functions": null,
+                "counted_files": null,
+                "nloc_total": null,
+                "nloc_average": null,
+                "ccn_average": null,
+                "commit_at": null,
+                "commit_hash": null,
+                "includes": null,
+                "excludes": null,
+                "dependency_count": null
+            },
+            "itsdangerous:2.0.0a1": {
+                "id": 1059,
+                "project": 12,
+                "published_at": "2020-05-28 17:43:25",
+                "version": "2.0.0a1",
+                "updated_at": "2024-03-27 10:22:53",
+                "counted_functions": null,
+                "counted_files": null,
+                "nloc_total": null,
+                "nloc_average": null,
+                "ccn_average": null,
+                "commit_at": null,
+                "commit_hash": null,
+                "includes": null,
+                "excludes": null,
+                "dependency_count": null
+            },
+            "click:8.0.0a1": {
+                "id": 911,
+                "project": 10,
+                "published_at": "2020-11-25 18:19:38",
+                "version": "8.0.0a1",
+                "updated_at": "2024-03-27 10:22:49",
+                "counted_functions": null,
+                "counted_files": null,
+                "nloc_total": null,
+                "nloc_average": null,
+                "ccn_average": null,
+                "commit_at": null,
+                "commit_hash": null,
+                "includes": null,
+                "excludes": null,
+                "dependency_count": null
+            },
+            "itsdangerous:2.0.0rc1": {
+                "id": 1060,
+                "project": 12,
+                "published_at": "2021-02-15 16:53:16",
+                "version": "2.0.0rc1",
+                "updated_at": "2024-03-27 10:22:53",
+                "counted_functions": null,
+                "counted_files": null,
+                "nloc_total": null,
+                "nloc_average": null,
+                "ccn_average": null,
+                "commit_at": null,
+                "commit_hash": null,
+                "includes": null,
+                "excludes": null,
+                "dependency_count": null
+            },
+            "werkzeug:2.0.0rc1": {
+                "id": 1165,
+                "project": 14,
+                "published_at": "2021-02-08 15:22:14",
+                "version": "2.0.0rc1",
+                "updated_at": "2024-03-27 10:41:15",
+                "counted_functions": null,
+                "counted_files": null,
+                "nloc_total": null,
+                "nloc_average": null,
+                "ccn_average": null,
+                "commit_at": null,
+                "commit_hash": null,
+                "includes": null,
+                "excludes": null,
+                "dependency_count": null
+            },
+            "werkzeug:2.0.0rc3": {
+                "id": 1167,
+                "project": 14,
+                "published_at": "2021-03-17 20:43:17",
+                "version": "2.0.0rc3",
+                "updated_at": "2024-03-27 10:41:15",
+                "counted_functions": null,
+                "counted_files": null,
+                "nloc_total": null,
+                "nloc_average": null,
+                "ccn_average": null,
+                "commit_at": null,
+                "commit_hash": null,
+                "includes": null,
+                "excludes": null,
+                "dependency_count": null
+            },
+            "click:8.0.0rc1": {
+                "id": 912,
+                "project": 10,
+                "published_at": "2021-04-16 14:09:35",
+                "version": "8.0.0rc1",
+                "updated_at": "2024-03-27 10:22:49",
+                "counted_functions": null,
+                "counted_files": null,
+                "nloc_total": null,
+                "nloc_average": null,
+                "ccn_average": null,
+                "commit_at": null,
+                "commit_hash": null,
+                "includes": null,
+                "excludes": null,
+                "dependency_count": null
+            },
+            "itsdangerous:2.0.0rc2": {
+                "id": 1061,
+                "project": 12,
+                "published_at": "2021-04-16 14:53:07",
+                "version": "2.0.0rc2",
+                "updated_at": "2024-03-27 10:22:53",
+                "counted_functions": null,
+                "counted_files": null,
+                "nloc_total": null,
+                "nloc_average": null,
+                "ccn_average": null,
+                "commit_at": null,
+                "commit_hash": null,
+                "includes": null,
+                "excludes": null,
+                "dependency_count": null
+            },
+            "jinja2:3.0.0rc2": {
+                "id": 42,
+                "project": 1,
+                "published_at": "2021-04-25 15:12:58",
+                "version": "3.0.0rc2",
+                "updated_at": "2024-03-25 17:46:06",
+                "counted_functions": null,
+                "counted_files": null,
+                "nloc_total": null,
+                "nloc_average": null,
+                "ccn_average": null,
+                "commit_at": null,
+                "commit_hash": null,
+                "includes": null,
+                "excludes": null,
+                "dependency_count": null
+            },
+            "click:8.0.1": {
+                "id": 913,
+                "project": 10,
+                "published_at": "2021-05-19 21:00:32",
+                "version": "8.0.1",
+                "updated_at": "2024-03-27 10:22:49",
+                "counted_functions": null,
+                "counted_files": null,
+                "nloc_total": null,
+                "nloc_average": null,
+                "ccn_average": null,
+                "commit_at": null,
+                "commit_hash": null,
+                "includes": null,
+                "excludes": null,
+                "dependency_count": null
+            },
+            "itsdangerous:2.0.1": {
+                "id": 1062,
+                "project": 12,
+                "published_at": "2021-05-18 15:09:42",
+                "version": "2.0.1",
+                "updated_at": "2024-03-27 10:22:53",
+                "counted_functions": null,
+                "counted_files": null,
+                "nloc_total": null,
+                "nloc_average": null,
+                "ccn_average": null,
+                "commit_at": null,
+                "commit_hash": null,
+                "includes": null,
+                "excludes": null,
+                "dependency_count": null
+            },
+            "jinja2:3.0.1": {
+                "id": 43,
+                "project": 1,
+                "published_at": "2021-05-18 20:39:17",
+                "version": "3.0.1",
+                "updated_at": "2024-03-25 17:46:06",
+                "counted_functions": null,
+                "counted_files": null,
+                "nloc_total": null,
+                "nloc_average": null,
+                "ccn_average": null,
+                "commit_at": null,
+                "commit_hash": null,
+                "includes": null,
+                "excludes": null,
+                "dependency_count": null
+            },
+            "werkzeug:2.0.1": {
+                "id": 1170,
+                "project": 14,
+                "published_at": "2021-05-17 23:18:08",
+                "version": "2.0.1",
+                "updated_at": "2024-03-27 10:41:15",
+                "counted_functions": null,
+                "counted_files": null,
+                "nloc_total": null,
+                "nloc_average": null,
+                "ccn_average": null,
+                "commit_at": null,
+                "commit_hash": null,
+                "includes": null,
+                "excludes": null,
+                "dependency_count": null
+            },
+            "click:8.0.3": {
+                "id": 915,
+                "project": 10,
+                "published_at": "2021-10-10 18:07:30",
+                "version": "8.0.3",
+                "updated_at": "2024-03-27 10:22:49",
+                "counted_functions": null,
+                "counted_files": null,
+                "nloc_total": null,
+                "nloc_average": null,
+                "ccn_average": null,
+                "commit_at": null,
+                "commit_hash": null,
+                "includes": null,
+                "excludes": null,
+                "dependency_count": null
+            },
+            "jinja2:3.0.2": {
+                "id": 44,
+                "project": 1,
+                "published_at": "2021-10-05 00:49:27",
+                "version": "3.0.2",
+                "updated_at": "2024-03-25 17:46:06",
+                "counted_functions": null,
+                "counted_files": null,
+                "nloc_total": null,
+                "nloc_average": null,
+                "ccn_average": null,
+                "commit_at": null,
+                "commit_hash": null,
+                "includes": null,
+                "excludes": null,
+                "dependency_count": null
+            },
+            "werkzeug:2.0.2": {
+                "id": 1171,
+                "project": 14,
+                "published_at": "2021-10-06 00:29:17",
+                "version": "2.0.2",
+                "updated_at": "2024-03-27 10:41:15",
+                "counted_functions": null,
+                "counted_files": null,
+                "nloc_total": null,
+                "nloc_average": null,
+                "ccn_average": null,
+                "commit_at": null,
+                "commit_hash": null,
+                "includes": null,
+                "excludes": null,
+                "dependency_count": null
+            },
+            "jinja2:3.0.3": {
+                "id": 45,
+                "project": 1,
+                "published_at": "2021-11-09 20:27:27",
+                "version": "3.0.3",
+                "updated_at": "2024-03-25 17:46:06",
+                "counted_functions": null,
+                "counted_files": null,
+                "nloc_total": null,
+                "nloc_average": null,
+                "ccn_average": null,
+                "commit_at": null,
+                "commit_hash": null,
+                "includes": null,
+                "excludes": null,
+                "dependency_count": null
+            },
+            "click:8.0.4": {
+                "id": 916,
+                "project": 10,
+                "published_at": "2022-02-18 20:31:27",
+                "version": "8.0.4",
+                "updated_at": "2024-03-27 10:22:49",
+                "counted_functions": null,
+                "counted_files": null,
+                "nloc_total": null,
+                "nloc_average": null,
+                "ccn_average": null,
+                "commit_at": null,
+                "commit_hash": null,
+                "includes": null,
+                "excludes": null,
+                "dependency_count": null
+            },
+            "itsdangerous:2.1.0": {
+                "id": 1063,
+                "project": 12,
+                "published_at": "2022-02-18 03:39:58",
+                "version": "2.1.0",
+                "updated_at": "2024-03-27 10:22:53",
+                "counted_functions": null,
+                "counted_files": null,
+                "nloc_total": null,
+                "nloc_average": null,
+                "ccn_average": null,
+                "commit_at": null,
+                "commit_hash": null,
+                "includes": null,
+                "excludes": null,
+                "dependency_count": null
+            },
+            "werkzeug:2.0.3": {
+                "id": 1172,
+                "project": 14,
+                "published_at": "2022-02-07 21:06:00",
+                "version": "2.0.3",
+                "updated_at": "2024-03-27 10:41:15",
+                "counted_functions": null,
+                "counted_files": null,
+                "nloc_total": null,
+                "nloc_average": null,
+                "ccn_average": null,
+                "commit_at": null,
+                "commit_hash": null,
+                "includes": null,
+                "excludes": null,
+                "dependency_count": null
+            },
+            "click:8.1.2": {
+                "id": 919,
+                "project": 10,
+                "published_at": "2022-03-31 20:52:50",
+                "version": "8.1.2",
+                "updated_at": "2024-03-27 10:22:49",
+                "counted_functions": null,
+                "counted_files": null,
+                "nloc_total": null,
+                "nloc_average": null,
+                "ccn_average": null,
+                "commit_at": null,
+                "commit_hash": null,
+                "includes": null,
+                "excludes": null,
+                "dependency_count": null
+            },
+            "importlib-metadata:4.11.3": {
+                "id": 995,
+                "project": 11,
+                "published_at": "2022-03-13 18:08:51",
+                "version": "4.11.3",
+                "updated_at": "2024-03-27 10:22:51",
+                "counted_functions": null,
+                "counted_files": null,
+                "nloc_total": null,
+                "nloc_average": null,
+                "ccn_average": null,
+                "commit_at": null,
+                "commit_hash": null,
+                "includes": null,
+                "excludes": null,
+                "dependency_count": null
+            },
+            "itsdangerous:2.1.2": {
+                "id": 1065,
+                "project": 12,
+                "published_at": "2022-03-24 15:12:13",
+                "version": "2.1.2",
+                "updated_at": "2024-03-27 10:22:53",
+                "counted_functions": null,
+                "counted_files": null,
+                "nloc_total": null,
+                "nloc_average": null,
+                "ccn_average": null,
+                "commit_at": null,
+                "commit_hash": null,
+                "includes": null,
+                "excludes": null,
+                "dependency_count": null
+            },
+            "jinja2:3.1.1": {
+                "id": 47,
+                "project": 1,
+                "published_at": "2022-03-25 22:32:55",
+                "version": "3.1.1",
+                "updated_at": "2024-03-25 17:46:06",
+                "counted_functions": null,
+                "counted_files": null,
+                "nloc_total": null,
+                "nloc_average": null,
+                "ccn_average": null,
+                "commit_at": null,
+                "commit_hash": null,
+                "includes": null,
+                "excludes": null,
+                "dependency_count": null
+            },
+            "markupsafe:2.1.1": {
+                "id": 1092,
+                "project": 13,
+                "published_at": "2022-03-15 13:22:05",
+                "version": "2.1.1",
+                "updated_at": "2024-03-27 10:41:06",
+                "counted_functions": null,
+                "counted_files": null,
+                "nloc_total": null,
+                "nloc_average": null,
+                "ccn_average": null,
+                "commit_at": null,
+                "commit_hash": null,
+                "includes": null,
+                "excludes": null,
+                "dependency_count": null
+            },
+            "werkzeug:2.1.0": {
+                "id": 1173,
+                "project": 14,
+                "published_at": "2022-03-28 17:57:06",
+                "version": "2.1.0",
+                "updated_at": "2024-03-27 10:41:15",
+                "counted_functions": null,
+                "counted_files": null,
+                "nloc_total": null,
+                "nloc_average": null,
+                "ccn_average": null,
+                "commit_at": null,
+                "commit_hash": null,
+                "includes": null,
+                "excludes": null,
+                "dependency_count": null
+            },
+            "zipp:3.7.0": {
+                "id": 1238,
+                "project": 15,
+                "published_at": "2021-12-31 00:04:05",
+                "version": "3.7.0",
+                "updated_at": "2024-03-27 10:41:17",
+                "counted_functions": null,
+                "counted_files": null,
+                "nloc_total": null,
+                "nloc_average": null,
+                "ccn_average": null,
+                "commit_at": null,
+                "commit_hash": null,
+                "includes": null,
+                "excludes": null,
+                "dependency_count": null
+            },
+            "click:8.1.3": {
+                "id": 920,
+                "project": 10,
+                "published_at": "2022-04-28 17:36:06",
+                "version": "8.1.3",
+                "updated_at": "2024-03-27 10:22:49",
+                "counted_functions": null,
+                "counted_files": null,
+                "nloc_total": null,
+                "nloc_average": null,
+                "ccn_average": null,
+                "commit_at": null,
+                "commit_hash": null,
+                "includes": null,
+                "excludes": null,
+                "dependency_count": null
+            },
+            "jinja2:3.1.2": {
+                "id": 48,
+                "project": 1,
+                "published_at": "2022-04-28 17:21:25",
+                "version": "3.1.2",
+                "updated_at": "2024-03-25 17:46:06",
+                "counted_functions": null,
+                "counted_files": null,
+                "nloc_total": null,
+                "nloc_average": null,
+                "ccn_average": null,
+                "commit_at": null,
+                "commit_hash": null,
+                "includes": null,
+                "excludes": null,
+                "dependency_count": null
+            },
+            "werkzeug:2.1.2": {
+                "id": 1175,
+                "project": 14,
+                "published_at": "2022-04-28 17:40:18",
+                "version": "2.1.2",
+                "updated_at": "2024-03-27 10:41:15",
+                "counted_functions": null,
+                "counted_files": null,
+                "nloc_total": null,
+                "nloc_average": null,
+                "ccn_average": null,
+                "commit_at": null,
+                "commit_hash": null,
+                "includes": null,
+                "excludes": null,
+                "dependency_count": null
+            },
+            "zipp:3.8.0": {
+                "id": 1239,
+                "project": 15,
+                "published_at": "2022-04-03 16:10:38",
+                "version": "3.8.0",
+                "updated_at": "2024-03-27 10:41:17",
+                "counted_functions": null,
+                "counted_files": null,
+                "nloc_total": null,
+                "nloc_average": null,
+                "ccn_average": null,
+                "commit_at": null,
+                "commit_hash": null,
+                "includes": null,
+                "excludes": null,
+                "dependency_count": null
+            },
+            "importlib-metadata:4.11.4": {
+                "id": 996,
+                "project": 11,
+                "published_at": "2022-05-21 16:40:19",
+                "version": "4.11.4",
+                "updated_at": "2024-03-27 10:22:51",
+                "counted_functions": null,
+                "counted_files": null,
+                "nloc_total": null,
+                "nloc_average": null,
+                "ccn_average": null,
+                "commit_at": null,
+                "commit_hash": null,
+                "includes": null,
+                "excludes": null,
+                "dependency_count": null
+            },
+            "importlib-metadata:4.12.0": {
+                "id": 997,
+                "project": 11,
+                "published_at": "2022-06-25 17:01:22",
+                "version": "4.12.0",
+                "updated_at": "2024-03-27 10:22:51",
+                "counted_functions": null,
+                "counted_files": null,
+                "nloc_total": null,
+                "nloc_average": null,
+                "ccn_average": null,
+                "commit_at": null,
+                "commit_hash": null,
+                "includes": null,
+                "excludes": null,
+                "dependency_count": null
+            },
+            "werkzeug:2.2.1": {
+                "id": 1178,
+                "project": 14,
+                "published_at": "2022-07-27 20:45:45",
+                "version": "2.2.1",
+                "updated_at": "2024-03-27 10:41:15",
+                "counted_functions": null,
+                "counted_files": null,
+                "nloc_total": null,
+                "nloc_average": null,
+                "ccn_average": null,
+                "commit_at": null,
+                "commit_hash": null,
+                "includes": null,
+                "excludes": null,
+                "dependency_count": null
+            },
+            "zipp:3.8.1": {
+                "id": 1240,
+                "project": 15,
+                "published_at": "2022-07-12 14:23:02",
+                "version": "3.8.1",
+                "updated_at": "2024-03-27 10:41:17",
+                "counted_functions": null,
+                "counted_files": null,
+                "nloc_total": null,
+                "nloc_average": null,
+                "ccn_average": null,
+                "commit_at": null,
+                "commit_hash": null,
+                "includes": null,
+                "excludes": null,
+                "dependency_count": null
+            },
+            "werkzeug:2.2.2": {
+                "id": 1179,
+                "project": 14,
+                "published_at": "2022-08-08 21:46:11",
+                "version": "2.2.2",
+                "updated_at": "2024-03-27 10:41:15",
+                "counted_functions": null,
+                "counted_files": null,
+                "nloc_total": null,
+                "nloc_average": null,
+                "ccn_average": null,
+                "commit_at": null,
+                "commit_hash": null,
+                "includes": null,
+                "excludes": null,
+                "dependency_count": null
+            },
+            "importlib-metadata:5.0.0": {
+                "id": 1016,
+                "project": 11,
+                "published_at": "2022-10-02 00:44:23",
+                "version": "5.0.0",
+                "updated_at": "2024-03-27 10:22:51",
+                "counted_functions": null,
+                "counted_files": null,
+                "nloc_total": null,
+                "nloc_average": null,
+                "ccn_average": null,
+                "commit_at": null,
+                "commit_hash": null,
+                "includes": null,
+                "excludes": null,
+                "dependency_count": null
+            },
+            "zipp:3.10.0": {
+                "id": 1215,
+                "project": 15,
+                "published_at": "2022-10-24 01:23:01",
+                "version": "3.10.0",
+                "updated_at": "2024-03-27 10:41:17",
+                "counted_functions": null,
+                "counted_files": null,
+                "nloc_total": null,
+                "nloc_average": null,
+                "ccn_average": null,
+                "commit_at": null,
+                "commit_hash": null,
+                "includes": null,
+                "excludes": null,
+                "dependency_count": null
+            },
+            "importlib-metadata:5.1.0": {
+                "id": 1017,
+                "project": 11,
+                "published_at": "2022-11-24 14:40:55",
+                "version": "5.1.0",
+                "updated_at": "2024-03-27 10:22:51",
+                "counted_functions": null,
+                "counted_files": null,
+                "nloc_total": null,
+                "nloc_average": null,
+                "ccn_average": null,
+                "commit_at": null,
+                "commit_hash": null,
+                "includes": null,
+                "excludes": null,
+                "dependency_count": null
+            },
+            "zipp:3.11.0": {
+                "id": 1216,
+                "project": 15,
+                "published_at": "2022-11-25 18:14:05",
+                "version": "3.11.0",
+                "updated_at": "2024-03-27 10:41:17",
+                "counted_functions": null,
+                "counted_files": null,
+                "nloc_total": null,
+                "nloc_average": null,
+                "ccn_average": null,
+                "commit_at": null,
+                "commit_hash": null,
+                "includes": null,
+                "excludes": null,
+                "dependency_count": null
+            },
+            "importlib-metadata:5.2.0": {
+                "id": 1018,
+                "project": 11,
+                "published_at": "2022-12-18 22:41:28",
+                "version": "5.2.0",
+                "updated_at": "2024-03-27 10:22:51",
+                "counted_functions": null,
+                "counted_files": null,
+                "nloc_total": null,
+                "nloc_average": null,
+                "ccn_average": null,
+                "commit_at": null,
+                "commit_hash": null,
+                "includes": null,
+                "excludes": null,
+                "dependency_count": null
+            },
+            "importlib-metadata:6.0.0": {
+                "id": 1019,
+                "project": 11,
+                "published_at": "2023-01-02 19:00:25",
+                "version": "6.0.0",
+                "updated_at": "2024-03-27 10:22:51",
+                "counted_functions": null,
+                "counted_files": null,
+                "nloc_total": null,
+                "nloc_average": null,
+                "ccn_average": null,
+                "commit_at": null,
+                "commit_hash": null,
+                "includes": null,
+                "excludes": null,
+                "dependency_count": null
+            },
+            "markupsafe:2.1.2": {
+                "id": 1093,
+                "project": 13,
+                "published_at": "2023-01-17 18:24:16",
+                "version": "2.1.2",
+                "updated_at": "2024-03-27 10:41:06",
+                "counted_functions": null,
+                "counted_files": null,
+                "nloc_total": null,
+                "nloc_average": null,
+                "ccn_average": null,
+                "commit_at": null,
+                "commit_hash": null,
+                "includes": null,
+                "excludes": null,
+                "dependency_count": null
+            },
+            "zipp:3.12.0": {
+                "id": 1217,
+                "project": 15,
+                "published_at": "2023-01-27 22:48:15",
+                "version": "3.12.0",
+                "updated_at": "2024-03-27 10:41:17",
+                "counted_functions": null,
+                "counted_files": null,
+                "nloc_total": null,
+                "nloc_average": null,
+                "ccn_average": null,
+                "commit_at": null,
+                "commit_hash": null,
+                "includes": null,
+                "excludes": null,
+                "dependency_count": null
+            },
+            "werkzeug:2.2.3": {
+                "id": 1180,
+                "project": 14,
+                "published_at": "2023-02-14 17:20:13",
+                "version": "2.2.3",
+                "updated_at": "2024-03-27 10:41:15",
+                "counted_functions": null,
+                "counted_files": null,
+                "nloc_total": null,
+                "nloc_average": null,
+                "ccn_average": null,
+                "commit_at": null,
+                "commit_hash": null,
+                "includes": null,
+                "excludes": null,
+                "dependency_count": null
+            },
+            "zipp:3.15.0": {
+                "id": 1221,
+                "project": 15,
+                "published_at": "2023-02-25 02:18:04",
+                "version": "3.15.0",
+                "updated_at": "2024-03-27 10:41:17",
+                "counted_functions": null,
+                "counted_files": null,
+                "nloc_total": null,
+                "nloc_average": null,
+                "ccn_average": null,
+                "commit_at": null,
+                "commit_hash": null,
+                "includes": null,
+                "excludes": null,
+                "dependency_count": null
+            },
+            "importlib-metadata:6.1.0": {
+                "id": 1021,
+                "project": 11,
+                "published_at": "2023-03-18 17:11:21",
+                "version": "6.1.0",
+                "updated_at": "2024-03-27 10:22:51",
+                "counted_functions": null,
+                "counted_files": null,
+                "nloc_total": null,
+                "nloc_average": null,
+                "ccn_average": null,
+                "commit_at": null,
+                "commit_hash": null,
+                "includes": null,
+                "excludes": null,
+                "dependency_count": null
+            },
+            "blinker:1.6.2": {
+                "id": 869,
+                "project": 9,
+                "published_at": "2023-04-12 21:45:44",
+                "version": "1.6.2",
+                "updated_at": "2024-03-27 10:22:45",
+                "counted_functions": null,
+                "counted_files": null,
+                "nloc_total": null,
+                "nloc_average": null,
+                "ccn_average": null,
+                "commit_at": null,
+                "commit_hash": null,
+                "includes": null,
+                "excludes": null,
+                "dependency_count": null
+            },
+            "importlib-metadata:6.6.0": {
+                "id": 1031,
+                "project": 11,
+                "published_at": "2023-04-22 12:57:38",
+                "version": "6.6.0",
+                "updated_at": "2024-03-27 10:22:51",
+                "counted_functions": null,
+                "counted_files": null,
+                "nloc_total": null,
+                "nloc_average": null,
+                "ccn_average": null,
+                "commit_at": null,
+                "commit_hash": null,
+                "includes": null,
+                "excludes": null,
+                "dependency_count": null
+            },
+            "werkzeug:2.3.2": {
+                "id": 1183,
+                "project": 14,
+                "published_at": "2023-04-28 19:03:19",
+                "version": "2.3.2",
+                "updated_at": "2024-03-27 10:41:15",
+                "counted_functions": null,
+                "counted_files": null,
+                "nloc_total": null,
+                "nloc_average": null,
+                "ccn_average": null,
+                "commit_at": null,
+                "commit_hash": null,
+                "includes": null,
+                "excludes": null,
+                "dependency_count": null
+            },
+            "werkzeug:2.3.4": {
+                "id": 1185,
+                "project": 14,
+                "published_at": "2023-05-08 20:12:17",
+                "version": "2.3.4",
+                "updated_at": "2024-03-27 10:41:15",
+                "counted_functions": null,
+                "counted_files": null,
+                "nloc_total": null,
+                "nloc_average": null,
+                "ccn_average": null,
+                "commit_at": null,
+                "commit_hash": null,
+                "includes": null,
+                "excludes": null,
+                "dependency_count": null
+            },
+            "importlib-metadata:6.7.0": {
+                "id": 1032,
+                "project": 11,
+                "published_at": "2023-06-18 21:46:26",
+                "version": "6.7.0",
+                "updated_at": "2024-03-27 10:22:51",
+                "counted_functions": null,
+                "counted_files": null,
+                "nloc_total": null,
+                "nloc_average": null,
+                "ccn_average": null,
+                "commit_at": null,
+                "commit_hash": null,
+                "includes": null,
+                "excludes": null,
+                "dependency_count": null
+            },
+            "markupsafe:2.1.3": {
+                "id": 1094,
+                "project": 13,
+                "published_at": "2023-06-02 21:44:04",
+                "version": "2.1.3",
+                "updated_at": "2024-03-27 10:41:06",
+                "counted_functions": null,
+                "counted_files": null,
+                "nloc_total": null,
+                "nloc_average": null,
+                "ccn_average": null,
+                "commit_at": null,
+                "commit_hash": null,
+                "includes": null,
+                "excludes": null,
+                "dependency_count": null
+            },
+            "werkzeug:2.3.6": {
+                "id": 1187,
+                "project": 14,
+                "published_at": "2023-06-08 21:28:20",
+                "version": "2.3.6",
+                "updated_at": "2024-03-27 10:41:15",
+                "counted_functions": null,
+                "counted_files": null,
+                "nloc_total": null,
+                "nloc_average": null,
+                "ccn_average": null,
+                "commit_at": null,
+                "commit_hash": null,
+                "includes": null,
+                "excludes": null,
+                "dependency_count": null
+            },
+            "click:8.1.6": {
+                "id": 923,
+                "project": 10,
+                "published_at": "2023-07-18 20:05:12",
+                "version": "8.1.6",
+                "updated_at": "2024-03-27 10:22:49",
+                "counted_functions": null,
+                "counted_files": null,
+                "nloc_total": null,
+                "nloc_average": null,
+                "ccn_average": null,
+                "commit_at": null,
+                "commit_hash": null,
+                "includes": null,
+                "excludes": null,
+                "dependency_count": null
+            },
+            "importlib-metadata:6.8.0": {
+                "id": 1033,
+                "project": 11,
+                "published_at": "2023-07-07 16:16:55",
+                "version": "6.8.0",
+                "updated_at": "2024-03-27 10:22:51",
+                "counted_functions": null,
+                "counted_files": null,
+                "nloc_total": null,
+                "nloc_average": null,
+                "ccn_average": null,
+                "commit_at": null,
+                "commit_hash": null,
+                "includes": null,
+                "excludes": null,
+                "dependency_count": null
+            },
+            "zipp:3.16.2": {
+                "id": 1224,
+                "project": 15,
+                "published_at": "2023-07-14 19:25:11",
+                "version": "3.16.2",
+                "updated_at": "2024-03-27 10:41:17",
+                "counted_functions": null,
+                "counted_files": null,
+                "nloc_total": null,
+                "nloc_average": null,
+                "ccn_average": null,
+                "commit_at": null,
+                "commit_hash": null,
+                "includes": null,
+                "excludes": null,
+                "dependency_count": null
+            },
+            "click:8.1.7": {
+                "id": 924,
+                "project": 10,
+                "published_at": "2023-08-17 17:29:10",
+                "version": "8.1.7",
+                "updated_at": "2024-03-27 10:22:49",
+                "counted_functions": null,
+                "counted_files": null,
+                "nloc_total": null,
+                "nloc_average": null,
+                "ccn_average": null,
+                "commit_at": null,
+                "commit_hash": null,
+                "includes": null,
+                "excludes": null,
+                "dependency_count": null
+            },
+            "werkzeug:2.3.7": {
+                "id": 1188,
+                "project": 14,
+                "published_at": "2023-08-14 09:30:45",
+                "version": "2.3.7",
+                "updated_at": "2024-03-27 10:41:15",
+                "counted_functions": null,
+                "counted_files": null,
+                "nloc_total": null,
+                "nloc_average": null,
+                "ccn_average": null,
+                "commit_at": null,
+                "commit_hash": null,
+                "includes": null,
+                "excludes": null,
+                "dependency_count": null
+            },
+            "werkzeug:3.0.0": {
+                "id": 1190,
+                "project": 14,
+                "published_at": "2023-09-30 13:58:46",
+                "version": "3.0.0",
+                "updated_at": "2024-03-27 10:41:15",
+                "counted_functions": null,
+                "counted_files": null,
+                "nloc_total": null,
+                "nloc_average": null,
+                "ccn_average": null,
+                "commit_at": null,
+                "commit_hash": null,
+                "includes": null,
+                "excludes": null,
+                "dependency_count": null
+            },
+            "zipp:3.17.0": {
+                "id": 1225,
+                "project": 15,
+                "published_at": "2023-09-18 15:18:23",
+                "version": "3.17.0",
+                "updated_at": "2024-03-27 10:41:17",
+                "counted_functions": null,
+                "counted_files": null,
+                "nloc_total": null,
+                "nloc_average": null,
+                "ccn_average": null,
+                "commit_at": null,
+                "commit_hash": null,
+                "includes": null,
+                "excludes": null,
+                "dependency_count": null
+            },
+            "blinker:1.6.3": {
+                "id": 870,
+                "project": 9,
+                "published_at": "2023-10-07 14:16:19",
+                "version": "1.6.3",
+                "updated_at": "2024-03-27 10:22:45",
+                "counted_functions": null,
+                "counted_files": null,
+                "nloc_total": null,
+                "nloc_average": null,
+                "ccn_average": null,
+                "commit_at": null,
+                "commit_hash": null,
+                "includes": null,
+                "excludes": null,
+                "dependency_count": null
+            },
+            "werkzeug:3.0.1": {
+                "id": 1191,
+                "project": 14,
+                "published_at": "2023-10-24 20:57:47",
+                "version": "3.0.1",
+                "updated_at": "2024-03-27 10:41:15",
+                "counted_functions": null,
+                "counted_files": null,
+                "nloc_total": null,
+                "nloc_average": null,
+                "ccn_average": null,
+                "commit_at": null,
+                "commit_hash": null,
+                "includes": null,
+                "excludes": null,
+                "dependency_count": null
+            },
+            "blinker:1.7.0": {
+                "id": 871,
+                "project": 9,
+                "published_at": "2023-11-01 22:06:00",
+                "version": "1.7.0",
+                "updated_at": "2024-03-27 10:22:45",
+                "counted_functions": null,
+                "counted_files": null,
+                "nloc_total": null,
+                "nloc_average": null,
+                "ccn_average": null,
+                "commit_at": null,
+                "commit_hash": null,
+                "includes": null,
+                "excludes": null,
+                "dependency_count": null
+            },
+            "importlib-metadata:7.0.1": {
+                "id": 1036,
+                "project": 11,
+                "published_at": "2023-12-22 17:17:19",
+                "version": "7.0.1",
+                "updated_at": "2024-03-27 10:22:51",
+                "counted_functions": null,
+                "counted_files": null,
+                "nloc_total": null,
+                "nloc_average": null,
+                "ccn_average": null,
+                "commit_at": null,
+                "commit_hash": null,
+                "includes": null,
+                "excludes": null,
+                "dependency_count": null
+            },
+            "jinja2:3.1.3": {
+                "id": 49,
+                "project": 1,
+                "published_at": "2024-01-10 23:12:19",
+                "version": "3.1.3",
+                "updated_at": "2024-03-25 17:46:06",
+                "counted_functions": null,
+                "counted_files": null,
+                "nloc_total": null,
+                "nloc_average": null,
+                "ccn_average": null,
+                "commit_at": null,
+                "commit_hash": null,
+                "includes": null,
+                "excludes": null,
+                "dependency_count": null
+            },
+            "markupsafe:2.1.4": {
+                "id": 1095,
+                "project": 13,
+                "published_at": "2024-01-19 22:48:20",
+                "version": "2.1.4",
+                "updated_at": "2024-03-27 10:41:06",
+                "counted_functions": null,
+                "counted_files": null,
+                "nloc_total": null,
+                "nloc_average": null,
+                "ccn_average": null,
+                "commit_at": null,
+                "commit_hash": null,
+                "includes": null,
+                "excludes": null,
+                "dependency_count": null
+            },
+            "markupsafe:2.1.5": {
+                "id": 1096,
+                "project": 13,
+                "published_at": "2024-02-02 16:30:04",
+                "version": "2.1.5",
+                "updated_at": "2024-03-27 10:41:06",
+                "counted_functions": null,
+                "counted_files": null,
+                "nloc_total": null,
+                "nloc_average": null,
+                "ccn_average": null,
+                "commit_at": null,
+                "commit_hash": null,
+                "includes": null,
+                "excludes": null,
+                "dependency_count": null
+            }
+        },
+        "timeline": [
+            {
+                "date": "2012-01-01 00:00:00",
+                "release": [],
+                "cves": []
+            },
+            {
+                "date": "2012-02-01 00:00:00",
+                "release": [],
+                "cves": []
+            },
+            {
+                "date": "2012-03-01 00:00:00",
+                "release": [],
+                "cves": []
+            },
+            {
+                "date": "2012-04-01 00:00:00",
+                "release": [],
+                "cves": []
+            },
+            {
+                "date": "2012-05-01 00:00:00",
+                "release": [],
+                "cves": []
+            },
+            {
+                "date": "2012-06-01 00:00:00",
+                "release": [],
+                "cves": []
+            },
+            {
+                "date": "2012-07-01 00:00:00",
+                "release": [],
+                "cves": []
+            },
+            {
+                "date": "2012-08-01 00:00:00",
+                "release": [],
+                "cves": []
+            },
+            {
+                "date": "2012-09-01 00:00:00",
+                "release": [],
+                "cves": []
+            },
+            {
+                "date": "2012-10-01 00:00:00",
+                "release": [],
+                "cves": []
+            },
+            {
+                "date": "2012-11-01 00:00:00",
+                "release": [],
+                "cves": []
+            },
+            {
+                "date": "2012-12-01 00:00:00",
+                "release": [],
+                "cves": []
+            },
+            {
+                "date": "2013-01-01 00:00:00",
+                "release": [],
+                "cves": []
+            },
+            {
+                "date": "2013-02-01 00:00:00",
+                "release": [],
+                "cves": []
+            },
+            {
+                "date": "2013-03-01 00:00:00",
+                "release": [],
+                "cves": []
+            },
+            {
+                "date": "2013-04-01 00:00:00",
+                "release": [],
+                "cves": []
+            },
+            {
+                "date": "2013-05-01 00:00:00",
+                "release": [],
+                "cves": []
+            },
+            {
+                "date": "2013-06-01 00:00:00",
+                "release": [],
+                "cves": []
+            },
+            {
+                "date": "2013-07-01 00:00:00",
+                "release": [],
+                "cves": []
+            },
+            {
+                "date": "2013-08-01 00:00:00",
+                "release": [],
+                "cves": []
+            },
+            {
+                "date": "2013-09-01 00:00:00",
+                "release": [],
+                "cves": []
+            },
+            {
+                "date": "2013-10-01 00:00:00",
+                "release": [],
+                "cves": []
+            },
+            {
+                "date": "2013-11-01 00:00:00",
+                "release": [],
+                "cves": []
+            },
+            {
+                "date": "2013-12-01 00:00:00",
+                "release": [],
+                "cves": []
+            },
+            {
+                "date": "2014-01-01 00:00:00",
+                "release": [],
+                "cves": []
+            },
+            {
+                "date": "2014-02-01 00:00:00",
+                "release": [],
+                "cves": []
+            },
+            {
+                "date": "2014-03-01 00:00:00",
+                "release": [],
+                "cves": []
+            },
+            {
+                "date": "2014-04-01 00:00:00",
+                "release": [],
+                "cves": []
+            },
+            {
+                "date": "2014-05-01 00:00:00",
+                "release": [],
+                "cves": []
+            },
+            {
+                "date": "2014-06-01 00:00:00",
+                "release": [],
+                "cves": []
+            },
+            {
+                "date": "2014-07-01 00:00:00",
+                "release": [],
+                "cves": []
+            },
+            {
+                "date": "2014-08-01 00:00:00",
+                "release": [],
+                "cves": []
+            },
+            {
+                "date": "2014-09-01 00:00:00",
+                "release": [],
+                "cves": []
+            },
+            {
+                "date": "2014-10-01 00:00:00",
+                "release": [],
+                "cves": []
+            },
+            {
+                "date": "2014-11-01 00:00:00",
+                "release": [],
+                "cves": []
+            },
+            {
+                "date": "2014-12-01 00:00:00",
+                "release": [],
+                "cves": []
+            },
+            {
+                "date": "2015-01-01 00:00:00",
+                "release": [],
+                "cves": []
+            },
+            {
+                "date": "2015-02-01 00:00:00",
+                "release": [],
+                "cves": []
+            },
+            {
+                "date": "2015-03-01 00:00:00",
+                "release": [],
+                "cves": []
+            },
+            {
+                "date": "2015-04-01 00:00:00",
+                "release": [],
+                "cves": []
+            },
+            {
+                "date": "2015-05-01 00:00:00",
+                "release": [],
+                "cves": []
+            },
+            {
+                "date": "2015-06-01 00:00:00",
+                "release": [],
+                "cves": []
+            },
+            {
+                "date": "2015-07-01 00:00:00",
+                "release": [],
+                "cves": []
+            },
+            {
+                "date": "2015-08-01 00:00:00",
+                "release": [],
+                "cves": []
+            },
+            {
+                "date": "2015-09-01 00:00:00",
+                "release": [],
+                "cves": []
+            },
+            {
+                "date": "2015-10-01 00:00:00",
+                "release": [],
+                "cves": []
+            },
+            {
+                "date": "2015-11-01 00:00:00",
+                "release": [],
+                "cves": []
+            },
+            {
+                "date": "2015-12-01 00:00:00",
+                "release": [],
+                "cves": []
+            },
+            {
+                "date": "2016-01-01 00:00:00",
+                "release": [],
+                "cves": []
+            },
+            {
+                "date": "2016-02-01 00:00:00",
+                "release": [],
+                "cves": []
+            },
+            {
+                "date": "2016-03-01 00:00:00",
+                "release": [],
+                "cves": []
+            },
+            {
+                "date": "2016-04-01 00:00:00",
+                "release": [],
+                "cves": []
+            },
+            {
+                "date": "2016-05-01 00:00:00",
+                "release": [],
+                "cves": []
+            },
+            {
+                "date": "2016-06-01 00:00:00",
+                "release": [
+                    "click:6.5",
+                    "jinja2:2.8"
+                ],
+                "cves": [
+                    "CVE-2016-10745",
+                    "CVE-2019-10906",
+                    "CVE-2020-28493",
+                    "CVE-2024-22195"
+                ]
+            },
+            {
+                "date": "2016-07-01 00:00:00",
+                "release": [
+                    "click:6.5",
+                    "jinja2:2.8"
+                ],
+                "cves": [
+                    "CVE-2016-10745",
+                    "CVE-2019-10906",
+                    "CVE-2020-28493",
+                    "CVE-2024-22195"
+                ]
+            },
+            {
+                "date": "2016-08-01 00:00:00",
+                "release": [
+                    "click:6.5",
+                    "jinja2:2.8"
+                ],
+                "cves": [
+                    "CVE-2016-10745",
+                    "CVE-2019-10906",
+                    "CVE-2020-28493",
+                    "CVE-2024-22195"
+                ]
+            },
+            {
+                "date": "2016-09-01 00:00:00",
+                "release": [
+                    "click:6.5",
+                    "jinja2:2.8"
+                ],
+                "cves": [
+                    "CVE-2016-10745",
+                    "CVE-2019-10906",
+                    "CVE-2020-28493",
+                    "CVE-2024-22195"
+                ]
+            },
+            {
+                "date": "2016-10-01 00:00:00",
+                "release": [
+                    "click:6.5",
+                    "jinja2:2.8"
+                ],
+                "cves": [
+                    "CVE-2016-10745",
+                    "CVE-2019-10906",
+                    "CVE-2020-28493",
+                    "CVE-2024-22195"
+                ]
+            },
+            {
+                "date": "2016-11-01 00:00:00",
+                "release": [
+                    "click:6.5",
+                    "jinja2:2.8"
+                ],
+                "cves": [
+                    "CVE-2016-10745",
+                    "CVE-2019-10906",
+                    "CVE-2020-28493",
+                    "CVE-2024-22195"
+                ]
+            },
+            {
+                "date": "2016-12-01 00:00:00",
+                "release": [
+                    "click:6.6",
+                    "jinja2:2.8"
+                ],
+                "cves": [
+                    "CVE-2016-10745",
+                    "CVE-2019-10906",
+                    "CVE-2020-28493",
+                    "CVE-2024-22195"
+                ]
+            },
+            {
+                "date": "2017-01-01 00:00:00",
+                "release": [
+                    "click:6.6",
+                    "jinja2:2.8.1"
+                ],
+                "cves": [
+                    "CVE-2019-10906",
+                    "CVE-2020-28493",
+                    "CVE-2024-22195"
+                ]
+            },
+            {
+                "date": "2017-02-01 00:00:00",
+                "release": [
+                    "click:6.7",
+                    "jinja2:2.9.5"
+                ],
+                "cves": [
+                    "CVE-2019-10906",
+                    "CVE-2020-28493",
+                    "CVE-2024-22195"
+                ]
+            },
+            {
+                "date": "2017-03-01 00:00:00",
+                "release": [
+                    "click:6.7",
+                    "jinja2:2.9.5"
+                ],
+                "cves": [
+                    "CVE-2019-10906",
+                    "CVE-2020-28493",
+                    "CVE-2024-22195"
+                ]
+            },
+            {
+                "date": "2017-04-01 00:00:00",
+                "release": [
+                    "click:6.7",
+                    "jinja2:2.9.5"
+                ],
+                "cves": [
+                    "CVE-2019-10906",
+                    "CVE-2020-28493",
+                    "CVE-2024-22195"
+                ]
+            },
+            {
+                "date": "2017-05-01 00:00:00",
+                "release": [
+                    "click:6.7",
+                    "jinja2:2.9.6"
+                ],
+                "cves": [
+                    "CVE-2019-10906",
+                    "CVE-2020-28493",
+                    "CVE-2024-22195"
+                ]
+            },
+            {
+                "date": "2017-06-01 00:00:00",
+                "release": [
+                    "click:6.7",
+                    "jinja2:2.9.6"
+                ],
+                "cves": [
+                    "CVE-2019-10906",
+                    "CVE-2020-28493",
+                    "CVE-2024-22195"
+                ]
+            },
+            {
+                "date": "2017-07-01 00:00:00",
+                "release": [
+                    "click:6.7",
+                    "jinja2:2.9.6"
+                ],
+                "cves": [
+                    "CVE-2019-10906",
+                    "CVE-2020-28493",
+                    "CVE-2024-22195"
+                ]
+            },
+            {
+                "date": "2017-08-01 00:00:00",
+                "release": [
+                    "click:6.7",
+                    "jinja2:2.9.6"
+                ],
+                "cves": [
+                    "CVE-2019-10906",
+                    "CVE-2020-28493",
+                    "CVE-2024-22195"
+                ]
+            },
+            {
+                "date": "2017-09-01 00:00:00",
+                "release": [
+                    "click:6.7",
+                    "jinja2:2.9.6"
+                ],
+                "cves": [
+                    "CVE-2019-10906",
+                    "CVE-2020-28493",
+                    "CVE-2024-22195"
+                ]
+            },
+            {
+                "date": "2017-10-01 00:00:00",
+                "release": [
+                    "click:6.7",
+                    "jinja2:2.9.6"
+                ],
+                "cves": [
+                    "CVE-2019-10906",
+                    "CVE-2020-28493",
+                    "CVE-2024-22195"
+                ]
+            },
+            {
+                "date": "2017-11-01 00:00:00",
+                "release": [
+                    "click:6.7",
+                    "jinja2:2.9.6"
+                ],
+                "cves": [
+                    "CVE-2019-10906",
+                    "CVE-2020-28493",
+                    "CVE-2024-22195"
+                ]
+            },
+            {
+                "date": "2017-12-01 00:00:00",
+                "release": [
+                    "click:6.7",
+                    "jinja2:2.10"
+                ],
+                "cves": [
+                    "CVE-2019-10906",
+                    "CVE-2020-28493",
+                    "CVE-2024-22195"
+                ]
+            },
+            {
+                "date": "2018-01-01 00:00:00",
+                "release": [
+                    "click:6.7",
+                    "jinja2:2.10"
+                ],
+                "cves": [
+                    "CVE-2019-10906",
+                    "CVE-2020-28493",
+                    "CVE-2024-22195"
+                ]
+            },
+            {
+                "date": "2018-02-01 00:00:00",
+                "release": [
+                    "click:6.7",
+                    "jinja2:2.10"
+                ],
+                "cves": [
+                    "CVE-2019-10906",
+                    "CVE-2020-28493",
+                    "CVE-2024-22195"
+                ]
+            },
+            {
+                "date": "2018-03-01 00:00:00",
+                "release": [
+                    "click:6.7",
+                    "jinja2:2.10"
+                ],
+                "cves": [
+                    "CVE-2019-10906",
+                    "CVE-2020-28493",
+                    "CVE-2024-22195"
+                ]
+            },
+            {
+                "date": "2018-04-01 00:00:00",
+                "release": [
+                    "click:6.7",
+                    "jinja2:2.10"
+                ],
+                "cves": [
+                    "CVE-2019-10906",
+                    "CVE-2020-28493",
+                    "CVE-2024-22195"
+                ]
+            },
+            {
+                "date": "2018-05-01 00:00:00",
+                "release": [
+                    "click:6.7",
+                    "jinja2:2.10"
+                ],
+                "cves": [
+                    "CVE-2019-10906",
+                    "CVE-2020-28493",
+                    "CVE-2024-22195"
+                ]
+            },
+            {
+                "date": "2018-06-01 00:00:00",
+                "release": [
+                    "click:6.7",
+                    "jinja2:2.10"
+                ],
+                "cves": [
+                    "CVE-2019-10906",
+                    "CVE-2020-28493",
+                    "CVE-2024-22195"
+                ]
+            },
+            {
+                "date": "2018-07-01 00:00:00",
+                "release": [
+                    "click:6.7",
+                    "jinja2:2.10"
+                ],
+                "cves": [
+                    "CVE-2019-10906",
+                    "CVE-2020-28493",
+                    "CVE-2024-22195"
+                ]
+            },
+            {
+                "date": "2018-08-01 00:00:00",
+                "release": [
+                    "click:6.7",
+                    "jinja2:2.10"
+                ],
+                "cves": [
+                    "CVE-2019-10906",
+                    "CVE-2020-28493",
+                    "CVE-2024-22195"
+                ]
+            },
+            {
+                "date": "2018-09-01 00:00:00",
+                "release": [
+                    "click:6.7",
+                    "jinja2:2.10"
+                ],
+                "cves": [
+                    "CVE-2019-10906",
+                    "CVE-2020-28493",
+                    "CVE-2024-22195"
+                ]
+            },
+            {
+                "date": "2018-10-01 00:00:00",
+                "release": [
+                    "click:7.0",
+                    "jinja2:2.10"
+                ],
+                "cves": [
+                    "CVE-2019-10906",
+                    "CVE-2020-28493",
+                    "CVE-2024-22195"
+                ]
+            },
+            {
+                "date": "2018-11-01 00:00:00",
+                "release": [
+                    "click:7.0",
+                    "itsdangerous:1.1.0",
+                    "jinja2:2.10"
+                ],
+                "cves": [
+                    "CVE-2019-10906",
+                    "CVE-2020-28493",
+                    "CVE-2024-22195"
+                ]
+            },
+            {
+                "date": "2018-12-01 00:00:00",
+                "release": [
+                    "click:7.0",
+                    "itsdangerous:1.1.0",
+                    "jinja2:2.10"
+                ],
+                "cves": [
+                    "CVE-2019-10906",
+                    "CVE-2020-28493",
+                    "CVE-2024-22195"
+                ]
+            },
+            {
+                "date": "2019-01-01 00:00:00",
+                "release": [
+                    "click:7.0",
+                    "itsdangerous:1.1.0",
+                    "jinja2:2.10"
+                ],
+                "cves": [
+                    "CVE-2019-10906",
+                    "CVE-2020-28493",
+                    "CVE-2024-22195"
+                ]
+            },
+            {
+                "date": "2019-02-01 00:00:00",
+                "release": [
+                    "click:7.0",
+                    "itsdangerous:1.1.0",
+                    "jinja2:2.10"
+                ],
+                "cves": [
+                    "CVE-2019-10906",
+                    "CVE-2020-28493",
+                    "CVE-2024-22195"
+                ]
+            },
+            {
+                "date": "2019-03-01 00:00:00",
+                "release": [
+                    "click:7.0",
+                    "itsdangerous:1.1.0",
+                    "jinja2:2.10"
+                ],
+                "cves": [
+                    "CVE-2019-10906",
+                    "CVE-2020-28493",
+                    "CVE-2024-22195"
+                ]
+            },
+            {
+                "date": "2019-04-01 00:00:00",
+                "release": [
+                    "click:7.0",
+                    "itsdangerous:1.1.0",
+                    "jinja2:2.10"
+                ],
+                "cves": [
+                    "CVE-2019-10906",
+                    "CVE-2020-28493",
+                    "CVE-2024-22195"
+                ]
+            },
+            {
+                "date": "2019-05-01 00:00:00",
+                "release": [
+                    "click:7.0",
+                    "itsdangerous:1.1.0",
+                    "jinja2:2.10.1"
+                ],
+                "cves": [
+                    "CVE-2020-28493",
+                    "CVE-2024-22195"
+                ]
+            },
+            {
+                "date": "2019-06-01 00:00:00",
+                "release": [
+                    "click:7.0",
+                    "itsdangerous:1.1.0",
+                    "jinja2:2.10.1"
+                ],
+                "cves": [
+                    "CVE-2020-28493",
+                    "CVE-2024-22195"
+                ]
+            },
+            {
+                "date": "2019-07-01 00:00:00",
+                "release": [
+                    "click:7.0",
+                    "itsdangerous:1.1.0",
+                    "jinja2:2.10.1"
+                ],
+                "cves": [
+                    "CVE-2020-28493",
+                    "CVE-2024-22195"
+                ]
+            },
+            {
+                "date": "2019-08-01 00:00:00",
+                "release": [
+                    "click:7.0",
+                    "itsdangerous:1.1.0",
+                    "jinja2:2.10.1"
+                ],
+                "cves": [
+                    "CVE-2020-28493",
+                    "CVE-2024-22195"
+                ]
+            },
+            {
+                "date": "2019-09-01 00:00:00",
+                "release": [
+                    "click:7.0",
+                    "itsdangerous:1.1.0",
+                    "jinja2:2.10.1"
+                ],
+                "cves": [
+                    "CVE-2020-28493",
+                    "CVE-2024-22195"
+                ]
+            },
+            {
+                "date": "2019-10-01 00:00:00",
+                "release": [
+                    "click:7.0",
+                    "itsdangerous:1.1.0",
+                    "jinja2:2.10.1"
+                ],
+                "cves": [
+                    "CVE-2020-28493",
+                    "CVE-2024-22195"
+                ]
+            },
+            {
+                "date": "2019-11-01 00:00:00",
+                "release": [
+                    "click:7.0",
+                    "itsdangerous:1.1.0",
+                    "jinja2:2.10.3"
+                ],
+                "cves": [
+                    "CVE-2020-28493",
+                    "CVE-2024-22195"
+                ]
+            },
+            {
+                "date": "2019-12-01 00:00:00",
+                "release": [
+                    "click:7.0",
+                    "itsdangerous:1.1.0",
+                    "jinja2:2.10.3"
+                ],
+                "cves": [
+                    "CVE-2020-28493",
+                    "CVE-2024-22195"
+                ]
+            },
+            {
+                "date": "2020-01-01 00:00:00",
+                "release": [
+                    "click:7.0",
+                    "itsdangerous:1.1.0",
+                    "jinja2:2.10.3"
+                ],
+                "cves": [
+                    "CVE-2020-28493",
+                    "CVE-2024-22195"
+                ]
+            },
+            {
+                "date": "2020-02-01 00:00:00",
+                "release": [
+                    "click:7.0",
+                    "itsdangerous:1.1.0",
+                    "jinja2:2.11.1",
+                    "werkzeug:1.0.0rc1"
+                ],
+                "cves": [
+                    "CVE-2020-28493",
+                    "CVE-2022-29361",
+                    "CVE-2023-23934",
+                    "CVE-2023-25577",
+                    "CVE-2023-46136",
+                    "CVE-2024-22195"
+                ]
+            },
+            {
+                "date": "2020-03-01 00:00:00",
+                "release": [
+                    "click:7.0",
+                    "itsdangerous:1.1.0",
+                    "jinja2:3.0.0a1",
+                    "werkzeug:1.0.0"
+                ],
+                "cves": [
+                    "CVE-2020-28493",
+                    "CVE-2022-29361",
+                    "CVE-2023-23934",
+                    "CVE-2023-25577",
+                    "CVE-2023-46136",
+                    "CVE-2024-22195"
+                ]
+            },
+            {
+                "date": "2020-04-01 00:00:00",
+                "release": [
+                    "click:7.1.1",
+                    "itsdangerous:1.1.0",
+                    "jinja2:3.0.0a1",
+                    "werkzeug:1.0.1"
+                ],
+                "cves": [
+                    "CVE-2020-28493",
+                    "CVE-2022-29361",
+                    "CVE-2023-23934",
+                    "CVE-2023-25577",
+                    "CVE-2023-46136",
+                    "CVE-2024-22195"
+                ]
+            },
+            {
+                "date": "2020-05-01 00:00:00",
+                "release": [
+                    "click:7.1.2",
+                    "itsdangerous:1.1.0",
+                    "jinja2:3.0.0a1",
+                    "werkzeug:1.0.1"
+                ],
+                "cves": [
+                    "CVE-2020-28493",
+                    "CVE-2022-29361",
+                    "CVE-2023-23934",
+                    "CVE-2023-25577",
+                    "CVE-2023-46136",
+                    "CVE-2024-22195"
+                ]
+            },
+            {
+                "date": "2020-06-01 00:00:00",
+                "release": [
+                    "click:7.1.2",
+                    "itsdangerous:2.0.0a1",
+                    "jinja2:3.0.0a1",
+                    "werkzeug:1.0.1"
+                ],
+                "cves": [
+                    "CVE-2020-28493",
+                    "CVE-2022-29361",
+                    "CVE-2023-23934",
+                    "CVE-2023-25577",
+                    "CVE-2023-46136",
+                    "CVE-2024-22195"
+                ]
+            },
+            {
+                "date": "2020-07-01 00:00:00",
+                "release": [
+                    "click:7.1.2",
+                    "itsdangerous:2.0.0a1",
+                    "jinja2:3.0.0a1",
+                    "werkzeug:1.0.1"
+                ],
+                "cves": [
+                    "CVE-2020-28493",
+                    "CVE-2022-29361",
+                    "CVE-2023-23934",
+                    "CVE-2023-25577",
+                    "CVE-2023-46136",
+                    "CVE-2024-22195"
+                ]
+            },
+            {
+                "date": "2020-08-01 00:00:00",
+                "release": [
+                    "click:7.1.2",
+                    "itsdangerous:2.0.0a1",
+                    "jinja2:3.0.0a1",
+                    "werkzeug:1.0.1"
+                ],
+                "cves": [
+                    "CVE-2020-28493",
+                    "CVE-2022-29361",
+                    "CVE-2023-23934",
+                    "CVE-2023-25577",
+                    "CVE-2023-46136",
+                    "CVE-2024-22195"
+                ]
+            },
+            {
+                "date": "2020-09-01 00:00:00",
+                "release": [
+                    "click:7.1.2",
+                    "itsdangerous:2.0.0a1",
+                    "jinja2:3.0.0a1",
+                    "werkzeug:1.0.1"
+                ],
+                "cves": [
+                    "CVE-2020-28493",
+                    "CVE-2022-29361",
+                    "CVE-2023-23934",
+                    "CVE-2023-25577",
+                    "CVE-2023-46136",
+                    "CVE-2024-22195"
+                ]
+            },
+            {
+                "date": "2020-10-01 00:00:00",
+                "release": [
+                    "click:7.1.2",
+                    "itsdangerous:2.0.0a1",
+                    "jinja2:3.0.0a1",
+                    "werkzeug:1.0.1"
+                ],
+                "cves": [
+                    "CVE-2020-28493",
+                    "CVE-2022-29361",
+                    "CVE-2023-23934",
+                    "CVE-2023-25577",
+                    "CVE-2023-46136",
+                    "CVE-2024-22195"
+                ]
+            },
+            {
+                "date": "2020-11-01 00:00:00",
+                "release": [
+                    "click:7.1.2",
+                    "itsdangerous:2.0.0a1",
+                    "jinja2:3.0.0a1",
+                    "werkzeug:1.0.1"
+                ],
+                "cves": [
+                    "CVE-2020-28493",
+                    "CVE-2022-29361",
+                    "CVE-2023-23934",
+                    "CVE-2023-25577",
+                    "CVE-2023-46136",
+                    "CVE-2024-22195"
+                ]
+            },
+            {
+                "date": "2020-12-01 00:00:00",
+                "release": [
+                    "click:8.0.0a1",
+                    "itsdangerous:2.0.0a1",
+                    "jinja2:3.0.0a1",
+                    "werkzeug:1.0.1"
+                ],
+                "cves": [
+                    "CVE-2020-28493",
+                    "CVE-2022-29361",
+                    "CVE-2023-23934",
+                    "CVE-2023-25577",
+                    "CVE-2023-46136",
+                    "CVE-2024-22195"
+                ]
+            },
+            {
+                "date": "2021-01-01 00:00:00",
+                "release": [
+                    "click:8.0.0a1",
+                    "itsdangerous:2.0.0a1",
+                    "jinja2:3.0.0a1",
+                    "werkzeug:1.0.1"
+                ],
+                "cves": [
+                    "CVE-2020-28493",
+                    "CVE-2022-29361",
+                    "CVE-2023-23934",
+                    "CVE-2023-25577",
+                    "CVE-2023-46136",
+                    "CVE-2024-22195"
+                ]
+            },
+            {
+                "date": "2021-02-01 00:00:00",
+                "release": [
+                    "click:8.0.0a1",
+                    "itsdangerous:2.0.0a1",
+                    "jinja2:3.0.0a1",
+                    "werkzeug:1.0.1"
+                ],
+                "cves": [
+                    "CVE-2020-28493",
+                    "CVE-2022-29361",
+                    "CVE-2023-23934",
+                    "CVE-2023-25577",
+                    "CVE-2023-46136",
+                    "CVE-2024-22195"
+                ]
+            },
+            {
+                "date": "2021-03-01 00:00:00",
+                "release": [
+                    "click:8.0.0a1",
+                    "itsdangerous:2.0.0rc1",
+                    "jinja2:3.0.0a1",
+                    "werkzeug:2.0.0rc1"
+                ],
+                "cves": [
+                    "CVE-2020-28493",
+                    "CVE-2022-29361",
+                    "CVE-2023-23934",
+                    "CVE-2023-25577",
+                    "CVE-2023-46136",
+                    "CVE-2024-22195"
+                ]
+            },
+            {
+                "date": "2021-04-01 00:00:00",
+                "release": [
+                    "click:8.0.0a1",
+                    "itsdangerous:2.0.0rc1",
+                    "jinja2:3.0.0a1",
+                    "werkzeug:2.0.0rc3"
+                ],
+                "cves": [
+                    "CVE-2020-28493",
+                    "CVE-2022-29361",
+                    "CVE-2023-23934",
+                    "CVE-2023-25577",
+                    "CVE-2023-46136",
+                    "CVE-2024-22195"
+                ]
+            },
+            {
+                "date": "2021-05-01 00:00:00",
+                "release": [
+                    "click:8.0.0rc1",
+                    "itsdangerous:2.0.0rc2",
+                    "jinja2:3.0.0rc2",
+                    "werkzeug:2.0.0rc3"
+                ],
+                "cves": [
+                    "CVE-2022-29361",
+                    "CVE-2023-23934",
+                    "CVE-2023-25577",
+                    "CVE-2023-46136",
+                    "CVE-2024-22195"
+                ]
+            },
+            {
+                "date": "2021-06-01 00:00:00",
+                "release": [
+                    "click:8.0.1",
+                    "itsdangerous:2.0.1",
+                    "jinja2:3.0.1",
+                    "werkzeug:2.0.1"
+                ],
+                "cves": [
+                    "CVE-2022-29361",
+                    "CVE-2023-23934",
+                    "CVE-2023-25577",
+                    "CVE-2023-46136",
+                    "CVE-2024-22195"
+                ]
+            },
+            {
+                "date": "2021-07-01 00:00:00",
+                "release": [
+                    "click:8.0.1",
+                    "itsdangerous:2.0.1",
+                    "jinja2:3.0.1",
+                    "werkzeug:2.0.1"
+                ],
+                "cves": [
+                    "CVE-2022-29361",
+                    "CVE-2023-23934",
+                    "CVE-2023-25577",
+                    "CVE-2023-46136",
+                    "CVE-2024-22195"
+                ]
+            },
+            {
+                "date": "2021-08-01 00:00:00",
+                "release": [
+                    "click:8.0.1",
+                    "itsdangerous:2.0.1",
+                    "jinja2:3.0.1",
+                    "werkzeug:2.0.1"
+                ],
+                "cves": [
+                    "CVE-2022-29361",
+                    "CVE-2023-23934",
+                    "CVE-2023-25577",
+                    "CVE-2023-46136",
+                    "CVE-2024-22195"
+                ]
+            },
+            {
+                "date": "2021-09-01 00:00:00",
+                "release": [
+                    "click:8.0.1",
+                    "itsdangerous:2.0.1",
+                    "jinja2:3.0.1",
+                    "werkzeug:2.0.1"
+                ],
+                "cves": [
+                    "CVE-2022-29361",
+                    "CVE-2023-23934",
+                    "CVE-2023-25577",
+                    "CVE-2023-46136",
+                    "CVE-2024-22195"
+                ]
+            },
+            {
+                "date": "2021-10-01 00:00:00",
+                "release": [
+                    "click:8.0.1",
+                    "itsdangerous:2.0.1",
+                    "jinja2:3.0.1",
+                    "werkzeug:2.0.1"
+                ],
+                "cves": [
+                    "CVE-2022-29361",
+                    "CVE-2023-23934",
+                    "CVE-2023-25577",
+                    "CVE-2023-46136",
+                    "CVE-2024-22195"
+                ]
+            },
+            {
+                "date": "2021-11-01 00:00:00",
+                "release": [
+                    "click:8.0.3",
+                    "itsdangerous:2.0.1",
+                    "jinja2:3.0.2",
+                    "werkzeug:2.0.2"
+                ],
+                "cves": [
+                    "CVE-2022-29361",
+                    "CVE-2023-23934",
+                    "CVE-2023-25577",
+                    "CVE-2023-46136",
+                    "CVE-2024-22195"
+                ]
+            },
+            {
+                "date": "2021-12-01 00:00:00",
+                "release": [
+                    "click:8.0.3",
+                    "itsdangerous:2.0.1",
+                    "jinja2:3.0.3",
+                    "werkzeug:2.0.2"
+                ],
+                "cves": [
+                    "CVE-2022-29361",
+                    "CVE-2023-23934",
+                    "CVE-2023-25577",
+                    "CVE-2023-46136",
+                    "CVE-2024-22195"
+                ]
+            },
+            {
+                "date": "2022-01-01 00:00:00",
+                "release": [
+                    "click:8.0.3",
+                    "itsdangerous:2.0.1",
+                    "jinja2:3.0.3",
+                    "werkzeug:2.0.2"
+                ],
+                "cves": [
+                    "CVE-2022-29361",
+                    "CVE-2023-23934",
+                    "CVE-2023-25577",
+                    "CVE-2023-46136",
+                    "CVE-2024-22195"
+                ]
+            },
+            {
+                "date": "2022-02-01 00:00:00",
+                "release": [
+                    "click:8.0.3",
+                    "itsdangerous:2.0.1",
+                    "jinja2:3.0.3",
+                    "werkzeug:2.0.2"
+                ],
+                "cves": [
+                    "CVE-2022-29361",
+                    "CVE-2023-23934",
+                    "CVE-2023-25577",
+                    "CVE-2023-46136",
+                    "CVE-2024-22195"
+                ]
+            },
+            {
+                "date": "2022-03-01 00:00:00",
+                "release": [
+                    "click:8.0.4",
+                    "itsdangerous:2.1.0",
+                    "jinja2:3.0.3",
+                    "werkzeug:2.0.3"
+                ],
+                "cves": [
+                    "CVE-2022-29361",
+                    "CVE-2023-23934",
+                    "CVE-2023-25577",
+                    "CVE-2023-46136",
+                    "CVE-2024-22195"
+                ]
+            },
+            {
+                "date": "2022-04-01 00:00:00",
+                "release": [
+                    "click:8.1.2",
+                    "importlib-metadata:4.11.3",
+                    "itsdangerous:2.1.2",
+                    "jinja2:3.1.1",
+                    "markupsafe:2.1.1",
+                    "werkzeug:2.1.0",
+                    "zipp:3.7.0"
+                ],
+                "cves": [
+                    "CVE-2022-29361",
+                    "CVE-2023-23934",
+                    "CVE-2023-25577",
+                    "CVE-2023-46136",
+                    "CVE-2024-22195"
+                ]
+            },
+            {
+                "date": "2022-05-01 00:00:00",
+                "release": [
+                    "click:8.1.3",
+                    "importlib-metadata:4.11.3",
+                    "itsdangerous:2.1.2",
+                    "jinja2:3.1.2",
+                    "markupsafe:2.1.1",
+                    "werkzeug:2.1.2",
+                    "zipp:3.8.0"
+                ],
+                "cves": [
+                    "CVE-2023-23934",
+                    "CVE-2023-25577",
+                    "CVE-2023-46136",
+                    "CVE-2024-22195"
+                ]
+            },
+            {
+                "date": "2022-06-01 00:00:00",
+                "release": [
+                    "click:8.1.3",
+                    "importlib-metadata:4.11.4",
+                    "itsdangerous:2.1.2",
+                    "jinja2:3.1.2",
+                    "markupsafe:2.1.1",
+                    "werkzeug:2.1.2",
+                    "zipp:3.8.0"
+                ],
+                "cves": [
+                    "CVE-2023-23934",
+                    "CVE-2023-25577",
+                    "CVE-2023-46136",
+                    "CVE-2024-22195"
+                ]
+            },
+            {
+                "date": "2022-07-01 00:00:00",
+                "release": [
+                    "click:8.1.3",
+                    "importlib-metadata:4.12.0",
+                    "itsdangerous:2.1.2",
+                    "jinja2:3.1.2",
+                    "markupsafe:2.1.1",
+                    "werkzeug:2.1.2",
+                    "zipp:3.8.0"
+                ],
+                "cves": [
+                    "CVE-2023-23934",
+                    "CVE-2023-25577",
+                    "CVE-2023-46136",
+                    "CVE-2024-22195"
+                ]
+            },
+            {
+                "date": "2022-08-01 00:00:00",
+                "release": [
+                    "click:8.1.3",
+                    "importlib-metadata:4.12.0",
+                    "itsdangerous:2.1.2",
+                    "jinja2:3.1.2",
+                    "markupsafe:2.1.1",
+                    "werkzeug:2.2.1",
+                    "zipp:3.8.1"
+                ],
+                "cves": [
+                    "CVE-2023-23934",
+                    "CVE-2023-25577",
+                    "CVE-2023-46136",
+                    "CVE-2024-22195"
+                ]
+            },
+            {
+                "date": "2022-09-01 00:00:00",
+                "release": [
+                    "click:8.1.3",
+                    "importlib-metadata:4.12.0",
+                    "itsdangerous:2.1.2",
+                    "jinja2:3.1.2",
+                    "markupsafe:2.1.1",
+                    "werkzeug:2.2.2",
+                    "zipp:3.8.1"
+                ],
+                "cves": [
+                    "CVE-2023-23934",
+                    "CVE-2023-25577",
+                    "CVE-2023-46136",
+                    "CVE-2024-22195"
+                ]
+            },
+            {
+                "date": "2022-10-01 00:00:00",
+                "release": [
+                    "click:8.1.3",
+                    "importlib-metadata:4.12.0",
+                    "itsdangerous:2.1.2",
+                    "jinja2:3.1.2",
+                    "markupsafe:2.1.1",
+                    "werkzeug:2.2.2",
+                    "zipp:3.8.1"
+                ],
+                "cves": [
+                    "CVE-2023-23934",
+                    "CVE-2023-25577",
+                    "CVE-2023-46136",
+                    "CVE-2024-22195"
+                ]
+            },
+            {
+                "date": "2022-11-01 00:00:00",
+                "release": [
+                    "click:8.1.3",
+                    "importlib-metadata:5.0.0",
+                    "itsdangerous:2.1.2",
+                    "jinja2:3.1.2",
+                    "markupsafe:2.1.1",
+                    "werkzeug:2.2.2",
+                    "zipp:3.10.0"
+                ],
+                "cves": [
+                    "CVE-2023-23934",
+                    "CVE-2023-25577",
+                    "CVE-2023-46136",
+                    "CVE-2024-22195"
+                ]
+            },
+            {
+                "date": "2022-12-01 00:00:00",
+                "release": [
+                    "click:8.1.3",
+                    "importlib-metadata:5.1.0",
+                    "itsdangerous:2.1.2",
+                    "jinja2:3.1.2",
+                    "markupsafe:2.1.1",
+                    "werkzeug:2.2.2",
+                    "zipp:3.11.0"
+                ],
+                "cves": [
+                    "CVE-2023-23934",
+                    "CVE-2023-25577",
+                    "CVE-2023-46136",
+                    "CVE-2024-22195"
+                ]
+            },
+            {
+                "date": "2023-01-01 00:00:00",
+                "release": [
+                    "click:8.1.3",
+                    "importlib-metadata:5.2.0",
+                    "itsdangerous:2.1.2",
+                    "jinja2:3.1.2",
+                    "markupsafe:2.1.1",
+                    "werkzeug:2.2.2",
+                    "zipp:3.11.0"
+                ],
+                "cves": [
+                    "CVE-2023-23934",
+                    "CVE-2023-25577",
+                    "CVE-2023-46136",
+                    "CVE-2024-22195"
+                ]
+            },
+            {
+                "date": "2023-02-01 00:00:00",
+                "release": [
+                    "click:8.1.3",
+                    "importlib-metadata:6.0.0",
+                    "itsdangerous:2.1.2",
+                    "jinja2:3.1.2",
+                    "markupsafe:2.1.2",
+                    "werkzeug:2.2.2",
+                    "zipp:3.12.0"
+                ],
+                "cves": [
+                    "CVE-2023-23934",
+                    "CVE-2023-25577",
+                    "CVE-2023-46136",
+                    "CVE-2024-22195"
+                ]
+            },
+            {
+                "date": "2023-03-01 00:00:00",
+                "release": [
+                    "click:8.1.3",
+                    "importlib-metadata:6.0.0",
+                    "itsdangerous:2.1.2",
+                    "jinja2:3.1.2",
+                    "markupsafe:2.1.2",
+                    "werkzeug:2.2.3",
+                    "zipp:3.15.0"
+                ],
+                "cves": [
+                    "CVE-2023-46136",
+                    "CVE-2024-22195"
+                ]
+            },
+            {
+                "date": "2023-04-01 00:00:00",
+                "release": [
+                    "click:8.1.3",
+                    "importlib-metadata:6.1.0",
+                    "itsdangerous:2.1.2",
+                    "jinja2:3.1.2",
+                    "markupsafe:2.1.2",
+                    "werkzeug:2.2.3",
+                    "zipp:3.15.0"
+                ],
+                "cves": [
+                    "CVE-2023-46136",
+                    "CVE-2024-22195"
+                ]
+            },
+            {
+                "date": "2023-05-01 00:00:00",
+                "release": [
+                    "blinker:1.6.2",
+                    "click:8.1.3",
+                    "importlib-metadata:6.6.0",
+                    "itsdangerous:2.1.2",
+                    "jinja2:3.1.2",
+                    "markupsafe:2.1.2",
+                    "werkzeug:2.3.2",
+                    "zipp:3.15.0"
+                ],
+                "cves": [
+                    "CVE-2023-46136",
+                    "CVE-2024-22195"
+                ]
+            },
+            {
+                "date": "2023-06-01 00:00:00",
+                "release": [
+                    "blinker:1.6.2",
+                    "click:8.1.3",
+                    "importlib-metadata:6.6.0",
+                    "itsdangerous:2.1.2",
+                    "jinja2:3.1.2",
+                    "markupsafe:2.1.2",
+                    "werkzeug:2.3.4",
+                    "zipp:3.15.0"
+                ],
+                "cves": [
+                    "CVE-2023-46136",
+                    "CVE-2024-22195"
+                ]
+            },
+            {
+                "date": "2023-07-01 00:00:00",
+                "release": [
+                    "blinker:1.6.2",
+                    "click:8.1.3",
+                    "importlib-metadata:6.7.0",
+                    "itsdangerous:2.1.2",
+                    "jinja2:3.1.2",
+                    "markupsafe:2.1.3",
+                    "werkzeug:2.3.6",
+                    "zipp:3.15.0"
+                ],
+                "cves": [
+                    "CVE-2023-46136",
+                    "CVE-2024-22195"
+                ]
+            },
+            {
+                "date": "2023-08-01 00:00:00",
+                "release": [
+                    "blinker:1.6.2",
+                    "click:8.1.6",
+                    "importlib-metadata:6.8.0",
+                    "itsdangerous:2.1.2",
+                    "jinja2:3.1.2",
+                    "markupsafe:2.1.3",
+                    "werkzeug:2.3.6",
+                    "zipp:3.16.2"
+                ],
+                "cves": [
+                    "CVE-2023-46136",
+                    "CVE-2024-22195"
+                ]
+            },
+            {
+                "date": "2023-09-01 00:00:00",
+                "release": [
+                    "blinker:1.6.2",
+                    "click:8.1.7",
+                    "importlib-metadata:6.8.0",
+                    "itsdangerous:2.1.2",
+                    "jinja2:3.1.2",
+                    "markupsafe:2.1.3",
+                    "werkzeug:2.3.7",
+                    "zipp:3.16.2"
+                ],
+                "cves": [
+                    "CVE-2023-46136",
+                    "CVE-2024-22195"
+                ]
+            },
+            {
+                "date": "2023-10-01 00:00:00",
+                "release": [
+                    "blinker:1.6.2",
+                    "click:8.1.7",
+                    "importlib-metadata:6.8.0",
+                    "itsdangerous:2.1.2",
+                    "jinja2:3.1.2",
+                    "markupsafe:2.1.3",
+                    "werkzeug:3.0.0",
+                    "zipp:3.17.0"
+                ],
+                "cves": [
+                    "CVE-2023-46136",
+                    "CVE-2024-22195"
+                ]
+            },
+            {
+                "date": "2023-11-01 00:00:00",
+                "release": [
+                    "blinker:1.6.3",
+                    "click:8.1.7",
+                    "importlib-metadata:6.8.0",
+                    "itsdangerous:2.1.2",
+                    "jinja2:3.1.2",
+                    "markupsafe:2.1.3",
+                    "werkzeug:3.0.1",
+                    "zipp:3.17.0"
+                ],
+                "cves": [
+                    "CVE-2023-46136",
+                    "CVE-2024-22195"
+                ]
+            },
+            {
+                "date": "2023-12-01 00:00:00",
+                "release": [
+                    "blinker:1.7.0",
+                    "click:8.1.7",
+                    "importlib-metadata:6.8.0",
+                    "itsdangerous:2.1.2",
+                    "jinja2:3.1.2",
+                    "markupsafe:2.1.3",
+                    "werkzeug:3.0.1",
+                    "zipp:3.17.0"
+                ],
+                "cves": [
+                    "CVE-2023-46136",
+                    "CVE-2024-22195"
+                ]
+            },
+            {
+                "date": "2024-01-01 00:00:00",
+                "release": [
+                    "blinker:1.7.0",
+                    "click:8.1.7",
+                    "importlib-metadata:7.0.1",
+                    "itsdangerous:2.1.2",
+                    "jinja2:3.1.2",
+                    "markupsafe:2.1.3",
+                    "werkzeug:3.0.1",
+                    "zipp:3.17.0"
+                ],
+                "cves": [
+                    "CVE-2023-46136",
+                    "CVE-2024-22195"
+                ]
+            },
+            {
+                "date": "2024-02-01 00:00:00",
+                "release": [
+                    "blinker:1.7.0",
+                    "click:8.1.7",
+                    "importlib-metadata:7.0.1",
+                    "itsdangerous:2.1.2",
+                    "jinja2:3.1.3",
+                    "markupsafe:2.1.4",
+                    "werkzeug:3.0.1",
+                    "zipp:3.17.0"
+                ],
+                "cves": [
+                    "CVE-2023-46136"
+                ]
+            },
+            {
+                "date": "2024-03-01 00:00:00",
+                "release": [
+                    "blinker:1.7.0",
+                    "click:8.1.7",
+                    "importlib-metadata:7.0.1",
+                    "itsdangerous:2.1.2",
+                    "jinja2:3.1.3",
+                    "markupsafe:2.1.5",
+                    "werkzeug:3.0.1",
+                    "zipp:3.17.0"
+                ],
+                "cves": [
+                    "CVE-2023-46136"
+                ]
+            }
+        ]
+    },
+    "pypi:tornado": {
+        "cwes": {},
+        "cves": {},
+        "releases": {},
+        "timeline": [
+            {
+                "date": "2012-01-01 00:00:00",
+                "release": [],
+                "cves": []
+            },
+            {
+                "date": "2012-02-01 00:00:00",
+                "release": [],
+                "cves": []
+            },
+            {
+                "date": "2012-03-01 00:00:00",
+                "release": [],
+                "cves": []
+            },
+            {
+                "date": "2012-04-01 00:00:00",
+                "release": [],
+                "cves": []
+            },
+            {
+                "date": "2012-05-01 00:00:00",
+                "release": [],
+                "cves": []
+            },
+            {
+                "date": "2012-06-01 00:00:00",
+                "release": [],
+                "cves": []
+            },
+            {
+                "date": "2012-07-01 00:00:00",
+                "release": [],
+                "cves": []
+            },
+            {
+                "date": "2012-08-01 00:00:00",
+                "release": [],
+                "cves": []
+            },
+            {
+                "date": "2012-09-01 00:00:00",
+                "release": [],
+                "cves": []
+            },
+            {
+                "date": "2012-10-01 00:00:00",
+                "release": [],
+                "cves": []
+            },
+            {
+                "date": "2012-11-01 00:00:00",
+                "release": [],
+                "cves": []
+            },
+            {
+                "date": "2012-12-01 00:00:00",
+                "release": [],
+                "cves": []
+            },
+            {
+                "date": "2013-01-01 00:00:00",
+                "release": [],
+                "cves": []
+            },
+            {
+                "date": "2013-02-01 00:00:00",
+                "release": [],
+                "cves": []
+            },
+            {
+                "date": "2013-03-01 00:00:00",
+                "release": [],
+                "cves": []
+            },
+            {
+                "date": "2013-04-01 00:00:00",
+                "release": [],
+                "cves": []
+            },
+            {
+                "date": "2013-05-01 00:00:00",
+                "release": [],
+                "cves": []
+            },
+            {
+                "date": "2013-06-01 00:00:00",
+                "release": [],
+                "cves": []
+            },
+            {
+                "date": "2013-07-01 00:00:00",
+                "release": [],
+                "cves": []
+            },
+            {
+                "date": "2013-08-01 00:00:00",
+                "release": [],
+                "cves": []
+            },
+            {
+                "date": "2013-09-01 00:00:00",
+                "release": [],
+                "cves": []
+            },
+            {
+                "date": "2013-10-01 00:00:00",
+                "release": [],
+                "cves": []
+            },
+            {
+                "date": "2013-11-01 00:00:00",
+                "release": [],
+                "cves": []
+            },
+            {
+                "date": "2013-12-01 00:00:00",
+                "release": [],
+                "cves": []
+            },
+            {
+                "date": "2014-01-01 00:00:00",
+                "release": [],
+                "cves": []
+            },
+            {
+                "date": "2014-02-01 00:00:00",
+                "release": [],
+                "cves": []
+            },
+            {
+                "date": "2014-03-01 00:00:00",
+                "release": [],
+                "cves": []
+            },
+            {
+                "date": "2014-04-01 00:00:00",
+                "release": [],
+                "cves": []
+            },
+            {
+                "date": "2014-05-01 00:00:00",
+                "release": [],
+                "cves": []
+            },
+            {
+                "date": "2014-06-01 00:00:00",
+                "release": [],
+                "cves": []
+            },
+            {
+                "date": "2014-07-01 00:00:00",
+                "release": [],
+                "cves": []
+            },
+            {
+                "date": "2014-08-01 00:00:00",
+                "release": [],
+                "cves": []
+            },
+            {
+                "date": "2014-09-01 00:00:00",
+                "release": [],
+                "cves": []
+            },
+            {
+                "date": "2014-10-01 00:00:00",
+                "release": [],
+                "cves": []
+            },
+            {
+                "date": "2014-11-01 00:00:00",
+                "release": [],
+                "cves": []
+            },
+            {
+                "date": "2014-12-01 00:00:00",
+                "release": [],
+                "cves": []
+            },
+            {
+                "date": "2015-01-01 00:00:00",
+                "release": [],
+                "cves": []
+            },
+            {
+                "date": "2015-02-01 00:00:00",
+                "release": [],
+                "cves": []
+            },
+            {
+                "date": "2015-03-01 00:00:00",
+                "release": [],
+                "cves": []
+            },
+            {
+                "date": "2015-04-01 00:00:00",
+                "release": [],
+                "cves": []
+            },
+            {
+                "date": "2015-05-01 00:00:00",
+                "release": [],
+                "cves": []
+            },
+            {
+                "date": "2015-06-01 00:00:00",
+                "release": [],
+                "cves": []
+            },
+            {
+                "date": "2015-07-01 00:00:00",
+                "release": [],
+                "cves": []
+            },
+            {
+                "date": "2015-08-01 00:00:00",
+                "release": [],
+                "cves": []
+            },
+            {
+                "date": "2015-09-01 00:00:00",
+                "release": [],
+                "cves": []
+            },
+            {
+                "date": "2015-10-01 00:00:00",
+                "release": [],
+                "cves": []
+            },
+            {
+                "date": "2015-11-01 00:00:00",
+                "release": [],
+                "cves": []
+            },
+            {
+                "date": "2015-12-01 00:00:00",
+                "release": [],
+                "cves": []
+            },
+            {
+                "date": "2016-01-01 00:00:00",
+                "release": [],
+                "cves": []
+            },
+            {
+                "date": "2016-02-01 00:00:00",
+                "release": [],
+                "cves": []
+            },
+            {
+                "date": "2016-03-01 00:00:00",
+                "release": [],
+                "cves": []
+            },
+            {
+                "date": "2016-04-01 00:00:00",
+                "release": [],
+                "cves": []
+            },
+            {
+                "date": "2016-05-01 00:00:00",
+                "release": [],
+                "cves": []
+            },
+            {
+                "date": "2016-06-01 00:00:00",
+                "release": [],
+                "cves": []
+            },
+            {
+                "date": "2016-07-01 00:00:00",
+                "release": [],
+                "cves": []
+            },
+            {
+                "date": "2016-08-01 00:00:00",
+                "release": [],
+                "cves": []
+            },
+            {
+                "date": "2016-09-01 00:00:00",
+                "release": [],
+                "cves": []
+            },
+            {
+                "date": "2016-10-01 00:00:00",
+                "release": [],
+                "cves": []
+            },
+            {
+                "date": "2016-11-01 00:00:00",
+                "release": [],
+                "cves": []
+            },
+            {
+                "date": "2016-12-01 00:00:00",
+                "release": [],
+                "cves": []
+            },
+            {
+                "date": "2017-01-01 00:00:00",
+                "release": [],
+                "cves": []
+            },
+            {
+                "date": "2017-02-01 00:00:00",
+                "release": [],
+                "cves": []
+            },
+            {
+                "date": "2017-03-01 00:00:00",
+                "release": [],
+                "cves": []
+            },
+            {
+                "date": "2017-04-01 00:00:00",
+                "release": [],
+                "cves": []
+            },
+            {
+                "date": "2017-05-01 00:00:00",
+                "release": [],
+                "cves": []
+            },
+            {
+                "date": "2017-06-01 00:00:00",
+                "release": [],
+                "cves": []
+            },
+            {
+                "date": "2017-07-01 00:00:00",
+                "release": [],
+                "cves": []
+            },
+            {
+                "date": "2017-08-01 00:00:00",
+                "release": [],
+                "cves": []
+            },
+            {
+                "date": "2017-09-01 00:00:00",
+                "release": [],
+                "cves": []
+            },
+            {
+                "date": "2017-10-01 00:00:00",
+                "release": [],
+                "cves": []
+            },
+            {
+                "date": "2017-11-01 00:00:00",
+                "release": [],
+                "cves": []
+            },
+            {
+                "date": "2017-12-01 00:00:00",
+                "release": [],
+                "cves": []
+            },
+            {
+                "date": "2018-01-01 00:00:00",
+                "release": [],
+                "cves": []
+            },
+            {
+                "date": "2018-02-01 00:00:00",
+                "release": [],
+                "cves": []
+            },
+            {
+                "date": "2018-03-01 00:00:00",
+                "release": [],
+                "cves": []
+            },
+            {
+                "date": "2018-04-01 00:00:00",
+                "release": [],
+                "cves": []
+            },
+            {
+                "date": "2018-05-01 00:00:00",
+                "release": [],
+                "cves": []
+            },
+            {
+                "date": "2018-06-01 00:00:00",
+                "release": [],
+                "cves": []
+            },
+            {
+                "date": "2018-07-01 00:00:00",
+                "release": [],
+                "cves": []
+            },
+            {
+                "date": "2018-08-01 00:00:00",
+                "release": [],
+                "cves": []
+            },
+            {
+                "date": "2018-09-01 00:00:00",
+                "release": [],
+                "cves": []
+            },
+            {
+                "date": "2018-10-01 00:00:00",
+                "release": [],
+                "cves": []
+            },
+            {
+                "date": "2018-11-01 00:00:00",
+                "release": [],
+                "cves": []
+            },
+            {
+                "date": "2018-12-01 00:00:00",
+                "release": [],
+                "cves": []
+            },
+            {
+                "date": "2019-01-01 00:00:00",
+                "release": [],
+                "cves": []
+            },
+            {
+                "date": "2019-02-01 00:00:00",
+                "release": [],
+                "cves": []
+            },
+            {
+                "date": "2019-03-01 00:00:00",
+                "release": [],
+                "cves": []
+            },
+            {
+                "date": "2019-04-01 00:00:00",
+                "release": [],
+                "cves": []
+            },
+            {
+                "date": "2019-05-01 00:00:00",
+                "release": [],
+                "cves": []
+            },
+            {
+                "date": "2019-06-01 00:00:00",
+                "release": [],
+                "cves": []
+            },
+            {
+                "date": "2019-07-01 00:00:00",
+                "release": [],
+                "cves": []
+            },
+            {
+                "date": "2019-08-01 00:00:00",
+                "release": [],
+                "cves": []
+            },
+            {
+                "date": "2019-09-01 00:00:00",
+                "release": [],
+                "cves": []
+            },
+            {
+                "date": "2019-10-01 00:00:00",
+                "release": [],
+                "cves": []
+            },
+            {
+                "date": "2019-11-01 00:00:00",
+                "release": [],
+                "cves": []
+            },
+            {
+                "date": "2019-12-01 00:00:00",
+                "release": [],
+                "cves": []
+            },
+            {
+                "date": "2020-01-01 00:00:00",
+                "release": [],
+                "cves": []
+            },
+            {
+                "date": "2020-02-01 00:00:00",
+                "release": [],
+                "cves": []
+            },
+            {
+                "date": "2020-03-01 00:00:00",
+                "release": [],
+                "cves": []
+            },
+            {
+                "date": "2020-04-01 00:00:00",
+                "release": [],
+                "cves": []
+            },
+            {
+                "date": "2020-05-01 00:00:00",
+                "release": [],
+                "cves": []
+            },
+            {
+                "date": "2020-06-01 00:00:00",
+                "release": [],
+                "cves": []
+            },
+            {
+                "date": "2020-07-01 00:00:00",
+                "release": [],
+                "cves": []
+            },
+            {
+                "date": "2020-08-01 00:00:00",
+                "release": [],
+                "cves": []
+            },
+            {
+                "date": "2020-09-01 00:00:00",
+                "release": [],
+                "cves": []
+            },
+            {
+                "date": "2020-10-01 00:00:00",
+                "release": [],
+                "cves": []
+            },
+            {
+                "date": "2020-11-01 00:00:00",
+                "release": [],
+                "cves": []
+            },
+            {
+                "date": "2020-12-01 00:00:00",
+                "release": [],
+                "cves": []
+            },
+            {
+                "date": "2021-01-01 00:00:00",
+                "release": [],
+                "cves": []
+            },
+            {
+                "date": "2021-02-01 00:00:00",
+                "release": [],
+                "cves": []
+            },
+            {
+                "date": "2021-03-01 00:00:00",
+                "release": [],
+                "cves": []
+            },
+            {
+                "date": "2021-04-01 00:00:00",
+                "release": [],
+                "cves": []
+            },
+            {
+                "date": "2021-05-01 00:00:00",
+                "release": [],
+                "cves": []
+            },
+            {
+                "date": "2021-06-01 00:00:00",
+                "release": [],
+                "cves": []
+            },
+            {
+                "date": "2021-07-01 00:00:00",
+                "release": [],
+                "cves": []
+            },
+            {
+                "date": "2021-08-01 00:00:00",
+                "release": [],
+                "cves": []
+            },
+            {
+                "date": "2021-09-01 00:00:00",
+                "release": [],
+                "cves": []
+            },
+            {
+                "date": "2021-10-01 00:00:00",
+                "release": [],
+                "cves": []
+            },
+            {
+                "date": "2021-11-01 00:00:00",
+                "release": [],
+                "cves": []
+            },
+            {
+                "date": "2021-12-01 00:00:00",
+                "release": [],
+                "cves": []
+            },
+            {
+                "date": "2022-01-01 00:00:00",
+                "release": [],
+                "cves": []
+            },
+            {
+                "date": "2022-02-01 00:00:00",
+                "release": [],
+                "cves": []
+            },
+            {
+                "date": "2022-03-01 00:00:00",
+                "release": [],
+                "cves": []
+            },
+            {
+                "date": "2022-04-01 00:00:00",
+                "release": [],
+                "cves": []
+            },
+            {
+                "date": "2022-05-01 00:00:00",
+                "release": [],
+                "cves": []
+            },
+            {
+                "date": "2022-06-01 00:00:00",
+                "release": [],
+                "cves": []
+            },
+            {
+                "date": "2022-07-01 00:00:00",
+                "release": [],
+                "cves": []
+            },
+            {
+                "date": "2022-08-01 00:00:00",
+                "release": [],
+                "cves": []
+            },
+            {
+                "date": "2022-09-01 00:00:00",
+                "release": [],
+                "cves": []
+            },
+            {
+                "date": "2022-10-01 00:00:00",
+                "release": [],
+                "cves": []
+            },
+            {
+                "date": "2022-11-01 00:00:00",
+                "release": [],
+                "cves": []
+            },
+            {
+                "date": "2022-12-01 00:00:00",
+                "release": [],
+                "cves": []
+            },
+            {
+                "date": "2023-01-01 00:00:00",
+                "release": [],
+                "cves": []
+            },
+            {
+                "date": "2023-02-01 00:00:00",
+                "release": [],
+                "cves": []
+            },
+            {
+                "date": "2023-03-01 00:00:00",
+                "release": [],
+                "cves": []
+            },
+            {
+                "date": "2023-04-01 00:00:00",
+                "release": [],
+                "cves": []
+            },
+            {
+                "date": "2023-05-01 00:00:00",
+                "release": [],
+                "cves": []
+            },
+            {
+                "date": "2023-06-01 00:00:00",
+                "release": [],
+                "cves": []
+            },
+            {
+                "date": "2023-07-01 00:00:00",
+                "release": [],
+                "cves": []
+            },
+            {
+                "date": "2023-08-01 00:00:00",
+                "release": [],
+                "cves": []
+            },
+            {
+                "date": "2023-09-01 00:00:00",
+                "release": [],
+                "cves": []
+            },
+            {
+                "date": "2023-10-01 00:00:00",
+                "release": [],
+                "cves": []
+            },
+            {
+                "date": "2023-11-01 00:00:00",
+                "release": [],
+                "cves": []
+            },
+            {
+                "date": "2023-12-01 00:00:00",
+                "release": [],
+                "cves": []
+            },
+            {
+                "date": "2024-01-01 00:00:00",
+                "release": [],
+                "cves": []
+            },
+            {
+                "date": "2024-02-01 00:00:00",
+                "release": [],
+                "cves": []
+            },
+            {
+                "date": "2024-03-01 00:00:00",
+                "release": [],
+                "cves": []
+            }
+        ]
+    }
+}

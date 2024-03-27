@@ -18,12 +18,12 @@ def version_satisfies_requirements(v: str, requirements: str) -> bool:
         requirement = requirement.strip()
         regex = re.match(r'([<>=]+)(.*)', requirement)
         if not regex:
-            logger.error(f"Error parsing requirement '{requirement}'")
+            logger.debug(f"Error parsing requirement '{requirement}'")
             continue
         try:
             operator, version = regex.groups()
         except Exception as e:
-            logger.error(f"Error parsing requirement '{requirement}'")
+            logger.debug(f"Error parsing requirement '{requirement}'")
             continue
         version = semver.parse(version.strip('.'))
         match operator:
