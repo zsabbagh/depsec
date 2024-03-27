@@ -44,23 +44,6 @@ parser.add_argument('--force', help='Force reload of dependencies', action='stor
 
 args = parser.parse_args()
 
-def impact_to_int(score: str):
-    """
-    Translates a CVSS score to an integer
-    """
-    if score is None:
-        return None
-    elif type(score) in [int, float]:
-        return score
-    score = score.lower()
-    match score:
-        case 'none':
-            return 0
-        case 'low' | 'partial':
-            return 1
-        case 'high' | 'complete':
-            return 2
-    return None
 
 
 # These are the key performance indicators for the releases
@@ -227,14 +210,16 @@ def plot_timelines(timelines: dict, title_prefix: str = ''):
             fill = kpi_dict.get('fill', True)
             if fill and default_value_key in ['mean', 'median']:
                 if lower is not None and upper is not None:
-                    ax.fill_between(results.get('dates'), lower, upper, alpha=0.1, label=f"{project.title()} min - max")
+                    ax.fill_between(results.get('dates'), lower, upper, alpha=0.1)
     for kpi in args.kpis:
         fig, ax = figures.get(kpi, (None, None))
         min_val = min_values.get(kpi)
         if min_val is None or min_val > 0:
             min_val = 0
         ax.set_ylim(ymin=min_val, ymax=max_values[kpi])
-        ax.legend()
+        # Shrink current axis's height by 10% on the bottom
+        # Put a legend below current axis
+        ax.legend(loc='upper center', framealpha=0.5)
         fig.autofmt_xdate()
         filename = f"{kpi.replace('/', '-')}"
         fig.savefig(plots_dir / f"{filename}.png")

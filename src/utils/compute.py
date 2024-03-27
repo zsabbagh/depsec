@@ -11,6 +11,24 @@ def _get_entry(*args, element='entry'):
 def _get_data(*args):
     return args[0]
 
+def impact_to_int(score: str):
+    """
+    Translates a CVSS score to an integer
+    """
+    if score is None:
+        return None
+    elif type(score) in [int, float]:
+        return score
+    score = score.lower()
+    match score:
+        case 'none':
+            return 0
+        case 'low' | 'partial':
+            return 1
+        case 'high' | 'complete':
+            return 2
+    return None
+
 def patch_lag(data: dict, entry: dict, *args, format='days', start: str = 'release'):
     """
     Asserts that the data has 'cves' and 'releases' keys.
@@ -129,7 +147,7 @@ KPIS = {
     },
     'confidentiality': {
         'default': 'mean', # mean impact of all CVEs
-        'key': 'cvss_confidentiality_impact',
+        'key': lambda *args: impact_to_int(args[1].get('cvss_confidentiality_impact')),
         'title': 'CVSS Confidentiality Impact',
         'max': 2,
         'element': 'cve',
@@ -137,7 +155,7 @@ KPIS = {
     },
     'integrity': {
         'default': 'mean',
-        'key': 'cvss_integrity_impact',
+        'key': lambda *args: impact_to_int(args[1].get('cvss_integrity_impact')),
         'title': 'CVSS Integrity Impact',
         'max': 2,
         'element': 'cve',
@@ -145,7 +163,7 @@ KPIS = {
     },
     'availability': {
         'default': 'mean',
-        'key': 'cvss_availability_impact',
+        'key': lambda *args: impact_to_int(args[1].get('cvss_availability_impact')),
         'title': 'CVSS Availability Impact',
         'max': 2,
         'element': 'cve',
