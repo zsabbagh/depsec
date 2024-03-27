@@ -2,6 +2,7 @@
     "pypi": {
         "jinja2": {
             "product": "jinja",
+            "vendor": "palletsprojects",
             "repo": {
                 "url": "github.com/pallets/jinja",
                 "tags": "jinja2:@version",
@@ -34,6 +35,22 @@
                 "includes": ["tensorflow/"]
             },
             "vendor": "google"
-        }
+        },
+        "asgiref": {},
+        "sqlparse": {
+            "product": "sqlparse",
+            "vendor": "sqlparse_project"
+        },
+        "typing-extensions": {},
+        "werkzeug": {
+            "product": "werkzeug",
+            "vendor": "palletsprojects"
+        },
+        "itsdangerous": {},
+        "blinker": {},
+        "click": {},
+        "markupsafe": {},
+        "importlib-metadata": {},
+        "zipp": {}
     }
 }
