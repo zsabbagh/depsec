@@ -22,8 +22,10 @@ parser.add_argument('--do', help='The operation to do', default=[], nargs='*')
 parser.add_argument('-o', '--only', help='Only do the mentioned projects', default=[], nargs='*')
 parser.add_argument('-c', '--clone', help='Clone if the repository does not exist', action='store_true', default=False)
 parser.add_argument('-s', '--skips', help='Tests to skip, in Bandit test IDs (b?\d{3})', default='')
+parser.add_argument('--exclude-projects', help='Exclude the mentioned projects', default=[], nargs='*')
 
 args = parser.parse_args()
+excluded_projects = set(map(str.lower, args.exclude_projects))
 
 skips = args.skips
 if bool(skips):
@@ -61,6 +63,10 @@ def is_version_tag(tag: str):
 for platform, projects in data.items():
 
     for project_name in projects:
+
+        if project_name.lower() in excluded_projects:
+            logger.info(f"Excluding {platform} project '{project_name}'")
+            continue
 
         if only and project_name.lower() not in only:
             logger.info(f"Skipping {platform} project '{project_name}', only '{', '.join(list(only))}' provided")
@@ -144,6 +150,15 @@ for platform, projects in data.items():
             release.commit_at = date_time
             release.commit_hash = str(tag.commit)
             date_str = date_time.strftime('%Y-%m-%d %H:%M:%S')
+            if excludes:
+                excl_str = ', '.join(list(map(str, excludes)))
+                logger.info(f"Updating {project_name}:{version} excludes to '{excl_str}'")
+                release.excludes = excl_str
+            if includes:
+                incl_str = ', '.join(list(map(str, includes)))
+                logger.info(f"Updating {project_name}:{version} includes to '{incl_str}'")
+                release.includes = incl_str
+            release.save()
             if 'lizard' in args.do:
                 res = run_lizard(repo_path, includes, excludes)
                 nloc = res.get('nloc')

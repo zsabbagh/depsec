@@ -36,21 +36,65 @@
             },
             "vendor": "google"
         },
-        "asgiref": {},
+        "asgiref": {
+            "repo": {
+                "url": "github.com/django/asgiref",
+                "includes": ["asgiref/"]
+            }
+        },
         "sqlparse": {
             "product": "sqlparse",
-            "vendor": "sqlparse_project"
+            "vendor": "sqlparse_project",
+            "repo": {
+                "url": "github.com/andialbrecht/sqlparse",
+                "includes": ["sqlparse/"]
+            }
         },
         "typing-extensions": {},
         "werkzeug": {
             "product": "werkzeug",
             "vendor": "palletsprojects"
         },
-        "itsdangerous": {},
-        "blinker": {},
-        "click": {},
-        "markupsafe": {},
+        "itsdangerous": {
+            "product": "itsdangerous",
+            "vendor": "palletsprojects",
+            "repo": {
+                "url": "github.com/pallets/itsdangerous",
+                "includes": ["itsdangerous/", "src/"]
+            }
+        },
+        "blinker": {
+            "product": "blinker",
+            "vendor": "pallets-eco",
+            "repo": {
+                "url": "github.com/pallets-eco/blinker",
+                "includes": ["src/"]
+            }
+        },
+        "click": {
+            "product": "click",
+            "vendor": "palletsprojects",
+            "repo": {
+                "url": "github.com/pallets/click",
+                "includes": ["src/"]
+            }
+        },
+        "markupsafe": {
+            "product": "markupsafe",
+            "vendor": "palletsprojects",
+            "repo": {
+                "url": "github.com/pallets/markupsafe",
+                "includes": ["src/"]
+            }
+        },
         "importlib-metadata": {},
-        "zipp": {}
+        "zipp": {
+            "product": "zipp",
+            "vendor": "jaraco",
+            "repo": {
+                "url": "github.com/jaraco/zipp",
+                "includes": ["src/"]
+            }
+        }
     }
 }
