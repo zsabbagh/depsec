@@ -79,7 +79,7 @@ def cves_per_nloc(data: dict, entry: dict, *args):
 
 # This file helps with computing KPIs for certain data structures
 # *args are in the order (data, elem, entry)
-KPIS = {
+KPIS_TIMELINE = {
     'base': {
         'default': 'mean',
         'key': 'cvss_base_score',
@@ -230,7 +230,7 @@ def values_to_stats(list_of_values: list):
             result['min'].append(np.min(values))
             result['max'].append(np.max(values))
     return result
-    
+
 
 def timeline_kpis(data: dict, *kpis: str):
     """
@@ -241,7 +241,7 @@ def timeline_kpis(data: dict, *kpis: str):
     timeline = data.get('timeline')
     cves = data.get('cves')
     results = {
-        k: deepcopy(KPIS[k]) for k in kpis if k in KPIS
+        k: deepcopy(KPIS_TIMELINE[k]) for k in kpis if k in KPIS_TIMELINE
     }
     dates = []
     kpi_args = list(kpis)
@@ -260,13 +260,13 @@ def timeline_kpis(data: dict, *kpis: str):
             if k not in kpi_argset:
                 continue
             # expect keywords type, element, function
-            kpi: dict = KPIS.get(k)
+            kpi: dict = KPIS_TIMELINE.get(k)
             element_name: str = kpi.get('element')
             element = ids = None
             if 'values' not in results[k]:
                 results[k]['values'] = []
-            returns_values = kpi.get('returns_values')
-            if returns_values:
+            key_returns_values = kpi.get('returns_values')
+            if key_returns_values:
                 logger.info(f"Returns values for KPI '{k}'")
                 key = kpi.get('key')
                 if not callable(key):
@@ -332,4 +332,7 @@ def timeline_kpis(data: dict, *kpis: str):
     return results
 
 def overall_kpis(data: dict, *kpis):
+    """
+    Computes KPIs for an overall vulnerability data structure.
+    """
     pass

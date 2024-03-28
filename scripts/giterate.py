@@ -9,7 +9,7 @@ from src.middleware import Middleware
 from src.schemas.projects import *
 # This tool iterates git tags and runs a command for each tag
 
-VERSION_TAG = r'^v?\d+\.\d+\.\d+$'
+VERSION_TAG = r'v?(\d+\.\d+(?:\.\d+)?)'
 
 parser = argparse.ArgumentParser(description='Iterate git tags and run a command for each tag')
 parser.add_argument('-p', '--projects', help='The projects file', default='projects.json')
@@ -22,6 +22,7 @@ parser.add_argument('--do', help='The operation to do', default=[], nargs='*')
 parser.add_argument('-o', '--only', help='Only do the mentioned projects', default=[], nargs='*')
 parser.add_argument('-c', '--clone', help='Clone if the repository does not exist', action='store_true', default=False)
 parser.add_argument('-s', '--skips', help='Tests to skip, in Bandit test IDs (b?\d{3})', default='')
+parser.add_argument('--tags', help='Show tags only', action='store_true')
 parser.add_argument('--exclude-projects', help='Exclude the mentioned projects', default=[], nargs='*')
 
 args = parser.parse_args()
@@ -54,11 +55,19 @@ data = None
 with open(args.projects, 'r') as f:
     data = json.load(f)
 
-def is_version_tag(tag: str):
+def version_tag(tag: str, pattern: str = None):
     """
-    Checks if a tag is a version tag
+    Returns the version tag from the tag if it matches the pattern
     """
-    return bool(re.match(VERSION_TAG, tag))
+    if type(pattern) == str:
+        pattern = pattern.replace('@version', VERSION_TAG)
+    else:
+        pattern = VERSION_TAG
+    pattern = rf"^{pattern}$"
+    groups = re.match(pattern, tag)
+    if groups:
+        return groups.group(1)
+    return None
 
 for platform, projects in data.items():
 
@@ -113,14 +122,27 @@ for platform, projects in data.items():
                 continue
 
         logger.info(f"Checking out {repo_name} to {repo_path}")
+        tag_pattern = repo.get('tags')
         repo = Repo(repo_path)
         tags = repo.tags
         versions = {}
 
+        if args.tags:
+            tags = [ tag.name for tag in tags ]
+            tags = sorted(list(set(tags)))
+            print(f"-- Tags for {repo_name} --")
+            for tag in tags:
+                v = version_tag(tag, tag_pattern)
+                if v:
+                    print(f"{v} <<-- '{tag}' matches")
+                else:
+                    print(tag)
+            continue
+        
         for tag in tags:
-            if not is_version_tag(tag.name):
+            tag_version = version_tag(tag.name, tag_pattern)
+            if not tag_version:
                 continue
-            tag_version = tag.name.lstrip('v')
             versions[tag_version] = tag
         
         logger.info(f"Versions found for {repo_name}: {len(versions)}")

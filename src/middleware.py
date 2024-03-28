@@ -290,7 +290,7 @@ class Middleware:
         return releases
     
     def get_release(self,
-                    project: str | Project,
+                    project_or_release: str | Project | Release,
                     version: str = None,
                     platform: str="pypi",
                     before: str | int | datetime.datetime = None,
@@ -302,7 +302,9 @@ class Middleware:
         project: str | Project, the project name or the project object
         version: str, the version number, if None, the latest release is used
         """
-        project = self.get_project(project, platform)
+        if isinstance(project_or_release, Release):
+            return project_or_release
+        project = self.get_project(project_or_release, platform)
         if project is None:
             return None
         version = version if version else project.latest_release
@@ -602,7 +604,7 @@ class Middleware:
                         cwes[cwe_id]['cves'] = list(weakset)
                 if rel_id not in releases:
                     releases[rel_id] = model_to_dict(rel, recurse=False)
-                    bandit_report = rel.bandit_report.first()
+                    bandit_report = release.bandit_report.first()
                     if bandit_report:
                         releases[rel_id]['bandit_report'] = model_to_dict(bandit_report, recurse=False)
         return results
@@ -898,6 +900,37 @@ class Middleware:
         release.dependency_count = len(results)
         release.save()
         return results
+    
+    def get_bandit_report(self,
+                          project_or_release: str | Project | Release,
+                          version: str = None,
+                          platform: str="pypi",
+                          as_dict: bool = False) -> BanditReport | dict:
+        """
+        Get the bandit report of a project and a specific version number (release)
+
+        project_name: str
+        version: str, if None, the latest release is used
+        platform: str, default: pypi
+        as_dict: bool, default: False, if True, returns the report as a dictionary
+
+        returns: (BanditReport, List[Issue])
+        """
+        release = self.get_release(project_or_release, version, platform)
+        if release is None:
+            logger.error(f"Release '{version}' not found for {project_or_release}")
+            return None
+        report = BanditReport.get_or_none(
+            BanditReport.release == release
+        )
+        if report is None:
+            logger.warning(f"Bandit report not found for {project_or_release} {version}")
+            return None
+        if as_dict:
+            report = model_to_dict(report, recurse=False)
+            report['issues'] = [ model_to_dict(issue, recurse=False) for issue in report.issues ]
+            return report
+        return report
 
 if __name__ == "__main__":
     # For the purpose of loading in interactive shell and debugging

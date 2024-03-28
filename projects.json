@@ -68,7 +68,8 @@
             "vendor": "pallets-eco",
             "repo": {
                 "url": "github.com/pallets-eco/blinker",
-                "includes": ["src/"]
+                "includes": ["src/"],
+                "tags": "(?:rel-)?@version"
             }
         },
         "click": {

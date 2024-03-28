@@ -49,7 +49,7 @@ args = parser.parse_args()
 # These are the key performance indicators for the releases
 
 kpiset = set(list(map(lambda x: x.lower(), args.kpis)))
-valid_kpis = set(compute.KPIS.keys())
+valid_kpis = set(compute.KPIS_TIMELINE.keys())
 if not kpiset.issubset(valid_kpis):
     invalid_kpis = list(kpiset - valid_kpis)
     logger.error(f"Invalid KPIs: {', '.join(invalid_kpis)}. Valid KPIs are: {', '.join(valid_kpis)}")
@@ -142,8 +142,8 @@ def plot_timelines(timelines: dict, title_prefix: str = ''):
     title_prefix = f"{title_prefix.strip()} "
     for kpi in args.kpis:
         fig, ax = plt.subplots()
-        title = compute.KPIS.get(kpi).get('title')
-        y_label = compute.KPIS.get(kpi).get('y_label')
+        title = compute.KPIS_TIMELINE.get(kpi).get('title')
+        y_label = compute.KPIS_TIMELINE.get(kpi).get('y_label')
         ax.set_title(f"{title_prefix}{title}")
         ax.set_ylabel(y_label)
         figures[kpi] = (fig, ax)
