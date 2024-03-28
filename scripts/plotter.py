@@ -30,6 +30,7 @@ from playhouse.shortcuts import model_to_dict
 parser = argparse.ArgumentParser(description='Plot data from a file')
 parser.add_argument('config', help='The configuration file')
 parser.add_argument('--start', help='The start year', default=2020)
+parser.add_argument('--end', help='The end year', default=None)
 parser.add_argument('--platform', help='The default platform', default='pypi')
 parser.add_argument('--step', help='The step size', default='m')
 parser.add_argument('-p', '--projects', nargs='+', help='The projects to plot', required=True)
@@ -37,8 +38,9 @@ parser.add_argument('-o', '--output', help='The output directory', default='outp
 parser.add_argument('--kpis', nargs='+', help='The key performance indicators to plot', default=['count', 'base', 'nloc'])
 parser.add_argument('--debug', help='The debug level of the logger', default='INFO')
 parser.add_argument('--show', help='Show the plots', action='store_true')
-parser.add_argument('--dependencies', help='Generate plots on dependencies as well', action='store_true')
+parser.add_argument('--dependencies', help="Generate plots for each project's dependencies as well", action='store_true')
 parser.add_argument('--force', help='Force reload of dependencies', action='store_true')
+parser.add_argument('--kind', help='What kind of plots to plot, timeline or overall', nargs='+', default=['timeline', 'overall'])
 
 # TODO: Add possibility to combine KPIs as left and right y-axis
 
@@ -257,57 +259,70 @@ if __name__ == '__main__':
     with open(json_dir / 'files.json', 'w') as f:
         json.dump(files, f, indent=4)
     
-    # timeline plot section
-    timelines = {}
-    for project in args.projects:
-        # get timeline for each project
-        platform, project = get_platform(project)
-        logger.info(f"Getting timeline for {project} on {platform}...")
-        timeline = mw.get_vulnerabilities_timeline(project,
-                                                   args.start,
-                                                   step=args.step,
-                                                   platform=platform)
-        cves = timeline.get('cves', {})
-        logger.info(f"Found {len(cves)} CVEs for {project}")
-        timelines[f"{platform}:{project}"] = timeline
-
-    plot_timelines(timelines)
-    try_json_dump(timelines, json_dir / 'timelines.json')
-
-    if args.dependencies:
-        dependency_timelines = {}
-        timeline_entries = {}
-        for project in timelines:
-            platform, project = get_platform(project)
+    if 'timeline' in args.kind:
+    
+        # timeline plot section
+        timelines = {}
+        for project in args.projects:
             # get timeline for each project
-            logger.info(f"Getting dependencies for {project} on {platform}...")
-            indirect_timelines = mw.get_indirect_vulnerabilities_timeline(project,
-                                                                          args.start,
-                                                                          step=args.step,
-                                                                          platform=platform)
-            dependency_timelines[f"{platform}:{project}"] = indirect_timelines
-        plot_timelines(dependency_timelines, "Dependency")
-        try_json_dump(dependency_timelines, json_dir / 'dependency_timelines.json')
+            platform, project = get_platform(project)
+            logger.info(f"Getting timeline for {project} on {platform}...")
+            timeline = mw.get_vulnerabilities_timeline(project,
+                                                    start_date=args.start,
+                                                    end_date=args.end,
+                                                    step=args.step,
+                                                    platform=platform)
+            cves = timeline.get('cves', {})
+            logger.info(f"Found {len(cves)} CVEs for {project}")
+            timelines[f"{platform}:{project}"] = timeline
+
+        plot_timelines(timelines)
+        try_json_dump(timelines, json_dir / 'timelines.json')
+
+        if args.dependencies:
+            dependency_timelines = {}
+            timeline_entries = {}
+            for project in timelines:
+                platform, project = get_platform(project)
+                # get timeline for each project
+                logger.info(f"Getting dependencies for {project} on {platform}...")
+                indirect_timelines = mw.get_indirect_vulnerabilities_timeline(project,
+                                                                            start_date=args.start,
+                                                                            end_date=args.end,
+                                                                            step=args.step,
+                                                                            platform=platform)
+                dependency_timelines[f"{platform}:{project}"] = indirect_timelines
+            plot_timelines(dependency_timelines, "Dependency")
+            try_json_dump(dependency_timelines, json_dir / 'dependency_timelines.json')
+
+    if 'overall' in args.kind:
+        # get all the vulnerabilities for the projects
+        # and plot them
+        # 1) by CWE category
+        # 2) by CWE weakness
+        # 3) by severity
+        # 4) by impact
+        # 5) issues
+        vulnerabilities = {}
+        for project in args.projects:
+            # get all the vulnerabilities for the project
+            platform, project = get_platform(project)
+            project_id = f"{platform}:{project}"
+            vulnerabilities[project_id] = mw.get_vulnerabilities(project,
+                                                            platform=platform,
+                                                            include_categories=False)
+            project_instance = mw.get_project(project, platform=platform)
+            project_dict = model_to_dict(project_instance, recurse=False)
+            # complement the project with the releases
+            vulnerabilities[project_id]['project'] = project_dict
+            vulnerabilities[project_id]['releases'] = [ model_to_dict(release, recurse=False) for release in project_instance.releases ]
+            pprint(vulnerabilities[project_id])
+            time.sleep(1)
+        plot_vulnerabilities(vulnerabilities)
+        try_json_dump(vulnerabilities, json_dir / 'vulnerabilities.json')
 
     if args.show:
         plt.show()
-
-    exit(1)
-
-    # get all the vulnerabilities for the projects
-    # and plot them
-    # 1) by CWE category
-    # 2) by CWE weakness
-    # 3) by severity
-    vulnerabilities = {}
-    for project in args.projects:
-        # get all the vulnerabilities for the project
-        platform, project = get_platform(project)
-        vulnerabilities[project] = mw.get_vulnerabilities(project,
-                                                          platform=platform,
-                                                          include_categories=True)
-    plot_vulnerabilities(vulnerabilities)
-    try_json_dump(vulnerabilities, json_dir / 'vulnerabilities.json')
         
     # TODO: do the same above but for each dependencies
     
