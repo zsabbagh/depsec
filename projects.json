@@ -6,7 +6,7 @@
             "repo": {
                 "url": "github.com/pallets/jinja",
                 "tags": "jinja2:@version",
-                "includes": ["jinja2/"]
+                "includes": ["jinja2/", "src/"]
             }
         },
         "flask": {
@@ -19,7 +19,7 @@
         "django": {
             "repo": {
                 "url": "github.com/django/django",
-                "includes": ["django/"]
+                "includes": ["django/", "django.py", "src/"]
             }
         },
         "tornado": {
@@ -47,7 +47,7 @@
             "vendor": "sqlparse_project",
             "repo": {
                 "url": "github.com/andialbrecht/sqlparse",
-                "includes": ["sqlparse/"]
+                "includes": ["sqlparse/", "src/"]
             }
         },
         "typing-extensions": {},
@@ -68,7 +68,7 @@
             "vendor": "pallets-eco",
             "repo": {
                 "url": "github.com/pallets-eco/blinker",
-                "includes": ["src/"],
+                "includes": ["src/", "blinker/"],
                 "tags": "(?:rel-)?@version"
             }
         },
@@ -77,7 +77,7 @@
             "vendor": "palletsprojects",
             "repo": {
                 "url": "github.com/pallets/click",
-                "includes": ["src/"]
+                "includes": ["src/", "click/"]
             }
         },
         "markupsafe": {
@@ -85,7 +85,7 @@
             "vendor": "palletsprojects",
             "repo": {
                 "url": "github.com/pallets/markupsafe",
-                "includes": ["src/"]
+                "includes": ["src/", "markupsafe/"]
             }
         },
         "importlib-metadata": {},
@@ -94,7 +94,7 @@
             "vendor": "jaraco",
             "repo": {
                 "url": "github.com/jaraco/zipp",
-                "includes": ["src/", "zipp.py"]
+                "includes": ["src/", "zipp.py", "zipp/"]
             }
         }
     }
