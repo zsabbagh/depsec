@@ -3,6 +3,7 @@ import src.schemas.nvd as nvd
 import src.schemas.cwe as cwe
 import src.utils.db as db
 import argparse
+from copy import deepcopy
 from packaging import version as semver
 from playhouse.shortcuts import model_to_dict
 from pprint import pprint
@@ -909,14 +910,61 @@ class Middleware:
         release.save()
         return results
     
+    def get_bandit_report(self,
+                          project_or_release: str | Project,
+                          version: str = None,
+                          platform: str="pypi") -> BanditReport:
+        """
+        Gets the bandit report of a project or a specific release
+        If no version is provided, the latest release with a bandit report is used
+
+        project_or_release: str | Project | Release
+        version: str, the version number, if None, the latest release is used
+        platform: str, default: pypi
+        """
+        project = release = None
+        if isinstance(project_or_release, Project):
+            version = version if version else project_or_release.latest_release
+            project = project_or_release
+        elif isinstance(project_or_release, Release):
+            version = project_or_release.version
+            project = project_or_release.project
+        else:
+            project = self.get_project(project_or_release, platform)
+            version = version if version else project.latest_release
+        if project is None:
+            logger.error(f"Project {project_or_release} not found")
+            return None
+        if release is None:
+            release = self.get_release(project, version, platform)
+            if release is None:
+                logger.error(f"Release {version} not found for {project.name}")
+                return None
+        bandit_report = release.bandit_report.first()
+        if bandit_report is None:
+            logger.info(f"No bandit report found for {project.name} {version}")
+            releases = self.get_releases(project.name, platform=platform, sort_semantically=True)
+            for rel in releases:
+                bandit_report = rel.bandit_report.first()
+                if bandit_report is not None:
+                    logger.info(f"Found bandit report for {project.name} {rel.version}")
+                    break
+        if bandit_report is None:
+            logger.error(f"No bandit report found for {project.name} {version}")
+            return None
+        return bandit_report
+    
     def get_report(self,
                     *projects: str | Project,
+                    only_latest: bool = False,
+                    with_dependencies: bool = False,
                     platform: str="pypi") -> dict:
         """
         Gets an "overall" report of a project.
         These are designed to be generalised for dependencies as well
 
         *projects: str | Project, the project name or the project object, which could be dependencies
+        only_latest: bool, default: False, if True, only the latest release is used for CVEs
         platform: str, default: pypi
 
 
@@ -950,31 +998,117 @@ class Middleware:
             'bandit': {},
         }
         bandit = results['bandit']
+        dep_vulns = {}
+        dep_rels = {}
         for project in projects:
             project_name = project
             project = self.get_project(project, platform)
             if project is None:
                 logger.error(f"Project {project} not found")
                 return None
-            result = self.get_vulnerabilities(project, platform=platform)
+            result = self.get_vulnerabilities(project,
+                                              project.latest_release if only_latest else None,
+                                              platform=platform)
             result = result if result is not None else {}
             rels = self.get_releases(project, platform=platform)
             releases = {}
             latest_release = project.latest_release
+            bandit_report = self.get_bandit_report(project)
+            latest_rel_id = f"{project_name}:{latest_release}"
             for rel in rels:
+                # this is to provide information of all releases, although not necessarily used
+                # added for transparency
                 rel_id = f"{project_name}:{rel.version}"
-                releases[rel_id] = {
-                    'version': rel.version,
-                    'published_at': rel.published_at,
-                }
-                bandit_report = rel.bandit_report.first()
-                if bandit_report and rel.version == latest_release:
-                    releases[rel_id]['bandit_report'] = model_to_dict(bandit_report, recurse=False)
+                rel_dict = model_to_dict(rel, recurse=False)
+                rel_dict['dependencies'] = {}
+                if with_dependencies:
+                    deps = self.get_dependencies(project_name, rel.version, platform)
+                    if deps is not None:
+                        for dep in deps:
+                            dep_name = dep.name
+                            if dep_name not in dep_rels:
+                                rels = self.get_releases(dep_name, platform=dep.platform)
+                                vulns = self.get_vulnerabilities(dep_name, platform=dep.platform)
+                                dep_rels[dep_name] = rels if rels is not None else []
+                                dep_vulns[dep_name] = vulns if vulns is not None else {}
+                            else:
+                                vulns = dep_vulns[dep_name]
+                                rels = dep_rels[dep_name]
+                            dep_version = dep.version
+                            dep_platform = dep.platform
+                            dep_req = dep.requirements
+                            dep_id = f"{dep_name}:{dep_version}"
+                            # gets the release of the dependency that fulfills the requirements
+                            satisfies = []
+                            not_satisfies = []
+                            for rel in rels:
+                                if rel.version == dep_version:
+                                    satisfies.append(rel)
+                                else:
+                                    not_satisfies.append(rel)
+                            if len(satisfies) == 0:
+                                logger.warning(f"No release found for {dep_name} {dep_version} {dep_req}")
+                                continue
+                            dep_rel = satisfies[0]
+                            dep_cve = set()
+                            dep_patch_lag = set()
+                            for cve_id in vulns.get('cves', {}):
+                                cve = vulns['cves'][cve_id]
+                                if cve_id not in result['cves']:
+                                    result['cves'][cve_id] = cve
+                                for app in cve.get('applicability', []):
+                                    if db.is_applicable(dep_rel, app):
+                                        dep_cve.add(cve_id)
+                                        v_end = app.get('version_end')
+                                        v_excl = app.get('exclude_end', False)
+                                        if v_end is not None and v_excl is False:
+                                            rels = self.get_releases(dep_name, platform=dep_platform, requirements=f">{v_end}")
+                                            if len(rels) > 0:
+                                                v_end = rels[0].version
+                                        if v_end is not None and '<' in dep_req and not version_satisfies_requirements(v_end, dep_req):
+                                            # if there is a limiting version and the v_end does not satisfy the requirements
+                                            logger.info(f"Patch lag for {rel_id} dependency {dep_name} {dep_version} ({cve_id}). Version end {v_end} '{dep_req}'")
+                                            dep_patch_lag.add(cve_id)
+                            # count the amount of vulnerabilities introduced by requirements
+                            rel_dict['dependencies'][dep_id] = {
+                                'name': dep_name,
+                                'version': dep_version,
+                                'platform': dep_platform,
+                                'requirements': dep.requirements,
+                                'cves': dep_cve,
+                                'patch_lag': dep_patch_lag,
+                            }
+                rel_dict['cves'] = set()
+                rel_dict['cwes'] = set()
+                releases[rel_id] = rel_dict
+                for cve in result.get('cves', {}).values():
+                    cve_id = cve.get('cve_id')
+                    if db.is_applicable(rel, cve.get('applicability', [])):
+                        rel_dict['cves'].add(cve_id)
+                        rel_dict['cwes'].update(cve.get('cwes', []))
+                if rel_id == latest_rel_id:
                     if 'latest' not in result:
                         result['latest'] = {}
-                    result['latest'][project_name] = model_to_dict(rel, recurse=False)
-                    result['latest'][project_name]['bandit_report'] = model_to_dict(bandit_report, recurse=False)
-                    result['latest'][project_name]['bandit_report']['issues'] = [ model_to_dict(issue, recurse=False) for issue in bandit_report.issues ]
+                    result['latest'][rel_id] = deepcopy(releases[rel_id])
+            if bandit_report:
+                # if there is a bandit report, add it to the latest release
+                bandit_release = bandit_report.release
+                brel_id = f"{project_name}:{bandit_report.release.version}"
+                issues = bandit_report.issues
+                bandit_report = model_to_dict(bandit_report, recurse=False)
+                bandit_report['issues'] = [ model_to_dict(issue, recurse=False) for issue in issues ]
+                bandit_report['release'] = brel_id
+                result['latest'][latest_rel_id]['bandit_report'] = bandit_report
+                result['latest'][latest_rel_id]['analysed_release'] = brel_id
+                brel = model_to_dict(bandit_release, recurse=False)
+                latest_rel = result['latest'][latest_rel_id]
+                for key in brel:
+                    # if the key is not in the latest release, add it
+                    # this is to avoid overwriting the latest release's data, yet adding static code analysis data
+                    if type(brel[key]) in [str, int, float, datetime.datetime] and latest_rel.get(key) is None:
+                        latest_rel[key] = brel[key]
+            else:
+                logger.error(f"No bandit report found for {project_name}")
             for cve_id in result.get('cves', {}):
                 if cve_id not in results['cves']:
                     results['cves'][cve_id] = result['cves'][cve_id]
@@ -996,69 +1130,49 @@ class Middleware:
                 if latest not in results['latest']:
                     results['latest'][latest] = result['latest'][latest]
         bandit['count'] = {}
-        bandit['tests'] = {}
+        bandit['by_test'] = {}
+        bandit['by_cwe'] = {}
         for lrel in results['latest']:
             bandit_report = results['latest'][lrel].get('bandit_report', {})
             if 'issues' in bandit_report:
                 issues = bandit_report['issues']
                 for issue in issues:
                     test_id = issue.get('test_id')
-                    if test_id not in bandit['tests']:
-                        bandit['tests'][test_id] = {
-                            'release': [lrel]
+                    cwe_id = issue.get('cwe_id', 'unknown')
+                    by_test = bandit['by_test']
+                    by_cwe = bandit['by_cwe']
+                    if test_id not in by_test:
+                        by_test[test_id] = {
+                            'release': set([lrel])
                         }
                     else:
-                        if lrel not in bandit['tests'][test_id]['release']:
-                            bandit['tests'][test_id]['release'].append(lrel)
+                        if lrel not in by_test[test_id]['release']:
+                            by_test[test_id]['release'].add(lrel)
+                    if cwe_id not in by_cwe:
+                        by_cwe[cwe_id] = {
+                            'release': set([lrel])
+                        }
+                    else:
+                        if lrel not in by_cwe[cwe_id]['release']:
+                            by_cwe[cwe_id]['release'].add(lrel)
                     severity = issue.get('severity', '').lower()
                     confidence = issue.get('confidence', '').lower()
                     sev = f"severity_{severity[0]}"
                     conf = f"confidence_{confidence[0]}"
-                    bandit['tests'][test_id][sev] = bandit['tests'][test_id].get(sev, 0) + 1
-                    bandit['tests'][test_id][conf] = bandit['tests'][test_id].get(conf, 0) + 1
                     sevconf = f"{sev}_{conf}"
-                    bandit['tests'][test_id][sevconf] = bandit['tests'][test_id].get(sevconf, 0) + 1
-            for test in bandit['tests']:
-                for key in bandit['tests'][test]:
-                    if type(bandit['tests'][test][key]) == list:
+                    by_test[test_id][sev] = by_test[test_id].get(sev, 0) + 1
+                    by_test[test_id][conf] = by_test[test_id].get(conf, 0) + 1
+                    by_test[test_id][sevconf] = by_test[test_id].get(sevconf, 0) + 1
+                    by_cwe[cwe_id][sev] = by_cwe[cwe_id].get(sev, 0) + 1
+                    by_cwe[cwe_id][conf] = by_cwe[cwe_id].get(conf, 0) + 1
+                    by_cwe[cwe_id][sevconf] = by_cwe[cwe_id].get(sevconf, 0) + 1
+            for test in bandit['by_test'].values():
+                for key in test:
+                    if type(test[key]) not in [int, float]:
                         continue
-                    if key not in bandit['count']:
-                        bandit['count'][key] = 0
-                    bandit['count'][key] += bandit['tests'][test][key]
+                    bandit['count'][key] = test.get(key, 0) + test[key]
         return results
-            
     
-    def get_bandit_report(self,
-                          project_or_release: str | Project | Release,
-                          version: str = None,
-                          platform: str="pypi",
-                          as_dict: bool = False) -> BanditReport | dict:
-        """
-        Get the bandit report of a project and a specific version number (release)
-
-        project_name: str
-        version: str, if None, the latest release is used
-        platform: str, default: pypi
-        as_dict: bool, default: False, if True, returns the report as a dictionary
-
-        returns: (BanditReport, List[Issue])
-        """
-        release = self.get_release(project_or_release, version, platform)
-        if release is None:
-            logger.error(f"Release '{version}' not found for {project_or_release}")
-            return None
-        report = BanditReport.get_or_none(
-            BanditReport.release == release
-        )
-        if report is None:
-            logger.warning(f"Bandit report not found for {project_or_release} {version}")
-            return None
-        if as_dict:
-            report = model_to_dict(report, recurse=False)
-            report['issues'] = [ model_to_dict(issue, recurse=False) for issue in report.issues ]
-            return report
-        return report
-
 if __name__ == "__main__":
     # For the purpose of loading in interactive shell and debugging
     # e.g., py -i src/middleware.py
@@ -1073,5 +1187,5 @@ if __name__ == "__main__":
     project = mw.get_project(args.project)
     release = mw.get_release(project)
     start_time = datetime.datetime.now()
-    report = mw.get_report(args.project)
+    report = mw.get_report(args.project, with_dependencies=True)
     print(f"report generation for '{args.project}' took {datetime.datetime.now() - start_time}")

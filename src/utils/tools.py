@@ -5,6 +5,22 @@ from pathlib import Path
 from loguru import logger
 from src.schemas.projects import Release, Project
 
+def parse_requirement(requirement: str) -> dict:
+    """
+    
+    """
+    requirement = requirement.strip()
+    regex = re.match(r'([<>=]+)(.*)', requirement)
+    if not regex:
+        logger.debug(f"Error parsing requirement '{requirement}'")
+        return None
+    try:
+        operator, version = regex.groups()
+    except Exception as e:
+        logger.debug(f"Error parsing requirement '{requirement}'")
+        return None
+    return operator, version
+
 def version_satisfies_requirements(v: str, requirements: str) -> bool:
     """
     Check if a version satisfies the requirements.
@@ -15,16 +31,10 @@ def version_satisfies_requirements(v: str, requirements: str) -> bool:
     v = semver.parse(v.strip('.')) if type(v) == str else v
     requirements = requirements.split(',')
     for requirement in requirements:
-        requirement = requirement.strip()
-        regex = re.match(r'([<>=]+)(.*)', requirement)
-        if not regex:
-            logger.debug(f"Error parsing requirement '{requirement}'")
-            continue
-        try:
-            operator, version = regex.groups()
-        except Exception as e:
-            logger.debug(f"Error parsing requirement '{requirement}'")
-            continue
+        parsed = parse_requirement(requirement)
+        if not parsed:
+            return False
+        operator, version = parsed
         version = semver.parse(version.strip('.'))
         match operator:
             # return False if the version does not satisfy the requirement
