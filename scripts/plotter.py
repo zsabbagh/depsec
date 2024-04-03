@@ -240,11 +240,27 @@ def plot_overall(overall: dict):
         'cwes': { <cwe-id>: {} },
         'releases': { <release-id>: {} }
         'latest': {},
-        'bandit': {},
+        'bandit': {
+            'by_test'
+            'by_cwe'
+            'count'
+        },
     }
     """
-    categories = {}
-    cves = {}
+    # this will be more hard-coded plotting, given the wide variety of data
+
+    # TODO: overall time KPIs (time to fix, time to CVE publish)
+
+    # TODO: scatter plot of CWE categories, with size being the number of vulnerabilities
+
+    # TODO: bar chart of CWE categories, sorted by number of vulnerabilities
+
+    # TODO: KPIs per minor release (count, severity, impact, etc.)
+
+    # TODO: frequency plot of Bandit test ID issues
+
+    # TODO: frequency plot of Bandit severity/confidence
+
     pass
 
 def combine_timeline_data(data: dict):
