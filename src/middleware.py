@@ -956,16 +956,19 @@ class Middleware:
     
     def get_report(self,
                     *projects: str | Project,
+                    platform: str="pypi",
+                    exclude_deprecated: bool = True,
                     only_latest: bool = False,
-                    with_dependencies: bool = False,
-                    platform: str="pypi") -> dict:
+                    with_dependencies: bool = False) -> dict:
         """
         Gets an "overall" report of a project.
         These are designed to be generalised for dependencies as well
 
         *projects: str | Project, the project name or the project object, which could be dependencies
-        only_latest: bool, default: False, if True, only the latest release is used for CVEs
         platform: str, default: pypi
+        exclude_deprecated: bool, default: True, if True, deprecated releases are excluded
+        only_latest: bool, default: False, if True, only the latest release is used for CVEs
+        with_dependencies: bool, default: False, if True, dependencies are included in the report
 
 
         returns a vulnerability report complemented with releases and the latest release's bandit report:
@@ -1010,7 +1013,7 @@ class Middleware:
                                               project.latest_release if only_latest else None,
                                               platform=platform)
             result = result if result is not None else {}
-            rels = self.get_releases(project, platform=platform)
+            rels = self.get_releases(project, platform=platform, exclude_deprecated=exclude_deprecated)
             releases = {}
             latest_release = project.latest_release
             bandit_report = self.get_bandit_report(project)

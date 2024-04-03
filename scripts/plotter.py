@@ -46,13 +46,11 @@ parser.add_argument('--kind', help='What kind of plots to plot, timeline or over
 
 args = parser.parse_args()
 
-
-
 # These are the key performance indicators for the releases
 
 kpiset = set(list(map(lambda x: x.lower(), args.kpis)))
 valid_kpis = set(compute.KPIS_TIMELINE.keys())
-if not kpiset.issubset(valid_kpis):
+if not kpiset.issubset(valid_kpis) and 'timeline' in args.kind:
     invalid_kpis = list(kpiset - valid_kpis)
     logger.error(f"Invalid KPIs: {', '.join(invalid_kpis)}. Valid KPIs are: {', '.join(valid_kpis)}")
     exit(1)
@@ -80,6 +78,13 @@ def convert_datetime_to_str(data: dict):
     """
     if isinstance(data, Model):
         data = model_to_dict(data)
+    elif type(data) == set:
+        if len(data) == 0:
+            return []
+        ls = list(data)
+        if type(ls[0]) in [int, float, str]:
+            return sorted(ls)
+        return [ convert_datetime_to_str(entry) for entry in ls ]
     if type(data) == list:
         return [ convert_datetime_to_str(entry) for entry in data ]
     elif type(data) != dict:
@@ -226,11 +231,16 @@ def plot_timelines(timelines: dict, title_prefix: str = ''):
         filename = f"{kpi.replace('/', '-')}"
         fig.savefig(plots_dir / f"{filename}.png")
 
-def plot_vulnerabilities(vulnerabilities: dict):
+def plot_overall(overall: dict):
     """
     Expects a dictionary with the following structure:
+
     <project>: {
-        <cve-id>: {}
+        'cves': { <cve-id>: {} },
+        'cwes': { <cwe-id>: {} },
+        'releases': { <release-id>: {} }
+        'latest': {},
+        'bandit': {},
     }
     """
     categories = {}
@@ -303,23 +313,16 @@ if __name__ == '__main__':
         # 3) by severity
         # 4) by impact
         # 5) issues
-        vulnerabilities = {}
+        overall = {}
         for project in args.projects:
             # get all the vulnerabilities for the project
             platform, project = get_platform(project)
             project_id = f"{platform}:{project}"
-            vulnerabilities[project_id] = mw.get_vulnerabilities(project,
-                                                            platform=platform,
-                                                            include_categories=False)
-            project_instance = mw.get_project(project, platform=platform)
-            project_dict = model_to_dict(project_instance, recurse=False)
-            # complement the project with the releases
-            vulnerabilities[project_id]['project'] = project_dict
-            vulnerabilities[project_id]['releases'] = [ model_to_dict(release, recurse=False) for release in project_instance.releases ]
-            pprint(vulnerabilities[project_id])
+            overall[project_id] = mw.get_report(project, platform=platform, with_dependencies=True)
+            pprint(overall[project_id])
             time.sleep(1)
-        plot_vulnerabilities(vulnerabilities)
-        try_json_dump(vulnerabilities, json_dir / 'vulnerabilities.json')
+        plot_overall(overall)
+        try_json_dump(overall, 'overall.json')
 
     if args.show:
         plt.show()
