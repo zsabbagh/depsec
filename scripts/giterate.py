@@ -107,6 +107,8 @@ for platform, projects in data.items():
 
         src_name = repo.get('src') or repo_name
 
+        tag_pattern = repo.get('tags')
+
         if not repo_path.exists():
             # TODO: Clone the repository
             if args.clone:
@@ -122,7 +124,6 @@ for platform, projects in data.items():
                 continue
 
         logger.info(f"Checking out {repo_name} to {repo_path}")
-        tag_pattern = repo.get('tags')
         repo = Repo(repo_path)
         tags = repo.tags
         versions = {}

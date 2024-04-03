@@ -53,7 +53,11 @@
         "typing-extensions": {},
         "werkzeug": {
             "product": "werkzeug",
-            "vendor": "palletsprojects"
+            "vendor": "palletsprojects",
+            "repo": {
+                "url": "github.com/pallets/werkzeug",
+                "includes": ["werkzeug/", "src/"]
+            }
         },
         "itsdangerous": {
             "product": "itsdangerous",

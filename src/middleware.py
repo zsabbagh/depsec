@@ -296,12 +296,18 @@ class Middleware:
                     platform: str="pypi",
                     before: str | int | datetime.datetime = None,
                     requirements: str = None,
+                    has_static_analysis: bool = False,
                     after: str | int | datetime.datetime = None) -> Release:
         """
         Get a specific release of a project, uses latest release if version is None
 
         project: str | Project, the project name or the project object
         version: str, the version number, if None, the latest release is used
+        platform: str, default: pypi
+        before: str | int | datetime.datetime, default: None, if provided, only the releases before the date are returned
+        after: str | int | datetime.datetime, default: None, if provided, only the releases after the date are returned
+        requirements: str, default: None, if provided (a comma separated list of requirements), only the releases that satisfy the requirements are returned
+        has_static_analysis: bool, default: False, if True, a release with static analysis is returned if available
         """
         if isinstance(project_or_release, Release):
             return project_or_release
@@ -311,8 +317,12 @@ class Middleware:
         version = version if version else project.latest_release
         before_date = strint_to_date(before)
         after_date = strint_to_date(after)
-        if before_date is not None or after_date is not None or requirements is not None:
+        if before_date is not None or after_date is not None or requirements is not None or has_static_analysis:
             releases = self.get_releases(project.name, platform=platform, before=before_date, after=after, sort_semantically=True, requirements=requirements)
+            if has_static_analysis:
+                for rel in releases:
+                    if rel.nloc_total is not None:
+                        return rel
             return releases[0] if len(releases) > 0 else None
         release = Release.get_or_none(
             Release.project == project.id,
@@ -1136,6 +1146,18 @@ class Middleware:
         bandit['by_test'] = {}
         bandit['by_cwe'] = {}
         for lrel in results['latest']:
+            for dep in results['latest'][lrel].get('dependencies', {}).values():
+                depname = dep['name']
+                dproj = self.get_release(depname, dep['version'], platform=dep['platform'], requirements=dep['requirements'], has_static_analysis=True)
+                if dproj is None:
+                    logger.error(f"Dependency {depname} {dep['version']} not found")
+                    continue
+                bandit_report = dproj.bandit_report.first()
+                dproj_dict = model_to_dict(dproj, recurse=False)
+                dproj_dict['bandit_report'] = model_to_dict(bandit_report, recurse=False) if bandit_report else None
+                for key in dproj_dict:
+                    if type(dproj_dict[key]) in [str, int, float, datetime.datetime, dict] and dep.get(key) is None:
+                        dep[key] = dproj_dict[key]
             bandit_report = results['latest'][lrel].get('bandit_report', {})
             if 'issues' in bandit_report:
                 issues = bandit_report['issues']
