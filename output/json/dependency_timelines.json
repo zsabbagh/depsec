@@ -3,221 +3,6 @@
         "cwes": {},
         "cves": {},
         "releases": {
-            "pytz:2017.2": {
-                "id": 1329,
-                "project": 16,
-                "published_at": "2017-03-30 08:35:56",
-                "version": "2017.2",
-                "updated_at": "2024-03-27 11:38:13",
-                "counted_functions": null,
-                "counted_files": null,
-                "nloc_total": null,
-                "nloc_average": null,
-                "ccn_average": null,
-                "commit_at": null,
-                "commit_hash": null,
-                "includes": null,
-                "excludes": null,
-                "dependency_count": null
-            },
-            "pytz:2017.3": {
-                "id": 1330,
-                "project": 16,
-                "published_at": "2017-10-30 14:10:09",
-                "version": "2017.3",
-                "updated_at": "2024-03-27 11:38:13",
-                "counted_functions": null,
-                "counted_files": null,
-                "nloc_total": null,
-                "nloc_average": null,
-                "ccn_average": null,
-                "commit_at": null,
-                "commit_hash": null,
-                "includes": null,
-                "excludes": null,
-                "dependency_count": null
-            },
-            "pytz:2018.3": {
-                "id": 1331,
-                "project": 16,
-                "published_at": "2018-02-09 07:58:26",
-                "version": "2018.3",
-                "updated_at": "2024-03-27 11:38:13",
-                "counted_functions": null,
-                "counted_files": null,
-                "nloc_total": null,
-                "nloc_average": null,
-                "ccn_average": null,
-                "commit_at": null,
-                "commit_hash": null,
-                "includes": null,
-                "excludes": null,
-                "dependency_count": null
-            },
-            "pytz:2018.4": {
-                "id": 1332,
-                "project": 16,
-                "published_at": "2018-04-10 10:48:11",
-                "version": "2018.4",
-                "updated_at": "2024-03-27 11:38:13",
-                "counted_functions": null,
-                "counted_files": null,
-                "nloc_total": null,
-                "nloc_average": null,
-                "ccn_average": null,
-                "commit_at": null,
-                "commit_hash": null,
-                "includes": null,
-                "excludes": null,
-                "dependency_count": null
-            },
-            "pytz:2018.5": {
-                "id": 1333,
-                "project": 16,
-                "published_at": "2018-06-29 06:53:04",
-                "version": "2018.5",
-                "updated_at": "2024-03-27 11:38:13",
-                "counted_functions": null,
-                "counted_files": null,
-                "nloc_total": null,
-                "nloc_average": null,
-                "ccn_average": null,
-                "commit_at": null,
-                "commit_hash": null,
-                "includes": null,
-                "excludes": null,
-                "dependency_count": null
-            },
-            "pytz:2018.7": {
-                "id": 1335,
-                "project": 16,
-                "published_at": "2018-10-29 10:11:56",
-                "version": "2018.7",
-                "updated_at": "2024-03-27 11:38:13",
-                "counted_functions": null,
-                "counted_files": null,
-                "nloc_total": null,
-                "nloc_average": null,
-                "ccn_average": null,
-                "commit_at": null,
-                "commit_hash": null,
-                "includes": null,
-                "excludes": null,
-                "dependency_count": null
-            },
-            "pytz:2018.9": {
-                "id": 1336,
-                "project": 16,
-                "published_at": "2019-01-07 07:54:53",
-                "version": "2018.9",
-                "updated_at": "2024-03-27 11:38:13",
-                "counted_functions": null,
-                "counted_files": null,
-                "nloc_total": null,
-                "nloc_average": null,
-                "ccn_average": null,
-                "commit_at": null,
-                "commit_hash": null,
-                "includes": null,
-                "excludes": null,
-                "dependency_count": null
-            },
-            "pytz:2019.1": {
-                "id": 1337,
-                "project": 16,
-                "published_at": "2019-04-10 02:12:32",
-                "version": "2019.1",
-                "updated_at": "2024-03-27 11:38:13",
-                "counted_functions": null,
-                "counted_files": null,
-                "nloc_total": null,
-                "nloc_average": null,
-                "ccn_average": null,
-                "commit_at": null,
-                "commit_hash": null,
-                "includes": null,
-                "excludes": null,
-                "dependency_count": null
-            },
-            "pytz:2019.2": {
-                "id": 1338,
-                "project": 16,
-                "published_at": "2019-07-31 16:29:10",
-                "version": "2019.2",
-                "updated_at": "2024-03-27 11:38:13",
-                "counted_functions": null,
-                "counted_files": null,
-                "nloc_total": null,
-                "nloc_average": null,
-                "ccn_average": null,
-                "commit_at": null,
-                "commit_hash": null,
-                "includes": null,
-                "excludes": null,
-                "dependency_count": null
-            },
-            "pytz:2019.3": {
-                "id": 1339,
-                "project": 16,
-                "published_at": "2019-10-07 03:18:16",
-                "version": "2019.3",
-                "updated_at": "2024-03-27 11:38:13",
-                "counted_functions": null,
-                "counted_files": null,
-                "nloc_total": null,
-                "nloc_average": null,
-                "ccn_average": null,
-                "commit_at": null,
-                "commit_hash": null,
-                "includes": null,
-                "excludes": null,
-                "dependency_count": null
-            },
-            "asgiref:3.2.3": {
-                "id": 770,
-                "project": 6,
-                "published_at": "2019-10-23 19:24:16",
-                "version": "3.2.3",
-                "updated_at": "2024-03-27 10:13:11",
-                "counted_functions": 60,
-                "counted_files": 9,
-                "nloc_total": 752,
-                "nloc_average": 12.53,
-                "ccn_average": 2.9,
-                "commit_at": "2019-10-23 21:20:13",
-                "commit_hash": "dd09962654196ac0816c3a049459e7ea78c5c7ea",
-                "includes": "asgiref/",
-                "excludes": null,
-                "dependency_count": null,
-                "bandit_report": {
-                    "id": 1740,
-                    "release": 770,
-                    "updated_at": "2024-03-28 10:49:33",
-                    "issues_total": 0,
-                    "files_counted": 0,
-                    "files_skipped": 0,
-                    "confidence_high_count": 0,
-                    "confidence_medium_count": 0,
-                    "confidence_low_count": 0,
-                    "confidence_undefined_count": 0,
-                    "severity_high_count": 0,
-                    "severity_medium_count": 0,
-                    "severity_low_count": 0,
-                    "severity_undefined_count": 0,
-                    "severity_h_confidence_h_count": 0,
-                    "severity_h_confidence_m_count": 0,
-                    "severity_h_confidence_l_count": 0,
-                    "severity_m_confidence_h_count": 0,
-                    "severity_m_confidence_m_count": 0,
-                    "severity_m_confidence_l_count": 0,
-                    "severity_l_confidence_h_count": 0,
-                    "severity_l_confidence_m_count": 0,
-                    "severity_l_confidence_l_count": 0,
-                    "loc": 829,
-                    "nosec": 0,
-                    "skipped_tests": 0
-                }
-            },
             "asgiref:3.2.7": {
                 "id": 774,
                 "project": 6,
@@ -239,7 +24,7 @@
                     "release": 774,
                     "updated_at": "2024-03-28 10:49:33",
                     "issues_total": 1,
-                    "files_counted": 1,
+                    "files_with_issues": 1,
                     "files_skipped": 0,
                     "confidence_high_count": 1,
                     "confidence_medium_count": 0,
@@ -263,23 +48,6 @@
                     "skipped_tests": 0
                 }
             },
-            "pytz:2020.1": {
-                "id": 1340,
-                "project": 16,
-                "published_at": "2020-04-28 08:28:21",
-                "version": "2020.1",
-                "updated_at": "2024-03-27 11:38:13",
-                "counted_functions": null,
-                "counted_files": null,
-                "nloc_total": null,
-                "nloc_average": null,
-                "ccn_average": null,
-                "commit_at": null,
-                "commit_hash": null,
-                "includes": null,
-                "excludes": null,
-                "dependency_count": null
-            },
             "asgiref:3.2.10": {
                 "id": 768,
                 "project": 6,
@@ -301,7 +69,7 @@
                     "release": 768,
                     "updated_at": "2024-03-28 10:49:32",
                     "issues_total": 1,
-                    "files_counted": 1,
+                    "files_with_issues": 1,
                     "files_skipped": 0,
                     "confidence_high_count": 1,
                     "confidence_medium_count": 0,
@@ -321,51 +89,6 @@
                     "severity_l_confidence_m_count": 0,
                     "severity_l_confidence_l_count": 0,
                     "loc": 877,
-                    "nosec": 0,
-                    "skipped_tests": 0
-                }
-            },
-            "asgiref:3.3.0": {
-                "id": 777,
-                "project": 6,
-                "published_at": "2020-10-09 16:44:30",
-                "version": "3.3.0",
-                "updated_at": "2024-03-27 10:13:11",
-                "counted_functions": 62,
-                "counted_files": 9,
-                "nloc_total": 829,
-                "nloc_average": 13.37,
-                "ccn_average": 3.18,
-                "commit_at": "2020-10-09 18:27:33",
-                "commit_hash": "7dba5ff61313dfd1535de200590b9155abde20f0",
-                "includes": "asgiref/",
-                "excludes": null,
-                "dependency_count": null,
-                "bandit_report": {
-                    "id": 1732,
-                    "release": 777,
-                    "updated_at": "2024-03-28 10:49:32",
-                    "issues_total": 1,
-                    "files_counted": 1,
-                    "files_skipped": 0,
-                    "confidence_high_count": 1,
-                    "confidence_medium_count": 0,
-                    "confidence_low_count": 0,
-                    "confidence_undefined_count": 0,
-                    "severity_high_count": 0,
-                    "severity_medium_count": 0,
-                    "severity_low_count": 1,
-                    "severity_undefined_count": 0,
-                    "severity_h_confidence_h_count": 0,
-                    "severity_h_confidence_m_count": 0,
-                    "severity_h_confidence_l_count": 0,
-                    "severity_m_confidence_h_count": 0,
-                    "severity_m_confidence_m_count": 0,
-                    "severity_m_confidence_l_count": 0,
-                    "severity_l_confidence_h_count": 1,
-                    "severity_l_confidence_m_count": 0,
-                    "severity_l_confidence_l_count": 0,
-                    "loc": 900,
                     "nosec": 0,
                     "skipped_tests": 0
                 }
@@ -391,7 +114,7 @@
                     "release": 778,
                     "updated_at": "2024-03-28 10:49:32",
                     "issues_total": 1,
-                    "files_counted": 1,
+                    "files_with_issues": 1,
                     "files_skipped": 0,
                     "confidence_high_count": 1,
                     "confidence_medium_count": 0,
@@ -415,57 +138,6 @@
                     "skipped_tests": 0
                 }
             },
-            "pytz:2020.4": {
-                "id": 1341,
-                "project": 16,
-                "published_at": "2020-11-02 05:25:55",
-                "version": "2020.4",
-                "updated_at": "2024-03-27 11:38:13",
-                "counted_functions": null,
-                "counted_files": null,
-                "nloc_total": null,
-                "nloc_average": null,
-                "ccn_average": null,
-                "commit_at": null,
-                "commit_hash": null,
-                "includes": null,
-                "excludes": null,
-                "dependency_count": null
-            },
-            "pytz:2020.5": {
-                "id": 1342,
-                "project": 16,
-                "published_at": "2020-12-24 20:58:04",
-                "version": "2020.5",
-                "updated_at": "2024-03-27 11:38:13",
-                "counted_functions": null,
-                "counted_files": null,
-                "nloc_total": null,
-                "nloc_average": null,
-                "ccn_average": null,
-                "commit_at": null,
-                "commit_hash": null,
-                "includes": null,
-                "excludes": null,
-                "dependency_count": null
-            },
-            "pytz:2021.1": {
-                "id": 1343,
-                "project": 16,
-                "published_at": "2021-02-01 08:07:15",
-                "version": "2021.1",
-                "updated_at": "2024-03-27 11:38:13",
-                "counted_functions": null,
-                "counted_files": null,
-                "nloc_total": null,
-                "nloc_average": null,
-                "ccn_average": null,
-                "commit_at": null,
-                "commit_hash": null,
-                "includes": null,
-                "excludes": null,
-                "dependency_count": null
-            },
             "asgiref:3.3.4": {
                 "id": 781,
                 "project": 6,
@@ -487,7 +159,7 @@
                     "release": 781,
                     "updated_at": "2024-03-28 10:49:31",
                     "issues_total": 1,
-                    "files_counted": 1,
+                    "files_with_issues": 1,
                     "files_skipped": 0,
                     "confidence_high_count": 1,
                     "confidence_medium_count": 0,
@@ -549,7 +221,7 @@
                     "release": 783,
                     "updated_at": "2024-03-28 10:49:31",
                     "issues_total": 1,
-                    "files_counted": 1,
+                    "files_with_issues": 1,
                     "files_skipped": 0,
                     "confidence_high_count": 1,
                     "confidence_medium_count": 0,
@@ -628,7 +300,7 @@
                     "release": 784,
                     "updated_at": "2024-03-28 10:49:31",
                     "issues_total": 1,
-                    "files_counted": 1,
+                    "files_with_issues": 1,
                     "files_skipped": 0,
                     "confidence_high_count": 1,
                     "confidence_medium_count": 0,
@@ -690,7 +362,7 @@
                     "release": 785,
                     "updated_at": "2024-03-28 10:49:31",
                     "issues_total": 1,
-                    "files_counted": 1,
+                    "files_with_issues": 1,
                     "files_skipped": 0,
                     "confidence_high_count": 1,
                     "confidence_medium_count": 0,
@@ -752,7 +424,7 @@
                     "release": 786,
                     "updated_at": "2024-03-28 10:49:30",
                     "issues_total": 1,
-                    "files_counted": 1,
+                    "files_with_issues": 1,
                     "files_skipped": 0,
                     "confidence_high_count": 1,
                     "confidence_medium_count": 0,
@@ -831,7 +503,7 @@
                     "release": 787,
                     "updated_at": "2024-03-28 10:49:30",
                     "issues_total": 1,
-                    "files_counted": 1,
+                    "files_with_issues": 1,
                     "files_skipped": 0,
                     "confidence_high_count": 1,
                     "confidence_medium_count": 0,
@@ -893,7 +565,7 @@
                     "release": 790,
                     "updated_at": "2024-03-28 10:49:30",
                     "issues_total": 1,
-                    "files_counted": 1,
+                    "files_with_issues": 1,
                     "files_skipped": 0,
                     "confidence_high_count": 1,
                     "confidence_medium_count": 0,
@@ -1035,129 +707,71 @@
                 "includes": null,
                 "excludes": null,
                 "dependency_count": null
+            },
+            "asgiref:3.8.1": {
+                "id": 792,
+                "project": 6,
+                "published_at": "2024-03-22 14:39:34",
+                "version": "3.8.1",
+                "updated_at": "2024-03-27 10:13:11",
+                "counted_functions": 75,
+                "counted_files": 10,
+                "nloc_total": 1271,
+                "nloc_average": 16.95,
+                "ccn_average": 2.85,
+                "commit_at": "2024-03-22 15:37:33",
+                "commit_hash": "e38d3c327c01aa82c0bf2726220700c1097ea6cc",
+                "includes": "asgiref/",
+                "excludes": null,
+                "dependency_count": null,
+                "bandit_report": {
+                    "id": 1719,
+                    "release": 792,
+                    "updated_at": "2024-03-28 10:49:29",
+                    "issues_total": 0,
+                    "files_with_issues": 0,
+                    "files_skipped": 0,
+                    "confidence_high_count": 0,
+                    "confidence_medium_count": 0,
+                    "confidence_low_count": 0,
+                    "confidence_undefined_count": 0,
+                    "severity_high_count": 0,
+                    "severity_medium_count": 0,
+                    "severity_low_count": 0,
+                    "severity_undefined_count": 0,
+                    "severity_h_confidence_h_count": 0,
+                    "severity_h_confidence_m_count": 0,
+                    "severity_h_confidence_l_count": 0,
+                    "severity_m_confidence_h_count": 0,
+                    "severity_m_confidence_m_count": 0,
+                    "severity_m_confidence_l_count": 0,
+                    "severity_l_confidence_h_count": 0,
+                    "severity_l_confidence_m_count": 0,
+                    "severity_l_confidence_l_count": 0,
+                    "loc": 1312,
+                    "nosec": 0,
+                    "skipped_tests": 0
+                }
+            },
+            "typing-extensions:4.11.0rc1": {
+                "id": 843,
+                "project": 8,
+                "published_at": "2024-03-24 14:04:40",
+                "version": "4.11.0rc1",
+                "updated_at": "2024-03-27 10:14:24",
+                "counted_functions": null,
+                "counted_files": null,
+                "nloc_total": null,
+                "nloc_average": null,
+                "ccn_average": null,
+                "commit_at": null,
+                "commit_hash": null,
+                "includes": null,
+                "excludes": null,
+                "dependency_count": null
             }
         },
         "timeline": [
-            {
-                "date": "2012-01-01 00:00:00",
-                "release": [],
-                "cves": []
-            },
-            {
-                "date": "2012-02-01 00:00:00",
-                "release": [],
-                "cves": []
-            },
-            {
-                "date": "2012-03-01 00:00:00",
-                "release": [],
-                "cves": []
-            },
-            {
-                "date": "2012-04-01 00:00:00",
-                "release": [],
-                "cves": []
-            },
-            {
-                "date": "2012-05-01 00:00:00",
-                "release": [],
-                "cves": []
-            },
-            {
-                "date": "2012-06-01 00:00:00",
-                "release": [],
-                "cves": []
-            },
-            {
-                "date": "2012-07-01 00:00:00",
-                "release": [],
-                "cves": []
-            },
-            {
-                "date": "2012-08-01 00:00:00",
-                "release": [],
-                "cves": []
-            },
-            {
-                "date": "2012-09-01 00:00:00",
-                "release": [],
-                "cves": []
-            },
-            {
-                "date": "2012-10-01 00:00:00",
-                "release": [],
-                "cves": []
-            },
-            {
-                "date": "2012-11-01 00:00:00",
-                "release": [],
-                "cves": []
-            },
-            {
-                "date": "2012-12-01 00:00:00",
-                "release": [],
-                "cves": []
-            },
-            {
-                "date": "2013-01-01 00:00:00",
-                "release": [],
-                "cves": []
-            },
-            {
-                "date": "2013-02-01 00:00:00",
-                "release": [],
-                "cves": []
-            },
-            {
-                "date": "2013-03-01 00:00:00",
-                "release": [],
-                "cves": []
-            },
-            {
-                "date": "2013-04-01 00:00:00",
-                "release": [],
-                "cves": []
-            },
-            {
-                "date": "2013-05-01 00:00:00",
-                "release": [],
-                "cves": []
-            },
-            {
-                "date": "2013-06-01 00:00:00",
-                "release": [],
-                "cves": []
-            },
-            {
-                "date": "2013-07-01 00:00:00",
-                "release": [],
-                "cves": []
-            },
-            {
-                "date": "2013-08-01 00:00:00",
-                "release": [],
-                "cves": []
-            },
-            {
-                "date": "2013-09-01 00:00:00",
-                "release": [],
-                "cves": []
-            },
-            {
-                "date": "2013-10-01 00:00:00",
-                "release": [],
-                "cves": []
-            },
-            {
-                "date": "2013-11-01 00:00:00",
-                "release": [],
-                "cves": []
-            },
-            {
-                "date": "2013-12-01 00:00:00",
-                "release": [],
-                "cves": []
-            },
             {
                 "date": "2014-01-01 00:00:00",
                 "release": [],
@@ -1355,401 +969,295 @@
             },
             {
                 "date": "2017-04-01 00:00:00",
-                "release": [
-                    "pytz:2017.2"
-                ],
+                "release": [],
                 "cves": []
             },
             {
                 "date": "2017-05-01 00:00:00",
-                "release": [
-                    "pytz:2017.2"
-                ],
+                "release": [],
                 "cves": []
             },
             {
                 "date": "2017-06-01 00:00:00",
-                "release": [
-                    "pytz:2017.2"
-                ],
+                "release": [],
                 "cves": []
             },
             {
                 "date": "2017-07-01 00:00:00",
-                "release": [
-                    "pytz:2017.2"
-                ],
+                "release": [],
                 "cves": []
             },
             {
                 "date": "2017-08-01 00:00:00",
-                "release": [
-                    "pytz:2017.2"
-                ],
+                "release": [],
                 "cves": []
             },
             {
                 "date": "2017-09-01 00:00:00",
-                "release": [
-                    "pytz:2017.2"
-                ],
+                "release": [],
                 "cves": []
             },
             {
                 "date": "2017-10-01 00:00:00",
-                "release": [
-                    "pytz:2017.2"
-                ],
+                "release": [],
                 "cves": []
             },
             {
                 "date": "2017-11-01 00:00:00",
-                "release": [
-                    "pytz:2017.3"
-                ],
+                "release": [],
                 "cves": []
             },
             {
                 "date": "2017-12-01 00:00:00",
-                "release": [
-                    "pytz:2017.3"
-                ],
+                "release": [],
                 "cves": []
             },
             {
                 "date": "2018-01-01 00:00:00",
-                "release": [
-                    "pytz:2017.3"
-                ],
+                "release": [],
                 "cves": []
             },
             {
                 "date": "2018-02-01 00:00:00",
-                "release": [
-                    "pytz:2017.3"
-                ],
+                "release": [],
                 "cves": []
             },
             {
                 "date": "2018-03-01 00:00:00",
-                "release": [
-                    "pytz:2018.3"
-                ],
+                "release": [],
                 "cves": []
             },
             {
                 "date": "2018-04-01 00:00:00",
-                "release": [
-                    "pytz:2018.3"
-                ],
+                "release": [],
                 "cves": []
             },
             {
                 "date": "2018-05-01 00:00:00",
-                "release": [
-                    "pytz:2018.4"
-                ],
+                "release": [],
                 "cves": []
             },
             {
                 "date": "2018-06-01 00:00:00",
-                "release": [
-                    "pytz:2018.4"
-                ],
+                "release": [],
                 "cves": []
             },
             {
                 "date": "2018-07-01 00:00:00",
-                "release": [
-                    "pytz:2018.5"
-                ],
+                "release": [],
                 "cves": []
             },
             {
                 "date": "2018-08-01 00:00:00",
-                "release": [
-                    "pytz:2018.5"
-                ],
+                "release": [],
                 "cves": []
             },
             {
                 "date": "2018-09-01 00:00:00",
-                "release": [
-                    "pytz:2018.5"
-                ],
+                "release": [],
                 "cves": []
             },
             {
                 "date": "2018-10-01 00:00:00",
-                "release": [
-                    "pytz:2018.5"
-                ],
+                "release": [],
                 "cves": []
             },
             {
                 "date": "2018-11-01 00:00:00",
-                "release": [
-                    "pytz:2018.7"
-                ],
+                "release": [],
                 "cves": []
             },
             {
                 "date": "2018-12-01 00:00:00",
-                "release": [
-                    "pytz:2018.7"
-                ],
+                "release": [],
                 "cves": []
             },
             {
                 "date": "2019-01-01 00:00:00",
-                "release": [
-                    "pytz:2018.7"
-                ],
+                "release": [],
                 "cves": []
             },
             {
                 "date": "2019-02-01 00:00:00",
-                "release": [
-                    "pytz:2018.9"
-                ],
+                "release": [],
                 "cves": []
             },
             {
                 "date": "2019-03-01 00:00:00",
-                "release": [
-                    "pytz:2018.9"
-                ],
+                "release": [],
                 "cves": []
             },
             {
                 "date": "2019-04-01 00:00:00",
-                "release": [
-                    "pytz:2018.9"
-                ],
+                "release": [],
                 "cves": []
             },
             {
                 "date": "2019-05-01 00:00:00",
-                "release": [
-                    "pytz:2019.1"
-                ],
+                "release": [],
                 "cves": []
             },
             {
                 "date": "2019-06-01 00:00:00",
-                "release": [
-                    "pytz:2019.1"
-                ],
+                "release": [],
                 "cves": []
             },
             {
                 "date": "2019-07-01 00:00:00",
-                "release": [
-                    "pytz:2019.1"
-                ],
+                "release": [],
                 "cves": []
             },
             {
                 "date": "2019-08-01 00:00:00",
-                "release": [
-                    "pytz:2019.2"
-                ],
+                "release": [],
                 "cves": []
             },
             {
                 "date": "2019-09-01 00:00:00",
-                "release": [
-                    "pytz:2019.2"
-                ],
+                "release": [],
                 "cves": []
             },
             {
                 "date": "2019-10-01 00:00:00",
-                "release": [
-                    "pytz:2019.2"
-                ],
+                "release": [],
                 "cves": []
             },
             {
                 "date": "2019-11-01 00:00:00",
-                "release": [
-                    "pytz:2019.3"
-                ],
+                "release": [],
                 "cves": []
             },
             {
                 "date": "2019-12-01 00:00:00",
-                "release": [
-                    "asgiref:3.2.3",
-                    "pytz:2019.3"
-                ],
+                "release": [],
                 "cves": []
             },
             {
                 "date": "2020-01-01 00:00:00",
-                "release": [
-                    "asgiref:3.2.3",
-                    "pytz:2019.3"
-                ],
+                "release": [],
                 "cves": []
             },
             {
                 "date": "2020-02-01 00:00:00",
-                "release": [
-                    "asgiref:3.2.3",
-                    "pytz:2019.3"
-                ],
+                "release": [],
                 "cves": []
             },
             {
                 "date": "2020-03-01 00:00:00",
-                "release": [
-                    "asgiref:3.2.3",
-                    "pytz:2019.3"
-                ],
+                "release": [],
                 "cves": []
             },
             {
                 "date": "2020-04-01 00:00:00",
-                "release": [
-                    "asgiref:3.2.7",
-                    "pytz:2019.3"
-                ],
+                "release": [],
                 "cves": []
             },
             {
                 "date": "2020-05-01 00:00:00",
-                "release": [
-                    "asgiref:3.2.7",
-                    "pytz:2020.1"
-                ],
+                "release": [],
                 "cves": []
             },
             {
                 "date": "2020-06-01 00:00:00",
                 "release": [
-                    "asgiref:3.2.7",
-                    "pytz:2020.1"
+                    "asgiref:3.2.7"
                 ],
                 "cves": []
             },
             {
                 "date": "2020-07-01 00:00:00",
                 "release": [
-                    "asgiref:3.2.10",
-                    "pytz:2020.1"
+                    "asgiref:3.2.10"
                 ],
                 "cves": []
             },
             {
                 "date": "2020-08-01 00:00:00",
-                "release": [
-                    "asgiref:3.2.10",
-                    "pytz:2020.1"
-                ],
+                "release": [],
                 "cves": []
             },
             {
                 "date": "2020-09-01 00:00:00",
-                "release": [
-                    "asgiref:3.2.10",
-                    "pytz:2020.1"
-                ],
+                "release": [],
                 "cves": []
             },
             {
                 "date": "2020-10-01 00:00:00",
-                "release": [
-                    "asgiref:3.2.10",
-                    "pytz:2020.1"
-                ],
+                "release": [],
                 "cves": []
             },
             {
                 "date": "2020-11-01 00:00:00",
-                "release": [
-                    "asgiref:3.3.0",
-                    "pytz:2020.1"
-                ],
+                "release": [],
                 "cves": []
             },
             {
                 "date": "2020-12-01 00:00:00",
                 "release": [
-                    "asgiref:3.3.1",
-                    "pytz:2020.4"
+                    "asgiref:3.3.1"
                 ],
                 "cves": []
             },
             {
                 "date": "2021-01-01 00:00:00",
                 "release": [
-                    "asgiref:3.3.1",
-                    "pytz:2020.5"
+                    "asgiref:3.3.1"
                 ],
                 "cves": []
             },
             {
                 "date": "2021-02-01 00:00:00",
                 "release": [
-                    "asgiref:3.3.1",
-                    "pytz:2020.5"
+                    "asgiref:3.3.1"
                 ],
                 "cves": []
             },
             {
                 "date": "2021-03-01 00:00:00",
                 "release": [
-                    "asgiref:3.3.1",
-                    "pytz:2021.1"
+                    "asgiref:3.3.1"
                 ],
                 "cves": []
             },
             {
                 "date": "2021-04-01 00:00:00",
                 "release": [
-                    "asgiref:3.3.1",
-                    "pytz:2021.1"
+                    "asgiref:3.3.1"
                 ],
                 "cves": []
             },
             {
                 "date": "2021-05-01 00:00:00",
                 "release": [
-                    "asgiref:3.3.4",
-                    "pytz:2021.1"
+                    "asgiref:3.3.4"
                 ],
                 "cves": []
             },
             {
                 "date": "2021-06-01 00:00:00",
                 "release": [
-                    "asgiref:3.3.4",
-                    "pytz:2021.1"
+                    "asgiref:3.3.4"
                 ],
                 "cves": []
             },
             {
                 "date": "2021-07-01 00:00:00",
                 "release": [
-                    "asgiref:3.4.0",
-                    "pytz:2021.1"
+                    "asgiref:3.4.0"
                 ],
                 "cves": []
             },
             {
                 "date": "2021-08-01 00:00:00",
                 "release": [
-                    "asgiref:3.4.1",
-                    "pytz:2021.1"
+                    "asgiref:3.4.1"
                 ],
                 "cves": []
             },
             {
                 "date": "2021-09-01 00:00:00",
                 "release": [
-                    "asgiref:3.4.1",
-                    "pytz:2021.1"
+                    "asgiref:3.4.1"
                 ],
                 "cves": []
             },
@@ -1988,6 +1496,14 @@
                 "release": [
                     "asgiref:3.7.2",
                     "typing-extensions:4.10.0"
+                ],
+                "cves": []
+            },
+            {
+                "date": "2024-04-01 00:00:00",
+                "release": [
+                    "asgiref:3.8.1",
+                    "typing-extensions:4.11.0rc1"
                 ],
                 "cves": []
             }
@@ -2348,7 +1864,7 @@
                     "release": 902,
                     "updated_at": "2024-03-28 10:50:00",
                     "issues_total": 0,
-                    "files_counted": 0,
+                    "files_with_issues": 0,
                     "files_skipped": 0,
                     "confidence_high_count": 0,
                     "confidence_medium_count": 0,
@@ -2410,7 +1926,7 @@
                     "release": 903,
                     "updated_at": "2024-03-28 10:50:00",
                     "issues_total": 0,
-                    "files_counted": 0,
+                    "files_with_issues": 0,
                     "files_skipped": 0,
                     "confidence_high_count": 0,
                     "confidence_medium_count": 0,
@@ -2455,7 +1971,7 @@
                     "release": 31,
                     "updated_at": "2024-03-27 14:02:50",
                     "issues_total": 43,
-                    "files_counted": 12,
+                    "files_with_issues": 12,
                     "files_skipped": 0,
                     "confidence_high_count": 23,
                     "confidence_medium_count": 20,
@@ -2500,7 +2016,7 @@
                     "release": 904,
                     "updated_at": "2024-03-28 10:50:00",
                     "issues_total": 0,
-                    "files_counted": 0,
+                    "files_with_issues": 0,
                     "files_skipped": 0,
                     "confidence_high_count": 0,
                     "confidence_medium_count": 0,
@@ -2545,7 +2061,7 @@
                     "release": 37,
                     "updated_at": "2024-03-27 14:02:47",
                     "issues_total": 45,
-                    "files_counted": 12,
+                    "files_with_issues": 12,
                     "files_skipped": 0,
                     "confidence_high_count": 25,
                     "confidence_medium_count": 20,
@@ -2590,7 +2106,7 @@
                     "release": 38,
                     "updated_at": "2024-03-27 14:02:46",
                     "issues_total": 45,
-                    "files_counted": 12,
+                    "files_with_issues": 12,
                     "files_skipped": 0,
                     "confidence_high_count": 25,
                     "confidence_medium_count": 20,
@@ -2652,7 +2168,7 @@
                     "release": 906,
                     "updated_at": "2024-03-28 10:50:00",
                     "issues_total": 0,
-                    "files_counted": 0,
+                    "files_with_issues": 0,
                     "files_skipped": 0,
                     "confidence_high_count": 0,
                     "confidence_medium_count": 0,
@@ -2697,7 +2213,7 @@
                     "release": 1057,
                     "updated_at": "2024-03-28 10:49:50",
                     "issues_total": 0,
-                    "files_counted": 0,
+                    "files_with_issues": 0,
                     "files_skipped": 0,
                     "confidence_high_count": 0,
                     "confidence_medium_count": 0,
@@ -2742,7 +2258,7 @@
                     "release": 5,
                     "updated_at": "2024-03-27 14:02:45",
                     "issues_total": 45,
-                    "files_counted": 12,
+                    "files_with_issues": 12,
                     "files_skipped": 0,
                     "confidence_high_count": 25,
                     "confidence_medium_count": 20,
@@ -2787,7 +2303,7 @@
                     "release": 7,
                     "updated_at": "2024-03-27 14:02:44",
                     "issues_total": 45,
-                    "files_counted": 12,
+                    "files_with_issues": 12,
                     "files_skipped": 0,
                     "confidence_high_count": 25,
                     "confidence_medium_count": 20,
@@ -2832,7 +2348,7 @@
                     "release": 10,
                     "updated_at": "2024-03-27 14:02:43",
                     "issues_total": 0,
-                    "files_counted": 0,
+                    "files_with_issues": 0,
                     "files_skipped": 0,
                     "confidence_high_count": 0,
                     "confidence_medium_count": 0,
@@ -2896,16 +2412,44 @@
                 "published_at": "2020-02-06 20:26:09",
                 "version": "1.0.0",
                 "updated_at": "2024-03-27 10:41:15",
-                "counted_functions": null,
-                "counted_files": null,
-                "nloc_total": null,
-                "nloc_average": null,
-                "ccn_average": null,
-                "commit_at": null,
-                "commit_hash": null,
-                "includes": null,
+                "counted_functions": 1137,
+                "counted_files": 43,
+                "nloc_total": 14233,
+                "nloc_average": 12.52,
+                "ccn_average": 2.98,
+                "commit_at": "2020-02-06 21:18:19",
+                "commit_hash": "dfde671ef969e27c7b14bd464688c009b34a7d2b",
+                "includes": "werkzeug/, src/",
                 "excludes": null,
-                "dependency_count": null
+                "dependency_count": null,
+                "bandit_report": {
+                    "id": 2084,
+                    "release": 1161,
+                    "updated_at": "2024-04-03 13:23:44",
+                    "issues_total": 23,
+                    "files_with_issues": 13,
+                    "files_skipped": 0,
+                    "confidence_high_count": 23,
+                    "confidence_medium_count": 0,
+                    "confidence_low_count": 0,
+                    "confidence_undefined_count": 0,
+                    "severity_high_count": 3,
+                    "severity_medium_count": 5,
+                    "severity_low_count": 15,
+                    "severity_undefined_count": 0,
+                    "severity_h_confidence_h_count": 3,
+                    "severity_h_confidence_m_count": 0,
+                    "severity_h_confidence_l_count": 0,
+                    "severity_m_confidence_h_count": 5,
+                    "severity_m_confidence_m_count": 0,
+                    "severity_m_confidence_l_count": 0,
+                    "severity_l_confidence_h_count": 15,
+                    "severity_l_confidence_m_count": 0,
+                    "severity_l_confidence_l_count": 0,
+                    "loc": 16668,
+                    "nosec": 0,
+                    "skipped_tests": 0
+                }
             },
             "click:7.1.1": {
                 "id": 908,
@@ -2928,7 +2472,7 @@
                     "release": 908,
                     "updated_at": "2024-03-28 10:49:59",
                     "issues_total": 34,
-                    "files_counted": 7,
+                    "files_with_issues": 7,
                     "files_skipped": 0,
                     "confidence_high_count": 34,
                     "confidence_medium_count": 0,
@@ -2958,16 +2502,44 @@
                 "published_at": "2020-03-31 18:05:51",
                 "version": "1.0.1",
                 "updated_at": "2024-03-27 10:41:15",
-                "counted_functions": null,
-                "counted_files": null,
-                "nloc_total": null,
-                "nloc_average": null,
-                "ccn_average": null,
-                "commit_at": null,
-                "commit_hash": null,
-                "includes": null,
+                "counted_functions": 1137,
+                "counted_files": 43,
+                "nloc_total": 14235,
+                "nloc_average": 12.52,
+                "ccn_average": 2.98,
+                "commit_at": "2020-03-31 20:00:43",
+                "commit_hash": "1dde4b1790f9c46b7122bb8225e6b48a5b22a615",
+                "includes": "werkzeug/, src/",
                 "excludes": null,
-                "dependency_count": null
+                "dependency_count": null,
+                "bandit_report": {
+                    "id": 2083,
+                    "release": 1163,
+                    "updated_at": "2024-04-03 13:23:43",
+                    "issues_total": 23,
+                    "files_with_issues": 13,
+                    "files_skipped": 0,
+                    "confidence_high_count": 23,
+                    "confidence_medium_count": 0,
+                    "confidence_low_count": 0,
+                    "confidence_undefined_count": 0,
+                    "severity_high_count": 3,
+                    "severity_medium_count": 5,
+                    "severity_low_count": 15,
+                    "severity_undefined_count": 0,
+                    "severity_h_confidence_h_count": 3,
+                    "severity_h_confidence_m_count": 0,
+                    "severity_h_confidence_l_count": 0,
+                    "severity_m_confidence_h_count": 5,
+                    "severity_m_confidence_m_count": 0,
+                    "severity_m_confidence_l_count": 0,
+                    "severity_l_confidence_h_count": 15,
+                    "severity_l_confidence_m_count": 0,
+                    "severity_l_confidence_l_count": 0,
+                    "loc": 16670,
+                    "nosec": 0,
+                    "skipped_tests": 0
+                }
             },
             "click:7.1.2": {
                 "id": 909,
@@ -2990,7 +2562,7 @@
                     "release": 909,
                     "updated_at": "2024-03-28 10:49:59",
                     "issues_total": 34,
-                    "files_counted": 7,
+                    "files_with_issues": 7,
                     "files_skipped": 0,
                     "confidence_high_count": 34,
                     "confidence_medium_count": 0,
@@ -3171,7 +2743,7 @@
                     "release": 913,
                     "updated_at": "2024-03-28 10:49:58",
                     "issues_total": 32,
-                    "files_counted": 8,
+                    "files_with_issues": 8,
                     "files_skipped": 0,
                     "confidence_high_count": 32,
                     "confidence_medium_count": 0,
@@ -3216,7 +2788,7 @@
                     "release": 1062,
                     "updated_at": "2024-03-28 10:49:49",
                     "issues_total": 1,
-                    "files_counted": 1,
+                    "files_with_issues": 1,
                     "files_skipped": 0,
                     "confidence_high_count": 1,
                     "confidence_medium_count": 0,
@@ -3261,7 +2833,7 @@
                     "release": 43,
                     "updated_at": "2024-03-27 14:02:43",
                     "issues_total": 0,
-                    "files_counted": 0,
+                    "files_with_issues": 0,
                     "files_skipped": 0,
                     "confidence_high_count": 0,
                     "confidence_medium_count": 0,
@@ -3291,16 +2863,44 @@
                 "published_at": "2021-05-17 23:18:08",
                 "version": "2.0.1",
                 "updated_at": "2024-03-27 10:41:15",
-                "counted_functions": null,
-                "counted_files": null,
-                "nloc_total": null,
-                "nloc_average": null,
-                "ccn_average": null,
-                "commit_at": null,
-                "commit_hash": null,
-                "includes": null,
+                "counted_functions": 1180,
+                "counted_files": 47,
+                "nloc_total": 18434,
+                "nloc_average": 15.62,
+                "ccn_average": 2.88,
+                "commit_at": "2021-05-18 01:10:01",
+                "commit_hash": "73ed5efd401bd3b44cfbea67bba642c681fea6b0",
+                "includes": "werkzeug/, src/",
                 "excludes": null,
-                "dependency_count": null
+                "dependency_count": null,
+                "bandit_report": {
+                    "id": 2081,
+                    "release": 1170,
+                    "updated_at": "2024-04-03 13:23:41",
+                    "issues_total": 20,
+                    "files_with_issues": 11,
+                    "files_skipped": 0,
+                    "confidence_high_count": 19,
+                    "confidence_medium_count": 1,
+                    "confidence_low_count": 0,
+                    "confidence_undefined_count": 0,
+                    "severity_high_count": 3,
+                    "severity_medium_count": 4,
+                    "severity_low_count": 13,
+                    "severity_undefined_count": 0,
+                    "severity_h_confidence_h_count": 3,
+                    "severity_h_confidence_m_count": 0,
+                    "severity_h_confidence_l_count": 0,
+                    "severity_m_confidence_h_count": 3,
+                    "severity_m_confidence_m_count": 1,
+                    "severity_m_confidence_l_count": 0,
+                    "severity_l_confidence_h_count": 13,
+                    "severity_l_confidence_m_count": 0,
+                    "severity_l_confidence_l_count": 0,
+                    "loc": 18045,
+                    "nosec": 0,
+                    "skipped_tests": 0
+                }
             },
             "click:8.0.3": {
                 "id": 915,
@@ -3323,7 +2923,7 @@
                     "release": 915,
                     "updated_at": "2024-03-28 10:49:57",
                     "issues_total": 32,
-                    "files_counted": 8,
+                    "files_with_issues": 8,
                     "files_skipped": 0,
                     "confidence_high_count": 32,
                     "confidence_medium_count": 0,
@@ -3368,7 +2968,7 @@
                     "release": 44,
                     "updated_at": "2024-03-27 14:02:43",
                     "issues_total": 0,
-                    "files_counted": 0,
+                    "files_with_issues": 0,
                     "files_skipped": 0,
                     "confidence_high_count": 0,
                     "confidence_medium_count": 0,
@@ -3398,16 +2998,44 @@
                 "published_at": "2021-10-06 00:29:17",
                 "version": "2.0.2",
                 "updated_at": "2024-03-27 10:41:15",
-                "counted_functions": null,
-                "counted_files": null,
-                "nloc_total": null,
-                "nloc_average": null,
-                "ccn_average": null,
-                "commit_at": null,
-                "commit_hash": null,
-                "includes": null,
+                "counted_functions": 1188,
+                "counted_files": 47,
+                "nloc_total": 18496,
+                "nloc_average": 15.57,
+                "ccn_average": 2.88,
+                "commit_at": "2021-10-06 02:25:51",
+                "commit_hash": "532479573ab3ecd815795df58a48ae7d68777ee0",
+                "includes": "werkzeug/, src/",
                 "excludes": null,
-                "dependency_count": null
+                "dependency_count": null,
+                "bandit_report": {
+                    "id": 2080,
+                    "release": 1171,
+                    "updated_at": "2024-04-03 13:23:40",
+                    "issues_total": 20,
+                    "files_with_issues": 11,
+                    "files_skipped": 0,
+                    "confidence_high_count": 19,
+                    "confidence_medium_count": 1,
+                    "confidence_low_count": 0,
+                    "confidence_undefined_count": 0,
+                    "severity_high_count": 3,
+                    "severity_medium_count": 4,
+                    "severity_low_count": 13,
+                    "severity_undefined_count": 0,
+                    "severity_h_confidence_h_count": 3,
+                    "severity_h_confidence_m_count": 0,
+                    "severity_h_confidence_l_count": 0,
+                    "severity_m_confidence_h_count": 3,
+                    "severity_m_confidence_m_count": 1,
+                    "severity_m_confidence_l_count": 0,
+                    "severity_l_confidence_h_count": 13,
+                    "severity_l_confidence_m_count": 0,
+                    "severity_l_confidence_l_count": 0,
+                    "loc": 18104,
+                    "nosec": 0,
+                    "skipped_tests": 0
+                }
             },
             "jinja2:3.0.3": {
                 "id": 45,
@@ -3430,7 +3058,7 @@
                     "release": 45,
                     "updated_at": "2024-03-27 14:02:43",
                     "issues_total": 0,
-                    "files_counted": 0,
+                    "files_with_issues": 0,
                     "files_skipped": 0,
                     "confidence_high_count": 0,
                     "confidence_medium_count": 0,
@@ -3475,7 +3103,7 @@
                     "release": 916,
                     "updated_at": "2024-03-28 10:49:56",
                     "issues_total": 32,
-                    "files_counted": 8,
+                    "files_with_issues": 8,
                     "files_skipped": 0,
                     "confidence_high_count": 32,
                     "confidence_medium_count": 0,
@@ -3520,7 +3148,7 @@
                     "release": 1063,
                     "updated_at": "2024-03-28 10:49:49",
                     "issues_total": 1,
-                    "files_counted": 1,
+                    "files_with_issues": 1,
                     "files_skipped": 0,
                     "confidence_high_count": 1,
                     "confidence_medium_count": 0,
@@ -3550,16 +3178,44 @@
                 "published_at": "2022-02-07 21:06:00",
                 "version": "2.0.3",
                 "updated_at": "2024-03-27 10:41:15",
-                "counted_functions": null,
-                "counted_files": null,
-                "nloc_total": null,
-                "nloc_average": null,
-                "ccn_average": null,
-                "commit_at": null,
-                "commit_hash": null,
-                "includes": null,
+                "counted_functions": 1188,
+                "counted_files": 47,
+                "nloc_total": 18516,
+                "nloc_average": 15.59,
+                "ccn_average": 2.88,
+                "commit_at": "2022-02-07 22:02:05",
+                "commit_hash": "38e655ec8a7a7d357143f2c83db582526b3f8b95",
+                "includes": "werkzeug/, src/",
                 "excludes": null,
-                "dependency_count": null
+                "dependency_count": null,
+                "bandit_report": {
+                    "id": 2079,
+                    "release": 1172,
+                    "updated_at": "2024-04-03 13:23:39",
+                    "issues_total": 20,
+                    "files_with_issues": 11,
+                    "files_skipped": 0,
+                    "confidence_high_count": 19,
+                    "confidence_medium_count": 1,
+                    "confidence_low_count": 0,
+                    "confidence_undefined_count": 0,
+                    "severity_high_count": 3,
+                    "severity_medium_count": 4,
+                    "severity_low_count": 13,
+                    "severity_undefined_count": 0,
+                    "severity_h_confidence_h_count": 3,
+                    "severity_h_confidence_m_count": 0,
+                    "severity_h_confidence_l_count": 0,
+                    "severity_m_confidence_h_count": 3,
+                    "severity_m_confidence_m_count": 1,
+                    "severity_m_confidence_l_count": 0,
+                    "severity_l_confidence_h_count": 13,
+                    "severity_l_confidence_m_count": 0,
+                    "severity_l_confidence_l_count": 0,
+                    "loc": 18124,
+                    "nosec": 0,
+                    "skipped_tests": 0
+                }
             },
             "click:8.1.2": {
                 "id": 919,
@@ -3582,7 +3238,7 @@
                     "release": 919,
                     "updated_at": "2024-03-28 10:49:54",
                     "issues_total": 29,
-                    "files_counted": 7,
+                    "files_with_issues": 7,
                     "files_skipped": 0,
                     "confidence_high_count": 29,
                     "confidence_medium_count": 0,
@@ -3644,7 +3300,7 @@
                     "release": 1065,
                     "updated_at": "2024-03-28 10:49:49",
                     "issues_total": 1,
-                    "files_counted": 1,
+                    "files_with_issues": 1,
                     "files_skipped": 0,
                     "confidence_high_count": 1,
                     "confidence_medium_count": 0,
@@ -3689,7 +3345,7 @@
                     "release": 47,
                     "updated_at": "2024-03-27 14:02:43",
                     "issues_total": 0,
-                    "files_counted": 0,
+                    "files_with_issues": 0,
                     "files_skipped": 0,
                     "confidence_high_count": 0,
                     "confidence_medium_count": 0,
@@ -3734,7 +3390,7 @@
                     "release": 1092,
                     "updated_at": "2024-03-28 10:50:01",
                     "issues_total": 0,
-                    "files_counted": 0,
+                    "files_with_issues": 0,
                     "files_skipped": 0,
                     "confidence_high_count": 0,
                     "confidence_medium_count": 0,
@@ -3764,16 +3420,44 @@
                 "published_at": "2022-03-28 17:57:06",
                 "version": "2.1.0",
                 "updated_at": "2024-03-27 10:41:15",
-                "counted_functions": null,
-                "counted_files": null,
-                "nloc_total": null,
-                "nloc_average": null,
-                "ccn_average": null,
-                "commit_at": null,
-                "commit_hash": null,
-                "includes": null,
+                "counted_functions": 1086,
+                "counted_files": 36,
+                "nloc_total": 17019,
+                "nloc_average": 15.67,
+                "ccn_average": 2.92,
+                "commit_at": "2022-03-28 19:54:36",
+                "commit_hash": "294de758b6edc0dbbd68c3292729ef3fa0fab657",
+                "includes": "werkzeug/, src/",
                 "excludes": null,
-                "dependency_count": null
+                "dependency_count": null,
+                "bandit_report": {
+                    "id": 2078,
+                    "release": 1173,
+                    "updated_at": "2024-04-03 13:23:38",
+                    "issues_total": 18,
+                    "files_with_issues": 10,
+                    "files_skipped": 0,
+                    "confidence_high_count": 17,
+                    "confidence_medium_count": 1,
+                    "confidence_low_count": 0,
+                    "confidence_undefined_count": 0,
+                    "severity_high_count": 3,
+                    "severity_medium_count": 3,
+                    "severity_low_count": 12,
+                    "severity_undefined_count": 0,
+                    "severity_h_confidence_h_count": 3,
+                    "severity_h_confidence_m_count": 0,
+                    "severity_h_confidence_l_count": 0,
+                    "severity_m_confidence_h_count": 2,
+                    "severity_m_confidence_m_count": 1,
+                    "severity_m_confidence_l_count": 0,
+                    "severity_l_confidence_h_count": 12,
+                    "severity_l_confidence_m_count": 0,
+                    "severity_l_confidence_l_count": 0,
+                    "loc": 16587,
+                    "nosec": 0,
+                    "skipped_tests": 0
+                }
             },
             "zipp:3.7.0": {
                 "id": 1238,
@@ -3796,7 +3480,7 @@
                     "release": 1238,
                     "updated_at": "2024-03-28 10:50:03",
                     "issues_total": 0,
-                    "files_counted": 0,
+                    "files_with_issues": 0,
                     "files_skipped": 0,
                     "confidence_high_count": 0,
                     "confidence_medium_count": 0,
@@ -3841,7 +3525,7 @@
                     "release": 920,
                     "updated_at": "2024-03-28 10:49:54",
                     "issues_total": 29,
-                    "files_counted": 7,
+                    "files_with_issues": 7,
                     "files_skipped": 0,
                     "confidence_high_count": 29,
                     "confidence_medium_count": 0,
@@ -3886,7 +3570,7 @@
                     "release": 48,
                     "updated_at": "2024-03-27 14:02:43",
                     "issues_total": 0,
-                    "files_counted": 0,
+                    "files_with_issues": 0,
                     "files_skipped": 0,
                     "confidence_high_count": 0,
                     "confidence_medium_count": 0,
@@ -3916,16 +3600,44 @@
                 "published_at": "2022-04-28 17:40:18",
                 "version": "2.1.2",
                 "updated_at": "2024-03-27 10:41:15",
-                "counted_functions": null,
-                "counted_files": null,
-                "nloc_total": null,
-                "nloc_average": null,
-                "ccn_average": null,
-                "commit_at": null,
-                "commit_hash": null,
-                "includes": null,
+                "counted_functions": 1086,
+                "counted_files": 36,
+                "nloc_total": 17032,
+                "nloc_average": 15.68,
+                "ccn_average": 2.92,
+                "commit_at": "2022-04-28 19:38:17",
+                "commit_hash": "810cd659153a7c9923e2557a00c587c8bc77d74a",
+                "includes": "werkzeug/, src/",
                 "excludes": null,
-                "dependency_count": null
+                "dependency_count": null,
+                "bandit_report": {
+                    "id": 2076,
+                    "release": 1175,
+                    "updated_at": "2024-04-03 13:23:36",
+                    "issues_total": 18,
+                    "files_with_issues": 10,
+                    "files_skipped": 0,
+                    "confidence_high_count": 17,
+                    "confidence_medium_count": 1,
+                    "confidence_low_count": 0,
+                    "confidence_undefined_count": 0,
+                    "severity_high_count": 3,
+                    "severity_medium_count": 3,
+                    "severity_low_count": 12,
+                    "severity_undefined_count": 0,
+                    "severity_h_confidence_h_count": 3,
+                    "severity_h_confidence_m_count": 0,
+                    "severity_h_confidence_l_count": 0,
+                    "severity_m_confidence_h_count": 2,
+                    "severity_m_confidence_m_count": 1,
+                    "severity_m_confidence_l_count": 0,
+                    "severity_l_confidence_h_count": 12,
+                    "severity_l_confidence_m_count": 0,
+                    "severity_l_confidence_l_count": 0,
+                    "loc": 16599,
+                    "nosec": 0,
+                    "skipped_tests": 0
+                }
             },
             "zipp:3.8.0": {
                 "id": 1239,
@@ -3948,7 +3660,7 @@
                     "release": 1239,
                     "updated_at": "2024-03-28 10:50:03",
                     "issues_total": 0,
-                    "files_counted": 0,
+                    "files_with_issues": 0,
                     "files_skipped": 0,
                     "confidence_high_count": 0,
                     "confidence_medium_count": 0,
@@ -4012,16 +3724,44 @@
                 "published_at": "2022-07-27 20:45:45",
                 "version": "2.2.1",
                 "updated_at": "2024-03-27 10:41:15",
-                "counted_functions": null,
-                "counted_files": null,
-                "nloc_total": null,
-                "nloc_average": null,
-                "ccn_average": null,
-                "commit_at": null,
-                "commit_hash": null,
-                "includes": null,
+                "counted_functions": 1099,
+                "counted_files": 42,
+                "nloc_total": 17428,
+                "nloc_average": 15.86,
+                "ccn_average": 2.92,
+                "commit_at": "2022-07-27 22:39:20",
+                "commit_hash": "410c87843f07991ad0b4bb5e9dd1bd8c7f8f2332",
+                "includes": "werkzeug/, src/",
                 "excludes": null,
-                "dependency_count": null
+                "dependency_count": null,
+                "bandit_report": {
+                    "id": 2074,
+                    "release": 1178,
+                    "updated_at": "2024-04-03 13:23:34",
+                    "issues_total": 18,
+                    "files_with_issues": 10,
+                    "files_skipped": 0,
+                    "confidence_high_count": 17,
+                    "confidence_medium_count": 1,
+                    "confidence_low_count": 0,
+                    "confidence_undefined_count": 0,
+                    "severity_high_count": 3,
+                    "severity_medium_count": 3,
+                    "severity_low_count": 12,
+                    "severity_undefined_count": 0,
+                    "severity_h_confidence_h_count": 3,
+                    "severity_h_confidence_m_count": 0,
+                    "severity_h_confidence_l_count": 0,
+                    "severity_m_confidence_h_count": 2,
+                    "severity_m_confidence_m_count": 1,
+                    "severity_m_confidence_l_count": 0,
+                    "severity_l_confidence_h_count": 12,
+                    "severity_l_confidence_m_count": 0,
+                    "severity_l_confidence_l_count": 0,
+                    "loc": 16970,
+                    "nosec": 0,
+                    "skipped_tests": 0
+                }
             },
             "zipp:3.8.1": {
                 "id": 1240,
@@ -4044,7 +3784,7 @@
                     "release": 1240,
                     "updated_at": "2024-03-28 10:50:03",
                     "issues_total": 0,
-                    "files_counted": 0,
+                    "files_with_issues": 0,
                     "files_skipped": 0,
                     "confidence_high_count": 0,
                     "confidence_medium_count": 0,
@@ -4074,16 +3814,44 @@
                 "published_at": "2022-08-08 21:46:11",
                 "version": "2.2.2",
                 "updated_at": "2024-03-27 10:41:15",
-                "counted_functions": null,
-                "counted_files": null,
-                "nloc_total": null,
-                "nloc_average": null,
-                "ccn_average": null,
-                "commit_at": null,
-                "commit_hash": null,
-                "includes": null,
+                "counted_functions": 1099,
+                "counted_files": 42,
+                "nloc_total": 17466,
+                "nloc_average": 15.89,
+                "ccn_average": 2.92,
+                "commit_at": "2022-08-08 23:41:22",
+                "commit_hash": "15fcb87d36f4ed45b127692d2d739266b918503c",
+                "includes": "werkzeug/, src/",
                 "excludes": null,
-                "dependency_count": null
+                "dependency_count": null,
+                "bandit_report": {
+                    "id": 2073,
+                    "release": 1179,
+                    "updated_at": "2024-04-03 13:23:33",
+                    "issues_total": 19,
+                    "files_with_issues": 10,
+                    "files_skipped": 0,
+                    "confidence_high_count": 17,
+                    "confidence_medium_count": 2,
+                    "confidence_low_count": 0,
+                    "confidence_undefined_count": 0,
+                    "severity_high_count": 3,
+                    "severity_medium_count": 4,
+                    "severity_low_count": 12,
+                    "severity_undefined_count": 0,
+                    "severity_h_confidence_h_count": 3,
+                    "severity_h_confidence_m_count": 0,
+                    "severity_h_confidence_l_count": 0,
+                    "severity_m_confidence_h_count": 2,
+                    "severity_m_confidence_m_count": 2,
+                    "severity_m_confidence_l_count": 0,
+                    "severity_l_confidence_h_count": 12,
+                    "severity_l_confidence_m_count": 0,
+                    "severity_l_confidence_l_count": 0,
+                    "loc": 17007,
+                    "nosec": 0,
+                    "skipped_tests": 0
+                }
             },
             "importlib-metadata:5.0.0": {
                 "id": 1016,
@@ -4123,7 +3891,7 @@
                     "release": 1215,
                     "updated_at": "2024-03-28 10:50:02",
                     "issues_total": 0,
-                    "files_counted": 0,
+                    "files_with_issues": 0,
                     "files_skipped": 0,
                     "confidence_high_count": 0,
                     "confidence_medium_count": 0,
@@ -4185,7 +3953,7 @@
                     "release": 1216,
                     "updated_at": "2024-03-28 10:50:02",
                     "issues_total": 0,
-                    "files_counted": 0,
+                    "files_with_issues": 0,
                     "files_skipped": 0,
                     "confidence_high_count": 0,
                     "confidence_medium_count": 0,
@@ -4264,7 +4032,7 @@
                     "release": 1093,
                     "updated_at": "2024-03-28 10:50:01",
                     "issues_total": 0,
-                    "files_counted": 0,
+                    "files_with_issues": 0,
                     "files_skipped": 0,
                     "confidence_high_count": 0,
                     "confidence_medium_count": 0,
@@ -4309,7 +4077,7 @@
                     "release": 1217,
                     "updated_at": "2024-03-28 10:50:02",
                     "issues_total": 0,
-                    "files_counted": 0,
+                    "files_with_issues": 0,
                     "files_skipped": 0,
                     "confidence_high_count": 0,
                     "confidence_medium_count": 0,
@@ -4339,16 +4107,44 @@
                 "published_at": "2023-02-14 17:20:13",
                 "version": "2.2.3",
                 "updated_at": "2024-03-27 10:41:15",
-                "counted_functions": null,
-                "counted_files": null,
-                "nloc_total": null,
-                "nloc_average": null,
-                "ccn_average": null,
-                "commit_at": null,
-                "commit_hash": null,
-                "includes": null,
+                "counted_functions": 1104,
+                "counted_files": 42,
+                "nloc_total": 17547,
+                "nloc_average": 15.89,
+                "ccn_average": 2.92,
+                "commit_at": "2023-02-14 18:10:34",
+                "commit_hash": "22a254fca2ad0130adbbcbd11d3de51bcb04a08b",
+                "includes": "werkzeug/, src/",
                 "excludes": null,
-                "dependency_count": null
+                "dependency_count": null,
+                "bandit_report": {
+                    "id": 2072,
+                    "release": 1180,
+                    "updated_at": "2024-04-03 13:23:32",
+                    "issues_total": 19,
+                    "files_with_issues": 10,
+                    "files_skipped": 0,
+                    "confidence_high_count": 17,
+                    "confidence_medium_count": 2,
+                    "confidence_low_count": 0,
+                    "confidence_undefined_count": 0,
+                    "severity_high_count": 3,
+                    "severity_medium_count": 4,
+                    "severity_low_count": 12,
+                    "severity_undefined_count": 0,
+                    "severity_h_confidence_h_count": 3,
+                    "severity_h_confidence_m_count": 0,
+                    "severity_h_confidence_l_count": 0,
+                    "severity_m_confidence_h_count": 2,
+                    "severity_m_confidence_m_count": 2,
+                    "severity_m_confidence_l_count": 0,
+                    "severity_l_confidence_h_count": 12,
+                    "severity_l_confidence_m_count": 0,
+                    "severity_l_confidence_l_count": 0,
+                    "loc": 17084,
+                    "nosec": 0,
+                    "skipped_tests": 0
+                }
             },
             "zipp:3.15.0": {
                 "id": 1221,
@@ -4371,7 +4167,7 @@
                     "release": 1221,
                     "updated_at": "2024-03-28 10:50:02",
                     "issues_total": 0,
-                    "files_counted": 0,
+                    "files_with_issues": 0,
                     "files_skipped": 0,
                     "confidence_high_count": 0,
                     "confidence_medium_count": 0,
@@ -4433,7 +4229,7 @@
                     "release": 869,
                     "updated_at": "2024-03-28 10:49:51",
                     "issues_total": 0,
-                    "files_counted": 0,
+                    "files_with_issues": 0,
                     "files_skipped": 0,
                     "confidence_high_count": 0,
                     "confidence_medium_count": 0,
@@ -4480,16 +4276,44 @@
                 "published_at": "2023-04-28 19:03:19",
                 "version": "2.3.2",
                 "updated_at": "2024-03-27 10:41:15",
-                "counted_functions": null,
-                "counted_files": null,
-                "nloc_total": null,
-                "nloc_average": null,
-                "ccn_average": null,
-                "commit_at": null,
-                "commit_hash": null,
-                "includes": null,
+                "counted_functions": 1109,
+                "counted_files": 52,
+                "nloc_total": 18385,
+                "nloc_average": 16.58,
+                "ccn_average": 2.97,
+                "commit_at": "2023-04-28 20:56:39",
+                "commit_hash": "83054c4ab4343afdb057d85d799f8651a70c5a33",
+                "includes": "werkzeug/, src/",
                 "excludes": null,
-                "dependency_count": null
+                "dependency_count": null,
+                "bandit_report": {
+                    "id": 2069,
+                    "release": 1183,
+                    "updated_at": "2024-04-03 13:23:29",
+                    "issues_total": 19,
+                    "files_with_issues": 10,
+                    "files_skipped": 0,
+                    "confidence_high_count": 17,
+                    "confidence_medium_count": 2,
+                    "confidence_low_count": 0,
+                    "confidence_undefined_count": 0,
+                    "severity_high_count": 3,
+                    "severity_medium_count": 4,
+                    "severity_low_count": 12,
+                    "severity_undefined_count": 0,
+                    "severity_h_confidence_h_count": 3,
+                    "severity_h_confidence_m_count": 0,
+                    "severity_h_confidence_l_count": 0,
+                    "severity_m_confidence_h_count": 2,
+                    "severity_m_confidence_m_count": 2,
+                    "severity_m_confidence_l_count": 0,
+                    "severity_l_confidence_h_count": 12,
+                    "severity_l_confidence_m_count": 0,
+                    "severity_l_confidence_l_count": 0,
+                    "loc": 17764,
+                    "nosec": 0,
+                    "skipped_tests": 0
+                }
             },
             "werkzeug:2.3.4": {
                 "id": 1185,
@@ -4497,16 +4321,44 @@
                 "published_at": "2023-05-08 20:12:17",
                 "version": "2.3.4",
                 "updated_at": "2024-03-27 10:41:15",
-                "counted_functions": null,
-                "counted_files": null,
-                "nloc_total": null,
-                "nloc_average": null,
-                "ccn_average": null,
-                "commit_at": null,
-                "commit_hash": null,
-                "includes": null,
+                "counted_functions": 1110,
+                "counted_files": 52,
+                "nloc_total": 18386,
+                "nloc_average": 16.56,
+                "ccn_average": 2.97,
+                "commit_at": "2023-05-08 21:56:01",
+                "commit_hash": "9959cffeadb91ab62913b54c67db231993b7e297",
+                "includes": "werkzeug/, src/",
                 "excludes": null,
-                "dependency_count": null
+                "dependency_count": null,
+                "bandit_report": {
+                    "id": 2067,
+                    "release": 1185,
+                    "updated_at": "2024-04-03 13:23:27",
+                    "issues_total": 19,
+                    "files_with_issues": 10,
+                    "files_skipped": 0,
+                    "confidence_high_count": 17,
+                    "confidence_medium_count": 2,
+                    "confidence_low_count": 0,
+                    "confidence_undefined_count": 0,
+                    "severity_high_count": 3,
+                    "severity_medium_count": 4,
+                    "severity_low_count": 12,
+                    "severity_undefined_count": 0,
+                    "severity_h_confidence_h_count": 3,
+                    "severity_h_confidence_m_count": 0,
+                    "severity_h_confidence_l_count": 0,
+                    "severity_m_confidence_h_count": 2,
+                    "severity_m_confidence_m_count": 2,
+                    "severity_m_confidence_l_count": 0,
+                    "severity_l_confidence_h_count": 12,
+                    "severity_l_confidence_m_count": 0,
+                    "severity_l_confidence_l_count": 0,
+                    "loc": 17764,
+                    "nosec": 0,
+                    "skipped_tests": 0
+                }
             },
             "importlib-metadata:6.7.0": {
                 "id": 1032,
@@ -4546,7 +4398,7 @@
                     "release": 1094,
                     "updated_at": "2024-03-28 10:50:01",
                     "issues_total": 0,
-                    "files_counted": 0,
+                    "files_with_issues": 0,
                     "files_skipped": 0,
                     "confidence_high_count": 0,
                     "confidence_medium_count": 0,
@@ -4576,16 +4428,44 @@
                 "published_at": "2023-06-08 21:28:20",
                 "version": "2.3.6",
                 "updated_at": "2024-03-27 10:41:15",
-                "counted_functions": null,
-                "counted_files": null,
-                "nloc_total": null,
-                "nloc_average": null,
-                "ccn_average": null,
-                "commit_at": null,
-                "commit_hash": null,
-                "includes": null,
+                "counted_functions": 1112,
+                "counted_files": 52,
+                "nloc_total": 18393,
+                "nloc_average": 16.54,
+                "ccn_average": 2.97,
+                "commit_at": "2023-06-08 23:18:46",
+                "commit_hash": "c6f3c2a327952fe5a89fdc52457dbc3ea8361867",
+                "includes": "werkzeug/, src/",
                 "excludes": null,
-                "dependency_count": null
+                "dependency_count": null,
+                "bandit_report": {
+                    "id": 2065,
+                    "release": 1187,
+                    "updated_at": "2024-04-03 13:23:24",
+                    "issues_total": 19,
+                    "files_with_issues": 10,
+                    "files_skipped": 0,
+                    "confidence_high_count": 17,
+                    "confidence_medium_count": 2,
+                    "confidence_low_count": 0,
+                    "confidence_undefined_count": 0,
+                    "severity_high_count": 3,
+                    "severity_medium_count": 4,
+                    "severity_low_count": 12,
+                    "severity_undefined_count": 0,
+                    "severity_h_confidence_h_count": 3,
+                    "severity_h_confidence_m_count": 0,
+                    "severity_h_confidence_l_count": 0,
+                    "severity_m_confidence_h_count": 2,
+                    "severity_m_confidence_m_count": 2,
+                    "severity_m_confidence_l_count": 0,
+                    "severity_l_confidence_h_count": 12,
+                    "severity_l_confidence_m_count": 0,
+                    "severity_l_confidence_l_count": 0,
+                    "loc": 17774,
+                    "nosec": 0,
+                    "skipped_tests": 0
+                }
             },
             "click:8.1.6": {
                 "id": 923,
@@ -4608,7 +4488,7 @@
                     "release": 923,
                     "updated_at": "2024-03-28 10:49:52",
                     "issues_total": 27,
-                    "files_counted": 6,
+                    "files_with_issues": 6,
                     "files_skipped": 0,
                     "confidence_high_count": 27,
                     "confidence_medium_count": 0,
@@ -4670,7 +4550,7 @@
                     "release": 1224,
                     "updated_at": "2024-03-28 10:50:02",
                     "issues_total": 0,
-                    "files_counted": 0,
+                    "files_with_issues": 0,
                     "files_skipped": 0,
                     "confidence_high_count": 0,
                     "confidence_medium_count": 0,
@@ -4715,7 +4595,7 @@
                     "release": 924,
                     "updated_at": "2024-03-28 10:49:52",
                     "issues_total": 27,
-                    "files_counted": 6,
+                    "files_with_issues": 6,
                     "files_skipped": 0,
                     "confidence_high_count": 27,
                     "confidence_medium_count": 0,
@@ -4745,16 +4625,44 @@
                 "published_at": "2023-08-14 09:30:45",
                 "version": "2.3.7",
                 "updated_at": "2024-03-27 10:41:15",
-                "counted_functions": null,
-                "counted_files": null,
-                "nloc_total": null,
-                "nloc_average": null,
-                "ccn_average": null,
-                "commit_at": null,
-                "commit_hash": null,
-                "includes": null,
+                "counted_functions": 1111,
+                "counted_files": 52,
+                "nloc_total": 18386,
+                "nloc_average": 16.55,
+                "ccn_average": 2.97,
+                "commit_at": "2023-08-14 11:22:13",
+                "commit_hash": "3c2ba3da894c0767dd6dde7b2707cac65bad5422",
+                "includes": "werkzeug/, src/",
                 "excludes": null,
-                "dependency_count": null
+                "dependency_count": null,
+                "bandit_report": {
+                    "id": 2064,
+                    "release": 1188,
+                    "updated_at": "2024-04-03 13:23:23",
+                    "issues_total": 19,
+                    "files_with_issues": 10,
+                    "files_skipped": 0,
+                    "confidence_high_count": 17,
+                    "confidence_medium_count": 2,
+                    "confidence_low_count": 0,
+                    "confidence_undefined_count": 0,
+                    "severity_high_count": 3,
+                    "severity_medium_count": 4,
+                    "severity_low_count": 12,
+                    "severity_undefined_count": 0,
+                    "severity_h_confidence_h_count": 3,
+                    "severity_h_confidence_m_count": 0,
+                    "severity_h_confidence_l_count": 0,
+                    "severity_m_confidence_h_count": 2,
+                    "severity_m_confidence_m_count": 2,
+                    "severity_m_confidence_l_count": 0,
+                    "severity_l_confidence_h_count": 12,
+                    "severity_l_confidence_m_count": 0,
+                    "severity_l_confidence_l_count": 0,
+                    "loc": 17767,
+                    "nosec": 0,
+                    "skipped_tests": 0
+                }
             },
             "werkzeug:3.0.0": {
                 "id": 1190,
@@ -4762,16 +4670,44 @@
                 "published_at": "2023-09-30 13:58:46",
                 "version": "3.0.0",
                 "updated_at": "2024-03-27 10:41:15",
-                "counted_functions": null,
-                "counted_files": null,
-                "nloc_total": null,
-                "nloc_average": null,
-                "ccn_average": null,
-                "commit_at": null,
-                "commit_hash": null,
-                "includes": null,
+                "counted_functions": 1032,
+                "counted_files": 52,
+                "nloc_total": 16337,
+                "nloc_average": 15.83,
+                "ccn_average": 2.87,
+                "commit_at": "2023-09-30 15:53:04",
+                "commit_hash": "aa5088f6e550ab6dfb6742270c9ea733ed17261c",
+                "includes": "werkzeug/, src/",
                 "excludes": null,
-                "dependency_count": null
+                "dependency_count": null,
+                "bandit_report": {
+                    "id": 2062,
+                    "release": 1190,
+                    "updated_at": "2024-04-03 13:23:21",
+                    "issues_total": 19,
+                    "files_with_issues": 10,
+                    "files_skipped": 0,
+                    "confidence_high_count": 17,
+                    "confidence_medium_count": 2,
+                    "confidence_low_count": 0,
+                    "confidence_undefined_count": 0,
+                    "severity_high_count": 3,
+                    "severity_medium_count": 4,
+                    "severity_low_count": 12,
+                    "severity_undefined_count": 0,
+                    "severity_h_confidence_h_count": 3,
+                    "severity_h_confidence_m_count": 0,
+                    "severity_h_confidence_l_count": 0,
+                    "severity_m_confidence_h_count": 2,
+                    "severity_m_confidence_m_count": 2,
+                    "severity_m_confidence_l_count": 0,
+                    "severity_l_confidence_h_count": 12,
+                    "severity_l_confidence_m_count": 0,
+                    "severity_l_confidence_l_count": 0,
+                    "loc": 15788,
+                    "nosec": 0,
+                    "skipped_tests": 0
+                }
             },
             "zipp:3.17.0": {
                 "id": 1225,
@@ -4794,7 +4730,7 @@
                     "release": 1225,
                     "updated_at": "2024-03-28 10:50:02",
                     "issues_total": 0,
-                    "files_counted": 0,
+                    "files_with_issues": 0,
                     "files_skipped": 0,
                     "confidence_high_count": 0,
                     "confidence_medium_count": 0,
@@ -4839,7 +4775,7 @@
                     "release": 870,
                     "updated_at": "2024-03-28 10:49:50",
                     "issues_total": 0,
-                    "files_counted": 0,
+                    "files_with_issues": 0,
                     "files_skipped": 0,
                     "confidence_high_count": 0,
                     "confidence_medium_count": 0,
@@ -4869,16 +4805,44 @@
                 "published_at": "2023-10-24 20:57:47",
                 "version": "3.0.1",
                 "updated_at": "2024-03-27 10:41:15",
-                "counted_functions": null,
-                "counted_files": null,
-                "nloc_total": null,
-                "nloc_average": null,
-                "ccn_average": null,
-                "commit_at": null,
-                "commit_hash": null,
-                "includes": null,
+                "counted_functions": 1032,
+                "counted_files": 52,
+                "nloc_total": 16340,
+                "nloc_average": 15.83,
+                "ccn_average": 2.87,
+                "commit_at": "2023-10-24 22:52:38",
+                "commit_hash": "ce4eff5902d4a6b41a20ecc6e4029741284a87fd",
+                "includes": "werkzeug/, src/",
                 "excludes": null,
-                "dependency_count": null
+                "dependency_count": null,
+                "bandit_report": {
+                    "id": 2061,
+                    "release": 1191,
+                    "updated_at": "2024-04-03 13:23:20",
+                    "issues_total": 19,
+                    "files_with_issues": 10,
+                    "files_skipped": 0,
+                    "confidence_high_count": 17,
+                    "confidence_medium_count": 2,
+                    "confidence_low_count": 0,
+                    "confidence_undefined_count": 0,
+                    "severity_high_count": 3,
+                    "severity_medium_count": 4,
+                    "severity_low_count": 12,
+                    "severity_undefined_count": 0,
+                    "severity_h_confidence_h_count": 3,
+                    "severity_h_confidence_m_count": 0,
+                    "severity_h_confidence_l_count": 0,
+                    "severity_m_confidence_h_count": 2,
+                    "severity_m_confidence_m_count": 2,
+                    "severity_m_confidence_l_count": 0,
+                    "severity_l_confidence_h_count": 12,
+                    "severity_l_confidence_m_count": 0,
+                    "severity_l_confidence_l_count": 0,
+                    "loc": 15791,
+                    "nosec": 0,
+                    "skipped_tests": 0
+                }
             },
             "blinker:1.7.0": {
                 "id": 871,
@@ -4901,7 +4865,7 @@
                     "release": 871,
                     "updated_at": "2024-03-28 10:49:50",
                     "issues_total": 0,
-                    "files_counted": 0,
+                    "files_with_issues": 0,
                     "files_skipped": 0,
                     "confidence_high_count": 0,
                     "confidence_medium_count": 0,
@@ -4963,7 +4927,7 @@
                     "release": 49,
                     "updated_at": "2024-03-27 14:02:43",
                     "issues_total": 0,
-                    "files_counted": 0,
+                    "files_with_issues": 0,
                     "files_skipped": 0,
                     "confidence_high_count": 0,
                     "confidence_medium_count": 0,
@@ -5008,7 +4972,7 @@
                     "release": 1095,
                     "updated_at": "2024-03-28 10:50:01",
                     "issues_total": 0,
-                    "files_counted": 0,
+                    "files_with_issues": 0,
                     "files_skipped": 0,
                     "confidence_high_count": 0,
                     "confidence_medium_count": 0,
@@ -5053,7 +5017,7 @@
                     "release": 1096,
                     "updated_at": "2024-03-28 10:50:01",
                     "issues_total": 0,
-                    "files_counted": 0,
+                    "files_with_issues": 0,
                     "files_skipped": 0,
                     "confidence_high_count": 0,
                     "confidence_medium_count": 0,
@@ -5076,129 +5040,71 @@
                     "nosec": 0,
                     "skipped_tests": 0
                 }
+            },
+            "importlib-metadata:7.1.0": {
+                "id": 1038,
+                "project": 11,
+                "published_at": "2024-03-20 19:51:30",
+                "version": "7.1.0",
+                "updated_at": "2024-03-27 10:22:51",
+                "counted_functions": null,
+                "counted_files": null,
+                "nloc_total": null,
+                "nloc_average": null,
+                "ccn_average": null,
+                "commit_at": null,
+                "commit_hash": null,
+                "includes": null,
+                "excludes": null,
+                "dependency_count": null
+            },
+            "zipp:3.18.1": {
+                "id": 1227,
+                "project": 15,
+                "published_at": "2024-03-14 21:09:02",
+                "version": "3.18.1",
+                "updated_at": "2024-03-27 10:41:17",
+                "counted_functions": 0,
+                "counted_files": 0,
+                "nloc_total": 0,
+                "nloc_average": 0.0,
+                "ccn_average": 0.0,
+                "commit_at": "2024-03-14 22:03:39",
+                "commit_hash": "bfae83474a730e8cc9b8a71027fb859b46b3875c",
+                "includes": "src/, zipp.py",
+                "excludes": null,
+                "dependency_count": null,
+                "bandit_report": {
+                    "id": 1925,
+                    "release": 1227,
+                    "updated_at": "2024-03-28 10:50:02",
+                    "issues_total": 0,
+                    "files_with_issues": 0,
+                    "files_skipped": 0,
+                    "confidence_high_count": 0,
+                    "confidence_medium_count": 0,
+                    "confidence_low_count": 0,
+                    "confidence_undefined_count": 0,
+                    "severity_high_count": 0,
+                    "severity_medium_count": 0,
+                    "severity_low_count": 0,
+                    "severity_undefined_count": 0,
+                    "severity_h_confidence_h_count": 0,
+                    "severity_h_confidence_m_count": 0,
+                    "severity_h_confidence_l_count": 0,
+                    "severity_m_confidence_h_count": 0,
+                    "severity_m_confidence_m_count": 0,
+                    "severity_m_confidence_l_count": 0,
+                    "severity_l_confidence_h_count": 0,
+                    "severity_l_confidence_m_count": 0,
+                    "severity_l_confidence_l_count": 0,
+                    "loc": 0,
+                    "nosec": 0,
+                    "skipped_tests": 0
+                }
             }
         },
         "timeline": [
-            {
-                "date": "2012-01-01 00:00:00",
-                "release": [],
-                "cves": []
-            },
-            {
-                "date": "2012-02-01 00:00:00",
-                "release": [],
-                "cves": []
-            },
-            {
-                "date": "2012-03-01 00:00:00",
-                "release": [],
-                "cves": []
-            },
-            {
-                "date": "2012-04-01 00:00:00",
-                "release": [],
-                "cves": []
-            },
-            {
-                "date": "2012-05-01 00:00:00",
-                "release": [],
-                "cves": []
-            },
-            {
-                "date": "2012-06-01 00:00:00",
-                "release": [],
-                "cves": []
-            },
-            {
-                "date": "2012-07-01 00:00:00",
-                "release": [],
-                "cves": []
-            },
-            {
-                "date": "2012-08-01 00:00:00",
-                "release": [],
-                "cves": []
-            },
-            {
-                "date": "2012-09-01 00:00:00",
-                "release": [],
-                "cves": []
-            },
-            {
-                "date": "2012-10-01 00:00:00",
-                "release": [],
-                "cves": []
-            },
-            {
-                "date": "2012-11-01 00:00:00",
-                "release": [],
-                "cves": []
-            },
-            {
-                "date": "2012-12-01 00:00:00",
-                "release": [],
-                "cves": []
-            },
-            {
-                "date": "2013-01-01 00:00:00",
-                "release": [],
-                "cves": []
-            },
-            {
-                "date": "2013-02-01 00:00:00",
-                "release": [],
-                "cves": []
-            },
-            {
-                "date": "2013-03-01 00:00:00",
-                "release": [],
-                "cves": []
-            },
-            {
-                "date": "2013-04-01 00:00:00",
-                "release": [],
-                "cves": []
-            },
-            {
-                "date": "2013-05-01 00:00:00",
-                "release": [],
-                "cves": []
-            },
-            {
-                "date": "2013-06-01 00:00:00",
-                "release": [],
-                "cves": []
-            },
-            {
-                "date": "2013-07-01 00:00:00",
-                "release": [],
-                "cves": []
-            },
-            {
-                "date": "2013-08-01 00:00:00",
-                "release": [],
-                "cves": []
-            },
-            {
-                "date": "2013-09-01 00:00:00",
-                "release": [],
-                "cves": []
-            },
-            {
-                "date": "2013-10-01 00:00:00",
-                "release": [],
-                "cves": []
-            },
-            {
-                "date": "2013-11-01 00:00:00",
-                "release": [],
-                "cves": []
-            },
-            {
-                "date": "2013-12-01 00:00:00",
-                "release": [],
-                "cves": []
-            },
             {
                 "date": "2014-01-01 00:00:00",
                 "release": [],
@@ -6731,6 +6637,22 @@
                 "cves": [
                     "CVE-2023-46136"
                 ]
+            },
+            {
+                "date": "2024-04-01 00:00:00",
+                "release": [
+                    "blinker:1.7.0",
+                    "click:8.1.7",
+                    "importlib-metadata:7.1.0",
+                    "itsdangerous:2.1.2",
+                    "jinja2:3.1.3",
+                    "markupsafe:2.1.5",
+                    "werkzeug:3.0.1",
+                    "zipp:3.18.1"
+                ],
+                "cves": [
+                    "CVE-2023-46136"
+                ]
             }
         ]
     },
@@ -6739,126 +6661,6 @@
         "cves": {},
         "releases": {},
         "timeline": [
-            {
-                "date": "2012-01-01 00:00:00",
-                "release": [],
-                "cves": []
-            },
-            {
-                "date": "2012-02-01 00:00:00",
-                "release": [],
-                "cves": []
-            },
-            {
-                "date": "2012-03-01 00:00:00",
-                "release": [],
-                "cves": []
-            },
-            {
-                "date": "2012-04-01 00:00:00",
-                "release": [],
-                "cves": []
-            },
-            {
-                "date": "2012-05-01 00:00:00",
-                "release": [],
-                "cves": []
-            },
-            {
-                "date": "2012-06-01 00:00:00",
-                "release": [],
-                "cves": []
-            },
-            {
-                "date": "2012-07-01 00:00:00",
-                "release": [],
-                "cves": []
-            },
-            {
-                "date": "2012-08-01 00:00:00",
-                "release": [],
-                "cves": []
-            },
-            {
-                "date": "2012-09-01 00:00:00",
-                "release": [],
-                "cves": []
-            },
-            {
-                "date": "2012-10-01 00:00:00",
-                "release": [],
-                "cves": []
-            },
-            {
-                "date": "2012-11-01 00:00:00",
-                "release": [],
-                "cves": []
-            },
-            {
-                "date": "2012-12-01 00:00:00",
-                "release": [],
-                "cves": []
-            },
-            {
-                "date": "2013-01-01 00:00:00",
-                "release": [],
-                "cves": []
-            },
-            {
-                "date": "2013-02-01 00:00:00",
-                "release": [],
-                "cves": []
-            },
-            {
-                "date": "2013-03-01 00:00:00",
-                "release": [],
-                "cves": []
-            },
-            {
-                "date": "2013-04-01 00:00:00",
-                "release": [],
-                "cves": []
-            },
-            {
-                "date": "2013-05-01 00:00:00",
-                "release": [],
-                "cves": []
-            },
-            {
-                "date": "2013-06-01 00:00:00",
-                "release": [],
-                "cves": []
-            },
-            {
-                "date": "2013-07-01 00:00:00",
-                "release": [],
-                "cves": []
-            },
-            {
-                "date": "2013-08-01 00:00:00",
-                "release": [],
-                "cves": []
-            },
-            {
-                "date": "2013-09-01 00:00:00",
-                "release": [],
-                "cves": []
-            },
-            {
-                "date": "2013-10-01 00:00:00",
-                "release": [],
-                "cves": []
-            },
-            {
-                "date": "2013-11-01 00:00:00",
-                "release": [],
-                "cves": []
-            },
-            {
-                "date": "2013-12-01 00:00:00",
-                "release": [],
-                "cves": []
-            },
             {
                 "date": "2014-01-01 00:00:00",
                 "release": [],
@@ -7471,6 +7273,11 @@
             },
             {
                 "date": "2024-03-01 00:00:00",
+                "release": [],
+                "cves": []
+            },
+            {
+                "date": "2024-04-01 00:00:00",
                 "release": [],
                 "cves": []
             }

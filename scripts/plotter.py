@@ -34,28 +34,35 @@ parser.add_argument('--end', help='The end year', default=None)
 parser.add_argument('--platform', help='The default platform', default='pypi')
 parser.add_argument('--step', help='The step size', default='m')
 parser.add_argument('-p', '--projects', nargs='+', help='The projects to plot', required=True)
-parser.add_argument('-o', '--output', help='The output directory', default='output')
-parser.add_argument('--kpis', nargs='+', help='The key performance indicators to plot', default=['count', 'base', 'nloc'])
+parser.add_argument('--output', help='The output directory', default='output')
+parser.add_argument('-t', '--timeline', help='Plot the timeline', nargs='+', default=[])
+parser.add_argument('-o', '--overall', help='Plot the overall data', nargs='+', default=[])
 parser.add_argument('--debug', help='The debug level of the logger', default='INFO')
 parser.add_argument('--show', help='Show the plots', action='store_true')
 parser.add_argument('--dependencies', help="Generate plots for each project's dependencies as well", action='store_true')
 parser.add_argument('--force', help='Force reload of dependencies', action='store_true')
-parser.add_argument('--kind', help='What kind of plots to plot, timeline or overall', nargs='+', default=['timeline', 'overall'])
 
 # TODO: Add possibility to combine KPIs as left and right y-axis
 
 args = parser.parse_args()
 
+args.projects = sorted(list(map(str.lower, args.projects)))
+args.timeline = sorted(list(map(str.lower, args.timeline)))
+args.overall = sorted(list(map(str.lower, args.overall)))
+
 # These are the key performance indicators for the releases
 # convert to set for quick lookup
-kpiset = set(list(map(str.lower, args.kpis)))
+kpiset_timeline = set(args.timeline)
 valid_kpis = set(compute.KPIS_TIMELINE.keys())
-if not kpiset.issubset(valid_kpis) and 'timeline' in args.kind:
-    invalid_kpis = list(kpiset - valid_kpis)
+if not kpiset_timeline.issubset(valid_kpis) and 'timeline' in args.kind:
+    invalid_kpis = list(kpiset_timeline - valid_kpis)
     logger.error(f"Invalid KPIs: {', '.join(invalid_kpis)}. Valid KPIs are: {', '.join(valid_kpis)}")
     exit(1)
 
 sns.set_theme(style='darkgrid')
+
+def plot_grouped_bar(*args):
+    pass
 
 def get_platform(project: str):
     """
@@ -100,6 +107,7 @@ def try_json_dump(data: dict, path: Path):
     """
     Tries to dump a dictionary to a JSON file
     """
+    logger.info(f"Storing data to path '{path if type(path) == str else path.name}'...")
     if type(path) == str:
         path = Path(path)
         if not path.absolute().parent.exists():
@@ -128,6 +136,16 @@ plots_dir = output_dir / 'plots'
 json_dir.mkdir(exist_ok=True)
 plots_dir.mkdir(exist_ok=True)
 
+def get_version(release: str):
+    """
+    Gets the version numer from a release string <project>:<version>
+    """
+    try:
+        parts = list(filter(bool, release.split(':')))
+        return parts[1]
+    except:
+        return release
+
 def plot_timelines(timelines: dict, title_prefix: str = ''):
     """
     Expects a dictionary with the following structure:
@@ -147,7 +165,7 @@ def plot_timelines(timelines: dict, title_prefix: str = ''):
     # the scores to plot
     figures = {}
     title_prefix = f"{title_prefix.strip()} "
-    for kpi in args.kpis:
+    for kpi in args.timeline:
         fig, ax = plt.subplots()
         title = compute.KPIS_TIMELINE.get(kpi).get('title')
         y_label = compute.KPIS_TIMELINE.get(kpi).get('y_label')
@@ -158,8 +176,8 @@ def plot_timelines(timelines: dict, title_prefix: str = ''):
     min_values = {}
     for project, data in timelines.items():
         _, project = get_platform(project)
-        results = compute.timeline_kpis(data, *args.kpis)
-        for kpi in args.kpis:
+        results = compute.timeline_kpis(data, *args.timeline)
+        for kpi in args.timeline:
             fig, ax = figures.get(kpi, (None, None))
             logger.info(f"Processing kpi '{kpi}' for {project}")
             if fig is None or ax is None:
@@ -218,7 +236,7 @@ def plot_timelines(timelines: dict, title_prefix: str = ''):
             if fill and default_value_key in ['mean', 'median']:
                 if lower is not None and upper is not None:
                     ax.fill_between(results.get('dates'), lower, upper, alpha=0.1)
-    for kpi in args.kpis:
+    for kpi in args.timeline:
         fig, ax = figures.get(kpi, (None, None))
         min_val = min_values.get(kpi)
         if min_val is None or min_val > 0:
@@ -253,9 +271,36 @@ def plot_overall(overall: dict):
 
     # TODO: overall time KPIs (time to fix, time to CVE publish)
 
-    # TODO: scatter plot of CWE categories, with size being the number of vulnerabilities
-    for project in overall:
-        data = overall.get(project)
+    # TODO: scatter plot of CVEs, x-axis: exploitability, y-axis: impact
+    _mearurements = [
+        'cvss_base_score',
+        'cvss_impact_score',
+        'cvss_exploitability_score',
+    ]
+    fig, ax = plt.subplots()
+    for project_id in overall:
+        data = overall.get(project_id)
+        platform, project = get_platform(project_id)
+        cve_ids = [ cve_id for cve_id in data.get('cves') if data.get('cves', {}).get(cve_id).get('applicability')[0].get('project') == project ]
+        cve_ids = sorted(cve_ids)
+        scores = {}
+        for cve_id in cve_ids:
+            logger.info(f"Processing {cve_id} for {project}")
+            for key in _mearurements:
+                score = data.get('cves').get(cve_id).get(key, 0)
+                if scores.get(key) is None:
+                    scores[key] = []
+                scores.get(key).append(score)
+        ax.scatter(scores.get('cvss_exploitability_score'), scores.get('cvss_impact_score'),
+                   label=project.title(), alpha=0.5)
+        ax.set_xlabel('Exploitability')
+        ax.set_ylabel('Impact')
+        ax.set_ylim(0, 10.5)
+        ax.set_xlim(0, 10.5)
+    ax.legend()
+        # angle the x-axis labels
+    ax.set_title(f"CVSS scores of CVEs")
+            
 
     # TODO: bar chart of CWE categories, sorted by number of vulnerabilities
 
@@ -291,7 +336,7 @@ if __name__ == '__main__':
     with open(json_dir / 'files.json', 'w') as f:
         json.dump(files, f, indent=4)
     
-    if 'timeline' in args.kind:
+    if args.timeline:
     
         # timeline plot section
         timelines = {}
@@ -327,7 +372,7 @@ if __name__ == '__main__':
             plot_timelines(dependency_timelines, "Dependency")
             try_json_dump(dependency_timelines, json_dir / 'dependency_timelines.json')
 
-    if 'overall' in args.kind:
+    if args.overall:
         # get all the vulnerabilities for the projects
         # and plot them
         # 1) by CWE category
@@ -341,9 +386,12 @@ if __name__ == '__main__':
             platform, project = get_platform(project)
             project_id = f"{platform}:{project}"
             logger.info(f"Getting overall data for {project} on {platform}...")
-            overall[project_id] = mw.get_report(project, platform=platform, with_dependencies=True)
+            data = mw.get_report(project, platform=platform, with_dependencies=True)
+            overall[project_id] = data
+            logger.info(f"Got {len(data.get('cves'))} CVEs for {project}")
+            logger.info(f"Got {len(data.get('cwes'))} CWEs for {project}")
         plot_overall(overall)
-        try_json_dump(overall, 'overall.json')
+        try_json_dump(overall, json_dir / 'overall.json')
 
     if args.show:
         plt.show()

@@ -1047,6 +1047,12 @@ class Middleware:
                             else:
                                 vulns = dep_vulns[dep_name]
                                 rels = dep_rels[dep_name]
+                            for cve in vulns.get('cves', {}):
+                                if cve not in result['cves']:
+                                    result['cves'][cve] = vulns['cves'][cve]
+                            for cwe in vulns.get('cwes', {}):
+                                if cwe not in result['cwes']:
+                                    result['cwes'][cwe] = vulns['cwes'][cwe]
                             dep_version = dep.version
                             dep_platform = dep.platform
                             dep_req = dep.requirements
