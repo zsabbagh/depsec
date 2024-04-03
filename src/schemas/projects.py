@@ -100,7 +100,7 @@ class BanditReport(Model):
     release = ForeignKeyField(Release, backref='bandit_report', on_delete='CASCADE', unique=True)
     updated_at = DateTimeField(default=datetime.datetime.now)
     issues_total = IntegerField(null=True)
-    files_counted = IntegerField(null=True)
+    files_with_issues = IntegerField(null=True)
     files_skipped = IntegerField(null=True)
     confidence_high_count = IntegerField(null=True)
     confidence_medium_count = IntegerField(null=True)

@@ -204,10 +204,10 @@ for platform, projects in data.items():
                 if previous_report:
                     previous_report.delete_instance()
                 sevconf = res.get('severity_confidence', {})
-                logger.info(f"{project_name}:{version}, files: {res.get('files_counted')}, issues: {res.get('issues_total')}")
+                logger.info(f"{project_name}:{version}, files: {res.get('files_with_issues')}, issues: {res.get('issues_total')}")
                 report = BanditReport.create(
                     release=release,
-                    files_counted=res.get('files_counted'),
+                    files_with_issues=res.get('files_with_issues'),
                     files_skipped=res.get('files_skipped'),
                     issues_total=res.get('issues_total'),
                     confidence_high_count=res.get('confidence_high_count'),

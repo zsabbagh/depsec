@@ -88,7 +88,7 @@ def run_bandit(dir: str | Path,
     if not output_dir.exists():
         output_dir.mkdir()
     processed_dirs = set()
-    counted_files = set()
+    files_with_issues = set()
     loc = nosec = skipped_tests = 0
     total_issues = 0
     h_sev = m_sev = l_sev = u_sev = 0
@@ -132,7 +132,7 @@ def run_bandit(dir: str | Path,
                     filename = issue.get('filename')
                     # TODO: this is not the true measurement of files counted, this is for those that have issues
                     if filename is not None:
-                        counted_files.add(filename)
+                        files_with_issues.add(filename)
                     # count issues
                     sev = issue.get('issue_severity', 'undefined').lower()
                     conf = issue.get('issue_confidence', 'undefined').lower()
@@ -168,7 +168,7 @@ def run_bandit(dir: str | Path,
         'nosec': nosec,
         'skipped_tests': skipped_tests,
         'issues_total': len(all_issues),
-        'files_counted': len(counted_files),
+        'files_with_issues': len(files_with_issues),
         'files_skipped': files_skipped,
         'confidence_high_count': h_conf,
         'confidence_medium_count': m_conf,

@@ -20,7 +20,7 @@ from playhouse.shortcuts import model_to_dict
 # - Timeline, where each month counts the most recent release
 # --- Number of vulnerabilities
 # --- Max, median, mean, and standard deviation of the CVSS score
-# --- Patch lag (time between the CVE being published and the release being fixed)
+# --- Patch lag (time between the CVE being published and the release being fixed) (differentiate patch lag and technical lag)
 # - Number of vulnerabilities
 # --- By CWE category
 # --- By CWE weakness (specific weakness)
@@ -47,8 +47,8 @@ parser.add_argument('--kind', help='What kind of plots to plot, timeline or over
 args = parser.parse_args()
 
 # These are the key performance indicators for the releases
-
-kpiset = set(list(map(lambda x: x.lower(), args.kpis)))
+# convert to set for quick lookup
+kpiset = set(list(map(str.lower, args.kpis)))
 valid_kpis = set(compute.KPIS_TIMELINE.keys())
 if not kpiset.issubset(valid_kpis) and 'timeline' in args.kind:
     invalid_kpis = list(kpiset - valid_kpis)
@@ -249,17 +249,23 @@ def plot_overall(overall: dict):
     """
     # this will be more hard-coded plotting, given the wide variety of data
 
+    logger.info(f"Plotting overall data for {len(overall)} projects...")
+
     # TODO: overall time KPIs (time to fix, time to CVE publish)
 
     # TODO: scatter plot of CWE categories, with size being the number of vulnerabilities
+    for project in overall:
+        data = overall.get(project)
 
     # TODO: bar chart of CWE categories, sorted by number of vulnerabilities
 
-    # TODO: KPIs per minor release (count, severity, impact, etc.)
+    # TODO: KPIs per minor/major release (count, severity, impact, patch lag)
 
     # TODO: frequency plot of Bandit test ID issues
 
     # TODO: frequency plot of Bandit severity/confidence
+
+    # TODO: bandit issues / nloc
 
     pass
 
@@ -334,9 +340,8 @@ if __name__ == '__main__':
             # get all the vulnerabilities for the project
             platform, project = get_platform(project)
             project_id = f"{platform}:{project}"
+            logger.info(f"Getting overall data for {project} on {platform}...")
             overall[project_id] = mw.get_report(project, platform=platform, with_dependencies=True)
-            pprint(overall[project_id])
-            time.sleep(1)
         plot_overall(overall)
         try_json_dump(overall, 'overall.json')
 
