@@ -1,7 +1,26 @@
-import numpy as np
+import numpy as np, pandas as pd
 import src.utils.db as db
 from copy import deepcopy
 from loguru import logger
+
+class Metrics:
+    overall = [
+        'cvss_base_score',
+        'cvss_impact_score',
+        'cvss_exploitability_score',
+        'cvss_availability_impact',
+        'cvss_integrity_impact',
+        'cvss_confidentiality_impact',
+    ]
+    titles = {
+        'is_dependency': 'Dependency',
+        'cvss_base_score': 'CVSS Base Score',
+        'cvss_impact_score': 'CVSS Impact Score',
+        'cvss_exploitability_score': 'CVSS Exploitability Score',
+        'cvss_availability_impact': 'CVSS Availability Impact',
+        'cvss_integrity_impact': 'CVSS Integrity Impact',
+        'cvss_confidentiality_impact': 'CVSS Confidentiality Impact',
+    }
 
 def _get_entry(*args, element='entry'):
     if element != 'entry':
@@ -336,3 +355,120 @@ def overall_kpis(data: dict, *kpis):
     Computes KPIs for an overall vulnerability data structure.
     """
     pass
+
+def cve_kpi_value(cve: dict, kpi: str):
+    """
+    Computes a KPI for a given data structure.
+    """
+    value = cve.get(kpi)
+    if value is None:
+        logger.error(f"Could not find KPI '{kpi}' in CVE {(cve or {}).get('cve_id')}")
+        return None
+    if type(value) in [int, float]:
+        return value
+    elif type(value) == str:
+        return impact_to_int(value)
+    logger.error(f"Unexpected type ({type(value).__name__}) for KPI '{kpi}' in CVE {(cve or {}).get('cve_id')}")
+    return None
+
+def cve_distribution(overall_data: dict, project_name: str, *kpis) -> pd.DataFrame:
+    """
+    Computes the distribution of CVEs for a given 'overall' data result.
+    Each vector is a list of values for each CVE ID.
+    """
+    data: dict = overall_data
+    cves: dict = data.get('cves', {})
+    cve_ids: list = list(data.get('cves', {}).keys())
+    if not cve_ids:
+        logger.error("No CVEs found in data")
+        return None
+    # only unique CVE IDs
+    cve_ids = sorted(list(set(cve_ids)))
+
+    kpis = Metrics.overall if not kpis else kpis
+
+    # init result
+    results: list = []
+
+    for cve_id in cve_ids:
+        cve = cves.get(cve_id)
+        if not cve:
+            # this should not happen
+            logger.error(f"Could not find CVE {cve_id}")
+            continue
+        apps = cve.get('applicability', [])
+        is_dependency = False
+        if len(apps) > 0:
+            app = apps[0]
+            is_dependency = app.get('project') != project_name
+        res = {
+            'CVE ID': cve_id,
+            'Project': project_name,
+            'Source': 'Indirect' if is_dependency else 'Direct',
+        }
+        for kpi in kpis:
+            value = cve_kpi_value(cve, kpi)
+            kpi_title = Metrics.titles.get(kpi)
+            res[kpi_title] = value
+        results.append(res)
+    return pd.DataFrame(results)
+
+def cwe_distribution(overall_data: dict, project_name: str, *kpis) -> pd.DataFrame:
+    """
+    Computes the distribution of CWEs for a given 'overall' data result.
+    Each vector is a list of values for each CWE ID.
+    """
+    data: dict = overall_data
+    cves: dict = data.get('cves', {})
+    cwe_ids: list = []
+    for cve_id in cves:
+        cve = cves.get(cve_id)
+        apps = cve.get('applicability', [])
+        if len(apps) > 0:
+            app = apps[0]
+            if app.get('project') != project_name:
+                continue
+        cwes = cve.get('cwes', [])
+        cwe_ids.extend(cwes)
+    if not cwe_ids:
+        logger.error("No CWEs found in data")
+        return None
+    # only unique CWE IDs
+    cwe_ids = sorted(list(set(cwe_ids)))
+
+    kpis = Metrics.overall if not kpis else kpis
+
+    results: dict = []
+
+    for cwe_id in cwe_ids:
+        cwe = data.get('cwes', {}).get(cwe_id)
+        cve_ids = cwe.get('cves', [])
+        cve_ids = sorted(list(set(cve_ids)))
+        res = {
+            'CWE ID': cwe_id,
+            'Project': project_name,
+            'CVE Count': len(cve_ids),
+        }
+        scores = {
+            k: [] for k in kpis
+        }
+        for cve_id in cve_ids:
+            cve = cves.get(cve_id)
+            cwes = cve.get('cwes', [])
+            for kpi in kpis:
+                value = cve_kpi_value(cve, kpi)
+                if value is None:
+                    continue
+                scores[kpi].append(value)
+        for kpi in kpis:
+            mean = np.mean(scores[kpi])
+            std = np.std(scores[kpi])
+            min = np.min(scores[kpi])
+            max = np.max(scores[kpi])
+            kpi_title = Metrics.titles.get(kpi)
+            res[f"{kpi_title} Mean"] = mean
+            res[f"{kpi_title} Std"] = std
+            res[f"{kpi_title} Min"] = min
+            res[f"{kpi_title} Max"] = max
+        results.append(res)
+    return pd.DataFrame(results)

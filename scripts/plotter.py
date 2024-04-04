@@ -47,6 +47,8 @@ parser.add_argument('--force', help='Force reload of dependencies', action='stor
 args = parser.parse_args()
 
 args.projects = sorted(list(map(str.lower, args.projects)))
+
+
 args.timeline = sorted(list(map(str.lower, args.timeline)))
 args.overall = sorted(list(map(str.lower, args.overall)))
 
@@ -60,6 +62,36 @@ if not kpiset_timeline.issubset(valid_kpis) and 'timeline' in args.kind:
     exit(1)
 
 sns.set_theme(style='darkgrid')
+
+class Global:
+    colours = [
+        "#0cad6f","#4582b1","#f4d06f","#c4603b","#c477bf"
+    ]
+    class Colours:
+        light_grey = "#c0c0c0"
+
+def colour_to_rgb(colour: str):
+    """
+    Converts a colour to RGB
+    """
+    if colour.startswith('#'):
+        colour = colour[1:]
+    return tuple(int(colour[i:i+2], 16) for i in (0, 2, 4))
+
+def rgb_to_colour(rgb: tuple):
+    """
+    Converts an RGB tuple to a colour
+    """
+    return "#{:02x}{:02x}{:02x}".format(*rgb)
+
+def tone_colour(colour: str, factor: float):
+    """
+    Tone a colour by a factor
+    """
+    rgb = colour_to_rgb(colour)
+    new_rgb = tuple(int(c * factor) for c in rgb)
+    new_rgb = tuple(min(255, c) for c in new_rgb)
+    return rgb_to_colour(new_rgb)
 
 def plot_grouped_bar(*args):
     pass
@@ -247,9 +279,93 @@ def plot_timelines(timelines: dict, title_prefix: str = ''):
         ax.legend(loc='upper center', framealpha=0.5)
         fig.autofmt_xdate()
         filename = f"{kpi.replace('/', '-')}"
-        fig.savefig(plots_dir / f"{filename}.png")
+        prefix = title_prefix.lower().replace(' ', '_')
+        prefix = f"{prefix}_" if prefix else ""
+        fig.savefig(plots_dir / f"{prefix}{filename}.png")
 
-def plot_overall(overall: dict):
+
+def plot_cve_distribution(overall: dict, *measurements: str):
+    """
+    Plots CVE distribution of an overall dictionary
+    """
+    # CVE distribution
+    df: pd.DataFrame = pd.DataFrame()
+    project_ids = sorted(list(overall.keys()))
+    project_names = []
+    for project_id in project_ids:
+        platform, project_name = get_platform(project_id)
+        project_names.append(project_name)
+        data = overall[project_id]
+        res = compute.cve_distribution(data, project_name)
+        df = pd.concat([df, res], ignore_index=True)
+    fig, axs = plt.subplots(1, len(project_ids), figsize=(10, 8))
+    for i, project in enumerate(project_names):
+        ax = axs[i]
+        project_data = df[df['Project'] == project]
+        colour = Global.colours[i]
+        sns.swarmplot(data=project_data,
+                      x='Source',
+                      y='CVSS Base Score',
+                      ax=ax,
+                      color=colour,
+                      size=5)
+        sns.violinplot(data=project_data,
+                    x='Source',
+                    y='CVSS Base Score',
+                    ax=ax,
+                    fill=False,
+                    color=Global.Colours.light_grey,
+                    cut=0)
+        ax.set_title(project.title())
+        ax.set_xlabel(None)
+        ax.set_ylabel(None)
+        ax.set_ylim(0, 10.5)
+        ax.set_yticks(np.arange(0, 11, 1))
+    fig.suptitle("CVSS Base Score Distribution")
+    fig.supxlabel("Project")
+    fig.supylabel("CVSS Base Score")
+    fig.savefig(plots_dir / 'overall_cve_distribution.png')
+
+def plot_cwe_distribution(overall: dict, *measurements: str):
+    """
+    Plots CWE distribution
+    """
+    df: pd.DataFrame = pd.DataFrame()
+    cwe_count = {}
+    project_ids = sorted(list(overall.keys()))
+    project_names = []
+    for project_id in  project_ids:
+        platform, project_name = get_platform(project_id)
+        project_names.append(project_name)
+        data = overall[project_id]
+        res: pd.DataFrame = compute.cwe_distribution(data, project_name)
+        for cwe_id in res['CWE ID']:
+            if cwe_id not in cwe_count:
+                cwe_count[cwe_id] = 0
+            cwe_count[cwe_id] += res[res['CWE ID'] == cwe_id]['CVE Count']
+        df = pd.concat([df, res], ignore_index=True)
+    fig, axs = plt.subplots(len(project_ids), 1, figsize=(10, 8))
+    plt.subplots_adjust(hspace=0.5)
+    for i, project in enumerate(project_names):
+        ax: plt.Axes = axs[i]
+        project_data = df[df['Project'] == project]
+        project_data = project_data.sort_values(by='CVE Count', ascending=False)
+        project_data = project_data.head(10)
+        sns.barplot(data=project_data, x='CWE ID', y='CVE Count', ax=ax, color=Global.colours[i])
+        max_count = max(project_data['CVE Count'])
+        ylim = max_count + 1 if max_count > 10 else 5
+        step = ylim // 5
+        ax.set_ylim(0, ylim)
+        ax.set_yticks(np.arange(0, ylim, step))
+        ax.set_title(project.title())
+        ax.set_xlabel(None)
+        ax.set_ylabel(None)
+    fig.suptitle("Top 10 CWEs by CVE Count")
+    fig.supxlabel("CWE ID")
+    fig.supylabel("CVE Count")
+    fig.savefig(plots_dir / 'overall_cwe_distribution.png')
+
+def plot_overall(overall: dict, *measurements: str):
     """
     Expects a dictionary with the following structure:
 
@@ -268,38 +384,13 @@ def plot_overall(overall: dict):
     # this will be more hard-coded plotting, given the wide variety of data
 
     logger.info(f"Plotting overall data for {len(overall)} projects...")
+    # plotting the overall data
+    plot_cve_distribution(overall)
+    plot_cwe_distribution(overall)
 
     # TODO: overall time KPIs (time to fix, time to CVE publish)
 
     # TODO: scatter plot of CVEs, x-axis: exploitability, y-axis: impact
-    _mearurements = [
-        'cvss_base_score',
-        'cvss_impact_score',
-        'cvss_exploitability_score',
-    ]
-    fig, ax = plt.subplots()
-    for project_id in overall:
-        data = overall.get(project_id)
-        platform, project = get_platform(project_id)
-        cve_ids = [ cve_id for cve_id in data.get('cves') if data.get('cves', {}).get(cve_id).get('applicability')[0].get('project') == project ]
-        cve_ids = sorted(cve_ids)
-        scores = {}
-        for cve_id in cve_ids:
-            logger.info(f"Processing {cve_id} for {project}")
-            for key in _mearurements:
-                score = data.get('cves').get(cve_id).get(key, 0)
-                if scores.get(key) is None:
-                    scores[key] = []
-                scores.get(key).append(score)
-        ax.scatter(scores.get('cvss_exploitability_score'), scores.get('cvss_impact_score'),
-                   label=project.title(), alpha=0.5)
-        ax.set_xlabel('Exploitability')
-        ax.set_ylabel('Impact')
-        ax.set_ylim(0, 10.5)
-        ax.set_xlim(0, 10.5)
-    ax.legend()
-        # angle the x-axis labels
-    ax.set_title(f"CVSS scores of CVEs")
             
 
     # TODO: bar chart of CWE categories, sorted by number of vulnerabilities
