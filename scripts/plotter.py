@@ -284,7 +284,7 @@ def plot_timelines(timelines: dict, title_prefix: str = ''):
         fig.savefig(plots_dir / f"{prefix}{filename}.png")
 
 
-def plot_cve_distribution(overall: dict, *measurements: str):
+def plot_overall_cve_distribution(overall: dict, *measurements: str):
     """
     Plots CVE distribution of an overall dictionary
     """
@@ -326,7 +326,7 @@ def plot_cve_distribution(overall: dict, *measurements: str):
     fig.supylabel("CVSS Base Score")
     fig.savefig(plots_dir / 'overall_cve_distribution.png')
 
-def plot_cwe_distribution(overall: dict, *measurements: str):
+def plot_overall_cwe_distribution(overall: dict, *measurements: str):
     """
     Plots CWE distribution
     """
@@ -365,6 +365,53 @@ def plot_cwe_distribution(overall: dict, *measurements: str):
     fig.supylabel("CVE Count")
     fig.savefig(plots_dir / 'overall_cwe_distribution.png')
 
+def plot_semver_cve_distribution(overall: dict, *measurements: str):
+    """
+    Plots the distribution of SemVer releases
+    """
+    project_ids = sorted(list(overall.keys()))
+    project_names = []
+    df: pd.DataFrame = pd.DataFrame()
+    for project_id in project_ids:
+        platform, project_name = get_platform(project_id)
+        project_names.append(project_name)
+        data = overall[project_id]
+        res = compute.semver_cve_distribution(data, project_name)
+        df = pd.concat([df, res], ignore_index=True)
+    fig, axs = plt.subplots(len(project_ids), 1, figsize=(10, 8))
+    fig.subplots_adjust(hspace=0.5)
+    for i, project in enumerate(project_names):
+        ax: plt.Axes = axs[i]
+        project_data = df[df['Project'] == project]
+        project_data = project_data.sort_values(by=['Major', 'Source'], ascending=False)
+        min_version = project_data['Major'].min()
+        max_version = project_data['Major'].max()
+        logger.info(f"Project {project} version range: {min_version} - {max_version}")
+        project_unique: pd.DataFrame = project_data.copy()
+        project_unique = project_unique.drop_duplicates(subset=['Major', 'CVE ID'])
+        sns.countplot(data=project_unique, x='Major', hue='Source', ax=ax, color=Global.colours[i], zorder=2)
+        # ax2 = ax.twinx()
+        # sns.countplot(data=project_unique, x='Major', ax=ax2, color=Global.Colours.light_grey, hue='Source', width=0.1, zorder=1)
+        steps = 5
+        ax.set_title(project.title())
+        ax.set_xlabel(None)
+        ax.set_ylabel(None)
+        ax.set_ylim(0, 10.5)
+        ax.set_yticks(np.arange(0, 11, 11//steps))
+        ax.set_xlim(0.9, max_version+0.1)
+        ax.set_xticks(np.arange(1, max_version+1, 1))
+    fig.suptitle("CVE Distribution by Major Semantic Version")
+    fig.supxlabel("Major Semantic Version")
+    fig.supylabel("CVSS Base Score")
+    fig.savefig(plots_dir / 'semver_cve_distribution.png')
+    # set right y-axis label
+
+def plot_semver_bandit_distribution(overall: dict, *measurements: str):
+    """
+    Plots the distribution of Bandit issues
+    """
+    pass
+
 def plot_overall(overall: dict, *measurements: str):
     """
     Expects a dictionary with the following structure:
@@ -385,8 +432,8 @@ def plot_overall(overall: dict, *measurements: str):
 
     logger.info(f"Plotting overall data for {len(overall)} projects...")
     # plotting the overall data
-    plot_cve_distribution(overall)
-    plot_cwe_distribution(overall)
+    plot_overall_cve_distribution(overall)
+    plot_overall_cwe_distribution(overall)
 
     # TODO: overall time KPIs (time to fix, time to CVE publish)
 
@@ -396,6 +443,7 @@ def plot_overall(overall: dict, *measurements: str):
     # TODO: bar chart of CWE categories, sorted by number of vulnerabilities
 
     # TODO: KPIs per minor/major release (count, severity, impact, patch lag)
+    plot_semver_cve_distribution(overall)
 
     # TODO: frequency plot of Bandit test ID issues
 

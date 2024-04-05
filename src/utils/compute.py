@@ -1,16 +1,23 @@
 import numpy as np, pandas as pd
 import src.utils.db as db
 from copy import deepcopy
+from packaging import version as semver
 from loguru import logger
 
 class Metrics:
-    overall = [
+    cve_metrics = [
         'cvss_base_score',
         'cvss_impact_score',
         'cvss_exploitability_score',
         'cvss_availability_impact',
         'cvss_integrity_impact',
         'cvss_confidentiality_impact',
+    ]
+    release_metrics = [
+        'counted_files',
+        'counted_functions',
+        'nloc_total',
+        'ccn_average',
     ]
     titles = {
         'is_dependency': 'Dependency',
@@ -385,7 +392,7 @@ def cve_distribution(overall_data: dict, project_name: str, *kpis) -> pd.DataFra
     # only unique CVE IDs
     cve_ids = sorted(list(set(cve_ids)))
 
-    kpis = Metrics.overall if not kpis else kpis
+    kpis = Metrics.cve_metrics if not kpis else kpis
 
     # init result
     results: list = []
@@ -436,7 +443,7 @@ def cwe_distribution(overall_data: dict, project_name: str, *kpis) -> pd.DataFra
     # only unique CWE IDs
     cwe_ids = sorted(list(set(cwe_ids)))
 
-    kpis = Metrics.overall if not kpis else kpis
+    kpis = Metrics.cve_metrics if not kpis else kpis
 
     results: dict = []
 
@@ -472,3 +479,80 @@ def cwe_distribution(overall_data: dict, project_name: str, *kpis) -> pd.DataFra
             res[f"{kpi_title} Max"] = max
         results.append(res)
     return pd.DataFrame(results)
+
+def get_bandit_kpis(bandit_report: dict, *kpis) -> pd.DataFrame:
+    """
+    Compute KPIs for a Bandit report.
+    """
+    results = {}
+    results['Severity High'] = bandit_report.get('severity_high_count', 0)
+    results['Severity Medium'] = bandit_report.get('severity_medium_count', 0)
+    results['Severity Low'] = bandit_report.get('severity_low_count', 0)
+    results['Confidence High'] = bandit_report.get('confidence_high_count', 0)
+    results['Confidence Medium'] = bandit_report.get('confidence_medium_count', 0)
+    results['Confidence Low'] = bandit_report.get('confidence_low_count', 0)
+    results['Issues Total'] = bandit_report.get('issues_total', 0)
+    sev_h_conf_h = bandit_report.get('severity_h_confidence_h_count', 0)
+    sev_h_conf_m = bandit_report.get('severity_h_confidence_m_count', 0)
+    sev_h_conf_l = bandit_report.get('severity_h_confidence_l_count', 0)
+    sev_m_conf_h = bandit_report.get('severity_m_confidence_h_count', 0)
+    sev_m_conf_m = bandit_report.get('severity_m_confidence_m_count', 0)
+    sev_m_conf_l = bandit_report.get('severity_m_confidence_l_count', 0)
+    sev_l_conf_h = bandit_report.get('severity_l_confidence_h_count', 0)
+    sev_l_conf_m = bandit_report.get('severity_l_confidence_m_count', 0)
+    sev_l_conf_l = bandit_report.get('severity_l_confidence_l_count', 0)
+    results['Critical'] = sev_h_conf_h
+    results['High'] = sev_h_conf_m + sev_m_conf_h
+    results['Medium'] = sev_h_conf_l + sev_m_conf_m + sev_l_conf_h
+    results['Low'] = sev_m_conf_l + sev_l_conf_m
+    results['Info'] = sev_l_conf_l
+    return results
+
+def semver_cve_distribution(overall_data: dict, project_name: str, *kpis) -> pd.DataFrame:
+    """
+    Computes the distribution of semantic versions for a given 'overall' data result.
+
+    overall_data: dict, the overall data structure
+    project_name: str, the name of the project
+    """
+    data: dict = overall_data
+    releases = data.get('releases', {})
+    results = []
+    kpis = Metrics.cve_metrics if not kpis else kpis
+    cves = data.get('cves', {})
+    majors = set()
+    for release_id in releases:
+        release = releases.get(release_id)
+        v = release.get('version')
+        try:
+            version = semver.parse(v)
+        except Exception as e:
+            logger.error(f"Could not parse version {v}: {e}")
+            continue
+        # compute
+        for cve_id in release.get('cves', []):
+            res = {}
+            cve = cves.get(cve_id)
+            res['Project'] = project_name
+            res['Major'] = int(version.major)
+            if not version.major in majors:
+                logger.info(f"Found major version {version.major} for {project_name}")
+                majors.add(version.major)
+            res['Minor'] = int(version.minor)
+            is_dependency = False
+            for app in cve.get('applicability', []):
+                if app.get('project') != project_name:
+                    is_dependency = True
+                    break
+            res['Patch'] = v
+            res['CVE ID'] = cve_id
+            res['Source'] = 'Indirect' if is_dependency else 'Direct'
+            for kpi in kpis:
+                value = cve_kpi_value(cve, kpi)
+                if value is None:
+                    continue
+                kpi_title = Metrics.titles.get(kpi)
+                res[kpi_title] = value
+            results.append(res)
+    return pd.DataFrame(results)
+

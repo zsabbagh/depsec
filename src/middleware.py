@@ -436,6 +436,8 @@ class Middleware:
             if release is None:
                 logger.error(f"Release '{version}' not found for {project_name}")
                 return None
+        releases = self.get_releases(project.name, platform=platform, descending=False, sort_semantically=True, requirements=f">0.9")
+        first_release = releases[0] if len(releases) > 0 else None
         logger.debug(f"Querying databases for vulnerabilities of {project_name} {version}")
         product_name = project.product or project_name
         logger.debug(f"Getting CPEs for {project.vendor} {product_name}")
@@ -491,7 +493,9 @@ class Middleware:
                 add = cpe.version == release.version if release is not None else True
             else:
                 applicability = {
-                    'version_start': cpe.version_start if bool(cpe.version_start) else None,
+                    'version_start': cpe.version_start if bool(cpe.version_start) else (
+                        first_release.version if first_release is not None else None
+                    ),
                     'exclude_start': exclude_start,
                     'version_end': cpe.version_end if bool(cpe.version_end) else None,
                     'exclude_end': exclude_end,
@@ -1202,6 +1206,24 @@ class Middleware:
                     if type(test[key]) not in [int, float]:
                         continue
                     bandit['count'][key] = test.get(key, 0) + test[key]
+                sev_h_conf_h = test.get('severity_h_confidence_h', 0)
+                sev_h_conf_m = test.get('severity_h_confidence_m', 0)
+                sev_h_conf_l = test.get('severity_h_confidence_l', 0)
+                sev_m_conf_h = test.get('severity_m_confidence_h', 0)
+                sev_m_conf_m = test.get('severity_m_confidence_m', 0)
+                sev_m_conf_l = test.get('severity_m_confidence_l', 0)
+                sev_l_conf_h = test.get('severity_l_confidence_h', 0)
+                sev_l_conf_m = test.get('severity_l_confidence_m', 0)
+                sev_l_conf_l = test.get('severity_l_confidence_l', 0)
+                critical = sev_h_conf_h
+                high = sev_h_conf_m + sev_m_conf_h
+                medium = sev_h_conf_l + sev_m_conf_m + sev_l_conf_h
+                low = sev_m_conf_l + sev_l_conf_m
+                none = sev_l_conf_l
+                bandit['count']['issues_critical'] = bandit['count'].get('critical', 0) + critical
+                bandit['count']['issues_high'] = bandit['count'].get('high', 0) + high
+                bandit['count']['issues_medium'] = bandit['count'].get('medium', 0) + medium
+                bandit['count']['issues_low'] = bandit['count'].get('low', 0) + low
         return results
     
 if __name__ == "__main__":
