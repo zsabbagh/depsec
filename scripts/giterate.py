@@ -39,8 +39,8 @@ logger.add(sys.stdout, level=args.level.upper())
 
 only = set(map(str.lower, args.only))
 
-mw = Aggregator(args.config)
-mw.load_projects()
+aggr = Aggregator(args.config)
+aggr.load_projects()
 
 directory = Path(args.directory)
 if not directory.exists():
@@ -98,7 +98,7 @@ for platform, projects in data.items():
         url = f"https://{url}.git"
 
         # Get the project
-        project = mw.get_project(project_name, platform)
+        project = aggr.get_project(project_name, platform)
         if not project:
             print(f"Project {project_name} not found")
             continue
@@ -148,7 +148,7 @@ for platform, projects in data.items():
         
         logger.info(f"Versions found for {repo_name}: {len(versions)}")
         processed = 0
-        rels = mw.get_releases(project_name, platform)
+        rels = aggr.get_releases(project_name, platform)
         rels = [ rel.version for rel in rels]
         logger.info(f"Releases found for {repo_name}: {', '.join(rels)}")
 
@@ -156,7 +156,7 @@ for platform, projects in data.items():
             if bool(args.limit) and processed > args.limit:
                 logger.info(f"Limit of {args.limit} reached, stopping")
                 break
-            release: Release = mw.get_release(project_name, version, platform)
+            release: Release = aggr.get_release(project_name, version, platform)
             if release is None:
                 logger.warning(f"Release '{version}' for {project_name} not found by metadata, ignoring")
                 continue

@@ -459,9 +459,9 @@ def combine_timeline_data(data: dict):
     """
     pass
 
-mw = Aggregator(args.config)
+aggr = Aggregator(args.config)
 # load the projects, arguments are optional
-mw.load_projects(*args.projects)
+aggr.load_projects(*args.projects)
 
 if __name__ == '__main__':
 
@@ -483,7 +483,7 @@ if __name__ == '__main__':
             # get timeline for each project
             platform, project = get_platform(project)
             logger.info(f"Getting timeline for {project} on {platform}...")
-            timeline = mw.get_vulnerabilities_timeline(project,
+            timeline = aggr.get_vulnerabilities_timeline(project,
                                                     start_date=args.start,
                                                     end_date=args.end,
                                                     step=args.step,
@@ -502,7 +502,7 @@ if __name__ == '__main__':
                 platform, project = get_platform(project)
                 # get timeline for each project
                 logger.info(f"Getting dependencies for {project} on {platform}...")
-                indirect_timelines = mw.get_indirect_vulnerabilities_timeline(project,
+                indirect_timelines = aggr.get_indirect_vulnerabilities_timeline(project,
                                                                             start_date=args.start,
                                                                             end_date=args.end,
                                                                             step=args.step,
@@ -525,7 +525,7 @@ if __name__ == '__main__':
             platform, project = get_platform(project)
             project_id = f"{platform}:{project}"
             logger.info(f"Getting overall data for {project} on {platform}...")
-            data = mw.get_report(project, platform=platform, with_dependencies=True)
+            data = aggr.get_report(project, platform=platform, with_dependencies=True)
             overall[project_id] = data
             logger.info(f"Got {len(data.get('cves'))} CVEs for {project}")
             logger.info(f"Got {len(data.get('cwes'))} CWEs for {project}")
