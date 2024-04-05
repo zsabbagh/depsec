@@ -7,7 +7,7 @@ import src.utils.compute as compute
 from copy import deepcopy
 from pprint import pprint
 from pathlib import Path
-from src.middleware import Middleware
+from src.aggregator import Aggregator
 import src.schemas.nvd as nvd
 from loguru import logger
 from src.schemas.projects import *
@@ -459,7 +459,7 @@ def combine_timeline_data(data: dict):
     """
     pass
 
-mw = Middleware(args.config)
+mw = Aggregator(args.config)
 # load the projects, arguments are optional
 mw.load_projects(*args.projects)
 
@@ -467,7 +467,7 @@ if __name__ == '__main__':
 
     # extract the files to present in the JSON
     # to be transparent about the data
-    # usage of schema here, instead of middleware, as this is straight from the database
+    # usage of schema here, instead of Aggregator, as this is straight from the database
     files = nvd.NVDFile.select().order_by(nvd.NVDFile.created_at.desc())
     files = [ model_to_dict(file) for file in files ]
     files = convert_datetime_to_str(files)

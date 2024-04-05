@@ -30,9 +30,9 @@ def pm(model: List[Model] | Model, recurse=False):
         model = fn(model)
     pprint(model)
 
-class Middleware:
+class Aggregator:
     """
-    The middleware to communicate with the databases and the APIs
+    The Aggregator to communicate with the databases and the APIs
     """
 
     def __format_strings(self, *strings: str):
@@ -101,11 +101,11 @@ class Middleware:
     
     def __init__(self, config_path: str, debug: bool=False, debug_delay: int=None) -> None:
         """
-        Initialise the middleware
+        Initialise the Aggregator
         """
         self.__debug = debug
         self.__debug_delay = debug_delay
-        logger.debug(f"Initalising middleware with config file {config_path}")
+        logger.debug(f"Initalising Aggregator with config file {config_path}")
         self.config(config_path)
     
     def load_projects(self, *projects: str, file: str = 'projects.json') -> Project:
@@ -1228,14 +1228,14 @@ class Middleware:
     
 if __name__ == "__main__":
     # For the purpose of loading in interactive shell and debugging
-    # e.g., py -i src/middleware.py
+    # e.g., py -i src/Aggregator.py
     parser = argparse.ArgumentParser()
     parser.add_argument('project', type=str, help='The project name', default='jinja2')
     parser.add_argument('--debug', action='store_true', help='Debug mode')
     logger.remove()
     args = parser.parse_args()
     logger.add(sys.stdout, colorize=True, backtrace=True, diagnose=True, level='DEBUG' if args.debug else 'INFO')
-    mw = Middleware("config.yml", debug=True)
+    mw = Aggregator("config.yml", debug=True)
     mw.load_projects()
     project = mw.get_project(args.project)
     release = mw.get_release(project)

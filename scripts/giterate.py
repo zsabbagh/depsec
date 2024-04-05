@@ -5,7 +5,7 @@ from loguru import logger
 from git import Repo
 from pathlib import Path
 from src.utils.proc import *
-from src.middleware import Middleware
+from src.aggregator import Aggregator
 from src.schemas.projects import *
 # This tool iterates git tags and runs a command for each tag
 
@@ -39,7 +39,7 @@ logger.add(sys.stdout, level=args.level.upper())
 
 only = set(map(str.lower, args.only))
 
-mw = Middleware(args.config)
+mw = Aggregator(args.config)
 mw.load_projects()
 
 directory = Path(args.directory)
