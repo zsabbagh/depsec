@@ -52,11 +52,14 @@ args.projects = sorted(list(map(str.lower, args.projects)))
 args.timeline = sorted(list(map(str.lower, args.timeline)))
 args.overall = sorted(list(map(str.lower, args.overall)))
 
+if len(args.timeline) > 0 and args.timeline[0] in ['all', '*']:
+    args.timeline = list(compute.KPIS_TIMELINE.keys())
+
 # These are the key performance indicators for the releases
 # convert to set for quick lookup
 kpiset_timeline = set(args.timeline)
 valid_kpis = set(compute.KPIS_TIMELINE.keys())
-if not kpiset_timeline.issubset(valid_kpis) and 'timeline' in args.kind:
+if not kpiset_timeline.issubset(valid_kpis):
     invalid_kpis = list(kpiset_timeline - valid_kpis)
     logger.error(f"Invalid KPIs: {', '.join(invalid_kpis)}. Valid KPIs are: {', '.join(valid_kpis)}")
     exit(1)
@@ -279,8 +282,8 @@ def plot_timelines(timelines: dict, title_prefix: str = ''):
         ax.legend(loc='upper center', framealpha=0.5)
         fig.autofmt_xdate()
         filename = f"{kpi.replace('/', '-')}"
-        prefix = title_prefix.lower().replace(' ', '_')
-        prefix = f"{prefix}_" if prefix else ""
+        prefix = title_prefix.strip().lower().replace(' ', '-')
+        prefix = f"timeline-{prefix}-" if prefix else "timeline-"
         fig.savefig(plots_dir / f"{prefix}{filename}.png")
 
 
@@ -324,7 +327,7 @@ def plot_overall_cve_distribution(overall: dict, *measurements: str):
     fig.suptitle("CVSS Base Score Distribution")
     fig.supxlabel("Project")
     fig.supylabel("CVSS Base Score")
-    fig.savefig(plots_dir / 'overall_cve_distribution.png')
+    fig.savefig(plots_dir / 'overall-cve-distribution.png')
 
 def plot_overall_cwe_distribution(overall: dict, *measurements: str):
     """
@@ -363,7 +366,7 @@ def plot_overall_cwe_distribution(overall: dict, *measurements: str):
     fig.suptitle("Top 10 CWEs by CVE Count")
     fig.supxlabel("CWE ID")
     fig.supylabel("CVE Count")
-    fig.savefig(plots_dir / 'overall_cwe_distribution.png')
+    fig.savefig(plots_dir / 'overall-cwe-distribution.png')
 
 def plot_semver_cve_distribution(overall: dict, *measurements: str):
     """
@@ -403,7 +406,7 @@ def plot_semver_cve_distribution(overall: dict, *measurements: str):
     fig.suptitle("CVE Distribution by Major Semantic Version")
     fig.supxlabel("Major Semantic Version")
     fig.supylabel("CVSS Base Score")
-    fig.savefig(plots_dir / 'semver_cve_distribution.png')
+    fig.savefig(plots_dir / 'semver-cve-distribution.png')
     # set right y-axis label
 
 def plot_semver_bandit_distribution(overall: dict, *measurements: str):
