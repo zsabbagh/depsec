@@ -2,10 +2,11 @@
     "pypi": {
         "jinja2": {
             "product": "jinja",
+            "vendor": "palletsprojects",
             "repo": {
                 "url": "github.com/pallets/jinja",
                 "tags": "jinja2:@version",
-                "includes": ["jinja2/"]
+                "includes": ["jinja2/", "src/"]
             }
         },
         "flask": {
@@ -18,7 +19,7 @@
         "django": {
             "repo": {
                 "url": "github.com/django/django",
-                "includes": ["django/"]
+                "includes": ["django/", "django.py", "src/"]
             }
         },
         "tornado": {
@@ -34,6 +35,71 @@
                 "includes": ["tensorflow/"]
             },
             "vendor": "google"
+        },
+        "asgiref": {
+            "repo": {
+                "url": "github.com/django/asgiref",
+                "includes": ["asgiref/"]
+            }
+        },
+        "sqlparse": {
+            "product": "sqlparse",
+            "vendor": "sqlparse_project",
+            "repo": {
+                "url": "github.com/andialbrecht/sqlparse",
+                "includes": ["sqlparse/", "src/"]
+            }
+        },
+        "typing-extensions": {},
+        "werkzeug": {
+            "product": "werkzeug",
+            "vendor": "palletsprojects",
+            "repo": {
+                "url": "github.com/pallets/werkzeug",
+                "includes": ["werkzeug/", "src/"]
+            }
+        },
+        "itsdangerous": {
+            "product": "itsdangerous",
+            "vendor": "palletsprojects",
+            "repo": {
+                "url": "github.com/pallets/itsdangerous",
+                "includes": ["itsdangerous/", "src/"]
+            }
+        },
+        "blinker": {
+            "product": "blinker",
+            "vendor": "pallets-eco",
+            "repo": {
+                "url": "github.com/pallets-eco/blinker",
+                "includes": ["src/", "blinker/"],
+                "tags": "(?:rel-)?@version"
+            }
+        },
+        "click": {
+            "product": "click",
+            "vendor": "palletsprojects",
+            "repo": {
+                "url": "github.com/pallets/click",
+                "includes": ["src/", "click/"]
+            }
+        },
+        "markupsafe": {
+            "product": "markupsafe",
+            "vendor": "palletsprojects",
+            "repo": {
+                "url": "github.com/pallets/markupsafe",
+                "includes": ["src/", "markupsafe/"]
+            }
+        },
+        "importlib-metadata": {},
+        "zipp": {
+            "product": "zipp",
+            "vendor": "jaraco",
+            "repo": {
+                "url": "github.com/jaraco/zipp",
+                "includes": ["src/", "zipp.py", "zipp/"]
+            }
         }
     }
 }

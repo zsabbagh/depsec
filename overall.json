@@ -1,0 +1,3205 @@
+{
+    "pypi:tornado": {
+        "cves": {
+            "CVE-2023-28370": {
+                "id": 10333,
+                "cve_id": "CVE-2023-28370",
+                "description": "Open redirect vulnerability in Tornado versions 6.3.1 and earlier allows a remote unauthenticated attacker to redirect a user to an arbitrary web site and conduct a phishing attack by having user access a specially crafted URL.",
+                "published_at": "2023-05-25 10:15:00",
+                "last_modified_at": "2023-06-01 13:04:00",
+                "updated_at": "2024-03-19 14:57:13",
+                "cvss_version": "3.1",
+                "cvss_exploitability_score": 2.8,
+                "cvss_impact_score": 2.7,
+                "cvss_vector_string": "CVSS:3.1/AV:N/AC:L/PR:N/UI:R/S:C/C:L/I:L/A:N",
+                "cvss_attack_vector": "NETWORK",
+                "cvss_attack_complexity": "LOW",
+                "cvss_privileges_required": "NONE",
+                "cvss_user_interaction": "REQUIRED",
+                "cvss_scope": "CHANGED",
+                "cvss_confidentiality_impact": "LOW",
+                "cvss_integrity_impact": "LOW",
+                "cvss_availability_impact": "NONE",
+                "cvss_base_score": 6.1,
+                "cvss_base_severity": "MEDIUM",
+                "has_cwe": true,
+                "cwes": [
+                    "CWE-601"
+                ],
+                "applicability": [
+                    {
+                        "version_start": null,
+                        "exclude_start": false,
+                        "version_end": "6.3.2",
+                        "exclude_end": true,
+                        "start_date": null,
+                        "end_date": "2023-05-14 03:42:17",
+                        "project": "tornado",
+                        "patched_at": "2023-05-14 03:42:17",
+                        "patched_version": "6.3.2"
+                    }
+                ]
+            },
+            "CVE-2014-9720": {
+                "id": 162171,
+                "cve_id": "CVE-2014-9720",
+                "description": "Tornado before 3.2.2 sends arbitrary responses that contain a fixed CSRF token and may be sent with HTTP compression, which makes it easier for remote attackers to conduct a BREACH attack and determine this token via a series of crafted requests.",
+                "published_at": "2020-01-24 18:15:00",
+                "last_modified_at": "2020-01-28 16:42:00",
+                "updated_at": "2024-03-19 17:55:25",
+                "cvss_version": "3.1",
+                "cvss_exploitability_score": 2.8,
+                "cvss_impact_score": 3.6,
+                "cvss_vector_string": "CVSS:3.1/AV:N/AC:L/PR:N/UI:R/S:U/C:H/I:N/A:N",
+                "cvss_attack_vector": "NETWORK",
+                "cvss_attack_complexity": "LOW",
+                "cvss_privileges_required": "NONE",
+                "cvss_user_interaction": "REQUIRED",
+                "cvss_scope": "UNCHANGED",
+                "cvss_confidentiality_impact": "HIGH",
+                "cvss_integrity_impact": "NONE",
+                "cvss_availability_impact": "NONE",
+                "cvss_base_score": 6.5,
+                "cvss_base_severity": "MEDIUM",
+                "has_cwe": true,
+                "cwes": [
+                    "CWE-203"
+                ],
+                "applicability": [
+                    {
+                        "version_start": null,
+                        "exclude_start": false,
+                        "version_end": "3.2.2",
+                        "exclude_end": true,
+                        "start_date": null,
+                        "end_date": "2014-06-04 03:40:48",
+                        "project": "tornado",
+                        "patched_at": "2014-06-04 03:40:48",
+                        "patched_version": "3.2.2"
+                    }
+                ]
+            },
+            "CVE-2012-2374": {
+                "id": 170725,
+                "cve_id": "CVE-2012-2374",
+                "description": "CRLF injection vulnerability in the tornado.web.RequestHandler.set_header function in Tornado before 2.2.1 allows remote attackers to inject arbitrary HTTP headers and conduct HTTP response splitting attacks via crafted input.",
+                "published_at": "2012-05-23 20:55:00",
+                "last_modified_at": "2012-09-05 03:23:00",
+                "updated_at": "2024-03-19 18:00:47",
+                "cvss_version": "2.0",
+                "cvss_exploitability_score": 10.0,
+                "cvss_impact_score": 2.9,
+                "cvss_vector_string": null,
+                "cvss_attack_vector": "NETWORK",
+                "cvss_attack_complexity": "LOW",
+                "cvss_privileges_required": "NONE",
+                "cvss_user_interaction": "False",
+                "cvss_scope": "UNCHANGED",
+                "cvss_confidentiality_impact": "NONE",
+                "cvss_integrity_impact": "PARTIAL",
+                "cvss_availability_impact": "NONE",
+                "cvss_base_score": 5.0,
+                "cvss_base_severity": null,
+                "has_cwe": true,
+                "cwes": [
+                    "CWE-20"
+                ],
+                "applicability": [
+                    {
+                        "version_start": null,
+                        "exclude_start": false,
+                        "version_end": "2.2",
+                        "exclude_end": false,
+                        "start_date": null,
+                        "end_date": "2014-05-22 01:36:37",
+                        "project": "tornado",
+                        "patched_at": "2014-05-22 01:35:53",
+                        "patched_version": "2.2.1"
+                    },
+                    {
+                        "version_start": "1.0",
+                        "version_end": "2.2",
+                        "start_date": "2010-07-23 14:11:36",
+                        "exclude_start": false,
+                        "end_date": "2014-05-22 01:36:37",
+                        "exclude_end": true,
+                        "project": "tornado",
+                        "patched_at": "2014-05-22 01:36:37",
+                        "patched_version": "2.2"
+                    }
+                ]
+            }
+        },
+        "cwes": {
+            "CWE-601": {
+                "id": 733,
+                "cwe_id": "CWE-601",
+                "kind": "weakness",
+                "name": "URL Redirection to Untrusted Site ('Open Redirect')",
+                "abstraction": "Base",
+                "structure": "Simple",
+                "status": "Draft",
+                "summary": null,
+                "background_details": "{'Background_Detail': 'Phishing is a general term for deceptive attempts to coerce private information from users that will be used for identity theft.'}",
+                "likelihood_of_exploit": "Low",
+                "updated_at": "2024-03-19 14:29:41",
+                "detection_methods": "Automated Static Analysis (DM-14); Manual Static Analysis (DM-10)",
+                "consequences": "Bypass Protection Mechanism-Gain Privileges or Assume Identity (.); Bypass Protection Mechanism-Gain Privileges or Assume Identity-Other (C.)",
+                "cves": [
+                    "CVE-2023-28370"
+                ]
+            },
+            "CWE-203": {
+                "id": 337,
+                "cwe_id": "CWE-203",
+                "kind": "weakness",
+                "name": "Observable Discrepancy",
+                "abstraction": "Base",
+                "structure": "Simple",
+                "status": "Incomplete",
+                "summary": null,
+                "background_details": null,
+                "likelihood_of_exploit": null,
+                "updated_at": "2024-03-19 14:29:40",
+                "detection_methods": null,
+                "consequences": "Read Application Data (C.); Read Application Data-Bypass Protection Mechanism (C.)",
+                "cves": [
+                    "CVE-2014-9720"
+                ]
+            },
+            "CWE-20": {
+                "id": 333,
+                "cwe_id": "CWE-20",
+                "kind": "weakness",
+                "name": "Improper Input Validation",
+                "abstraction": "Class",
+                "structure": "Simple",
+                "status": "Stable",
+                "summary": null,
+                "background_details": null,
+                "likelihood_of_exploit": "High",
+                "updated_at": "2024-03-19 14:29:40",
+                "detection_methods": "Automated Static Analysis (DM-3); Fuzzing (DM-5); Manual Static Analysis (DM-4)",
+                "consequences": "DoS: Crash, Exit, or Restart-DoS: Resource Consumption (CPU)-DoS: Resource Consumption (Memory) (A.); Modify Memory-Execute Unauthorized Code or Commands (C.I.A.); Read Memory-Read Files or Directories (C.)",
+                "cves": [
+                    "CVE-2012-2374"
+                ]
+            }
+        },
+        "releases": {
+            "tornado:6.4": {
+                "id": 534,
+                "project": 4,
+                "published_at": "2023-11-29 03:39:29",
+                "version": "6.4",
+                "updated_at": "2024-03-25 17:46:13",
+                "counted_functions": null,
+                "counted_files": null,
+                "nloc_total": null,
+                "nloc_average": null,
+                "ccn_average": null,
+                "commit_at": null,
+                "commit_hash": null,
+                "includes": null,
+                "excludes": null,
+                "dependency_count": 0,
+                "dependencies": {},
+                "cves": [],
+                "cwes": []
+            },
+            "tornado:6.4b1": {
+                "id": 535,
+                "project": 4,
+                "published_at": "2023-11-16 03:29:25",
+                "version": "6.4b1",
+                "updated_at": "2024-03-25 17:46:13",
+                "counted_functions": null,
+                "counted_files": null,
+                "nloc_total": null,
+                "nloc_average": null,
+                "ccn_average": null,
+                "commit_at": null,
+                "commit_hash": null,
+                "includes": null,
+                "excludes": null,
+                "dependency_count": 0,
+                "dependencies": {},
+                "cves": [],
+                "cwes": []
+            },
+            "tornado:6.3.3": {
+                "id": 532,
+                "project": 4,
+                "published_at": "2023-08-11 15:21:47",
+                "version": "6.3.3",
+                "updated_at": "2024-03-25 17:46:13",
+                "counted_functions": 2930,
+                "counted_files": 73,
+                "nloc_total": 33528,
+                "nloc_average": 11.44,
+                "ccn_average": 1.9,
+                "commit_at": "2023-08-11 16:44:57",
+                "commit_hash": "e4d698433b44f350d4908da9ca2cac475c92dfdc",
+                "includes": "tornado/",
+                "excludes": "tornado/test/",
+                "dependency_count": 0,
+                "dependencies": {},
+                "cves": [],
+                "cwes": []
+            },
+            "tornado:6.3.2": {
+                "id": 531,
+                "project": 4,
+                "published_at": "2023-05-14 03:42:17",
+                "version": "6.3.2",
+                "updated_at": "2024-03-25 17:46:13",
+                "counted_functions": 2922,
+                "counted_files": 73,
+                "nloc_total": 33449,
+                "nloc_average": 11.45,
+                "ccn_average": 1.9,
+                "commit_at": "2023-05-14 03:31:48",
+                "commit_hash": "34f5c1cf2696afec5532ca9e870ba32cbc7fee27",
+                "includes": "tornado/",
+                "excludes": "tornado/test/",
+                "dependency_count": 0,
+                "dependencies": {},
+                "cves": [],
+                "cwes": []
+            },
+            "tornado:6.3.1": {
+                "id": 530,
+                "project": 4,
+                "published_at": "2023-04-21 23:17:13",
+                "version": "6.3.1",
+                "updated_at": "2024-03-25 17:46:13",
+                "counted_functions": 2922,
+                "counted_files": 73,
+                "nloc_total": 33444,
+                "nloc_average": 11.45,
+                "ccn_average": 1.9,
+                "commit_at": "2023-04-21 22:32:42",
+                "commit_hash": "419838b9bcc51445241630def0478f1fbaa61b4b",
+                "includes": "tornado/",
+                "excludes": "tornado/test/",
+                "dependency_count": 0,
+                "dependencies": {},
+                "cves": [
+                    "CVE-2023-28370"
+                ],
+                "cwes": [
+                    "CWE-601"
+                ]
+            },
+            "tornado:6.3": {
+                "id": 529,
+                "project": 4,
+                "published_at": "2023-04-18 02:03:37",
+                "version": "6.3",
+                "updated_at": "2024-03-25 17:46:13",
+                "counted_functions": null,
+                "counted_files": null,
+                "nloc_total": null,
+                "nloc_average": null,
+                "ccn_average": null,
+                "commit_at": null,
+                "commit_hash": null,
+                "includes": null,
+                "excludes": null,
+                "dependency_count": 0,
+                "dependencies": {},
+                "cves": [
+                    "CVE-2023-28370"
+                ],
+                "cwes": [
+                    "CWE-601"
+                ]
+            },
+            "tornado:6.3b1": {
+                "id": 533,
+                "project": 4,
+                "published_at": "2023-04-09 21:15:43",
+                "version": "6.3b1",
+                "updated_at": "2024-03-25 17:46:13",
+                "counted_functions": null,
+                "counted_files": null,
+                "nloc_total": null,
+                "nloc_average": null,
+                "ccn_average": null,
+                "commit_at": null,
+                "commit_hash": null,
+                "includes": null,
+                "excludes": null,
+                "dependency_count": 0,
+                "dependencies": {},
+                "cves": [
+                    "CVE-2023-28370"
+                ],
+                "cwes": [
+                    "CWE-601"
+                ]
+            },
+            "tornado:6.2": {
+                "id": 526,
+                "project": 4,
+                "published_at": "2022-07-03 22:39:25",
+                "version": "6.2",
+                "updated_at": "2024-03-25 17:46:13",
+                "counted_functions": null,
+                "counted_files": null,
+                "nloc_total": null,
+                "nloc_average": null,
+                "ccn_average": null,
+                "commit_at": null,
+                "commit_hash": null,
+                "includes": null,
+                "excludes": null,
+                "dependency_count": 0,
+                "dependencies": {},
+                "cves": [
+                    "CVE-2023-28370"
+                ],
+                "cwes": [
+                    "CWE-601"
+                ]
+            },
+            "tornado:6.2b2": {
+                "id": 528,
+                "project": 4,
+                "published_at": "2022-06-18 02:03:15",
+                "version": "6.2b2",
+                "updated_at": "2024-03-25 17:46:13",
+                "counted_functions": null,
+                "counted_files": null,
+                "nloc_total": null,
+                "nloc_average": null,
+                "ccn_average": null,
+                "commit_at": null,
+                "commit_hash": null,
+                "includes": null,
+                "excludes": null,
+                "dependency_count": 0,
+                "dependencies": {},
+                "cves": [
+                    "CVE-2023-28370"
+                ],
+                "cwes": [
+                    "CWE-601"
+                ]
+            },
+            "tornado:6.2b1": {
+                "id": 527,
+                "project": 4,
+                "published_at": "2022-06-11 01:43:24",
+                "version": "6.2b1",
+                "updated_at": "2024-03-25 17:46:13",
+                "counted_functions": null,
+                "counted_files": null,
+                "nloc_total": null,
+                "nloc_average": null,
+                "ccn_average": null,
+                "commit_at": null,
+                "commit_hash": null,
+                "includes": null,
+                "excludes": null,
+                "dependency_count": 0,
+                "dependencies": {},
+                "cves": [
+                    "CVE-2023-28370"
+                ],
+                "cwes": [
+                    "CWE-601"
+                ]
+            },
+            "tornado:6.1": {
+                "id": 523,
+                "project": 4,
+                "published_at": "2020-10-30 19:04:55",
+                "version": "6.1",
+                "updated_at": "2024-03-25 17:46:13",
+                "counted_functions": null,
+                "counted_files": null,
+                "nloc_total": null,
+                "nloc_average": null,
+                "ccn_average": null,
+                "commit_at": null,
+                "commit_hash": null,
+                "includes": null,
+                "excludes": null,
+                "dependency_count": 0,
+                "dependencies": {},
+                "cves": [
+                    "CVE-2023-28370"
+                ],
+                "cwes": [
+                    "CWE-601"
+                ]
+            },
+            "tornado:6.1b2": {
+                "id": 525,
+                "project": 4,
+                "published_at": "2020-10-25 01:12:54",
+                "version": "6.1b2",
+                "updated_at": "2024-03-25 17:46:13",
+                "counted_functions": null,
+                "counted_files": null,
+                "nloc_total": null,
+                "nloc_average": null,
+                "ccn_average": null,
+                "commit_at": null,
+                "commit_hash": null,
+                "includes": null,
+                "excludes": null,
+                "dependency_count": 0,
+                "dependencies": {},
+                "cves": [
+                    "CVE-2023-28370"
+                ],
+                "cwes": [
+                    "CWE-601"
+                ]
+            },
+            "tornado:6.1b1": {
+                "id": 524,
+                "project": 4,
+                "published_at": "2020-09-30 11:41:02",
+                "version": "6.1b1",
+                "updated_at": "2024-03-25 17:46:13",
+                "counted_functions": null,
+                "counted_files": null,
+                "nloc_total": null,
+                "nloc_average": null,
+                "ccn_average": null,
+                "commit_at": null,
+                "commit_hash": null,
+                "includes": null,
+                "excludes": null,
+                "dependency_count": 0,
+                "dependencies": {},
+                "cves": [
+                    "CVE-2023-28370"
+                ],
+                "cwes": [
+                    "CWE-601"
+                ]
+            },
+            "tornado:6.0.4": {
+                "id": 520,
+                "project": 4,
+                "published_at": "2020-03-04 02:32:23",
+                "version": "6.0.4",
+                "updated_at": "2024-03-25 17:46:13",
+                "counted_functions": 2866,
+                "counted_files": 78,
+                "nloc_total": 32369,
+                "nloc_average": 11.29,
+                "ccn_average": 1.89,
+                "commit_at": "2020-03-04 03:11:24",
+                "commit_hash": "b4e39e52cd27d6b3b324a399dff046f71545c4a5",
+                "includes": "tornado/",
+                "excludes": "tornado/test/",
+                "dependency_count": 0,
+                "dependencies": {},
+                "cves": [
+                    "CVE-2023-28370"
+                ],
+                "cwes": [
+                    "CWE-601"
+                ]
+            },
+            "tornado:6.0.3": {
+                "id": 519,
+                "project": 4,
+                "published_at": "2019-06-23 22:32:30",
+                "version": "6.0.3",
+                "updated_at": "2024-03-25 17:46:13",
+                "counted_functions": 2860,
+                "counted_files": 78,
+                "nloc_total": 32310,
+                "nloc_average": 11.3,
+                "ccn_average": 1.89,
+                "commit_at": "2019-06-24 00:12:17",
+                "commit_hash": "a36d05d1ef6527c56aaea2a749972845e64ef206",
+                "includes": "tornado/",
+                "excludes": "tornado/test/",
+                "dependency_count": 0,
+                "dependencies": {},
+                "cves": [
+                    "CVE-2023-28370"
+                ],
+                "cwes": [
+                    "CWE-601"
+                ]
+            },
+            "tornado:6.0.2": {
+                "id": 518,
+                "project": 4,
+                "published_at": "2019-03-23 16:57:11",
+                "version": "6.0.2",
+                "updated_at": "2024-03-25 17:46:13",
+                "counted_functions": 2860,
+                "counted_files": 78,
+                "nloc_total": 32298,
+                "nloc_average": 11.29,
+                "ccn_average": 1.89,
+                "commit_at": "2019-03-23 17:36:00",
+                "commit_hash": "442a8124a4373f7140bbdd8f9db9ce4346290f9d",
+                "includes": "tornado/",
+                "excludes": "tornado/test/",
+                "dependency_count": 0,
+                "dependencies": {},
+                "cves": [
+                    "CVE-2023-28370"
+                ],
+                "cwes": [
+                    "CWE-601"
+                ]
+            },
+            "tornado:6.0.1": {
+                "id": 517,
+                "project": 4,
+                "published_at": "2019-03-03 18:32:41",
+                "version": "6.0.1",
+                "updated_at": "2024-03-25 17:46:13",
+                "counted_functions": 2856,
+                "counted_files": 78,
+                "nloc_total": 32283,
+                "nloc_average": 11.3,
+                "ccn_average": 1.89,
+                "commit_at": "2019-03-03 17:59:47",
+                "commit_hash": "c9dad2a3082cf9d793e47389430939ae5e61a760",
+                "includes": "tornado/",
+                "excludes": "tornado/test/",
+                "dependency_count": 0,
+                "dependencies": {},
+                "cves": [
+                    "CVE-2023-28370"
+                ],
+                "cwes": [
+                    "CWE-601"
+                ]
+            },
+            "tornado:6.0": {
+                "id": 516,
+                "project": 4,
+                "published_at": "2019-03-01 15:27:27",
+                "version": "6.0",
+                "updated_at": "2024-03-25 17:46:13",
+                "counted_functions": null,
+                "counted_files": null,
+                "nloc_total": null,
+                "nloc_average": null,
+                "ccn_average": null,
+                "commit_at": null,
+                "commit_hash": null,
+                "includes": null,
+                "excludes": null,
+                "dependency_count": 0,
+                "dependencies": {},
+                "cves": [
+                    "CVE-2023-28370"
+                ],
+                "cwes": [
+                    "CWE-601"
+                ]
+            },
+            "tornado:6.0b1": {
+                "id": 522,
+                "project": 4,
+                "published_at": "2019-02-10 23:20:06",
+                "version": "6.0b1",
+                "updated_at": "2024-03-25 17:46:13",
+                "counted_functions": null,
+                "counted_files": null,
+                "nloc_total": null,
+                "nloc_average": null,
+                "ccn_average": null,
+                "commit_at": null,
+                "commit_hash": null,
+                "includes": null,
+                "excludes": null,
+                "dependency_count": 0,
+                "dependencies": {},
+                "cves": [
+                    "CVE-2023-28370"
+                ],
+                "cwes": [
+                    "CWE-601"
+                ]
+            },
+            "tornado:6.0a1": {
+                "id": 521,
+                "project": 4,
+                "published_at": "2019-01-02 03:56:14",
+                "version": "6.0a1",
+                "updated_at": "2024-03-25 17:46:13",
+                "counted_functions": null,
+                "counted_files": null,
+                "nloc_total": null,
+                "nloc_average": null,
+                "ccn_average": null,
+                "commit_at": null,
+                "commit_hash": null,
+                "includes": null,
+                "excludes": null,
+                "dependency_count": 0,
+                "dependencies": {},
+                "cves": [
+                    "CVE-2023-28370"
+                ],
+                "cwes": [
+                    "CWE-601"
+                ]
+            },
+            "tornado:5.1.1": {
+                "id": 514,
+                "project": 4,
+                "published_at": "2018-09-16 19:22:58",
+                "version": "5.1.1",
+                "updated_at": "2024-03-25 17:46:13",
+                "counted_functions": 3367,
+                "counted_files": 84,
+                "nloc_total": 29954,
+                "nloc_average": 8.9,
+                "ccn_average": 1.86,
+                "commit_at": "2018-09-16 20:53:14",
+                "commit_hash": "cc2cf078a39abec6f8d181f76a4e5ba9432364f3",
+                "includes": "tornado/",
+                "excludes": "tornado/test/",
+                "dependency_count": 0,
+                "dependencies": {},
+                "cves": [
+                    "CVE-2023-28370"
+                ],
+                "cwes": [
+                    "CWE-601"
+                ]
+            },
+            "tornado:5.1": {
+                "id": 513,
+                "project": 4,
+                "published_at": "2018-07-11 13:42:14",
+                "version": "5.1",
+                "updated_at": "2024-03-25 17:46:13",
+                "counted_functions": null,
+                "counted_files": null,
+                "nloc_total": null,
+                "nloc_average": null,
+                "ccn_average": null,
+                "commit_at": null,
+                "commit_hash": null,
+                "includes": null,
+                "excludes": null,
+                "dependency_count": 0,
+                "dependencies": {},
+                "cves": [
+                    "CVE-2023-28370"
+                ],
+                "cwes": [
+                    "CWE-601"
+                ]
+            },
+            "tornado:5.1b1": {
+                "id": 515,
+                "project": 4,
+                "published_at": "2018-06-11 13:08:41",
+                "version": "5.1b1",
+                "updated_at": "2024-03-25 17:46:13",
+                "counted_functions": null,
+                "counted_files": null,
+                "nloc_total": null,
+                "nloc_average": null,
+                "ccn_average": null,
+                "commit_at": null,
+                "commit_hash": null,
+                "includes": null,
+                "excludes": null,
+                "dependency_count": 0,
+                "dependencies": {},
+                "cves": [
+                    "CVE-2023-28370"
+                ],
+                "cwes": [
+                    "CWE-601"
+                ]
+            },
+            "tornado:5.0.2": {
+                "id": 510,
+                "project": 4,
+                "published_at": "2018-04-08 00:42:53",
+                "version": "5.0.2",
+                "updated_at": "2024-03-25 17:46:13",
+                "counted_functions": 3255,
+                "counted_files": 84,
+                "nloc_total": 28909,
+                "nloc_average": 8.88,
+                "ccn_average": 1.87,
+                "commit_at": "2018-04-08 02:30:56",
+                "commit_hash": "4fb847bf7abaddaa97ae60dd90b61246c5a523cd",
+                "includes": "tornado/",
+                "excludes": "tornado/test/",
+                "dependency_count": 0,
+                "dependencies": {},
+                "cves": [
+                    "CVE-2023-28370"
+                ],
+                "cwes": [
+                    "CWE-601"
+                ]
+            },
+            "tornado:5.0.1": {
+                "id": 509,
+                "project": 4,
+                "published_at": "2018-03-18 15:50:50",
+                "version": "5.0.1",
+                "updated_at": "2024-03-25 17:46:13",
+                "counted_functions": 3242,
+                "counted_files": 84,
+                "nloc_total": 28809,
+                "nloc_average": 8.89,
+                "ccn_average": 1.87,
+                "commit_at": "2018-03-18 16:39:19",
+                "commit_hash": "b758925a1f07f28f7b2c3308eb45dadb0015f7ba",
+                "includes": "tornado/",
+                "excludes": "tornado/test/",
+                "dependency_count": 0,
+                "dependencies": {},
+                "cves": [
+                    "CVE-2023-28370"
+                ],
+                "cwes": [
+                    "CWE-601"
+                ]
+            },
+            "tornado:5.0": {
+                "id": 508,
+                "project": 4,
+                "published_at": "2018-03-05 14:04:02",
+                "version": "5.0",
+                "updated_at": "2024-03-25 17:46:13",
+                "counted_functions": null,
+                "counted_files": null,
+                "nloc_total": null,
+                "nloc_average": null,
+                "ccn_average": null,
+                "commit_at": null,
+                "commit_hash": null,
+                "includes": null,
+                "excludes": null,
+                "dependency_count": 0,
+                "dependencies": {},
+                "cves": [
+                    "CVE-2023-28370"
+                ],
+                "cwes": [
+                    "CWE-601"
+                ]
+            },
+            "tornado:5.0b1": {
+                "id": 512,
+                "project": 4,
+                "published_at": "2018-01-27 23:08:32",
+                "version": "5.0b1",
+                "updated_at": "2024-03-25 17:46:13",
+                "counted_functions": null,
+                "counted_files": null,
+                "nloc_total": null,
+                "nloc_average": null,
+                "ccn_average": null,
+                "commit_at": null,
+                "commit_hash": null,
+                "includes": null,
+                "excludes": null,
+                "dependency_count": 0,
+                "dependencies": {},
+                "cves": [
+                    "CVE-2023-28370"
+                ],
+                "cwes": [
+                    "CWE-601"
+                ]
+            },
+            "tornado:5.0a1": {
+                "id": 511,
+                "project": 4,
+                "published_at": "2017-12-27 18:56:04",
+                "version": "5.0a1",
+                "updated_at": "2024-03-25 17:46:13",
+                "counted_functions": null,
+                "counted_files": null,
+                "nloc_total": null,
+                "nloc_average": null,
+                "ccn_average": null,
+                "commit_at": null,
+                "commit_hash": null,
+                "includes": null,
+                "excludes": null,
+                "dependency_count": 0,
+                "dependencies": {},
+                "cves": [
+                    "CVE-2023-28370"
+                ],
+                "cwes": [
+                    "CWE-601"
+                ]
+            },
+            "tornado:4.5.3": {
+                "id": 505,
+                "project": 4,
+                "published_at": "2018-01-06 18:09:36",
+                "version": "4.5.3",
+                "updated_at": "2024-03-25 17:46:13",
+                "counted_functions": 3113,
+                "counted_files": 83,
+                "nloc_total": 27479,
+                "nloc_average": 8.83,
+                "ccn_average": 1.88,
+                "commit_at": "2018-01-06 18:48:56",
+                "commit_hash": "8e9e75502ff910629663c4cdd7779d43ea2dd150",
+                "includes": "tornado/",
+                "excludes": "tornado/test/",
+                "dependency_count": 0,
+                "dependencies": {},
+                "cves": [
+                    "CVE-2023-28370"
+                ],
+                "cwes": [
+                    "CWE-601"
+                ]
+            },
+            "tornado:4.5.2": {
+                "id": 504,
+                "project": 4,
+                "published_at": "2017-08-27 20:39:57",
+                "version": "4.5.2",
+                "updated_at": "2024-03-25 17:46:13",
+                "counted_functions": 3109,
+                "counted_files": 83,
+                "nloc_total": 27413,
+                "nloc_average": 8.82,
+                "ccn_average": 1.88,
+                "commit_at": "2017-08-27 20:50:20",
+                "commit_hash": "810c341d2488c11813995dd2beadab7ba00ff44d",
+                "includes": "tornado/",
+                "excludes": "tornado/test/",
+                "dependency_count": 0,
+                "dependencies": {},
+                "cves": [
+                    "CVE-2023-28370"
+                ],
+                "cwes": [
+                    "CWE-601"
+                ]
+            },
+            "tornado:4.5.1": {
+                "id": 503,
+                "project": 4,
+                "published_at": "2017-04-20 13:34:59",
+                "version": "4.5.1",
+                "updated_at": "2024-03-25 17:46:13",
+                "counted_functions": 3109,
+                "counted_files": 83,
+                "nloc_total": 27406,
+                "nloc_average": 8.82,
+                "ccn_average": 1.88,
+                "commit_at": "2017-04-20 15:32:04",
+                "commit_hash": "e4f26acdabca32f6cc94a2681fb518dbce132688",
+                "includes": "tornado/",
+                "excludes": "tornado/test/",
+                "dependency_count": 0,
+                "dependencies": {},
+                "cves": [
+                    "CVE-2023-28370"
+                ],
+                "cwes": [
+                    "CWE-601"
+                ]
+            },
+            "tornado:4.5": {
+                "id": 502,
+                "project": 4,
+                "published_at": "2017-04-16 23:48:30",
+                "version": "4.5",
+                "updated_at": "2024-03-25 17:46:13",
+                "counted_functions": null,
+                "counted_files": null,
+                "nloc_total": null,
+                "nloc_average": null,
+                "ccn_average": null,
+                "commit_at": null,
+                "commit_hash": null,
+                "includes": null,
+                "excludes": null,
+                "dependency_count": 0,
+                "dependencies": {},
+                "cves": [
+                    "CVE-2023-28370"
+                ],
+                "cwes": [
+                    "CWE-601"
+                ]
+            },
+            "tornado:4.5b2": {
+                "id": 507,
+                "project": 4,
+                "published_at": "2017-04-11 02:45:41",
+                "version": "4.5b2",
+                "updated_at": "2024-03-25 17:46:13",
+                "counted_functions": null,
+                "counted_files": null,
+                "nloc_total": null,
+                "nloc_average": null,
+                "ccn_average": null,
+                "commit_at": null,
+                "commit_hash": null,
+                "includes": null,
+                "excludes": null,
+                "dependency_count": 0,
+                "dependencies": {},
+                "cves": [
+                    "CVE-2023-28370"
+                ],
+                "cwes": [
+                    "CWE-601"
+                ]
+            },
+            "tornado:4.5b1": {
+                "id": 506,
+                "project": 4,
+                "published_at": "2017-03-26 22:22:48",
+                "version": "4.5b1",
+                "updated_at": "2024-03-25 17:46:13",
+                "counted_functions": null,
+                "counted_files": null,
+                "nloc_total": null,
+                "nloc_average": null,
+                "ccn_average": null,
+                "commit_at": null,
+                "commit_hash": null,
+                "includes": null,
+                "excludes": null,
+                "dependency_count": 0,
+                "dependencies": {},
+                "cves": [
+                    "CVE-2023-28370"
+                ],
+                "cwes": [
+                    "CWE-601"
+                ]
+            },
+            "tornado:4.4.3": {
+                "id": 500,
+                "project": 4,
+                "published_at": "2017-03-30 14:52:05",
+                "version": "4.4.3",
+                "updated_at": "2024-03-25 17:46:13",
+                "counted_functions": 2959,
+                "counted_files": 81,
+                "nloc_total": 26136,
+                "nloc_average": 8.83,
+                "ccn_average": 1.9,
+                "commit_at": "2017-03-30 15:17:36",
+                "commit_hash": "50f1890e3e972eb49caebfe5b4fb5ef5fbfdcbc9",
+                "includes": "tornado/",
+                "excludes": "tornado/test/",
+                "dependency_count": 0,
+                "dependencies": {},
+                "cves": [
+                    "CVE-2023-28370"
+                ],
+                "cwes": [
+                    "CWE-601"
+                ]
+            },
+            "tornado:4.4.2": {
+                "id": 499,
+                "project": 4,
+                "published_at": "2016-09-30 23:32:03",
+                "version": "4.4.2",
+                "updated_at": "2024-03-25 17:46:13",
+                "counted_functions": 2959,
+                "counted_files": 81,
+                "nloc_total": 26136,
+                "nloc_average": 8.83,
+                "ccn_average": 1.9,
+                "commit_at": "2016-10-01 00:38:48",
+                "commit_hash": "c0f99bac0aeda25529e5c3df90034d4b2fa311fd",
+                "includes": "tornado/",
+                "excludes": "tornado/test/",
+                "dependency_count": 0,
+                "dependencies": {},
+                "cves": [
+                    "CVE-2023-28370"
+                ],
+                "cwes": [
+                    "CWE-601"
+                ]
+            },
+            "tornado:4.4.1": {
+                "id": 498,
+                "project": 4,
+                "published_at": "2016-07-23 17:19:57",
+                "version": "4.4.1",
+                "updated_at": "2024-03-25 17:46:13",
+                "counted_functions": 2954,
+                "counted_files": 81,
+                "nloc_total": 26067,
+                "nloc_average": 8.82,
+                "ccn_average": 1.89,
+                "commit_at": "2016-07-23 18:27:16",
+                "commit_hash": "087085ab2b8373947e742465538e4a2a89a48f77",
+                "includes": "tornado/",
+                "excludes": "tornado/test/",
+                "dependency_count": 0,
+                "dependencies": {},
+                "cves": [
+                    "CVE-2023-28370"
+                ],
+                "cwes": [
+                    "CWE-601"
+                ]
+            },
+            "tornado:4.4": {
+                "id": 497,
+                "project": 4,
+                "published_at": "2016-07-15 14:55:46",
+                "version": "4.4",
+                "updated_at": "2024-03-25 17:46:13",
+                "counted_functions": null,
+                "counted_files": null,
+                "nloc_total": null,
+                "nloc_average": null,
+                "ccn_average": null,
+                "commit_at": null,
+                "commit_hash": null,
+                "includes": null,
+                "excludes": null,
+                "dependency_count": 0,
+                "dependencies": {},
+                "cves": [
+                    "CVE-2023-28370"
+                ],
+                "cwes": [
+                    "CWE-601"
+                ]
+            },
+            "tornado:4.4b1": {
+                "id": 501,
+                "project": 4,
+                "published_at": "2016-07-08 18:22:33",
+                "version": "4.4b1",
+                "updated_at": "2024-03-25 17:46:13",
+                "counted_functions": null,
+                "counted_files": null,
+                "nloc_total": null,
+                "nloc_average": null,
+                "ccn_average": null,
+                "commit_at": null,
+                "commit_hash": null,
+                "includes": null,
+                "excludes": null,
+                "dependency_count": 0,
+                "dependencies": {},
+                "cves": [
+                    "CVE-2023-28370"
+                ],
+                "cwes": [
+                    "CWE-601"
+                ]
+            },
+            "tornado:4.3": {
+                "id": 494,
+                "project": 4,
+                "published_at": "2015-11-06 22:58:14",
+                "version": "4.3",
+                "updated_at": "2024-03-25 17:46:13",
+                "counted_functions": null,
+                "counted_files": null,
+                "nloc_total": null,
+                "nloc_average": null,
+                "ccn_average": null,
+                "commit_at": null,
+                "commit_hash": null,
+                "includes": null,
+                "excludes": null,
+                "dependency_count": 0,
+                "dependencies": {},
+                "cves": [
+                    "CVE-2023-28370"
+                ],
+                "cwes": [
+                    "CWE-601"
+                ]
+            },
+            "tornado:4.3b2": {
+                "id": 496,
+                "project": 4,
+                "published_at": "2015-10-24 22:32:39",
+                "version": "4.3b2",
+                "updated_at": "2024-03-25 17:46:13",
+                "counted_functions": null,
+                "counted_files": null,
+                "nloc_total": null,
+                "nloc_average": null,
+                "ccn_average": null,
+                "commit_at": null,
+                "commit_hash": null,
+                "includes": null,
+                "excludes": null,
+                "dependency_count": 0,
+                "dependencies": {},
+                "cves": [
+                    "CVE-2023-28370"
+                ],
+                "cwes": [
+                    "CWE-601"
+                ]
+            },
+            "tornado:4.3b1": {
+                "id": 495,
+                "project": 4,
+                "published_at": "2015-10-18 22:12:23",
+                "version": "4.3b1",
+                "updated_at": "2024-03-25 17:46:13",
+                "counted_functions": null,
+                "counted_files": null,
+                "nloc_total": null,
+                "nloc_average": null,
+                "ccn_average": null,
+                "commit_at": null,
+                "commit_hash": null,
+                "includes": null,
+                "excludes": null,
+                "dependency_count": 0,
+                "dependencies": {},
+                "cves": [
+                    "CVE-2023-28370"
+                ],
+                "cwes": [
+                    "CWE-601"
+                ]
+            },
+            "tornado:4.2.1": {
+                "id": 492,
+                "project": 4,
+                "published_at": "2015-07-17 15:52:36",
+                "version": "4.2.1",
+                "updated_at": "2024-03-25 17:46:13",
+                "counted_functions": 2813,
+                "counted_files": 78,
+                "nloc_total": 24481,
+                "nloc_average": 8.7,
+                "ccn_average": 1.89,
+                "commit_at": "2015-07-17 17:48:58",
+                "commit_hash": "5d4d114354f86b663e4ed4d963075237bf7e8a35",
+                "includes": "tornado/",
+                "excludes": "tornado/test/",
+                "dependency_count": 0,
+                "dependencies": {},
+                "cves": [
+                    "CVE-2023-28370"
+                ],
+                "cwes": [
+                    "CWE-601"
+                ]
+            },
+            "tornado:4.2": {
+                "id": 491,
+                "project": 4,
+                "published_at": "2015-05-27 01:50:21",
+                "version": "4.2",
+                "updated_at": "2024-03-25 17:46:13",
+                "counted_functions": null,
+                "counted_files": null,
+                "nloc_total": null,
+                "nloc_average": null,
+                "ccn_average": null,
+                "commit_at": null,
+                "commit_hash": null,
+                "includes": null,
+                "excludes": null,
+                "dependency_count": 0,
+                "dependencies": {},
+                "cves": [
+                    "CVE-2023-28370"
+                ],
+                "cwes": [
+                    "CWE-601"
+                ]
+            },
+            "tornado:4.2b1": {
+                "id": 493,
+                "project": 4,
+                "published_at": "2015-05-10 17:25:29",
+                "version": "4.2b1",
+                "updated_at": "2024-03-25 17:46:13",
+                "counted_functions": null,
+                "counted_files": null,
+                "nloc_total": null,
+                "nloc_average": null,
+                "ccn_average": null,
+                "commit_at": null,
+                "commit_hash": null,
+                "includes": null,
+                "excludes": null,
+                "dependency_count": 0,
+                "dependencies": {},
+                "cves": [
+                    "CVE-2023-28370"
+                ],
+                "cwes": [
+                    "CWE-601"
+                ]
+            },
+            "tornado:4.1": {
+                "id": 489,
+                "project": 4,
+                "published_at": "2015-02-07 17:59:22",
+                "version": "4.1",
+                "updated_at": "2024-03-25 17:46:13",
+                "counted_functions": null,
+                "counted_files": null,
+                "nloc_total": null,
+                "nloc_average": null,
+                "ccn_average": null,
+                "commit_at": null,
+                "commit_hash": null,
+                "includes": null,
+                "excludes": null,
+                "dependency_count": 0,
+                "dependencies": {},
+                "cves": [
+                    "CVE-2023-28370"
+                ],
+                "cwes": [
+                    "CWE-601"
+                ]
+            },
+            "tornado:4.1b2": {
+                "id": 490,
+                "project": 4,
+                "published_at": "2015-02-01 19:32:44",
+                "version": "4.1b2",
+                "updated_at": "2024-03-25 17:46:13",
+                "counted_functions": null,
+                "counted_files": null,
+                "nloc_total": null,
+                "nloc_average": null,
+                "ccn_average": null,
+                "commit_at": null,
+                "commit_hash": null,
+                "includes": null,
+                "excludes": null,
+                "dependency_count": 0,
+                "dependencies": {},
+                "cves": [
+                    "CVE-2023-28370"
+                ],
+                "cwes": [
+                    "CWE-601"
+                ]
+            },
+            "tornado:4.0.2": {
+                "id": 488,
+                "project": 4,
+                "published_at": "2014-09-11 03:48:53",
+                "version": "4.0.2",
+                "updated_at": "2024-03-25 17:46:13",
+                "counted_functions": 2456,
+                "counted_files": 72,
+                "nloc_total": 21362,
+                "nloc_average": 8.7,
+                "ccn_average": 1.92,
+                "commit_at": "2014-09-11 05:47:51",
+                "commit_hash": "b18b12b532790f40edf431625d184bf8e479956b",
+                "includes": "tornado/",
+                "excludes": "tornado/test/",
+                "dependency_count": 0,
+                "dependencies": {},
+                "cves": [
+                    "CVE-2023-28370"
+                ],
+                "cwes": [
+                    "CWE-601"
+                ]
+            },
+            "tornado:4.0.1": {
+                "id": 487,
+                "project": 4,
+                "published_at": "2014-08-12 13:12:17",
+                "version": "4.0.1",
+                "updated_at": "2024-03-25 17:46:13",
+                "counted_functions": 2452,
+                "counted_files": 72,
+                "nloc_total": 21324,
+                "nloc_average": 8.7,
+                "ccn_average": 1.92,
+                "commit_at": "2014-08-12 15:11:20",
+                "commit_hash": "54bfbee58650a0312b22eb081e8a38d03fcf1a49",
+                "includes": "tornado/",
+                "excludes": "tornado/test/",
+                "dependency_count": 0,
+                "dependencies": {},
+                "cves": [
+                    "CVE-2023-28370"
+                ],
+                "cwes": [
+                    "CWE-601"
+                ]
+            },
+            "tornado:4.0": {
+                "id": 486,
+                "project": 4,
+                "published_at": "2014-07-15 12:47:07",
+                "version": "4.0",
+                "updated_at": "2024-03-25 17:46:13",
+                "counted_functions": null,
+                "counted_files": null,
+                "nloc_total": null,
+                "nloc_average": null,
+                "ccn_average": null,
+                "commit_at": null,
+                "commit_hash": null,
+                "includes": null,
+                "excludes": null,
+                "dependency_count": 0,
+                "dependencies": {},
+                "cves": [
+                    "CVE-2023-28370"
+                ],
+                "cwes": [
+                    "CWE-601"
+                ]
+            },
+            "tornado:3.2.2": {
+                "id": 485,
+                "project": 4,
+                "published_at": "2014-06-04 03:40:48",
+                "version": "3.2.2",
+                "updated_at": "2024-03-25 17:46:13",
+                "counted_functions": 2132,
+                "counted_files": 68,
+                "nloc_total": 18666,
+                "nloc_average": 8.76,
+                "ccn_average": 1.93,
+                "commit_at": "2014-06-04 05:30:18",
+                "commit_hash": "67655497b06757752e48e236c78378b953bdff62",
+                "includes": "tornado/",
+                "excludes": "tornado/test/",
+                "dependency_count": 0,
+                "dependencies": {},
+                "cves": [
+                    "CVE-2023-28370"
+                ],
+                "cwes": [
+                    "CWE-601"
+                ]
+            },
+            "tornado:3.2.1": {
+                "id": 484,
+                "project": 4,
+                "published_at": "2014-05-06 02:37:53",
+                "version": "3.2.1",
+                "updated_at": "2024-03-25 17:46:13",
+                "counted_functions": 2114,
+                "counted_files": 68,
+                "nloc_total": 18501,
+                "nloc_average": 8.75,
+                "ccn_average": 1.93,
+                "commit_at": "2014-05-06 04:28:23",
+                "commit_hash": "989693186242844e3f94955a91d452b220320ad0",
+                "includes": "tornado/",
+                "excludes": "tornado/test/",
+                "dependency_count": 0,
+                "dependencies": {},
+                "cves": [
+                    "CVE-2012-2374",
+                    "CVE-2014-9720",
+                    "CVE-2023-28370"
+                ],
+                "cwes": [
+                    "CWE-20",
+                    "CWE-203",
+                    "CWE-601"
+                ]
+            },
+            "tornado:3.2": {
+                "id": 483,
+                "project": 4,
+                "published_at": "2014-01-14 13:44:22",
+                "version": "3.2",
+                "updated_at": "2024-03-25 17:46:13",
+                "counted_functions": null,
+                "counted_files": null,
+                "nloc_total": null,
+                "nloc_average": null,
+                "ccn_average": null,
+                "commit_at": null,
+                "commit_hash": null,
+                "includes": null,
+                "excludes": null,
+                "dependency_count": 0,
+                "dependencies": {},
+                "cves": [
+                    "CVE-2012-2374",
+                    "CVE-2014-9720",
+                    "CVE-2023-28370"
+                ],
+                "cwes": [
+                    "CWE-20",
+                    "CWE-203",
+                    "CWE-601"
+                ]
+            },
+            "tornado:3.1.1": {
+                "id": 482,
+                "project": 4,
+                "published_at": "2013-09-01 18:44:56",
+                "version": "3.1.1",
+                "updated_at": "2024-03-25 17:46:13",
+                "counted_functions": 1998,
+                "counted_files": 66,
+                "nloc_total": 17473,
+                "nloc_average": 8.75,
+                "ccn_average": 1.95,
+                "commit_at": "2013-09-01 20:21:36",
+                "commit_hash": "f36652d47fc42205c085ed65e740f4b155d4e5e4",
+                "includes": "tornado/",
+                "excludes": "tornado/test/",
+                "dependency_count": 0,
+                "dependencies": {},
+                "cves": [
+                    "CVE-2012-2374",
+                    "CVE-2014-9720",
+                    "CVE-2023-28370"
+                ],
+                "cwes": [
+                    "CWE-20",
+                    "CWE-203",
+                    "CWE-601"
+                ]
+            },
+            "tornado:3.1": {
+                "id": 481,
+                "project": 4,
+                "published_at": "2013-06-15 18:19:14",
+                "version": "3.1",
+                "updated_at": "2024-03-25 17:46:13",
+                "counted_functions": null,
+                "counted_files": null,
+                "nloc_total": null,
+                "nloc_average": null,
+                "ccn_average": null,
+                "commit_at": null,
+                "commit_hash": null,
+                "includes": null,
+                "excludes": null,
+                "dependency_count": 0,
+                "dependencies": {},
+                "cves": [
+                    "CVE-2012-2374",
+                    "CVE-2014-9720",
+                    "CVE-2023-28370"
+                ],
+                "cwes": [
+                    "CWE-20",
+                    "CWE-203",
+                    "CWE-601"
+                ]
+            },
+            "tornado:3.0.2": {
+                "id": 480,
+                "project": 4,
+                "published_at": "2013-06-02 20:30:48",
+                "version": "3.0.2",
+                "updated_at": "2024-03-25 17:46:13",
+                "counted_functions": 1816,
+                "counted_files": 66,
+                "nloc_total": 16131,
+                "nloc_average": 8.88,
+                "ccn_average": 1.97,
+                "commit_at": "2013-06-02 22:27:28",
+                "commit_hash": "1a3088b58d5160c4befbc5119cd5459e0c24a5a1",
+                "includes": "tornado/",
+                "excludes": "tornado/test/",
+                "dependency_count": 0,
+                "dependencies": {},
+                "cves": [
+                    "CVE-2012-2374",
+                    "CVE-2014-9720",
+                    "CVE-2023-28370"
+                ],
+                "cwes": [
+                    "CWE-20",
+                    "CWE-203",
+                    "CWE-601"
+                ]
+            },
+            "tornado:3.0.1": {
+                "id": 479,
+                "project": 4,
+                "published_at": "2013-04-09 03:28:29",
+                "version": "3.0.1",
+                "updated_at": "2024-03-25 17:46:13",
+                "counted_functions": 1816,
+                "counted_files": 66,
+                "nloc_total": 16130,
+                "nloc_average": 8.88,
+                "ccn_average": 1.97,
+                "commit_at": "2013-04-09 05:26:51",
+                "commit_hash": "e55590878524d4f47c8c75f38061587faf51d4c5",
+                "includes": "tornado/",
+                "excludes": "tornado/test/",
+                "dependency_count": 0,
+                "dependencies": {},
+                "cves": [
+                    "CVE-2012-2374",
+                    "CVE-2014-9720",
+                    "CVE-2023-28370"
+                ],
+                "cwes": [
+                    "CWE-20",
+                    "CWE-203",
+                    "CWE-601"
+                ]
+            },
+            "tornado:3.0": {
+                "id": 478,
+                "project": 4,
+                "published_at": "2013-03-29 13:09:15",
+                "version": "3.0",
+                "updated_at": "2024-03-25 17:46:13",
+                "counted_functions": null,
+                "counted_files": null,
+                "nloc_total": null,
+                "nloc_average": null,
+                "ccn_average": null,
+                "commit_at": null,
+                "commit_hash": null,
+                "includes": null,
+                "excludes": null,
+                "dependency_count": 0,
+                "dependencies": {},
+                "cves": [
+                    "CVE-2012-2374",
+                    "CVE-2014-9720",
+                    "CVE-2023-28370"
+                ],
+                "cwes": [
+                    "CWE-20",
+                    "CWE-203",
+                    "CWE-601"
+                ]
+            },
+            "tornado:2.4.1": {
+                "id": 477,
+                "project": 4,
+                "published_at": "2012-11-25 02:36:24",
+                "version": "2.4.1",
+                "updated_at": "2024-03-25 17:46:13",
+                "counted_functions": 1286,
+                "counted_files": 55,
+                "nloc_total": 12530,
+                "nloc_average": 9.74,
+                "ccn_average": 2.2,
+                "commit_at": "2012-11-25 03:24:44",
+                "commit_hash": "169ac4ef4983058eadc72d7dc4860e8acb2c8109",
+                "includes": "tornado/",
+                "excludes": "tornado/test/",
+                "dependency_count": 0,
+                "dependencies": {},
+                "cves": [
+                    "CVE-2012-2374",
+                    "CVE-2014-9720",
+                    "CVE-2023-28370"
+                ],
+                "cwes": [
+                    "CWE-20",
+                    "CWE-203",
+                    "CWE-601"
+                ]
+            },
+            "tornado:2.4": {
+                "id": 476,
+                "project": 4,
+                "published_at": "2012-09-04 17:53:49",
+                "version": "2.4",
+                "updated_at": "2024-03-25 17:46:13",
+                "counted_functions": null,
+                "counted_files": null,
+                "nloc_total": null,
+                "nloc_average": null,
+                "ccn_average": null,
+                "commit_at": null,
+                "commit_hash": null,
+                "includes": null,
+                "excludes": null,
+                "dependency_count": 0,
+                "dependencies": {},
+                "cves": [
+                    "CVE-2012-2374",
+                    "CVE-2014-9720",
+                    "CVE-2023-28370"
+                ],
+                "cwes": [
+                    "CWE-20",
+                    "CWE-203",
+                    "CWE-601"
+                ]
+            },
+            "tornado:2.3": {
+                "id": 475,
+                "project": 4,
+                "published_at": "2012-06-01 06:46:20",
+                "version": "2.3",
+                "updated_at": "2024-03-25 17:46:13",
+                "counted_functions": null,
+                "counted_files": null,
+                "nloc_total": null,
+                "nloc_average": null,
+                "ccn_average": null,
+                "commit_at": null,
+                "commit_hash": null,
+                "includes": null,
+                "excludes": null,
+                "dependency_count": 0,
+                "dependencies": {},
+                "cves": [
+                    "CVE-2012-2374",
+                    "CVE-2014-9720",
+                    "CVE-2023-28370"
+                ],
+                "cwes": [
+                    "CWE-20",
+                    "CWE-203",
+                    "CWE-601"
+                ]
+            },
+            "tornado:2.2.1": {
+                "id": 474,
+                "project": 4,
+                "published_at": "2014-05-22 01:35:53",
+                "version": "2.2.1",
+                "updated_at": "2024-03-25 17:46:13",
+                "counted_functions": 1132,
+                "counted_files": 51,
+                "nloc_total": 11323,
+                "nloc_average": 10.0,
+                "ccn_average": 2.28,
+                "commit_at": "2012-04-24 07:04:06",
+                "commit_hash": "8d7f9f014ee2694648654dcbcda733dfdf2052b4",
+                "includes": "tornado/",
+                "excludes": "tornado/test/",
+                "dependency_count": 0,
+                "dependencies": {},
+                "cves": [
+                    "CVE-2012-2374",
+                    "CVE-2014-9720",
+                    "CVE-2023-28370"
+                ],
+                "cwes": [
+                    "CWE-20",
+                    "CWE-203",
+                    "CWE-601"
+                ]
+            },
+            "tornado:2.2": {
+                "id": 473,
+                "project": 4,
+                "published_at": "2014-05-22 01:36:37",
+                "version": "2.2",
+                "updated_at": "2024-03-25 17:46:13",
+                "counted_functions": null,
+                "counted_files": null,
+                "nloc_total": null,
+                "nloc_average": null,
+                "ccn_average": null,
+                "commit_at": null,
+                "commit_hash": null,
+                "includes": null,
+                "excludes": null,
+                "dependency_count": 0,
+                "dependencies": {},
+                "cves": [
+                    "CVE-2012-2374",
+                    "CVE-2014-9720",
+                    "CVE-2023-28370"
+                ],
+                "cwes": [
+                    "CWE-20",
+                    "CWE-203",
+                    "CWE-601"
+                ]
+            },
+            "tornado:2.1.1": {
+                "id": 472,
+                "project": 4,
+                "published_at": "2014-05-22 01:36:58",
+                "version": "2.1.1",
+                "updated_at": "2024-03-25 17:46:13",
+                "counted_functions": 1052,
+                "counted_files": 51,
+                "nloc_total": 10563,
+                "nloc_average": 10.04,
+                "ccn_average": 2.3,
+                "commit_at": "2011-10-04 18:59:49",
+                "commit_hash": "fa159286ff3e1b5e625fc42a717c628bf9491938",
+                "includes": "tornado/",
+                "excludes": "tornado/test/",
+                "dependency_count": 0,
+                "dependencies": {},
+                "cves": [
+                    "CVE-2012-2374",
+                    "CVE-2014-9720",
+                    "CVE-2023-28370"
+                ],
+                "cwes": [
+                    "CWE-20",
+                    "CWE-203",
+                    "CWE-601"
+                ]
+            },
+            "tornado:2.1": {
+                "id": 471,
+                "project": 4,
+                "published_at": "2014-05-22 01:37:22",
+                "version": "2.1",
+                "updated_at": "2024-03-25 17:46:13",
+                "counted_functions": null,
+                "counted_files": null,
+                "nloc_total": null,
+                "nloc_average": null,
+                "ccn_average": null,
+                "commit_at": null,
+                "commit_hash": null,
+                "includes": null,
+                "excludes": null,
+                "dependency_count": 0,
+                "dependencies": {},
+                "cves": [
+                    "CVE-2012-2374",
+                    "CVE-2014-9720",
+                    "CVE-2023-28370"
+                ],
+                "cwes": [
+                    "CWE-20",
+                    "CWE-203",
+                    "CWE-601"
+                ]
+            },
+            "tornado:2.0": {
+                "id": 470,
+                "project": 4,
+                "published_at": "2014-05-22 01:37:54",
+                "version": "2.0",
+                "updated_at": "2024-03-25 17:46:13",
+                "counted_functions": null,
+                "counted_files": null,
+                "nloc_total": null,
+                "nloc_average": null,
+                "ccn_average": null,
+                "commit_at": null,
+                "commit_hash": null,
+                "includes": null,
+                "excludes": null,
+                "dependency_count": 0,
+                "dependencies": {},
+                "cves": [
+                    "CVE-2012-2374",
+                    "CVE-2014-9720",
+                    "CVE-2023-28370"
+                ],
+                "cwes": [
+                    "CWE-20",
+                    "CWE-203",
+                    "CWE-601"
+                ]
+            },
+            "tornado:1.2.1": {
+                "id": 469,
+                "project": 4,
+                "published_at": "2014-05-22 01:38:15",
+                "version": "1.2.1",
+                "updated_at": "2024-03-25 17:46:13",
+                "counted_functions": 593,
+                "counted_files": 31,
+                "nloc_total": 6963,
+                "nloc_average": 11.74,
+                "ccn_average": 2.86,
+                "commit_at": "2011-03-03 21:41:26",
+                "commit_hash": "f36fb66f02509b93a7156cd357e82d03155936a9",
+                "includes": "tornado/",
+                "excludes": "tornado/test/",
+                "dependency_count": 0,
+                "dependencies": {},
+                "cves": [
+                    "CVE-2012-2374",
+                    "CVE-2014-9720",
+                    "CVE-2023-28370"
+                ],
+                "cwes": [
+                    "CWE-20",
+                    "CWE-203",
+                    "CWE-601"
+                ]
+            },
+            "tornado:1.2": {
+                "id": 468,
+                "project": 4,
+                "published_at": "2014-05-22 01:38:41",
+                "version": "1.2",
+                "updated_at": "2024-03-25 17:46:13",
+                "counted_functions": null,
+                "counted_files": null,
+                "nloc_total": null,
+                "nloc_average": null,
+                "ccn_average": null,
+                "commit_at": null,
+                "commit_hash": null,
+                "includes": null,
+                "excludes": null,
+                "dependency_count": 0,
+                "dependencies": {},
+                "cves": [
+                    "CVE-2012-2374",
+                    "CVE-2014-9720",
+                    "CVE-2023-28370"
+                ],
+                "cwes": [
+                    "CWE-20",
+                    "CWE-203",
+                    "CWE-601"
+                ]
+            },
+            "tornado:1.1.1": {
+                "id": 467,
+                "project": 4,
+                "published_at": "2014-05-22 01:40:08",
+                "version": "1.1.1",
+                "updated_at": "2024-03-25 17:46:13",
+                "counted_functions": 506,
+                "counted_files": 27,
+                "nloc_total": 5967,
+                "nloc_average": 11.79,
+                "ccn_average": 2.88,
+                "commit_at": "2011-02-09 07:43:07",
+                "commit_hash": "b91245427fac0672d94f7db26e59ec2bd0c46f57",
+                "includes": "tornado/",
+                "excludes": "tornado/test/",
+                "dependency_count": 0,
+                "dependencies": {},
+                "cves": [
+                    "CVE-2012-2374",
+                    "CVE-2014-9720",
+                    "CVE-2023-28370"
+                ],
+                "cwes": [
+                    "CWE-20",
+                    "CWE-203",
+                    "CWE-601"
+                ]
+            },
+            "tornado:1.1": {
+                "id": 466,
+                "project": 4,
+                "published_at": "2014-05-22 01:39:08",
+                "version": "1.1",
+                "updated_at": "2024-03-25 17:46:13",
+                "counted_functions": null,
+                "counted_files": null,
+                "nloc_total": null,
+                "nloc_average": null,
+                "ccn_average": null,
+                "commit_at": null,
+                "commit_hash": null,
+                "includes": null,
+                "excludes": null,
+                "dependency_count": 0,
+                "dependencies": {},
+                "cves": [
+                    "CVE-2012-2374",
+                    "CVE-2014-9720",
+                    "CVE-2023-28370"
+                ],
+                "cwes": [
+                    "CWE-20",
+                    "CWE-203",
+                    "CWE-601"
+                ]
+            },
+            "tornado:1.0": {
+                "id": 465,
+                "project": 4,
+                "published_at": "2010-07-23 14:11:36",
+                "version": "1.0",
+                "updated_at": "2024-03-25 17:46:13",
+                "counted_functions": null,
+                "counted_files": null,
+                "nloc_total": null,
+                "nloc_average": null,
+                "ccn_average": null,
+                "commit_at": null,
+                "commit_hash": null,
+                "includes": null,
+                "excludes": null,
+                "dependency_count": 0,
+                "dependencies": {},
+                "cves": [
+                    "CVE-2012-2374",
+                    "CVE-2014-9720",
+                    "CVE-2023-28370"
+                ],
+                "cwes": [
+                    "CWE-20",
+                    "CWE-203",
+                    "CWE-601"
+                ]
+            }
+        },
+        "latest": {
+            "tornado:6.4": {
+                "id": 534,
+                "project": 4,
+                "published_at": "2023-11-29 03:39:29",
+                "version": "6.4",
+                "updated_at": "2024-03-25 17:46:13",
+                "counted_functions": 2930,
+                "counted_files": 73,
+                "nloc_total": 33528,
+                "nloc_average": 11.44,
+                "ccn_average": 1.9,
+                "commit_at": "2023-08-11 16:44:57",
+                "commit_hash": "e4d698433b44f350d4908da9ca2cac475c92dfdc",
+                "includes": "tornado/",
+                "excludes": "tornado/test/",
+                "dependency_count": 0,
+                "dependencies": {},
+                "cves": [],
+                "cwes": [],
+                "bandit_report": {
+                    "id": 1690,
+                    "release": "tornado:6.3.3",
+                    "updated_at": "2024-03-28 10:48:38",
+                    "issues_total": 72,
+                    "files_with_issues": 28,
+                    "files_skipped": 0,
+                    "confidence_high_count": 42,
+                    "confidence_medium_count": 30,
+                    "confidence_low_count": 0,
+                    "confidence_undefined_count": 0,
+                    "severity_high_count": 7,
+                    "severity_medium_count": 4,
+                    "severity_low_count": 61,
+                    "severity_undefined_count": 0,
+                    "severity_h_confidence_h_count": 7,
+                    "severity_h_confidence_m_count": 0,
+                    "severity_h_confidence_l_count": 0,
+                    "severity_m_confidence_h_count": 3,
+                    "severity_m_confidence_m_count": 1,
+                    "severity_m_confidence_l_count": 0,
+                    "severity_l_confidence_h_count": 32,
+                    "severity_l_confidence_m_count": 29,
+                    "severity_l_confidence_l_count": 0,
+                    "loc": 31744,
+                    "nosec": 0,
+                    "skipped_tests": 0,
+                    "issues": [
+                        {
+                            "id": 268652,
+                            "report": 1690,
+                            "description": "Possible hardcoded password: 'https://api.twitter.com/oauth/request_token'",
+                            "filename": "/Users/zakariasabbagh/Documents/GitHub/private/securipy/repositories/tornado/tornado/auth.py",
+                            "confidence": "medium",
+                            "severity": "low",
+                            "more_info": "https://bandit.readthedocs.io/en/1.7.7/plugins/b105_hardcoded_password_string.html",
+                            "test_id": "B105",
+                            "test_name": "hardcoded_password_string",
+                            "code": "709 \n710     _OAUTH_REQUEST_TOKEN_URL = \"https://api.twitter.com/oauth/request_token\"\n711     _OAUTH_ACCESS_TOKEN_URL = \"https://api.twitter.com/oauth/access_token\"\n",
+                            "lines": "710",
+                            "cwe_id": "CWE-259"
+                        },
+                        {
+                            "id": 268653,
+                            "report": 1690,
+                            "description": "Possible hardcoded password: 'https://api.twitter.com/oauth/access_token'",
+                            "filename": "/Users/zakariasabbagh/Documents/GitHub/private/securipy/repositories/tornado/tornado/auth.py",
+                            "confidence": "medium",
+                            "severity": "low",
+                            "more_info": "https://bandit.readthedocs.io/en/1.7.7/plugins/b105_hardcoded_password_string.html",
+                            "test_id": "B105",
+                            "test_name": "hardcoded_password_string",
+                            "code": "710     _OAUTH_REQUEST_TOKEN_URL = \"https://api.twitter.com/oauth/request_token\"\n711     _OAUTH_ACCESS_TOKEN_URL = \"https://api.twitter.com/oauth/access_token\"\n712     _OAUTH_AUTHORIZE_URL = \"https://api.twitter.com/oauth/authorize\"\n",
+                            "lines": "711",
+                            "cwe_id": "CWE-259"
+                        },
+                        {
+                            "id": 268654,
+                            "report": 1690,
+                            "description": "Possible hardcoded password: 'https://www.googleapis.com/oauth2/v4/token'",
+                            "filename": "/Users/zakariasabbagh/Documents/GitHub/private/securipy/repositories/tornado/tornado/auth.py",
+                            "confidence": "medium",
+                            "severity": "low",
+                            "more_info": "https://bandit.readthedocs.io/en/1.7.7/plugins/b105_hardcoded_password_string.html",
+                            "test_id": "B105",
+                            "test_name": "hardcoded_password_string",
+                            "code": "852     _OAUTH_AUTHORIZE_URL = \"https://accounts.google.com/o/oauth2/v2/auth\"\n853     _OAUTH_ACCESS_TOKEN_URL = \"https://www.googleapis.com/oauth2/v4/token\"\n854     _OAUTH_USERINFO_URL = \"https://www.googleapis.com/oauth2/v1/userinfo\"\n",
+                            "lines": "853",
+                            "cwe_id": "CWE-259"
+                        },
+                        {
+                            "id": 268655,
+                            "report": 1690,
+                            "description": "Possible hardcoded password: 'https://graph.facebook.com/oauth/access_token?'",
+                            "filename": "/Users/zakariasabbagh/Documents/GitHub/private/securipy/repositories/tornado/tornado/auth.py",
+                            "confidence": "medium",
+                            "severity": "low",
+                            "more_info": "https://bandit.readthedocs.io/en/1.7.7/plugins/b105_hardcoded_password_string.html",
+                            "test_id": "B105",
+                            "test_name": "hardcoded_password_string",
+                            "code": "951 \n952     _OAUTH_ACCESS_TOKEN_URL = \"https://graph.facebook.com/oauth/access_token?\"\n953     _OAUTH_AUTHORIZE_URL = \"https://www.facebook.com/dialog/oauth?\"\n",
+                            "lines": "952",
+                            "cwe_id": "CWE-259"
+                        },
+                        {
+                            "id": 268656,
+                            "report": 1690,
+                            "description": "Consider possible security implications associated with the subprocess module.",
+                            "filename": "/Users/zakariasabbagh/Documents/GitHub/private/securipy/repositories/tornado/tornado/autoreload.py",
+                            "confidence": "high",
+                            "severity": "low",
+                            "more_info": "https://bandit.readthedocs.io/en/1.7.7/blacklists/blacklist_imports.html#b404-import-subprocess",
+                            "test_id": "B404",
+                            "test_name": "blacklist",
+                            "code": "83 import types\n84 import subprocess\n85 import weakref\n",
+                            "lines": "84",
+                            "cwe_id": "CWE-78"
+                        },
+                        {
+                            "id": 268657,
+                            "report": 1690,
+                            "description": "subprocess call - check for execution of untrusted input.",
+                            "filename": "/Users/zakariasabbagh/Documents/GitHub/private/securipy/repositories/tornado/tornado/autoreload.py",
+                            "confidence": "high",
+                            "severity": "low",
+                            "more_info": "https://bandit.readthedocs.io/en/1.7.7/plugins/b603_subprocess_without_shell_equals_true.html",
+                            "test_id": "B603",
+                            "test_name": "subprocess_without_shell_equals_true",
+                            "code": "236     if not _has_execv:\n237         subprocess.Popen([sys.executable] + argv)\n238         os._exit(0)\n",
+                            "lines": "237",
+                            "cwe_id": "CWE-78"
+                        },
+                        {
+                            "id": 268658,
+                            "report": 1690,
+                            "description": "Starting a process without a shell.",
+                            "filename": "/Users/zakariasabbagh/Documents/GitHub/private/securipy/repositories/tornado/tornado/autoreload.py",
+                            "confidence": "medium",
+                            "severity": "low",
+                            "more_info": "https://bandit.readthedocs.io/en/1.7.7/plugins/b606_start_process_with_no_shell.html",
+                            "test_id": "B606",
+                            "test_name": "start_process_with_no_shell",
+                            "code": "240         try:\n241             os.execv(sys.executable, [sys.executable] + argv)\n242         except OSError:\n",
+                            "lines": "241",
+                            "cwe_id": "CWE-78"
+                        },
+                        {
+                            "id": 268659,
+                            "report": 1690,
+                            "description": "Starting a process without a shell.",
+                            "filename": "/Users/zakariasabbagh/Documents/GitHub/private/securipy/repositories/tornado/tornado/autoreload.py",
+                            "confidence": "medium",
+                            "severity": "low",
+                            "more_info": "https://bandit.readthedocs.io/en/1.7.7/plugins/b606_start_process_with_no_shell.html",
+                            "test_id": "B606",
+                            "test_name": "start_process_with_no_shell",
+                            "code": "253             # this error specifically.\n254             os.spawnv(\n255                 os.P_NOWAIT, sys.executable, [sys.executable] + argv  # type: ignore\n256             )\n257             # At this point the IOLoop has been closed and finally\n",
+                            "lines": "254, 255, 256",
+                            "cwe_id": "CWE-78"
+                        },
+                        {
+                            "id": 268660,
+                            "report": 1690,
+                            "description": "Try, Except, Pass detected.",
+                            "filename": "/Users/zakariasabbagh/Documents/GitHub/private/securipy/repositories/tornado/tornado/http1connection.py",
+                            "confidence": "high",
+                            "severity": "low",
+                            "more_info": "https://bandit.readthedocs.io/en/1.7.7/plugins/b110_try_except_pass.html",
+                            "test_id": "B110",
+                            "test_name": "try_except_pass",
+                            "code": "805             await self._serving_future\n806         except Exception:\n807             pass\n808 \n",
+                            "lines": "806, 807",
+                            "cwe_id": "CWE-703"
+                        },
+                        {
+                            "id": 268661,
+                            "report": 1690,
+                            "description": "Possible hardcoded password: ''",
+                            "filename": "/Users/zakariasabbagh/Documents/GitHub/private/securipy/repositories/tornado/tornado/httpclient.py",
+                            "confidence": "medium",
+                            "severity": "low",
+                            "more_info": "https://bandit.readthedocs.io/en/1.7.7/plugins/b106_hardcoded_password_funcarg.html",
+                            "test_id": "B106",
+                            "test_name": "hardcoded_password_funcarg",
+                            "code": "346     # implementations.\n347     _DEFAULTS = dict(\n348         connect_timeout=20.0,\n349         request_timeout=20.0,\n350         follow_redirects=True,\n351         max_redirects=5,\n352         decompress_response=True,\n353         proxy_password=\"\",\n354         allow_nonstandard_methods=False,\n355         validate_cert=True,\n356     )\n357 \n",
+                            "lines": "347, 348, 349, 350, 351, 352, 353, 354, 355, 356",
+                            "cwe_id": "CWE-259"
+                        },
+                        {
+                            "id": 268662,
+                            "report": 1690,
+                            "description": "Possible binding to all interfaces.",
+                            "filename": "/Users/zakariasabbagh/Documents/GitHub/private/securipy/repositories/tornado/tornado/httpserver.py",
+                            "confidence": "medium",
+                            "severity": "medium",
+                            "more_info": "https://bandit.readthedocs.io/en/1.7.7/plugins/b104_hardcoded_bind_all_interfaces.html",
+                            "test_id": "B104",
+                            "test_name": "hardcoded_bind_all_interfaces",
+                            "code": "321             # Unix (or other) socket; fake the remote address.\n322             self.remote_ip = \"0.0.0.0\"\n323         if protocol:\n",
+                            "lines": "322",
+                            "cwe_id": "CWE-605"
+                        },
+                        {
+                            "id": 268663,
+                            "report": 1690,
+                            "description": "Try, Except, Pass detected.",
+                            "filename": "/Users/zakariasabbagh/Documents/GitHub/private/securipy/repositories/tornado/tornado/httputil.py",
+                            "confidence": "high",
+                            "severity": "low",
+                            "more_info": "https://bandit.readthedocs.io/en/1.7.7/plugins/b110_try_except_pass.html",
+                            "test_id": "B110",
+                            "test_name": "try_except_pass",
+                            "code": "395                     parsed = parse_cookie(self.headers[\"Cookie\"])\n396                 except Exception:\n397                     pass\n398                 else:\n",
+                            "lines": "396, 397",
+                            "cwe_id": "CWE-703"
+                        },
+                        {
+                            "id": 268664,
+                            "report": 1690,
+                            "description": "Try, Except, Pass detected.",
+                            "filename": "/Users/zakariasabbagh/Documents/GitHub/private/securipy/repositories/tornado/tornado/httputil.py",
+                            "confidence": "high",
+                            "severity": "low",
+                            "more_info": "https://bandit.readthedocs.io/en/1.7.7/plugins/b110_try_except_pass.html",
+                            "test_id": "B110",
+                            "test_name": "try_except_pass",
+                            "code": "401                             self._cookies[k] = v\n402                         except Exception:\n403                             # SimpleCookie imposes some restrictions on keys;\n404                             # parse_cookie does not. Discard any cookies\n405                             # with disallowed keys.\n406                             pass\n407         return self._cookies\n",
+                            "lines": "402, 403, 404, 405, 406",
+                            "cwe_id": "CWE-703"
+                        },
+                        {
+                            "id": 268665,
+                            "report": 1690,
+                            "description": "Standard pseudo-random generators are not suitable for security/cryptographic purposes.",
+                            "filename": "/Users/zakariasabbagh/Documents/GitHub/private/securipy/repositories/tornado/tornado/ioloop.py",
+                            "confidence": "high",
+                            "severity": "low",
+                            "more_info": "https://bandit.readthedocs.io/en/1.7.7/blacklists/blacklist_calls.html#b311-random",
+                            "test_id": "B311",
+                            "test_name": "blacklist",
+                            "code": "935             # apply jitter fraction\n936             callback_time_sec *= 1 + (self.jitter * (random.random() - 0.5))\n937         if self._next_timeout <= current_time:\n",
+                            "lines": "936",
+                            "cwe_id": "CWE-330"
+                        },
+                        {
+                            "id": 268666,
+                            "report": 1690,
+                            "description": "Try, Except, Pass detected.",
+                            "filename": "/Users/zakariasabbagh/Documents/GitHub/private/securipy/repositories/tornado/tornado/log.py",
+                            "confidence": "high",
+                            "severity": "low",
+                            "more_info": "https://bandit.readthedocs.io/en/1.7.7/plugins/b110_try_except_pass.html",
+                            "test_id": "B110",
+                            "test_name": "try_except_pass",
+                            "code": "66                     return True\n67     except Exception:\n68         # Very broad exception handling because it's always better to\n69         # fall back to non-colored logs than to break at startup.\n70         pass\n71     return False\n",
+                            "lines": "67, 68, 69, 70",
+                            "cwe_id": "CWE-703"
+                        },
+                        {
+                            "id": 268667,
+                            "report": 1690,
+                            "description": "Consider possible security implications associated with the subprocess module.",
+                            "filename": "/Users/zakariasabbagh/Documents/GitHub/private/securipy/repositories/tornado/tornado/process.py",
+                            "confidence": "high",
+                            "severity": "low",
+                            "more_info": "https://bandit.readthedocs.io/en/1.7.7/blacklists/blacklist_imports.html#b404-import-subprocess",
+                            "test_id": "B404",
+                            "test_name": "blacklist",
+                            "code": "22 import signal\n23 import subprocess\n24 import sys\n",
+                            "lines": "23",
+                            "cwe_id": "CWE-78"
+                        },
+                        {
+                            "id": 268668,
+                            "report": 1690,
+                            "description": "subprocess call - check for execution of untrusted input.",
+                            "filename": "/Users/zakariasabbagh/Documents/GitHub/private/securipy/repositories/tornado/tornado/process.py",
+                            "confidence": "high",
+                            "severity": "low",
+                            "more_info": "https://bandit.readthedocs.io/en/1.7.7/plugins/b603_subprocess_without_shell_equals_true.html",
+                            "test_id": "B603",
+                            "test_name": "subprocess_without_shell_equals_true",
+                            "code": "239         try:\n240             self.proc = subprocess.Popen(*args, **kwargs)\n241         except:\n",
+                            "lines": "240",
+                            "cwe_id": "CWE-78"
+                        },
+                        {
+                            "id": 268669,
+                            "report": 1690,
+                            "description": "Try, Except, Pass detected.",
+                            "filename": "/Users/zakariasabbagh/Documents/GitHub/private/securipy/repositories/tornado/tornado/test/asyncio_test.py",
+                            "confidence": "high",
+                            "severity": "low",
+                            "more_info": "https://bandit.readthedocs.io/en/1.7.7/plugins/b110_try_except_pass.html",
+                            "test_id": "B110",
+                            "test_name": "try_except_pass",
+                            "code": "120             loop = asyncio.get_event_loop_policy().get_event_loop()\n121         except Exception:\n122             # We may not have a current event loop at this point.\n123             pass\n124         else:\n",
+                            "lines": "121, 122, 123",
+                            "cwe_id": "CWE-703"
+                        },
+                        {
+                            "id": 268670,
+                            "report": 1690,
+                            "description": "Possible hardcoded password: 'qwer'",
+                            "filename": "/Users/zakariasabbagh/Documents/GitHub/private/securipy/repositories/tornado/tornado/test/auth_test.py",
+                            "confidence": "medium",
+                            "severity": "low",
+                            "more_info": "https://bandit.readthedocs.io/en/1.7.7/plugins/b106_hardcoded_password_funcarg.html",
+                            "test_id": "B106",
+                            "test_name": "hardcoded_password_funcarg",
+                            "code": "62     def _oauth_consumer_token(self):\n63         return dict(key=\"asdf\", secret=\"qwer\")\n64 \n",
+                            "lines": "63",
+                            "cwe_id": "CWE-259"
+                        },
+                        {
+                            "id": 268671,
+                            "report": 1690,
+                            "description": "Possible hardcoded password: '5678'",
+                            "filename": "/Users/zakariasabbagh/Documents/GitHub/private/securipy/repositories/tornado/tornado/test/auth_test.py",
+                            "confidence": "medium",
+                            "severity": "low",
+                            "more_info": "https://bandit.readthedocs.io/en/1.7.7/plugins/b106_hardcoded_password_funcarg.html",
+                            "test_id": "B106",
+                            "test_name": "hardcoded_password_funcarg",
+                            "code": "80             raise Exception(\"failing in get_user\")\n81         if access_token != dict(key=\"uiop\", secret=\"5678\"):\n82             raise Exception(\"incorrect access token %r\" % access_token)\n",
+                            "lines": "81",
+                            "cwe_id": "CWE-259"
+                        },
+                        {
+                            "id": 268672,
+                            "report": 1690,
+                            "description": "Possible hardcoded password: 'qwer'",
+                            "filename": "/Users/zakariasabbagh/Documents/GitHub/private/securipy/repositories/tornado/tornado/test/auth_test.py",
+                            "confidence": "medium",
+                            "severity": "low",
+                            "more_info": "https://bandit.readthedocs.io/en/1.7.7/plugins/b106_hardcoded_password_funcarg.html",
+                            "test_id": "B106",
+                            "test_name": "hardcoded_password_funcarg",
+                            "code": "107     def _oauth_consumer_token(self):\n108         return dict(key=\"asdf\", secret=\"qwer\")\n109 \n",
+                            "lines": "108",
+                            "cwe_id": "CWE-259"
+                        },
+                        {
+                            "id": 268673,
+                            "report": 1690,
+                            "description": "Possible hardcoded password: '5678'",
+                            "filename": "/Users/zakariasabbagh/Documents/GitHub/private/securipy/repositories/tornado/tornado/test/auth_test.py",
+                            "confidence": "medium",
+                            "severity": "low",
+                            "more_info": "https://bandit.readthedocs.io/en/1.7.7/plugins/b106_hardcoded_password_funcarg.html",
+                            "test_id": "B106",
+                            "test_name": "hardcoded_password_funcarg",
+                            "code": "112             \"http://www.example.com/api/asdf\",\n113             dict(key=\"uiop\", secret=\"5678\"),\n114             parameters=dict(foo=\"bar\"),\n",
+                            "lines": "113",
+                            "cwe_id": "CWE-259"
+                        },
+                        {
+                            "id": 268674,
+                            "report": 1690,
+                            "description": "Possible hardcoded password: 'asdf'",
+                            "filename": "/Users/zakariasabbagh/Documents/GitHub/private/securipy/repositories/tornado/tornado/test/auth_test.py",
+                            "confidence": "medium",
+                            "severity": "low",
+                            "more_info": "https://bandit.readthedocs.io/en/1.7.7/plugins/b106_hardcoded_password_funcarg.html",
+                            "test_id": "B106",
+                            "test_name": "hardcoded_password_funcarg",
+                            "code": "163     def get(self):\n164         self.write(dict(access_token=\"asdf\", expires_in=3600))\n165 \n",
+                            "lines": "164",
+                            "cwe_id": "CWE-259"
+                        },
+                        {
+                            "id": 268675,
+                            "report": 1690,
+                            "description": "Possible hardcoded password: 'vbnm'",
+                            "filename": "/Users/zakariasabbagh/Documents/GitHub/private/securipy/repositories/tornado/tornado/test/auth_test.py",
+                            "confidence": "medium",
+                            "severity": "low",
+                            "more_info": "https://bandit.readthedocs.io/en/1.7.7/plugins/b106_hardcoded_password_funcarg.html",
+                            "test_id": "B106",
+                            "test_name": "hardcoded_password_funcarg",
+                            "code": "229                 \"/users/show/%s\" % self.get_argument(\"name\"),\n230                 access_token=dict(key=\"hjkl\", secret=\"vbnm\"),\n231             )\n",
+                            "lines": "230",
+                            "cwe_id": "CWE-259"
+                        },
+                        {
+                            "id": 268676,
+                            "report": 1690,
+                            "description": "Possible hardcoded password: 'test_twitter_consumer_secret'",
+                            "filename": "/Users/zakariasabbagh/Documents/GitHub/private/securipy/repositories/tornado/tornado/test/auth_test.py",
+                            "confidence": "medium",
+                            "severity": "low",
+                            "more_info": "https://bandit.readthedocs.io/en/1.7.7/plugins/b106_hardcoded_password_funcarg.html",
+                            "test_id": "B106",
+                            "test_name": "hardcoded_password_funcarg",
+                            "code": "273     def get_app(self):\n274         return Application(\n275             [\n276                 # test endpoints\n277                 (\"/openid/client/login\", OpenIdClientLoginHandler, dict(test=self)),\n278                 (\n279                     \"/oauth10/client/login\",\n280                     OAuth1ClientLoginHandler,\n281                     dict(test=self, version=\"1.0\"),\n282                 ),\n283                 (\n284                     \"/oauth10/client/request_params\",\n285                     OAuth1ClientRequestParametersHandler,\n286                     dict(version=\"1.0\"),\n287                 ),\n288                 (\n289                     \"/oauth10a/client/login\",\n290                     OAuth1ClientLoginHandler,\n291                     dict(test=self, version=\"1.0a\"),\n292                 ),\n293                 (\n294                     \"/oauth10a/client/login_coroutine\",\n295                     OAuth1ClientLoginCoroutineHandler,\n296                     dict(test=self, version=\"1.0a\"),\n297                 ),\n298                 (\n299                     \"/oauth10a/client/request_params\",\n300                     OAuth1ClientRequestParametersHandler,\n301                     dict(version=\"1.0a\"),\n302                 ),\n303                 (\"/oauth2/client/login\", OAuth2ClientLoginHandler, dict(test=self)),\n304                 (\"/facebook/client/login\", FacebookClientLoginHandler, dict(test=self)),\n305                 (\"/twitter/client/login\", TwitterClientLoginHandler, dict(test=self)),\n306                 (\n307                     \"/twitter/client/authenticate\",\n308                     TwitterClientAuthenticateHandler,\n309                     dict(test=self),\n310                 ),\n311                 (\n312                     \"/twitter/client/login_gen_coroutine\",\n313                     TwitterClientLoginGenCoroutineHandler,\n314                     dict(test=self),\n315                 ),\n316                 (\n317                     \"/twitter/client/show_user\",\n318                     TwitterClientShowUserHandler,\n319                     dict(test=self),\n320                 ),\n321                 # simulated servers\n322                 (\"/openid/server/authenticate\", OpenIdServerAuthenticateHandler),\n323                 (\"/oauth1/server/request_token\", OAuth1ServerRequestTokenHandler),\n324                 (\"/oauth1/server/access_token\", OAuth1ServerAccessTokenHandler),\n325                 (\"/facebook/server/access_token\", FacebookServerAccessTokenHandler),\n326                 (\"/facebook/server/me\", FacebookServerMeHandler),\n327                 (\"/twitter/server/access_token\", TwitterServerAccessTokenHandler),\n328                 (r\"/twitter/api/users/show/(.*)\\.json\", TwitterServerShowUserHandler),\n329                 (\n330                     r\"/twitter/api/account/verify_credentials\\.json\",\n331                     TwitterServerVerifyCredentialsHandler,\n332                 ),\n333             ],\n334             http_client=self.http_client,\n335             twitter_consumer_key=\"test_twitter_consumer_key\",\n336             twitter_consumer_secret=\"test_twitter_consumer_secret\",\n337             facebook_api_key=\"test_facebook_api_key\",\n338             facebook_secret=\"test_facebook_secret\",\n339         )\n340 \n",
+                            "lines": "274, 275, 276, 277, 278, 279, 280, 281, 282, 283, 284, 285, 286, 287, 288, 289, 290, 291, 292, 293, 294, 295, 296, 297, 298, 299, 300, 301, 302, 303, 304, 305, 306, 307, 308, 309, 310, 311, 312, 313, 314, 315, 316, 317, 318, 319, 320, 321, 322, 323, 324, 325, 326, 327, 328, 329, 330, 331, 332, 333, 334, 335, 336, 337, 338, 339",
+                            "cwe_id": "CWE-259"
+                        },
+                        {
+                            "id": 268677,
+                            "report": 1690,
+                            "description": "Possible hardcoded password: '5678'",
+                            "filename": "/Users/zakariasabbagh/Documents/GitHub/private/securipy/repositories/tornado/tornado/test/auth_test.py",
+                            "confidence": "medium",
+                            "severity": "low",
+                            "more_info": "https://bandit.readthedocs.io/en/1.7.7/plugins/b106_hardcoded_password_funcarg.html",
+                            "test_id": "B106",
+                            "test_name": "hardcoded_password_funcarg",
+                            "code": "379         self.assertEqual(parsed[\"email\"], \"foo@example.com\")\n380         self.assertEqual(parsed[\"access_token\"], dict(key=\"uiop\", secret=\"5678\"))\n381 \n",
+                            "lines": "380",
+                            "cwe_id": "CWE-259"
+                        },
+                        {
+                            "id": 268678,
+                            "report": 1690,
+                            "description": "Possible hardcoded password: '5678'",
+                            "filename": "/Users/zakariasabbagh/Documents/GitHub/private/securipy/repositories/tornado/tornado/test/auth_test.py",
+                            "confidence": "medium",
+                            "severity": "low",
+                            "more_info": "https://bandit.readthedocs.io/en/1.7.7/plugins/b106_hardcoded_password_funcarg.html",
+                            "test_id": "B106",
+                            "test_name": "hardcoded_password_funcarg",
+                            "code": "421         self.assertEqual(parsed[\"email\"], \"foo@example.com\")\n422         self.assertEqual(parsed[\"access_token\"], dict(key=\"uiop\", secret=\"5678\"))\n423 \n",
+                            "lines": "422",
+                            "cwe_id": "CWE-259"
+                        },
+                        {
+                            "id": 268679,
+                            "report": 1690,
+                            "description": "Consider possible security implications associated with the subprocess module.",
+                            "filename": "/Users/zakariasabbagh/Documents/GitHub/private/securipy/repositories/tornado/tornado/test/autoreload_test.py",
+                            "confidence": "high",
+                            "severity": "low",
+                            "more_info": "https://bandit.readthedocs.io/en/1.7.7/blacklists/blacklist_imports.html#b404-import-subprocess",
+                            "test_id": "B404",
+                            "test_name": "blacklist",
+                            "code": "2 import shutil\n3 import subprocess\n4 from subprocess import Popen\n",
+                            "lines": "3",
+                            "cwe_id": "CWE-78"
+                        },
+                        {
+                            "id": 268680,
+                            "report": 1690,
+                            "description": "Consider possible security implications associated with the subprocess module.",
+                            "filename": "/Users/zakariasabbagh/Documents/GitHub/private/securipy/repositories/tornado/tornado/test/autoreload_test.py",
+                            "confidence": "high",
+                            "severity": "low",
+                            "more_info": "https://bandit.readthedocs.io/en/1.7.7/blacklists/blacklist_imports.html#b404-import-subprocess",
+                            "test_id": "B404",
+                            "test_name": "blacklist",
+                            "code": "3 import subprocess\n4 from subprocess import Popen\n5 import sys\n",
+                            "lines": "4",
+                            "cwe_id": "CWE-78"
+                        },
+                        {
+                            "id": 268681,
+                            "report": 1690,
+                            "description": "subprocess call - check for execution of untrusted input.",
+                            "filename": "/Users/zakariasabbagh/Documents/GitHub/private/securipy/repositories/tornado/tornado/test/autoreload_test.py",
+                            "confidence": "high",
+                            "severity": "low",
+                            "more_info": "https://bandit.readthedocs.io/en/1.7.7/plugins/b603_subprocess_without_shell_equals_true.html",
+                            "test_id": "B603",
+                            "test_name": "subprocess_without_shell_equals_true",
+                            "code": "55 \n56         p = Popen(\n57             [sys.executable, \"-m\", \"testapp\"],\n58             stdout=subprocess.PIPE,\n59             cwd=self.path,\n60             env=dict(os.environ, PYTHONPATH=pythonpath),\n61             universal_newlines=True,\n62         )\n63         out = p.communicate()[0]\n",
+                            "lines": "56, 57, 58, 59, 60, 61, 62",
+                            "cwe_id": "CWE-78"
+                        },
+                        {
+                            "id": 268682,
+                            "report": 1690,
+                            "description": "subprocess call - check for execution of untrusted input.",
+                            "filename": "/Users/zakariasabbagh/Documents/GitHub/private/securipy/repositories/tornado/tornado/test/autoreload_test.py",
+                            "confidence": "high",
+                            "severity": "low",
+                            "more_info": "https://bandit.readthedocs.io/en/1.7.7/plugins/b603_subprocess_without_shell_equals_true.html",
+                            "test_id": "B603",
+                            "test_name": "subprocess_without_shell_equals_true",
+                            "code": "107 \n108         autoreload_proc = Popen(\n109             [sys.executable, \"-m\", \"tornado.autoreload\", \"-m\", \"testapp\"],\n110             stdout=subprocess.PIPE,\n111             cwd=self.path,\n112             env=dict(os.environ, PYTHONPATH=pythonpath),\n113             universal_newlines=True,\n114         )\n115 \n",
+                            "lines": "108, 109, 110, 111, 112, 113, 114",
+                            "cwe_id": "CWE-78"
+                        },
+                        {
+                            "id": 268683,
+                            "report": 1690,
+                            "description": "Use of weak MD5 hash for security. Consider usedforsecurity=False",
+                            "filename": "/Users/zakariasabbagh/Documents/GitHub/private/securipy/repositories/tornado/tornado/test/curl_httpclient_test.py",
+                            "confidence": "high",
+                            "severity": "high",
+                            "more_info": "https://bandit.readthedocs.io/en/1.7.7/plugins/b324_hashlib.html",
+                            "test_id": "B324",
+                            "test_name": "hashlib",
+                            "code": "53             assert param_dict[\"uri\"] == self.request.path\n54             h1 = md5(\n55                 utf8(\"%s:%s:%s\" % (self.username, realm, self.password))\n56             ).hexdigest()\n57             h2 = md5(\n",
+                            "lines": "54, 55, 56",
+                            "cwe_id": "CWE-327"
+                        },
+                        {
+                            "id": 268684,
+                            "report": 1690,
+                            "description": "Use of weak MD5 hash for security. Consider usedforsecurity=False",
+                            "filename": "/Users/zakariasabbagh/Documents/GitHub/private/securipy/repositories/tornado/tornado/test/curl_httpclient_test.py",
+                            "confidence": "high",
+                            "severity": "high",
+                            "more_info": "https://bandit.readthedocs.io/en/1.7.7/plugins/b324_hashlib.html",
+                            "test_id": "B324",
+                            "test_name": "hashlib",
+                            "code": "56             ).hexdigest()\n57             h2 = md5(\n58                 utf8(\"%s:%s\" % (self.request.method, self.request.path))\n59             ).hexdigest()\n60             digest = md5(utf8(\"%s:%s:%s\" % (h1, nonce, h2))).hexdigest()\n",
+                            "lines": "57, 58, 59",
+                            "cwe_id": "CWE-327"
+                        },
+                        {
+                            "id": 268685,
+                            "report": 1690,
+                            "description": "Use of weak MD5 hash for security. Consider usedforsecurity=False",
+                            "filename": "/Users/zakariasabbagh/Documents/GitHub/private/securipy/repositories/tornado/tornado/test/curl_httpclient_test.py",
+                            "confidence": "high",
+                            "severity": "high",
+                            "more_info": "https://bandit.readthedocs.io/en/1.7.7/plugins/b324_hashlib.html",
+                            "test_id": "B324",
+                            "test_name": "hashlib",
+                            "code": "59             ).hexdigest()\n60             digest = md5(utf8(\"%s:%s:%s\" % (h1, nonce, h2))).hexdigest()\n61             if digest == param_dict[\"response\"]:\n",
+                            "lines": "60",
+                            "cwe_id": "CWE-327"
+                        },
+                        {
+                            "id": 268686,
+                            "report": 1690,
+                            "description": "Possible hardcoded password: 'bar'",
+                            "filename": "/Users/zakariasabbagh/Documents/GitHub/private/securipy/repositories/tornado/tornado/test/curl_httpclient_test.py",
+                            "confidence": "medium",
+                            "severity": "low",
+                            "more_info": "https://bandit.readthedocs.io/en/1.7.7/plugins/b106_hardcoded_password_funcarg.html",
+                            "test_id": "B106",
+                            "test_name": "hardcoded_password_funcarg",
+                            "code": "108     def test_digest_auth(self):\n109         response = self.fetch(\n110             \"/digest\", auth_mode=\"digest\", auth_username=\"foo\", auth_password=\"bar\"\n111         )\n112         self.assertEqual(response.body, b\"ok\")\n",
+                            "lines": "109, 110, 111",
+                            "cwe_id": "CWE-259"
+                        },
+                        {
+                            "id": 268687,
+                            "report": 1690,
+                            "description": "Possible hardcoded password: 'bar\u30e6\u00a3'",
+                            "filename": "/Users/zakariasabbagh/Documents/GitHub/private/securipy/repositories/tornado/tornado/test/curl_httpclient_test.py",
+                            "confidence": "medium",
+                            "severity": "low",
+                            "more_info": "https://bandit.readthedocs.io/en/1.7.7/plugins/b106_hardcoded_password_funcarg.html",
+                            "test_id": "B106",
+                            "test_name": "hardcoded_password_funcarg",
+                            "code": "122     def test_digest_auth_non_ascii(self):\n123         response = self.fetch(\n124             \"/digest_non_ascii\",\n125             auth_mode=\"digest\",\n126             auth_username=\"foo\",\n127             auth_password=\"bar\u30e6\u00a3\",\n128         )\n129         self.assertEqual(response.body, b\"ok\")\n",
+                            "lines": "123, 124, 125, 126, 127, 128",
+                            "cwe_id": "CWE-259"
+                        },
+                        {
+                            "id": 268688,
+                            "report": 1690,
+                            "description": "Consider possible security implications associated with the subprocess module.",
+                            "filename": "/Users/zakariasabbagh/Documents/GitHub/private/securipy/repositories/tornado/tornado/test/httpclient_test.py",
+                            "confidence": "high",
+                            "severity": "low",
+                            "more_info": "https://bandit.readthedocs.io/en/1.7.7/blacklists/blacklist_imports.html#b404-import-subprocess",
+                            "test_id": "B404",
+                            "test_name": "blacklist",
+                            "code": "8 from io import BytesIO\n9 import subprocess\n10 import sys\n",
+                            "lines": "9",
+                            "cwe_id": "CWE-78"
+                        },
+                        {
+                            "id": 268689,
+                            "report": 1690,
+                            "description": "Possible hardcoded password: 'open sesame'",
+                            "filename": "/Users/zakariasabbagh/Documents/GitHub/private/securipy/repositories/tornado/tornado/test/httpclient_test.py",
+                            "confidence": "medium",
+                            "severity": "low",
+                            "more_info": "https://bandit.readthedocs.io/en/1.7.7/plugins/b106_hardcoded_password_funcarg.html",
+                            "test_id": "B106",
+                            "test_name": "hardcoded_password_funcarg",
+                            "code": "267         self.assertEqual(\n268             self.fetch(\n269                 \"/auth\", auth_username=\"Aladdin\", auth_password=\"open sesame\"\n270             ).body,\n271             b\"Basic QWxhZGRpbjpvcGVuIHNlc2FtZQ==\",\n",
+                            "lines": "268, 269, 270",
+                            "cwe_id": "CWE-259"
+                        },
+                        {
+                            "id": 268690,
+                            "report": 1690,
+                            "description": "Possible hardcoded password: 'open sesame'",
+                            "filename": "/Users/zakariasabbagh/Documents/GitHub/private/securipy/repositories/tornado/tornado/test/httpclient_test.py",
+                            "confidence": "medium",
+                            "severity": "low",
+                            "more_info": "https://bandit.readthedocs.io/en/1.7.7/plugins/b106_hardcoded_password_funcarg.html",
+                            "test_id": "B106",
+                            "test_name": "hardcoded_password_funcarg",
+                            "code": "275         self.assertEqual(\n276             self.fetch(\n277                 \"/auth\",\n278                 auth_username=\"Aladdin\",\n279                 auth_password=\"open sesame\",\n280                 auth_mode=\"basic\",\n281             ).body,\n282             b\"Basic QWxhZGRpbjpvcGVuIHNlc2FtZQ==\",\n",
+                            "lines": "276, 277, 278, 279, 280, 281",
+                            "cwe_id": "CWE-259"
+                        },
+                        {
+                            "id": 268691,
+                            "report": 1690,
+                            "description": "Possible hardcoded password: '123\u00a3'",
+                            "filename": "/Users/zakariasabbagh/Documents/GitHub/private/securipy/repositories/tornado/tornado/test/httpclient_test.py",
+                            "confidence": "medium",
+                            "severity": "low",
+                            "more_info": "https://bandit.readthedocs.io/en/1.7.7/plugins/b106_hardcoded_password_funcarg.html",
+                            "test_id": "B106",
+                            "test_name": "hardcoded_password_funcarg",
+                            "code": "287         self.assertEqual(\n288             self.fetch(\"/auth\", auth_username=\"test\", auth_password=\"123\u00a3\").body,\n289             b\"Basic dGVzdDoxMjPCow==\",\n",
+                            "lines": "288",
+                            "cwe_id": "CWE-259"
+                        },
+                        {
+                            "id": 268692,
+                            "report": 1690,
+                            "description": "Possible hardcoded password: 's\u0259cr\u0259t'",
+                            "filename": "/Users/zakariasabbagh/Documents/GitHub/private/securipy/repositories/tornado/tornado/test/httpclient_test.py",
+                            "confidence": "medium",
+                            "severity": "low",
+                            "more_info": "https://bandit.readthedocs.io/en/1.7.7/plugins/b106_hardcoded_password_funcarg.html",
+                            "test_id": "B106",
+                            "test_name": "hardcoded_password_funcarg",
+                            "code": "295         self.assertEqual(\n296             self.fetch(\"/auth\", auth_username=username, auth_password=\"s\u0259cr\u0259t\").body,\n297             b\"Basic am9zw6k6c8mZY3LJmXQ=\",\n",
+                            "lines": "296",
+                            "cwe_id": "CWE-259"
+                        },
+                        {
+                            "id": 268693,
+                            "report": 1690,
+                            "description": "Possible hardcoded password: 'open sesame'",
+                            "filename": "/Users/zakariasabbagh/Documents/GitHub/private/securipy/repositories/tornado/tornado/test/httpclient_test.py",
+                            "confidence": "medium",
+                            "severity": "low",
+                            "more_info": "https://bandit.readthedocs.io/en/1.7.7/plugins/b106_hardcoded_password_funcarg.html",
+                            "test_id": "B106",
+                            "test_name": "hardcoded_password_funcarg",
+                            "code": "305             with self.assertRaises((ValueError, HTTPError)):  # type: ignore\n306                 self.fetch(\n307                     \"/auth\",\n308                     auth_username=\"Aladdin\",\n309                     auth_password=\"open sesame\",\n310                     auth_mode=\"asdf\",\n311                     raise_error=True,\n312                 )\n313 \n",
+                            "lines": "306, 307, 308, 309, 310, 311, 312",
+                            "cwe_id": "CWE-259"
+                        },
+                        {
+                            "id": 268694,
+                            "report": 1690,
+                            "description": "subprocess call - check for execution of untrusted input.",
+                            "filename": "/Users/zakariasabbagh/Documents/GitHub/private/securipy/repositories/tornado/tornado/test/httpclient_test.py",
+                            "confidence": "high",
+                            "severity": "low",
+                            "more_info": "https://bandit.readthedocs.io/en/1.7.7/plugins/b603_subprocess_without_shell_equals_true.html",
+                            "test_id": "B603",
+                            "test_name": "subprocess_without_shell_equals_true",
+                            "code": "846         # as a whole, which is why we use this subprocess).\n847         proc = subprocess.run(\n848             [\n849                 sys.executable,\n850                 \"-c\",\n851                 \"from tornado.httpclient import HTTPClient; f = lambda: None; c = HTTPClient()\",\n852             ],\n853             stdout=subprocess.PIPE,\n854             stderr=subprocess.STDOUT,\n855             check=True,\n856             timeout=5,\n857         )\n858         if proc.stdout:\n",
+                            "lines": "847, 848, 849, 850, 851, 852, 853, 854, 855, 856, 857",
+                            "cwe_id": "CWE-78"
+                        },
+                        {
+                            "id": 268695,
+                            "report": 1690,
+                            "description": "Consider possible security implications associated with pickle module.",
+                            "filename": "/Users/zakariasabbagh/Documents/GitHub/private/securipy/repositories/tornado/tornado/test/httputil_test.py",
+                            "confidence": "high",
+                            "severity": "low",
+                            "more_info": "https://bandit.readthedocs.io/en/1.7.7/blacklists/blacklist_imports.html#b403-import-pickle",
+                            "test_id": "B403",
+                            "test_name": "blacklist",
+                            "code": "19 import logging\n20 import pickle\n21 import time\n",
+                            "lines": "20",
+                            "cwe_id": "CWE-502"
+                        },
+                        {
+                            "id": 268696,
+                            "report": 1690,
+                            "description": "Pickle and modules that wrap it can be unsafe when used to deserialize untrusted data, possible security issue.",
+                            "filename": "/Users/zakariasabbagh/Documents/GitHub/private/securipy/repositories/tornado/tornado/test/httputil_test.py",
+                            "confidence": "high",
+                            "severity": "medium",
+                            "more_info": "https://bandit.readthedocs.io/en/1.7.7/blacklists/blacklist_calls.html#b301-pickle",
+                            "test_id": "B301",
+                            "test_name": "blacklist",
+                            "code": "368         pickled = pickle.dumps(headers)\n369         unpickled = pickle.loads(pickled)\n370         self.assertEqual(sorted(headers.get_all()), sorted(unpickled.get_all()))\n",
+                            "lines": "369",
+                            "cwe_id": "CWE-502"
+                        },
+                        {
+                            "id": 268697,
+                            "report": 1690,
+                            "description": "Consider possible security implications associated with the subprocess module.",
+                            "filename": "/Users/zakariasabbagh/Documents/GitHub/private/securipy/repositories/tornado/tornado/test/import_test.py",
+                            "confidence": "high",
+                            "severity": "low",
+                            "more_info": "https://bandit.readthedocs.io/en/1.7.7/blacklists/blacklist_imports.html#b404-import-subprocess",
+                            "test_id": "B404",
+                            "test_name": "blacklist",
+                            "code": "1 # flake8: noqa\n2 import subprocess\n3 import sys\n",
+                            "lines": "2",
+                            "cwe_id": "CWE-78"
+                        },
+                        {
+                            "id": 268698,
+                            "report": 1690,
+                            "description": "subprocess call - check for execution of untrusted input.",
+                            "filename": "/Users/zakariasabbagh/Documents/GitHub/private/securipy/repositories/tornado/tornado/test/import_test.py",
+                            "confidence": "high",
+                            "severity": "low",
+                            "more_info": "https://bandit.readthedocs.io/en/1.7.7/plugins/b603_subprocess_without_shell_equals_true.html",
+                            "test_id": "B603",
+                            "test_name": "subprocess_without_shell_equals_true",
+                            "code": "47         # in our process, do it in a subprocess for a clean slate.\n48         proc = subprocess.Popen([sys.executable], stdin=subprocess.PIPE)\n49         proc.communicate(_import_everything)\n",
+                            "lines": "48",
+                            "cwe_id": "CWE-78"
+                        },
+                        {
+                            "id": 268699,
+                            "report": 1690,
+                            "description": "subprocess call - check for execution of untrusted input.",
+                            "filename": "/Users/zakariasabbagh/Documents/GitHub/private/securipy/repositories/tornado/tornado/test/import_test.py",
+                            "confidence": "high",
+                            "severity": "low",
+                            "more_info": "https://bandit.readthedocs.io/en/1.7.7/plugins/b603_subprocess_without_shell_equals_true.html",
+                            "test_id": "B603",
+                            "test_name": "subprocess_without_shell_equals_true",
+                            "code": "53         # Test that submodules can be referenced lazily after \"import tornado\"\n54         proc = subprocess.Popen([sys.executable], stdin=subprocess.PIPE)\n55         proc.communicate(_import_lazy)\n",
+                            "lines": "54",
+                            "cwe_id": "CWE-78"
+                        },
+                        {
+                            "id": 268700,
+                            "report": 1690,
+                            "description": "Consider possible security implications associated with the subprocess module.",
+                            "filename": "/Users/zakariasabbagh/Documents/GitHub/private/securipy/repositories/tornado/tornado/test/ioloop_test.py",
+                            "confidence": "high",
+                            "severity": "low",
+                            "more_info": "https://bandit.readthedocs.io/en/1.7.7/blacklists/blacklist_imports.html#b404-import-subprocess",
+                            "test_id": "B404",
+                            "test_name": "blacklist",
+                            "code": "8 import socket\n9 import subprocess\n10 import sys\n",
+                            "lines": "9",
+                            "cwe_id": "CWE-78"
+                        },
+                        {
+                            "id": 268701,
+                            "report": 1690,
+                            "description": "subprocess call - check for execution of untrusted input.",
+                            "filename": "/Users/zakariasabbagh/Documents/GitHub/private/securipy/repositories/tornado/tornado/test/ioloop_test.py",
+                            "confidence": "high",
+                            "severity": "low",
+                            "more_info": "https://bandit.readthedocs.io/en/1.7.7/plugins/b603_subprocess_without_shell_equals_true.html",
+                            "test_id": "B603",
+                            "test_name": "subprocess_without_shell_equals_true",
+                            "code": "768         args = [sys.executable, \"-c\", \"; \".join(stmt_list)]\n769         return native_str(subprocess.check_output(args)).strip()\n770 \n",
+                            "lines": "769",
+                            "cwe_id": "CWE-78"
+                        },
+                        {
+                            "id": 268702,
+                            "report": 1690,
+                            "description": "Standard pseudo-random generators are not suitable for security/cryptographic purposes.",
+                            "filename": "/Users/zakariasabbagh/Documents/GitHub/private/securipy/repositories/tornado/tornado/test/iostream_test.py",
+                            "confidence": "high",
+                            "severity": "low",
+                            "more_info": "https://bandit.readthedocs.io/en/1.7.7/blacklists/blacklist_calls.html#b311-random",
+                            "test_id": "B311",
+                            "test_name": "blacklist",
+                            "code": "678         # (using a user-allocated buffer).\n679         r = random.Random(42)\n680         nbytes = 1000000\n",
+                            "lines": "679",
+                            "cwe_id": "CWE-330"
+                        },
+                        {
+                            "id": 268703,
+                            "report": 1690,
+                            "description": "Use of weak SHA1 hash for security. Consider usedforsecurity=False",
+                            "filename": "/Users/zakariasabbagh/Documents/GitHub/private/securipy/repositories/tornado/tornado/test/iostream_test.py",
+                            "confidence": "high",
+                            "severity": "high",
+                            "more_info": "https://bandit.readthedocs.io/en/1.7.7/plugins/b324_hashlib.html",
+                            "test_id": "B324",
+                            "test_name": "hashlib",
+                            "code": "682 \n683         produce_hash = hashlib.sha1()\n684         consume_hash = hashlib.sha1()\n",
+                            "lines": "683",
+                            "cwe_id": "CWE-327"
+                        },
+                        {
+                            "id": 268704,
+                            "report": 1690,
+                            "description": "Use of weak SHA1 hash for security. Consider usedforsecurity=False",
+                            "filename": "/Users/zakariasabbagh/Documents/GitHub/private/securipy/repositories/tornado/tornado/test/iostream_test.py",
+                            "confidence": "high",
+                            "severity": "high",
+                            "more_info": "https://bandit.readthedocs.io/en/1.7.7/plugins/b324_hashlib.html",
+                            "test_id": "B324",
+                            "test_name": "hashlib",
+                            "code": "683         produce_hash = hashlib.sha1()\n684         consume_hash = hashlib.sha1()\n685 \n",
+                            "lines": "684",
+                            "cwe_id": "CWE-327"
+                        },
+                        {
+                            "id": 268705,
+                            "report": 1690,
+                            "description": "Standard pseudo-random generators are not suitable for security/cryptographic purposes.",
+                            "filename": "/Users/zakariasabbagh/Documents/GitHub/private/securipy/repositories/tornado/tornado/test/iostream_test.py",
+                            "confidence": "high",
+                            "severity": "low",
+                            "more_info": "https://bandit.readthedocs.io/en/1.7.7/blacklists/blacklist_calls.html#b311-random",
+                            "test_id": "B311",
+                            "test_name": "blacklist",
+                            "code": "1201     def setUp(self):\n1202         self.random = random.Random(42)\n1203 \n",
+                            "lines": "1202",
+                            "cwe_id": "CWE-330"
+                        },
+                        {
+                            "id": 268706,
+                            "report": 1690,
+                            "description": "Consider possible security implications associated with the subprocess module.",
+                            "filename": "/Users/zakariasabbagh/Documents/GitHub/private/securipy/repositories/tornado/tornado/test/log_test.py",
+                            "confidence": "high",
+                            "severity": "low",
+                            "more_info": "https://bandit.readthedocs.io/en/1.7.7/blacklists/blacklist_imports.html#b404-import-subprocess",
+                            "test_id": "B404",
+                            "test_name": "blacklist",
+                            "code": "19 import re\n20 import subprocess\n21 import sys\n",
+                            "lines": "20",
+                            "cwe_id": "CWE-78"
+                        },
+                        {
+                            "id": 268707,
+                            "report": 1690,
+                            "description": "subprocess call - check for execution of untrusted input.",
+                            "filename": "/Users/zakariasabbagh/Documents/GitHub/private/securipy/repositories/tornado/tornado/test/log_test.py",
+                            "confidence": "high",
+                            "severity": "low",
+                            "more_info": "https://bandit.readthedocs.io/en/1.7.7/plugins/b603_subprocess_without_shell_equals_true.html",
+                            "test_id": "B603",
+                            "test_name": "subprocess_without_shell_equals_true",
+                            "code": "207         program = \";\".join([IMPORT, statement, LOG_INFO])\n208         proc = subprocess.Popen(\n209             [sys.executable, \"-c\", program] + (args or []),\n210             stdout=subprocess.PIPE,\n211             stderr=subprocess.STDOUT,\n212         )\n213         stdout, stderr = proc.communicate()\n",
+                            "lines": "208, 209, 210, 211, 212",
+                            "cwe_id": "CWE-78"
+                        },
+                        {
+                            "id": 268708,
+                            "report": 1690,
+                            "description": "Consider possible security implications associated with the subprocess module.",
+                            "filename": "/Users/zakariasabbagh/Documents/GitHub/private/securipy/repositories/tornado/tornado/test/netutil_test.py",
+                            "confidence": "high",
+                            "severity": "low",
+                            "more_info": "https://bandit.readthedocs.io/en/1.7.7/blacklists/blacklist_imports.html#b404-import-subprocess",
+                            "test_id": "B404",
+                            "test_name": "blacklist",
+                            "code": "4 import socket\n5 from subprocess import Popen\n6 import sys\n",
+                            "lines": "5",
+                            "cwe_id": "CWE-78"
+                        },
+                        {
+                            "id": 268709,
+                            "report": 1690,
+                            "description": "subprocess call - check for execution of untrusted input.",
+                            "filename": "/Users/zakariasabbagh/Documents/GitHub/private/securipy/repositories/tornado/tornado/test/netutil_test.py",
+                            "confidence": "high",
+                            "severity": "low",
+                            "more_info": "https://bandit.readthedocs.io/en/1.7.7/plugins/b603_subprocess_without_shell_equals_true.html",
+                            "test_id": "B603",
+                            "test_name": "subprocess_without_shell_equals_true",
+                            "code": "153         start = time.time()\n154         popen = Popen(command, preexec_fn=lambda: signal.alarm(TIMEOUT))\n155         while time.time() - start < TIMEOUT:\n",
+                            "lines": "154",
+                            "cwe_id": "CWE-78"
+                        },
+                        {
+                            "id": 268710,
+                            "report": 1690,
+                            "description": "Consider possible security implications associated with the subprocess module.",
+                            "filename": "/Users/zakariasabbagh/Documents/GitHub/private/securipy/repositories/tornado/tornado/test/process_test.py",
+                            "confidence": "high",
+                            "severity": "low",
+                            "more_info": "https://bandit.readthedocs.io/en/1.7.7/blacklists/blacklist_imports.html#b404-import-subprocess",
+                            "test_id": "B404",
+                            "test_name": "blacklist",
+                            "code": "4 import signal\n5 import subprocess\n6 import sys\n",
+                            "lines": "5",
+                            "cwe_id": "CWE-78"
+                        },
+                        {
+                            "id": 268711,
+                            "report": 1690,
+                            "description": "Standard pseudo-random generators are not suitable for security/cryptographic purposes.",
+                            "filename": "/Users/zakariasabbagh/Documents/GitHub/private/securipy/repositories/tornado/tornado/test/queues_test.py",
+                            "confidence": "high",
+                            "severity": "low",
+                            "more_info": "https://bandit.readthedocs.io/en/1.7.7/blacklists/blacklist_calls.html#b311-random",
+                            "test_id": "B311",
+                            "test_name": "blacklist",
+                            "code": "330                 q.task_done()\n331                 yield gen.sleep(random() * 0.01)\n332 \n",
+                            "lines": "331",
+                            "cwe_id": "CWE-330"
+                        },
+                        {
+                            "id": 268712,
+                            "report": 1690,
+                            "description": "Consider possible security implications associated with the subprocess module.",
+                            "filename": "/Users/zakariasabbagh/Documents/GitHub/private/securipy/repositories/tornado/tornado/test/tcpserver_test.py",
+                            "confidence": "high",
+                            "severity": "low",
+                            "more_info": "https://bandit.readthedocs.io/en/1.7.7/blacklists/blacklist_imports.html#b404-import-subprocess",
+                            "test_id": "B404",
+                            "test_name": "blacklist",
+                            "code": "1 import socket\n2 import subprocess\n3 import sys\n",
+                            "lines": "2",
+                            "cwe_id": "CWE-78"
+                        },
+                        {
+                            "id": 268713,
+                            "report": 1690,
+                            "description": "subprocess call - check for execution of untrusted input.",
+                            "filename": "/Users/zakariasabbagh/Documents/GitHub/private/securipy/repositories/tornado/tornado/test/tcpserver_test.py",
+                            "confidence": "high",
+                            "severity": "low",
+                            "more_info": "https://bandit.readthedocs.io/en/1.7.7/plugins/b603_subprocess_without_shell_equals_true.html",
+                            "test_id": "B603",
+                            "test_name": "subprocess_without_shell_equals_true",
+                            "code": "127         try:\n128             result = subprocess.run(\n129                 [sys.executable, \"-Werror::DeprecationWarning\"],\n130                 capture_output=True,\n131                 input=code,\n132                 encoding=\"utf8\",\n133                 check=True,\n134             )\n135         except subprocess.CalledProcessError as e:\n",
+                            "lines": "128, 129, 130, 131, 132, 133, 134",
+                            "cwe_id": "CWE-78"
+                        },
+                        {
+                            "id": 268714,
+                            "report": 1690,
+                            "description": "Use of exec detected.",
+                            "filename": "/Users/zakariasabbagh/Documents/GitHub/private/securipy/repositories/tornado/tornado/test/util.py",
+                            "confidence": "high",
+                            "severity": "medium",
+                            "more_info": "https://bandit.readthedocs.io/en/1.7.7/plugins/b102_exec_used.html",
+                            "test_id": "B102",
+                            "test_name": "exec_used",
+                            "code": "92     local_namespace = {}  # type: typing.Dict[str, typing.Any]\n93     exec(textwrap.dedent(s), global_namespace, local_namespace)\n94     return local_namespace\n",
+                            "lines": "93",
+                            "cwe_id": "CWE-78"
+                        },
+                        {
+                            "id": 268715,
+                            "report": 1690,
+                            "description": "Possible hardcoded password: '0123456789'",
+                            "filename": "/Users/zakariasabbagh/Documents/GitHub/private/securipy/repositories/tornado/tornado/test/web_test.py",
+                            "confidence": "medium",
+                            "severity": "low",
+                            "more_info": "https://bandit.readthedocs.io/en/1.7.7/plugins/b107_hardcoded_password_default.html",
+                            "test_id": "B107",
+                            "test_name": "hardcoded_password_default",
+                            "code": "101     # stub out enough methods to make the signed_cookie functions work\n102     def __init__(self, cookie_secret=\"0123456789\", key_version=None):\n103         # don't call super.__init__\n104         self._cookies = {}  # type: typing.Dict[str, bytes]\n105         if key_version is None:\n106             self.application = ObjectDict(  # type: ignore\n107                 settings=dict(cookie_secret=cookie_secret)\n108             )\n109         else:\n110             self.application = ObjectDict(  # type: ignore\n111                 settings=dict(cookie_secret=cookie_secret, key_version=key_version)\n112             )\n113 \n",
+                            "lines": "102, 103, 104, 105, 106, 107, 108, 109, 110, 111, 112",
+                            "cwe_id": "CWE-259"
+                        },
+                        {
+                            "id": 268716,
+                            "report": 1690,
+                            "description": "Possible hardcoded password: 'WebTest.COOKIE_SECRET'",
+                            "filename": "/Users/zakariasabbagh/Documents/GitHub/private/securipy/repositories/tornado/tornado/test/web_test.py",
+                            "confidence": "medium",
+                            "severity": "low",
+                            "more_info": "https://bandit.readthedocs.io/en/1.7.7/plugins/b105_hardcoded_password_string.html",
+                            "test_id": "B105",
+                            "test_name": "hardcoded_password_string",
+                            "code": "730 class WSGISafeWebTest(WebTestCase):\n731     COOKIE_SECRET = \"WebTest.COOKIE_SECRET\"\n732 \n",
+                            "lines": "731",
+                            "cwe_id": "CWE-259"
+                        },
+                        {
+                            "id": 268717,
+                            "report": 1690,
+                            "description": "Possible hardcoded password: 'It's a secret to everybody'",
+                            "filename": "/Users/zakariasabbagh/Documents/GitHub/private/securipy/repositories/tornado/tornado/test/web_test.py",
+                            "confidence": "medium",
+                            "severity": "low",
+                            "more_info": "https://bandit.readthedocs.io/en/1.7.7/plugins/b105_hardcoded_password_string.html",
+                            "test_id": "B105",
+                            "test_name": "hardcoded_password_string",
+                            "code": "2562 class SignedValueTest(unittest.TestCase):\n2563     SECRET = \"It's a secret to everybody\"\n2564     SECRET_DICT = {0: \"asdfbasdf\", 1: \"12312312\", 2: \"2342342\"}\n",
+                            "lines": "2563",
+                            "cwe_id": "CWE-259"
+                        },
+                        {
+                            "id": 268718,
+                            "report": 1690,
+                            "description": "Possible hardcoded password: '3|'",
+                            "filename": "/Users/zakariasabbagh/Documents/GitHub/private/securipy/repositories/tornado/tornado/test/web_test.py",
+                            "confidence": "medium",
+                            "severity": "low",
+                            "more_info": "https://bandit.readthedocs.io/en/1.7.7/plugins/b106_hardcoded_password_funcarg.html",
+                            "test_id": "B106",
+                            "test_name": "hardcoded_password_funcarg",
+                            "code": "2795                 method=\"POST\",\n2796                 headers=self.cookie_headers(token=\"3|\"),\n2797                 body=urllib.parse.urlencode(dict(_xsrf=self.xsrf_token)),\n",
+                            "lines": "2796",
+                            "cwe_id": "CWE-259"
+                        },
+                        {
+                            "id": 268719,
+                            "report": 1690,
+                            "description": "Possible hardcoded password: 'deadbeef'",
+                            "filename": "/Users/zakariasabbagh/Documents/GitHub/private/securipy/repositories/tornado/tornado/test/web_test.py",
+                            "confidence": "medium",
+                            "severity": "low",
+                            "more_info": "https://bandit.readthedocs.io/en/1.7.7/plugins/b106_hardcoded_password_funcarg.html",
+                            "test_id": "B106",
+                            "test_name": "hardcoded_password_funcarg",
+                            "code": "2812             body=urllib.parse.urlencode(dict(_xsrf=\"deadbeef\")),\n2813             headers=self.cookie_headers(token=\"deadbeef\"),\n2814         )\n",
+                            "lines": "2813",
+                            "cwe_id": "CWE-259"
+                        },
+                        {
+                            "id": 268720,
+                            "report": 1690,
+                            "description": "Possible hardcoded password: 'xoxo'",
+                            "filename": "/Users/zakariasabbagh/Documents/GitHub/private/securipy/repositories/tornado/tornado/test/web_test.py",
+                            "confidence": "medium",
+                            "severity": "low",
+                            "more_info": "https://bandit.readthedocs.io/en/1.7.7/plugins/b106_hardcoded_password_funcarg.html",
+                            "test_id": "B106",
+                            "test_name": "hardcoded_password_funcarg",
+                            "code": "2821             body=urllib.parse.urlencode(dict(_xsrf=\"xoxo\")),\n2822             headers=self.cookie_headers(token=\"xoxo\"),\n2823         )\n",
+                            "lines": "2822",
+                            "cwe_id": "CWE-259"
+                        },
+                        {
+                            "id": 268721,
+                            "report": 1690,
+                            "description": "Use of exec detected.",
+                            "filename": "/Users/zakariasabbagh/Documents/GitHub/private/securipy/repositories/tornado/tornado/util.py",
+                            "confidence": "high",
+                            "severity": "medium",
+                            "more_info": "https://bandit.readthedocs.io/en/1.7.7/plugins/b102_exec_used.html",
+                            "test_id": "B102",
+                            "test_name": "exec_used",
+                            "code": "160         code = compile(code, \"<string>\", \"exec\", dont_inherit=True)\n161     exec(code, glob, loc)\n162 \n",
+                            "lines": "161",
+                            "cwe_id": "CWE-78"
+                        },
+                        {
+                            "id": 268722,
+                            "report": 1690,
+                            "description": "Use of weak SHA1 hash for security. Consider usedforsecurity=False",
+                            "filename": "/Users/zakariasabbagh/Documents/GitHub/private/securipy/repositories/tornado/tornado/web.py",
+                            "confidence": "high",
+                            "severity": "high",
+                            "more_info": "https://bandit.readthedocs.io/en/1.7.7/plugins/b324_hashlib.html",
+                            "test_id": "B324",
+                            "test_name": "hashlib",
+                            "code": "1685         \"\"\"\n1686         hasher = hashlib.sha1()\n1687         for part in self._write_buffer:\n",
+                            "lines": "1686",
+                            "cwe_id": "CWE-327"
+                        },
+                        {
+                            "id": 268723,
+                            "report": 1690,
+                            "description": "Use of weak SHA1 hash for security. Consider usedforsecurity=False",
+                            "filename": "/Users/zakariasabbagh/Documents/GitHub/private/securipy/repositories/tornado/tornado/websocket.py",
+                            "confidence": "high",
+                            "severity": "high",
+                            "more_info": "https://bandit.readthedocs.io/en/1.7.7/plugins/b324_hashlib.html",
+                            "test_id": "B324",
+                            "test_name": "hashlib",
+                            "code": "885         \"\"\"\n886         sha1 = hashlib.sha1()\n887         sha1.update(utf8(key))\n",
+                            "lines": "886",
+                            "cwe_id": "CWE-327"
+                        }
+                    ]
+                },
+                "analysed_release": "tornado:6.3.3"
+            }
+        },
+        "bandit": {
+            "count": {
+                "severity_l": 2,
+                "confidence_m": 2,
+                "severity_l_confidence_m": 2,
+                "confidence_h": 4,
+                "severity_l_confidence_h": 2,
+                "severity_m": 4,
+                "severity_m_confidence_m": 2,
+                "severity_h": 14,
+                "severity_h_confidence_h": 14,
+                "severity_m_confidence_h": 4
+            },
+            "by_test": {
+                "B105": {
+                    "release": [
+                        "tornado:6.4"
+                    ],
+                    "severity_l": 6,
+                    "confidence_m": 6,
+                    "severity_l_confidence_m": 6
+                },
+                "B404": {
+                    "release": [
+                        "tornado:6.4"
+                    ],
+                    "severity_l": 11,
+                    "confidence_h": 11,
+                    "severity_l_confidence_h": 11
+                },
+                "B603": {
+                    "release": [
+                        "tornado:6.4"
+                    ],
+                    "severity_l": 11,
+                    "confidence_h": 11,
+                    "severity_l_confidence_h": 11
+                },
+                "B606": {
+                    "release": [
+                        "tornado:6.4"
+                    ],
+                    "severity_l": 2,
+                    "confidence_m": 2,
+                    "severity_l_confidence_m": 2
+                },
+                "B110": {
+                    "release": [
+                        "tornado:6.4"
+                    ],
+                    "severity_l": 5,
+                    "confidence_h": 5,
+                    "severity_l_confidence_h": 5
+                },
+                "B106": {
+                    "release": [
+                        "tornado:6.4"
+                    ],
+                    "severity_l": 20,
+                    "confidence_m": 20,
+                    "severity_l_confidence_m": 20
+                },
+                "B104": {
+                    "release": [
+                        "tornado:6.4"
+                    ],
+                    "severity_m": 1,
+                    "confidence_m": 1,
+                    "severity_m_confidence_m": 1
+                },
+                "B311": {
+                    "release": [
+                        "tornado:6.4"
+                    ],
+                    "severity_l": 4,
+                    "confidence_h": 4,
+                    "severity_l_confidence_h": 4
+                },
+                "B324": {
+                    "release": [
+                        "tornado:6.4"
+                    ],
+                    "severity_h": 7,
+                    "confidence_h": 7,
+                    "severity_h_confidence_h": 7
+                },
+                "B403": {
+                    "release": [
+                        "tornado:6.4"
+                    ],
+                    "severity_l": 1,
+                    "confidence_h": 1,
+                    "severity_l_confidence_h": 1
+                },
+                "B301": {
+                    "release": [
+                        "tornado:6.4"
+                    ],
+                    "severity_m": 1,
+                    "confidence_h": 1,
+                    "severity_m_confidence_h": 1
+                },
+                "B102": {
+                    "release": [
+                        "tornado:6.4"
+                    ],
+                    "severity_m": 2,
+                    "confidence_h": 2,
+                    "severity_m_confidence_h": 2
+                },
+                "B107": {
+                    "release": [
+                        "tornado:6.4"
+                    ],
+                    "severity_l": 1,
+                    "confidence_m": 1,
+                    "severity_l_confidence_m": 1
+                }
+            },
+            "by_cwe": {
+                "CWE-259": {
+                    "release": [
+                        "tornado:6.4"
+                    ],
+                    "severity_l": 27,
+                    "confidence_m": 27,
+                    "severity_l_confidence_m": 27
+                },
+                "CWE-78": {
+                    "release": [
+                        "tornado:6.4"
+                    ],
+                    "severity_l": 24,
+                    "confidence_h": 24,
+                    "severity_l_confidence_h": 22,
+                    "confidence_m": 2,
+                    "severity_l_confidence_m": 2,
+                    "severity_m": 2,
+                    "severity_m_confidence_h": 2
+                },
+                "CWE-703": {
+                    "release": [
+                        "tornado:6.4"
+                    ],
+                    "severity_l": 5,
+                    "confidence_h": 5,
+                    "severity_l_confidence_h": 5
+                },
+                "CWE-605": {
+                    "release": [
+                        "tornado:6.4"
+                    ],
+                    "severity_m": 1,
+                    "confidence_m": 1,
+                    "severity_m_confidence_m": 1
+                },
+                "CWE-330": {
+                    "release": [
+                        "tornado:6.4"
+                    ],
+                    "severity_l": 4,
+                    "confidence_h": 4,
+                    "severity_l_confidence_h": 4
+                },
+                "CWE-327": {
+                    "release": [
+                        "tornado:6.4"
+                    ],
+                    "severity_h": 7,
+                    "confidence_h": 7,
+                    "severity_h_confidence_h": 7
+                },
+                "CWE-502": {
+                    "release": [
+                        "tornado:6.4"
+                    ],
+                    "severity_l": 1,
+                    "confidence_h": 2,
+                    "severity_l_confidence_h": 1,
+                    "severity_m": 1,
+                    "severity_m_confidence_h": 1
+                }
+            }
+        }
+    }
+}

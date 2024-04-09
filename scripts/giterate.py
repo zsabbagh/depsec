@@ -5,11 +5,11 @@ from loguru import logger
 from git import Repo
 from pathlib import Path
 from src.utils.proc import *
-from src.middleware import Middleware
+from src.aggregator import Aggregator
 from src.schemas.projects import *
 # This tool iterates git tags and runs a command for each tag
 
-VERSION_TAG = r'^v?\d+\.\d+\.\d+$'
+VERSION_TAG = r'v?(\d+\.\d+(?:\.\d+)?)'
 
 parser = argparse.ArgumentParser(description='Iterate git tags and run a command for each tag')
 parser.add_argument('-p', '--projects', help='The projects file', default='projects.json')
@@ -22,8 +22,11 @@ parser.add_argument('--do', help='The operation to do', default=[], nargs='*')
 parser.add_argument('-o', '--only', help='Only do the mentioned projects', default=[], nargs='*')
 parser.add_argument('-c', '--clone', help='Clone if the repository does not exist', action='store_true', default=False)
 parser.add_argument('-s', '--skips', help='Tests to skip, in Bandit test IDs (b?\d{3})', default='')
+parser.add_argument('--tags', help='Show tags only', action='store_true')
+parser.add_argument('--exclude-projects', help='Exclude the mentioned projects', default=[], nargs='*')
 
 args = parser.parse_args()
+excluded_projects = set(map(str.lower, args.exclude_projects))
 
 skips = args.skips
 if bool(skips):
@@ -36,8 +39,8 @@ logger.add(sys.stdout, level=args.level.upper())
 
 only = set(map(str.lower, args.only))
 
-mw = Middleware(args.config)
-mw.load_projects()
+aggr = Aggregator(args.config)
+aggr.load_projects()
 
 directory = Path(args.directory)
 if not directory.exists():
@@ -52,15 +55,27 @@ data = None
 with open(args.projects, 'r') as f:
     data = json.load(f)
 
-def is_version_tag(tag: str):
+def version_tag(tag: str, pattern: str = None):
     """
-    Checks if a tag is a version tag
+    Returns the version tag from the tag if it matches the pattern
     """
-    return bool(re.match(VERSION_TAG, tag))
+    if type(pattern) == str:
+        pattern = pattern.replace('@version', VERSION_TAG)
+    else:
+        pattern = VERSION_TAG
+    pattern = rf"^{pattern}$"
+    groups = re.match(pattern, tag)
+    if groups:
+        return groups.group(1)
+    return None
 
 for platform, projects in data.items():
 
     for project_name in projects:
+
+        if project_name.lower() in excluded_projects:
+            logger.info(f"Excluding {platform} project '{project_name}'")
+            continue
 
         if only and project_name.lower() not in only:
             logger.info(f"Skipping {platform} project '{project_name}', only '{', '.join(list(only))}' provided")
@@ -83,7 +98,7 @@ for platform, projects in data.items():
         url = f"https://{url}.git"
 
         # Get the project
-        project = mw.get_project(project_name, platform)
+        project = aggr.get_project(project_name, platform)
         if not project:
             print(f"Project {project_name} not found")
             continue
@@ -91,6 +106,8 @@ for platform, projects in data.items():
         repo_path = directory / repo_name
 
         src_name = repo.get('src') or repo_name
+
+        tag_pattern = repo.get('tags')
 
         if not repo_path.exists():
             # TODO: Clone the repository
@@ -111,15 +128,27 @@ for platform, projects in data.items():
         tags = repo.tags
         versions = {}
 
+        if args.tags:
+            tags = [ tag.name for tag in tags ]
+            tags = sorted(list(set(tags)))
+            print(f"-- Tags for {repo_name} --")
+            for tag in tags:
+                v = version_tag(tag, tag_pattern)
+                if v:
+                    print(f"{v} <<-- '{tag}' matches")
+                else:
+                    print(tag)
+            continue
+        
         for tag in tags:
-            if not is_version_tag(tag.name):
+            tag_version = version_tag(tag.name, tag_pattern)
+            if not tag_version:
                 continue
-            tag_version = tag.name.lstrip('v')
             versions[tag_version] = tag
         
         logger.info(f"Versions found for {repo_name}: {len(versions)}")
         processed = 0
-        rels = mw.get_releases(project_name, platform)
+        rels = aggr.get_releases(project_name, platform)
         rels = [ rel.version for rel in rels]
         logger.info(f"Releases found for {repo_name}: {', '.join(rels)}")
 
@@ -127,7 +156,7 @@ for platform, projects in data.items():
             if bool(args.limit) and processed > args.limit:
                 logger.info(f"Limit of {args.limit} reached, stopping")
                 break
-            release: Release = mw.get_release(project_name, version, platform)
+            release: Release = aggr.get_release(project_name, version, platform)
             if release is None:
                 logger.warning(f"Release '{version}' for {project_name} not found by metadata, ignoring")
                 continue
@@ -144,6 +173,15 @@ for platform, projects in data.items():
             release.commit_at = date_time
             release.commit_hash = str(tag.commit)
             date_str = date_time.strftime('%Y-%m-%d %H:%M:%S')
+            if excludes:
+                excl_str = ', '.join(list(map(str, excludes)))
+                logger.info(f"Updating {project_name}:{version} excludes to '{excl_str}'")
+                release.excludes = excl_str
+            if includes:
+                incl_str = ', '.join(list(map(str, includes)))
+                logger.info(f"Updating {project_name}:{version} includes to '{incl_str}'")
+                release.includes = incl_str
+            release.save()
             if 'lizard' in args.do:
                 res = run_lizard(repo_path, includes, excludes)
                 nloc = res.get('nloc')
@@ -166,10 +204,10 @@ for platform, projects in data.items():
                 if previous_report:
                     previous_report.delete_instance()
                 sevconf = res.get('severity_confidence', {})
-                logger.info(f"{project_name}:{version}, files: {res.get('files_counted')}, issues: {res.get('issues_total')}")
+                logger.info(f"{project_name}:{version}, files: {res.get('files_with_issues')}, issues: {res.get('issues_total')}")
                 report = BanditReport.create(
                     release=release,
-                    files_counted=res.get('files_counted'),
+                    files_with_issues=res.get('files_with_issues'),
                     files_skipped=res.get('files_skipped'),
                     issues_total=res.get('issues_total'),
                     confidence_high_count=res.get('confidence_high_count'),

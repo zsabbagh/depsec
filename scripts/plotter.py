@@ -3,9 +3,11 @@ import seaborn as sns
 import numpy as np
 import matplotlib.pyplot as plt
 import pandas as pd
+import src.utils.compute as compute
+from copy import deepcopy
 from pprint import pprint
 from pathlib import Path
-from src.middleware import Middleware
+from src.aggregator import Aggregator
 import src.schemas.nvd as nvd
 from loguru import logger
 from src.schemas.projects import *
@@ -18,7 +20,7 @@ from playhouse.shortcuts import model_to_dict
 # - Timeline, where each month counts the most recent release
 # --- Number of vulnerabilities
 # --- Max, median, mean, and standard deviation of the CVSS score
-# --- Patch lag (time between the CVE being published and the release being fixed)
+# --- Patch lag (time between the CVE being published and the release being fixed) (differentiate patch lag and technical lag)
 # - Number of vulnerabilities
 # --- By CWE category
 # --- By CWE weakness (specific weakness)
@@ -28,86 +30,74 @@ from playhouse.shortcuts import model_to_dict
 parser = argparse.ArgumentParser(description='Plot data from a file')
 parser.add_argument('config', help='The configuration file')
 parser.add_argument('--start', help='The start year', default=2020)
+parser.add_argument('--end', help='The end year', default=None)
 parser.add_argument('--platform', help='The default platform', default='pypi')
 parser.add_argument('--step', help='The step size', default='m')
 parser.add_argument('-p', '--projects', nargs='+', help='The projects to plot', required=True)
-parser.add_argument('-o', '--output', help='The output directory', default='output')
-parser.add_argument('--kpis', nargs='+', help='The key performance indicators to plot', default=['count', 'base', 'nloc'])
+parser.add_argument('--output', help='The output directory', default='output')
+parser.add_argument('-t', '--timeline', help='Plot the timeline', nargs='+', default=[])
+parser.add_argument('-o', '--overall', help='Plot the overall data', nargs='+', default=[])
 parser.add_argument('--debug', help='The debug level of the logger', default='INFO')
 parser.add_argument('--show', help='Show the plots', action='store_true')
+parser.add_argument('--dependencies', help="Generate plots for each project's dependencies as well", action='store_true')
+parser.add_argument('--force', help='Force reload of dependencies', action='store_true')
+
+# TODO: Add possibility to combine KPIs as left and right y-axis
 
 args = parser.parse_args()
 
-KPIS = {
-    'base': {
-        'key': 'cvss_base_score',
-        'title': 'CVSS Base Score',
-        'max': 10,
-        'y_label': 'Score',
-    },
-    'files': {
-        'key': 'files',
-        'title': 'Number of Files',
-        'y_label': 'Count',
-    },
-    'functions': {
-        'key': 'functions',
-        'title': 'Number of Functions',
-        'y_label': 'Count',
-    },
-    'impact': {
-        'key': 'cvss_impact_score',
-        'title': 'CVSS Impact Score',
-        'max': 10,
-        'y_label': 'Score',
-    },
-    'exploitability': {
-        'key': 'cvss_exploitability_score',
-        'title': 'CVSS Exploitability Score',
-        'max': 10,
-        'y_label': 'Score',
-    },
-    'confidentiality': {
-        'key': 'cvss_confidentiality_impact',
-        'title': 'CVSS Confidentiality Impact',
-        'max': 2,
-        'y_label': 'Impact',
-    },
-    'integrity': {
-        'key': 'cvss_integrity_impact',
-        'title': 'CVSS Integrity Impact',
-        'max': 2,
-        'y_label': 'Impact',
-    },
-    'availability': {
-        'key': 'cvss_availability_impact',
-        'title': 'CVSS Availability Impact',
-        'max': 2,
-        'y_label': 'Impact',
-    },
-    'cves': {
-        'key': 'cves',
-        'title': 'Number of CVEs',
-        'y_label': 'Count',
-    },
-    'nloc': {
-        'key': 'nlocs',
-        'title': 'Number of Lines of Code (NLOC)',
-        'y_label': 'NLOC',
-    },
-    'cves/nloc': {
-        'key': 'cves_per_10k_nlocs',
-        'title': 'CVEs per 10k NLOC',
-        'y_label': 'CVEs per 10k NLOC',
-    },
-    'ccn': {
-        'key': 'ccns',
-        'title': 'Cyclomatic Complexity (CCN) / Function',
-        'y_label': 'CCN',
-    },
-}
+args.projects = sorted(list(map(str.lower, args.projects)))
+
+
+args.timeline = sorted(list(map(str.lower, args.timeline)))
+args.overall = sorted(list(map(str.lower, args.overall)))
+
+if len(args.timeline) > 0 and args.timeline[0] in ['all', '*']:
+    args.timeline = list(compute.KPIS_TIMELINE.keys())
+
+# These are the key performance indicators for the releases
+# convert to set for quick lookup
+kpiset_timeline = set(args.timeline)
+valid_kpis = set(compute.KPIS_TIMELINE.keys())
+if not kpiset_timeline.issubset(valid_kpis):
+    invalid_kpis = list(kpiset_timeline - valid_kpis)
+    logger.error(f"Invalid KPIs: {', '.join(invalid_kpis)}. Valid KPIs are: {', '.join(valid_kpis)}")
+    exit(1)
 
 sns.set_theme(style='darkgrid')
+
+class Global:
+    colours = [
+        "#0cad6f","#4582b1","#f4d06f","#c4603b","#c477bf"
+    ]
+    class Colours:
+        light_grey = "#c0c0c0"
+
+def colour_to_rgb(colour: str):
+    """
+    Converts a colour to RGB
+    """
+    if colour.startswith('#'):
+        colour = colour[1:]
+    return tuple(int(colour[i:i+2], 16) for i in (0, 2, 4))
+
+def rgb_to_colour(rgb: tuple):
+    """
+    Converts an RGB tuple to a colour
+    """
+    return "#{:02x}{:02x}{:02x}".format(*rgb)
+
+def tone_colour(colour: str, factor: float):
+    """
+    Tone a colour by a factor
+    """
+    rgb = colour_to_rgb(colour)
+    new_rgb = tuple(int(c * factor) for c in rgb)
+    new_rgb = tuple(min(255, c) for c in new_rgb)
+    return rgb_to_colour(new_rgb)
+
+def plot_grouped_bar(*args):
+    pass
 
 def get_platform(project: str):
     """
@@ -124,13 +114,19 @@ def get_platform(project: str):
         platform, project = parts[0], parts[1]
     return platform.lower(), project.lower()
 
-
 def convert_datetime_to_str(data: dict):
     """
     Converts dictionaries with datetime objects to strings
     """
     if isinstance(data, Model):
         data = model_to_dict(data)
+    elif type(data) == set:
+        if len(data) == 0:
+            return []
+        ls = list(data)
+        if type(ls[0]) in [int, float, str]:
+            return sorted(ls)
+        return [ convert_datetime_to_str(entry) for entry in ls ]
     if type(data) == list:
         return [ convert_datetime_to_str(entry) for entry in data ]
     elif type(data) != dict:
@@ -146,6 +142,7 @@ def try_json_dump(data: dict, path: Path):
     """
     Tries to dump a dictionary to a JSON file
     """
+    logger.info(f"Storing data to path '{path if type(path) == str else path.name}'...")
     if type(path) == str:
         path = Path(path)
         if not path.absolute().parent.exists():
@@ -174,148 +171,17 @@ plots_dir = output_dir / 'plots'
 json_dir.mkdir(exist_ok=True)
 plots_dir.mkdir(exist_ok=True)
 
-def get_categories(timeline_entry: dict):
-    pass
+def get_version(release: str):
+    """
+    Gets the version numer from a release string <project>:<version>
+    """
+    try:
+        parts = list(filter(bool, release.split(':')))
+        return parts[1]
+    except:
+        return release
 
-def get_scores(timeline_entry: dict):
-    pass
-
-def impact_to_int(score: str):
-    """
-    Translates a CVSS score to an integer
-    """
-    if score is None:
-        return None
-    elif type(score) in [int, float]:
-        return score
-    score = score.lower()
-    match score:
-        case 'none':
-            return 0
-        case 'low' | 'partial':
-            return 1
-        case 'high' | 'complete':
-            return 2
-    return None
-
-def get_name_from_kpi(kpi: str):
-    """
-    Gets the name from a KPI
-    """
-    return kpi.replace('_', ' ').title().replace('Cvss', 'CVSS')
-
-def get_timeline_kpis(data: dict, *kws: str):
-    """
-    Gets the key performance indicators for a timeline
-    """
-    timeline = data.get('timeline')
-    cves = data.get('cves')
-    dates, cves_count, nlocs, ccns, cves_per_10k_nlocs = [], [], [], [], []
-    files, functions = [], []
-    for entry in timeline:
-        rel = data.get('releases', {}).get(entry.get('release'))
-        count = len(entry.get('cves', []))
-        nloc = rel.get('nloc_total', 0) if rel is not None else 0
-        nloc = 0 if nloc is None else nloc
-        files_count = rel.get('counted_files', 0) if rel is not None else 0
-        functions_count = rel.get('counted_functions', 0) if rel is not None else 0
-        files.append(files_count)
-        functions.append(functions_count)
-        ccn = rel.get('ccn_average', 0) if rel is not None else 0
-        date = entry.get('date')
-        dates.append(date)
-        cves_count.append(count)
-        nlocs.append(nloc)
-        ccns.append(ccn)
-        cves_per_10k_nlocs.append(count / (nloc / 10000) if nloc > 0 else 0)
-    prev_ccn = prev_nloc = prev_filec = prev_funcc = 0
-    for ccn in ccns:
-        if ccn is not None and ccn > 0:
-            prev_ccn = ccn
-            break
-    for nloc in nlocs:
-        if nloc is not None and nloc > 0:
-            prev_nloc = nloc
-            break
-    # eliminate None values
-    for i in range(len(dates)):
-        ccn = ccns[i]
-        nloc = nlocs[i]
-        filec = files[i]
-        funcc = functions[i]
-        if filec is None or filec == 0:
-            files[i] = prev_filec
-        else:
-            prev_filec = filec
-        if funcc is None or funcc == 0:
-            functions[i] = prev_funcc
-        else:
-            prev_funcc = funcc
-        if ccn is None or ccn == 0:
-            ccns[i] = prev_ccn
-        else:
-            prev_ccn = ccn
-        if nloc is None or nloc == 0:
-            nlocs[i] = prev_nloc
-            cves_per_10k_nlocs[i] = cves_count[i] / (prev_nloc / 10000) if prev_nloc > 0 else 0
-        else:
-            prev_nloc = nloc
-    results = {
-        'dates': dates,
-        'cves': cves_count,
-        'nlocs': nlocs,
-        'ccns': ccns,
-        'files': files,
-        'functions': functions,
-        'cves_per_10k_nlocs': cves_per_10k_nlocs,
-    }
-    for kw in kws:
-        if kw in results:
-            continue
-        max_scores = []
-        min_scores = []
-        std_scores = []
-        mean_scores = []
-        median_scores = []
-        max_value = None
-        for entry in timeline:
-            scrs = []
-            for cve in entry['cves']:
-                if kw not in cves.get(cve, {}):
-                    continue
-                val = cves.get(cve, {}).get(kw)
-                if max_value is None:
-                    if type(val) == str:
-                        max_value = 2
-                    else:
-                        max_value = 10
-                value = impact_to_int(val)
-                if type(value) not in [int, float]:
-                    logger.warning(f"Unexpected value keyword '{kw}' in {cve}: {value}")
-                    continue
-                scrs.append(value)
-            if len(scrs) == 0:
-                max_scores.append(0)
-                std_scores.append(0)
-                mean_scores.append(0)
-                median_scores.append(0)
-                min_scores.append(0)
-                continue
-            std_scores.append(np.std(scrs))
-            max_scores.append(max(scrs))
-            min_scores.append(min(scrs))
-            mean_scores.append(np.mean(scrs))
-            median_scores.append(np.std(scrs))
-        results[kw] = {
-            'max': max_scores,
-            'min': min_scores,
-            'mean': mean_scores,
-            'median': median_scores,
-            'std': std_scores,
-        }
-    return results
-
-def plot_timelines(timelines: dict):
+def plot_timelines(timelines: dict, title_prefix: str = ''):
     """
     Expects a dictionary with the following structure:
 
@@ -325,84 +191,286 @@ def plot_timelines(timelines: dict):
         'timeline': [
             {
                 'date': <date>,
-                'release': <release-id>,
+                'release': <release-id> | [ <release-id>, <release-id>, ...],
                 'cves': [<cve-id>, <cve-id>, ...]
             }
         ]
     }
     """
     # the scores to plot
-    figures = []
-    for kpi in args.kpis:
-        kpi = KPIS.get(kpi)
-        if kpi is None:
-            logger.error(f"Could not find KPI '{kpi}'")
-            continue
+    figures = {}
+    title_prefix = f"{title_prefix.strip()} "
+    for kpi in args.timeline:
         fig, ax = plt.subplots()
-        figures.append((fig, ax, kpi))
-        ax.set_title(kpi.get('title'))
-        ax.set_ylabel(kpi.get('y_label'))
-    kpi_keys = [ kpi.get('key') for _, _, kpi in figures ]
+        title = compute.KPIS_TIMELINE.get(kpi).get('title')
+        y_label = compute.KPIS_TIMELINE.get(kpi).get('y_label')
+        ax.set_title(f"{title_prefix}{title}")
+        ax.set_ylabel(y_label)
+        figures[kpi] = (fig, ax)
     max_values = {}
+    min_values = {}
     for project, data in timelines.items():
         _, project = get_platform(project)
-        results = get_timeline_kpis(data, *kpi_keys)
-        for fig, ax, kpi in figures:
+        results = compute.timeline_kpis(data, *args.timeline)
+        for kpi in args.timeline:
+            fig, ax = figures.get(kpi, (None, None))
+            logger.info(f"Processing kpi '{kpi}' for {project}")
+            if fig is None or ax is None:
+                logger.error(f"Could not find figure for KPI '{kpi}'")
+                continue
             ax: plt.Axes
-            kpi_key = kpi.get('key')
-            value = results.get(kpi_key)
-            if value is None:
+            kpi_dict = results.get(kpi)
+            if kpi_dict is None:
                 logger.error(f"Could not find KPI '{kpi}' for {project}")
                 continue
-            suffix = ''
+            default_value_key = kpi_dict.get('default', 'sum')
+            values = kpi_dict.get('values', [])
+            if values is None:
+                logger.error(f"Could not find KPI '{kpi}' for {project}")
+                continue
+            values = compute.values_to_stats(values)
+            suffix = kpi_dict.get('suffix', default_value_key)
+            prev = {
+                k: 0 for k in values
+            }
+            for i in range(0, len(values.get(default_value_key))):
+                if values.get(default_value_key)[i] is None:
+                    for k in values:
+                        values.get(k)[i] = prev.get(k)
+                else:
+                    prev = {
+                        k: values.get(k)[i] for k in values
+                    }
             lower = upper = None
-            has_max = 'max' in kpi
-            max_value = kpi.get('max', None)
-            if type(value) == dict:
-                lower = value.get('min')
-                upper = value.get('max')
-                value = value.get('mean')
-                max_value = max(value) if not has_max else max_value
-                suffix = f'{suffix} mean'
+            has_max = 'max' in kpi_dict
+            max_value = kpi_dict.get('max', None)
+            has_min = 'min' in kpi_dict
+            min_value = kpi_dict.get('min', None)
+            if type(values) == dict:
+                lower = values.get('min')
+                upper = values.get('max')
+                values = values.get(default_value_key)
+                max_value = max(values) if not has_max else max_value
+                min_value = min(values) if not has_min else min_value
             else:
-                max_value = max(value) if not has_max else max_value
+                max_value = max(values) if not has_max else max_value
+                min_value = min(values) if not has_min else min_value
             if not has_max:
                 max_value = max_value * 1.1
-            if max_values.get(kpi_key) is None:
-                max_values[kpi_key] = max_value
+                min_value = min_value * 1.1
+            if max_values.get(kpi) is None:
+                max_values[kpi] = max_value
             else:
-                max_values[kpi_key] = max(max_values[kpi_key], max_value)
-            ax.plot(results.get('dates'), value, label=f"{project.title()} {suffix}")
-            if lower is not None and upper is not None:
-                ax.fill_between(results.get('dates'), lower, upper, alpha=0.1, label=f"{project.title()} std")
-    for fig, ax, kpi in figures:
-        kpi_key = kpi.get('key')
-        ax.set_ylim(ymin=0, ymax=max_values[kpi_key])
-        ax.legend()
+                max_values[kpi] = max(max_values[kpi], max_value)
+            if min_values.get(kpi) is None:
+                min_values[kpi] = min_value
+            else:
+                min_values[kpi] = min(min_values[kpi], min_value)
+            ax.plot(results.get('dates'), values, label=f"{project.title()} {suffix}")
+            fill = kpi_dict.get('fill', True)
+            if fill and default_value_key in ['mean', 'median']:
+                if lower is not None and upper is not None:
+                    ax.fill_between(results.get('dates'), lower, upper, alpha=0.1)
+    for kpi in args.timeline:
+        fig, ax = figures.get(kpi, (None, None))
+        min_val = min_values.get(kpi)
+        if min_val is None or min_val > 0:
+            min_val = 0
+        ax.set_ylim(ymin=min_val, ymax=max_values[kpi])
+        # Shrink current axis's height by 10% on the bottom
+        # Put a legend below current axis
+        ax.legend(loc='upper center', framealpha=0.5)
         fig.autofmt_xdate()
-        filename = kpi.get('key', f"kpi-{datetime.datetime.now().strftime('%Y%m%d%H%M%S')}")
-        fig.savefig(plots_dir / f"{filename}.png")
+        filename = f"{kpi.replace('/', '-')}"
+        prefix = title_prefix.strip().lower().replace(' ', '-')
+        prefix = f"timeline-{prefix}-" if prefix else "timeline-"
+        fig.savefig(plots_dir / f"{prefix}{filename}.png")
 
-def plot_vulnerabilities(vulnerabilities: dict):
+
+def plot_overall_cve_distribution(overall: dict, *measurements: str):
     """
-    Expects a dictionary with the following structure:
-    <project>: {
-        <cve-id>: {}
-    }
+    Plots CVE distribution of an overall dictionary
     """
-    categories = {}
-    cves = {}
+    # CVE distribution
+    df: pd.DataFrame = pd.DataFrame()
+    project_ids = sorted(list(overall.keys()))
+    project_names = []
+    for project_id in project_ids:
+        platform, project_name = get_platform(project_id)
+        project_names.append(project_name)
+        data = overall[project_id]
+        res = compute.cve_distribution(data, project_name)
+        df = pd.concat([df, res], ignore_index=True)
+    fig, axs = plt.subplots(1, len(project_ids), figsize=(10, 8))
+    for i, project in enumerate(project_names):
+        ax = axs[i]
+        project_data = df[df['Project'] == project]
+        colour = Global.colours[i]
+        sns.swarmplot(data=project_data,
+                      x='Source',
+                      y='CVSS Base Score',
+                      ax=ax,
+                      color=colour,
+                      size=5)
+        sns.violinplot(data=project_data,
+                    x='Source',
+                    y='CVSS Base Score',
+                    ax=ax,
+                    fill=False,
+                    color=Global.Colours.light_grey,
+                    cut=0)
+        ax.set_title(project.title())
+        ax.set_xlabel(None)
+        ax.set_ylabel(None)
+        ax.set_ylim(0, 10.5)
+        ax.set_yticks(np.arange(0, 11, 1))
+    fig.suptitle("CVSS Base Score Distribution")
+    fig.supxlabel("Project")
+    fig.supylabel("CVSS Base Score")
+    fig.savefig(plots_dir / 'overall-cve-distribution.png')
+
+def plot_overall_cwe_distribution(overall: dict, *measurements: str):
+    """
+    Plots CWE distribution
+    """
+    df: pd.DataFrame = pd.DataFrame()
+    cwe_count = {}
+    project_ids = sorted(list(overall.keys()))
+    project_names = []
+    for project_id in  project_ids:
+        platform, project_name = get_platform(project_id)
+        project_names.append(project_name)
+        data = overall[project_id]
+        res: pd.DataFrame = compute.cwe_distribution(data, project_name)
+        for cwe_id in res['CWE ID']:
+            if cwe_id not in cwe_count:
+                cwe_count[cwe_id] = 0
+            cwe_count[cwe_id] += res[res['CWE ID'] == cwe_id]['CVE Count']
+        df = pd.concat([df, res], ignore_index=True)
+    fig, axs = plt.subplots(len(project_ids), 1, figsize=(10, 8))
+    plt.subplots_adjust(hspace=0.5)
+    for i, project in enumerate(project_names):
+        ax: plt.Axes = axs[i]
+        project_data = df[df['Project'] == project]
+        project_data = project_data.sort_values(by='CVE Count', ascending=False)
+        project_data = project_data.head(10)
+        sns.barplot(data=project_data, x='CWE ID', y='CVE Count', ax=ax, color=Global.colours[i])
+        max_count = max(project_data['CVE Count'])
+        ylim = max_count + 1 if max_count > 10 else 5
+        step = ylim // 5
+        ax.set_ylim(0, ylim)
+        ax.set_yticks(np.arange(0, ylim, step))
+        ax.set_title(project.title())
+        ax.set_xlabel(None)
+        ax.set_ylabel(None)
+    fig.suptitle("Top 10 CWEs by CVE Count")
+    fig.supxlabel("CWE ID")
+    fig.supylabel("CVE Count")
+    fig.savefig(plots_dir / 'overall-cwe-distribution.png')
+
+def plot_semver_cve_distribution(overall: dict, *measurements: str):
+    """
+    Plots the distribution of SemVer releases
+    """
+    project_ids = sorted(list(overall.keys()))
+    project_names = []
+    df: pd.DataFrame = pd.DataFrame()
+    for project_id in project_ids:
+        platform, project_name = get_platform(project_id)
+        project_names.append(project_name)
+        data = overall[project_id]
+        res = compute.semver_cve_distribution(data, project_name)
+        df = pd.concat([df, res], ignore_index=True)
+    fig, axs = plt.subplots(len(project_ids), 1, figsize=(10, 8))
+    fig.subplots_adjust(hspace=0.5)
+    for i, project in enumerate(project_names):
+        ax: plt.Axes = axs[i]
+        project_data = df[df['Project'] == project]
+        project_data = project_data.sort_values(by=['Major', 'Source'], ascending=False)
+        min_version = project_data['Major'].min()
+        max_version = project_data['Major'].max()
+        logger.info(f"Project {project} version range: {min_version} - {max_version}")
+        project_unique: pd.DataFrame = project_data.copy()
+        project_unique = project_unique.drop_duplicates(subset=['Major', 'CVE ID'])
+        sns.countplot(data=project_unique, x='Major', hue='Source', ax=ax, color=Global.colours[i], zorder=2)
+        # ax2 = ax.twinx()
+        # sns.countplot(data=project_unique, x='Major', ax=ax2, color=Global.Colours.light_grey, hue='Source', width=0.1, zorder=1)
+        steps = 5
+        ax.set_title(project.title())
+        ax.set_xlabel(None)
+        ax.set_ylabel(None)
+        ax.set_ylim(0, 10.5)
+        ax.set_yticks(np.arange(0, 11, 11//steps))
+        ax.set_xlim(0.9, max_version+0.1)
+        ax.set_xticks(np.arange(1, max_version+1, 1))
+    fig.suptitle("CVE Distribution by Major Semantic Version")
+    fig.supxlabel("Major Semantic Version")
+    fig.supylabel("CVSS Base Score")
+    fig.savefig(plots_dir / 'semver-cve-distribution.png')
+    # set right y-axis label
+
+def plot_semver_bandit_distribution(overall: dict, *measurements: str):
+    """
+    Plots the distribution of Bandit issues
+    """
     pass
 
-mw = Middleware(args.config)
+def plot_overall(overall: dict, *measurements: str):
+    """
+    Expects a dictionary with the following structure:
+
+    <project>: {
+        'cves': { <cve-id>: {} },
+        'cwes': { <cwe-id>: {} },
+        'releases': { <release-id>: {} }
+        'latest': {},
+        'bandit': {
+            'by_test'
+            'by_cwe'
+            'count'
+        },
+    }
+    """
+    # this will be more hard-coded plotting, given the wide variety of data
+
+    logger.info(f"Plotting overall data for {len(overall)} projects...")
+    # plotting the overall data
+    plot_overall_cve_distribution(overall)
+    plot_overall_cwe_distribution(overall)
+
+    # TODO: overall time KPIs (time to fix, time to CVE publish)
+
+    # TODO: scatter plot of CVEs, x-axis: exploitability, y-axis: impact
+            
+
+    # TODO: bar chart of CWE categories, sorted by number of vulnerabilities
+
+    # TODO: KPIs per minor/major release (count, severity, impact, patch lag)
+    plot_semver_cve_distribution(overall)
+
+    # TODO: frequency plot of Bandit test ID issues
+
+    # TODO: frequency plot of Bandit severity/confidence
+
+    # TODO: bandit issues / nloc
+
+    pass
+
+def combine_timeline_data(data: dict):
+    """
+    Combines timeline data to a single dictionary
+    """
+    pass
+
+aggr = Aggregator(args.config)
 # load the projects, arguments are optional
-mw.load_projects(*args.projects)
+aggr.load_projects(*args.projects)
 
 if __name__ == '__main__':
 
     # extract the files to present in the JSON
     # to be transparent about the data
-    # usage of schema here, instead of middleware, as this is straight from the database
+    # usage of schema here, instead of Aggregator, as this is straight from the database
     files = nvd.NVDFile.select().order_by(nvd.NVDFile.created_at.desc())
     files = [ model_to_dict(file) for file in files ]
     files = convert_datetime_to_str(files)
@@ -410,59 +478,65 @@ if __name__ == '__main__':
     with open(json_dir / 'files.json', 'w') as f:
         json.dump(files, f, indent=4)
     
-    # timeline plot section
-    timelines = {}
-    for project in args.projects:
-        # get timeline for each project
-        platform, project = get_platform(project)
-        logger.info(f"Getting timeline for {project} on {platform}...")
-        timeline = mw.get_vulnerabilities_timeline(project,
-                                                   args.start,
-                                                   step=args.step,
-                                                   platform=platform)
-        cves = timeline.get('cves', {})
-        logger.info(f"Found {len(cves)} CVEs for {project}")
-        timelines[f"{platform}:{project}"] = timeline
+    if args.timeline:
+    
+        # timeline plot section
+        timelines = {}
+        for project in args.projects:
+            # get timeline for each project
+            platform, project = get_platform(project)
+            logger.info(f"Getting timeline for {project} on {platform}...")
+            timeline = aggr.get_vulnerabilities_timeline(project,
+                                                    start_date=args.start,
+                                                    end_date=args.end,
+                                                    step=args.step,
+                                                    platform=platform)
+            cves = timeline.get('cves', {})
+            logger.info(f"Found {len(cves)} CVEs for {project}")
+            timelines[f"{platform}:{project}"] = timeline
 
-    plot_timelines(timelines)
-    try_json_dump(timelines, json_dir / 'timelines.json')
+        plot_timelines(timelines)
+        try_json_dump(timelines, json_dir / 'timelines.json')
+
+        if args.dependencies:
+            dependency_timelines = {}
+            timeline_entries = {}
+            for project in timelines:
+                platform, project = get_platform(project)
+                # get timeline for each project
+                logger.info(f"Getting dependencies for {project} on {platform}...")
+                indirect_timelines = aggr.get_indirect_vulnerabilities_timeline(project,
+                                                                            start_date=args.start,
+                                                                            end_date=args.end,
+                                                                            step=args.step,
+                                                                            platform=platform)
+                dependency_timelines[f"{platform}:{project}"] = indirect_timelines
+            plot_timelines(dependency_timelines, "Dependency")
+            try_json_dump(dependency_timelines, json_dir / 'dependency_timelines.json')
+
+    if args.overall:
+        # get all the vulnerabilities for the projects
+        # and plot them
+        # 1) by CWE category
+        # 2) by CWE weakness
+        # 3) by severity
+        # 4) by impact
+        # 5) issues
+        overall = {}
+        for project in args.projects:
+            # get all the vulnerabilities for the project
+            platform, project = get_platform(project)
+            project_id = f"{platform}:{project}"
+            logger.info(f"Getting overall data for {project} on {platform}...")
+            data = aggr.get_report(project, platform=platform, with_dependencies=True)
+            overall[project_id] = data
+            logger.info(f"Got {len(data.get('cves'))} CVEs for {project}")
+            logger.info(f"Got {len(data.get('cwes'))} CWEs for {project}")
+        plot_overall(overall)
+        try_json_dump(overall, json_dir / 'overall.json')
 
     if args.show:
         plt.show()
-
-    exit(0)
-
-    dependency_timelines = {}
-    for project in args.projects:
-        # get timeline for each project
-        platform, project = get_platform(project)
-        logger.info(f"Getting dependencies for {project} on {platform}...")
-        dependencies = mw.get_dependencies(project, platform=platform)
-        dependency_timelines[f"{platform}:{project}"] = {
-            'dependencies': dependencies,
-        }
-        logger.debug(f"Dependencies for {project}: {len(dependencies)}")
-        for dependency in dependencies:
-            timeline = mw.get_vulnerabilities_timeline(dependency.name,
-                                                       args.start,
-                                                       step=args.step,
-                                                       platform=platform)
-            dependency_timelines[f"{platform}:{project}"][dependency] = timeline
-
-    # get all the vulnerabilities for the projects
-    # and plot them
-    # 1) by CWE category
-    # 2) by CWE weakness
-    # 3) by severity
-    vulnerabilities = {}
-    for project in args.projects:
-        # get all the vulnerabilities for the project
-        platform, project = get_platform(project)
-        vulnerabilities[project] = mw.get_vulnerabilities(project,
-                                                          platform=platform,
-                                                          include_categories=True)
-    plot_vulnerabilities(vulnerabilities)
-    try_json_dump(vulnerabilities, json_dir / 'vulnerabilities.json')
         
     # TODO: do the same above but for each dependencies
     

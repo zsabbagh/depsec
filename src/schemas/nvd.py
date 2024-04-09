@@ -67,7 +67,7 @@ class CWE(Model):
     description: The description of the CWE
     updated_at: The date the row in the database was updated
     """
-    cve = ForeignKeyField(CVE, backref='cwes')
+    cve = ForeignKeyField(CVE, backref='cwes', on_delete='CASCADE')
     cwe_id = CharField(null=False)
     updated_at = DateTimeField(default=datetime.datetime.now)
 
@@ -110,7 +110,7 @@ class ConfigNode(Model):
     children: The children of the node
     """
     id = AutoField()
-    cve = ForeignKeyField(CVE, backref='config_nodes')
+    cve = ForeignKeyField(CVE, backref='config_nodes', on_delete='CASCADE')
     is_root = BooleanField(default=False)
     operator = CharField(null=True)
 
@@ -128,8 +128,8 @@ class ConfigEdge(Model):
     cpe: The Common Platform Enumeration
     """
     id = AutoField()
-    root = ForeignKeyField(ConfigNode, backref='root')
-    parent = ForeignKeyField(ConfigNode, backref='children')
+    root = ForeignKeyField(ConfigNode, backref='root', on_delete='CASCADE')
+    parent = ForeignKeyField(ConfigNode, backref='children', on_delete='CASCADE')
     child = ForeignKeyField(ConfigNode, backref='parents')
 
     class Meta:
@@ -156,7 +156,7 @@ class CPE(Model):
     """
     id = AutoField()
     uri = CharField(null=False)
-    node = ForeignKeyField(ConfigNode, backref='cpes')
+    node = ForeignKeyField(ConfigNode, backref='cpes', on_delete='CASCADE')
     part = CharField(null=True)
     vendor = CharField(null=False)
     product = CharField(null=False)

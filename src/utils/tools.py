@@ -1,8 +1,82 @@
 import re, datetime
+from loguru import logger
 from packaging import version as semver
 from pathlib import Path
 from loguru import logger
 from src.schemas.projects import Release, Project
+
+def parse_requirement(requirement: str) -> dict:
+    """
+    
+    """
+    requirement = requirement.strip()
+    regex = re.match(r'([<>=]+)(.*)', requirement)
+    if not regex:
+        logger.debug(f"Error parsing requirement '{requirement}'")
+        return None
+    try:
+        operator, version = regex.groups()
+    except Exception as e:
+        logger.debug(f"Error parsing requirement '{requirement}'")
+        return None
+    return operator, version
+
+def version_satisfies_requirements(v: str, requirements: str) -> bool:
+    """
+    Check if a version satisfies the requirements.
+
+    v: The version to check
+    requirements: The requirements to check
+    """
+    v = semver.parse(v.strip('.')) if type(v) == str else v
+    requirements = requirements.split(',')
+    for requirement in requirements:
+        parsed = parse_requirement(requirement)
+        if not parsed:
+            return False
+        operator, version = parsed
+        version = semver.parse(version.strip('.'))
+        match operator:
+            # return False if the version does not satisfy the requirement
+            case '>':
+                if v <= version:
+                    return False
+            case '>=':
+                if v < version:
+                    return False
+            case '<':
+                if v >= version:
+                    return False
+            case '<=':
+                if v > version:
+                    return False
+            case '==':
+                if v != version:
+                    return False
+            case '!=':
+                if v == version:
+                    return False
+            case _:
+                raise ValueError(f"Unexpected operator '{operator}'")
+    return True
+
+def strint_to_date(date: str | int | datetime.datetime | None):
+    """
+    Convert a date to a datetime object.
+
+    date: int implies a year, str implies a date, datetime implies a datetime object
+    """
+    if date is None:
+        return None
+    if type(date) == datetime.datetime:
+        return date
+    if type(date) == int:
+        date = str(date)
+    count_dash = date.count('-')
+    fmt = '%Y-%m-%d' if count_dash == 2 else '%Y-%m' if count_dash == 1 else '%Y'
+    if type(date) == str:
+        return datetime.datetime.strptime(date, fmt)
+    raise ValueError(f"Unexpected date type '{type(date).__name__}'")
 
 def version_in_range(v: str, start: str = None, end: str = None, exclude_start: bool = False, exclude_end: bool = False) -> bool:
     """

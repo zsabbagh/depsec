@@ -20,6 +20,7 @@ class Project(Model):
     forks: The number of forks the project has
     dependent_repos: The number of dependent repositories
     dependent_projects: The number of dependent projects
+    release_dependency_count: The number of releases that has been counted
     updated_at: The date the row in the database was updated
     package_manager_url: The URL of the package manager
     repository_url: The URL of the repository
@@ -37,7 +38,6 @@ class Project(Model):
     latest_release = CharField(null=True)
     dependent_repos = IntegerField(null=True)
     dependent_projects = IntegerField(null=True)
-    dependencies = IntegerField(null=True) # The number of dependencies
     updated_at = DateTimeField(default=datetime.datetime.now)
     package_manager_url = CharField(null=True)
     repository_url = CharField(null=True)
@@ -79,6 +79,7 @@ class Release(Model):
     commit_hash = CharField(null=True)
     includes = TextField(null=True)
     excludes = TextField(null=True)
+    dependency_count = IntegerField(null=True)
     class Meta:
         database = DB_PROJECTS.get()
         table_name = 'releases'
@@ -99,7 +100,7 @@ class BanditReport(Model):
     release = ForeignKeyField(Release, backref='bandit_report', on_delete='CASCADE', unique=True)
     updated_at = DateTimeField(default=datetime.datetime.now)
     issues_total = IntegerField(null=True)
-    files_counted = IntegerField(null=True)
+    files_with_issues = IntegerField(null=True)
     files_skipped = IntegerField(null=True)
     confidence_high_count = IntegerField(null=True)
     confidence_medium_count = IntegerField(null=True)
