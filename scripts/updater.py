@@ -1,4 +1,4 @@
-import argparse, re
+import argparse, re, sys
 from loguru import logger
 from pathlib import Path
 from pprint import pprint
@@ -15,8 +15,13 @@ parser.add_argument("-u", "--update-modules", action="store_true", help="Update 
 parser.add_argument("-r", "--repo-dir", help="Repository directory", default="./repositories/")
 parser.add_argument("-d", "--dependencies", action="store_true", help="Include dependencies", default=True)
 parser.add_argument("-p", "--projects", nargs='+', help="Projects to update")
+parser.add_argument("--debug", action="store_true", help="Enable debug logging")
 
 args = parser.parse_args()
+
+if not args.debug:
+    logger.remove()
+    logger.add(sys.stderr, level="INFO")
 
 ag = Aggregator(args.config)
 
@@ -101,7 +106,10 @@ def mark_issues(project: str | Project, version: str = None, platform: str="pypi
 for project in args.projects:
     version = None
     if ':' in project:
-        project, version = tuple(project.split(':'))
+        try:
+            project, version = tuple(project.split(':'))
+        except:
+            pass
     releases = []
     if version == 'all':
         releases = ag.get_releases(project, has_static_analysis=True)
@@ -109,6 +117,12 @@ for project in args.projects:
         if re.match(r"^\d+\.\d+\.\d+$", version) is None:
             version = f"=={version}"
         releases = ag.get_releases(project, requirements=version, has_static_analysis=True)
+    else:
+        rel = ag.get_release(project, has_static_analysis=True)
+        if rel is None:
+            logger.error(f"Release not found for {project}")
+            continue
+        releases.append(rel)
     for release in releases:
         process = [release]
         if args.dependencies:

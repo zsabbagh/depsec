@@ -277,7 +277,7 @@ class Aggregator:
                 logger.error(f"Invalid version {release.version} for {project_name}")
                 continue
             if exclude_deprecated and version_deprecated(version):
-                logger.warning(f"Skipping deprecated version {release.version} for {project_name}")
+                logger.debug(f"Skipping deprecated version {release.version} for {project_name}")
                 continue
             if requirements is not None:
                 # check if the version satisfies the requirements
@@ -676,7 +676,7 @@ class Aggregator:
         rel_timeline = self.get_release_timeline(project.name, start_date=start_date, end_date=end_date, step=step, platform=platform, exclude_deprecated=exclude_deprecated)
         for date, rel in rel_timeline:
             if rel is None:
-                logger.warning(f"No release found for {project.name} at {start_date}")
+                logger.debug(f"No release found for {project.name} at {start_date}")
                 start_date = datetime_increment(start_date, step)
                 results['timeline'].append({
                     'date': date,
@@ -897,12 +897,12 @@ class Aggregator:
         for node in nodes:
             relation = node.get('relation', '')
             if relation == 'SELF':
-                logger.warning(f"Skipping self-relation for {project_name} {version}")
+                logger.debug(f"Skipping self-relation for {project_name} {version}")
                 continue
             version_key = node.get('versionKey', {})
             name = version_key.get('name', '').lower()
             if name == project_name or not name:
-                logger.warning(f"Skipping dependency '{name}' for {project_name} {version}")
+                logger.debug(f"Skipping dependency '{name}' for {project_name} {version}")
                 continue
             ptfrm = version_key.get('system', '').lower()
             requirements = metadata.get(name, {}).get('requirements', '')
@@ -1019,7 +1019,7 @@ class Aggregator:
                     package = issue.package if issue.package else ''
                     is_test = package.startswith('test') or 'test' in module
                     if is_test:
-                        logger.warning(f"Detected test file {issue.filename} for {project_name} {release.version}, test ID {issue.test_id}")
+                        logger.debug(f"Detected test file {issue.filename} for {project_name} {release.version}, test ID {issue.test_id}")
                     severity = issue.severity
                     confidence = issue.confidence
                     score = bandit_issue_score(severity, confidence)
@@ -1136,7 +1136,7 @@ class Aggregator:
                                 else:
                                     not_satisfies.append(rel)
                             if len(satisfies) == 0:
-                                logger.warning(f"No release found for {dep_name} {dep_version} {dep_req}")
+                                logger.debug(f"No release found for {dep_name} {dep_version} {dep_req}")
                                 continue
                             dep_rel = satisfies[0]
                             dep_cve = set()
