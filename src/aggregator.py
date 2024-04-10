@@ -924,9 +924,76 @@ class Aggregator:
         release.save()
         return results
     
+    def _update_modules(self, project: str | Project, version: str = None, platform: str="pypi", repo_dir: str = None, with_dependencies: bool = True) -> None:
+        """
+        Updates 'module' field of a release
+        """
+        if repo_dir is None:
+            logger.error("Repository directory not provided")
+            return
+        repo_dir = Path(repo_dir).absolute()
+        releases = self.get_analysed_releases(project, platform=platform, with_dependencies=with_dependencies)
+        for release in releases:
+            report = release.bandit_report.first()
+            release_name = release.project.name
+            if report is not None:
+                for issue in report.issues:
+                    module = issue.module
+                    if module is None:
+                        path = Path(issue.filename)
+                        dirs = path.parts
+                        dir_str = None
+                        for i in range(len(dirs)-1, -1, -1):
+                            if dirs[i] == release_name:
+                                dir_str = '/'.join(dirs[i+1:])
+                                break
+                        module = dir_str
+                        package = str(Path(dir_str).parent)
+                        issue.module = module
+                        issue.package = package
+                        issue.save()
+                        print(f"Updated module for {release.project.name} {release.version} {issue.test_id} to {module}, and package {package}")
+
+    
+    def _mark_issues(self, project: str | Project, version: str = None, platform: str="pypi", with_dependencies: bool = True, skip_verified: bool = True, mark_tests: bool = True) -> None:
+        """
+        Mark issues as verified
+        """
+        releases = self.get_analysed_releases(project, platform=platform, with_dependencies=with_dependencies)
+        for release in releases:
+            report = release.bandit_report.first()
+            release_name = f"{release.project.name} {release.version}"
+            if report is not None:
+                for issue in report.issues:
+                    if skip_verified and issue.verified:
+                        print(f"Skip issue entered: Issue already verified for {release_name}")
+                        continue
+                    if mark_tests:
+                        if issue.package.startswith('test'):
+                            print(f"Skip issue entered: Issue in tests for {release_name}")
+                            issue.verified = False
+                            issue.save()
+                            continue
+                    print(f"Processing issue for {release_name}")
+                    pprint(model_to_dict(issue, recurse=False))
+                    inp = None
+                    while inp is None:
+                        inp = input("Mark as verified? [y/n]: ")
+                        inp = inp.strip().lower()
+                        if inp == 'y':
+                            issue.verified = True
+                            issue.save()
+                            print(f"Issue marked as verified for {release_name}")
+                        elif inp == 'n':
+                            print(f"Issue not marked as verified for {release_name}")
+                        else:
+                            inp = None
+                            print(f"Invalid input, please try again")
+    
     def get_bandit_report(self,
                           project_or_release: str | Project,
                           version: str = None,
+                          force: bool = True,
                           platform: str="pypi") -> BanditReport:
         """
         Gets the bandit report of a project or a specific release
@@ -955,7 +1022,7 @@ class Aggregator:
                 logger.error(f"Release {version} not found for {project.name}")
                 return None
         bandit_report = release.bandit_report.first()
-        if bandit_report is None:
+        if bandit_report is None and force:
             logger.info(f"No bandit report found for {project.name} {version}")
             releases = self.get_releases(project.name, platform=platform, sort_semantically=True)
             for rel in releases:
@@ -967,6 +1034,60 @@ class Aggregator:
             logger.error(f"No bandit report found for {project.name} {version}")
             return None
         return bandit_report
+    
+    def get_analysed_releases(self,
+                          project: str | Project,
+                          platform: str="pypi",
+                          with_dependencies: bool = True) -> List[Release]:
+        """
+        Gets all releases of a project with static analysis.
+        First is the project, then the dependencies, when with_dependencies is True
+
+        project: str | Project
+        platform: str, default: pypi
+        with_dependencies: bool, default: True, if True, dependencies are included in the list
+        """
+        release = self.get_release(project, platform=platform, has_static_analysis=True)
+        results = []
+        if release is None:
+            logger.error(f"No release found for {project}")
+            return results
+        results.append(release)
+        for dependency in release.dependencies:
+            dep_name = dependency.name
+            dep_release = self.get_release(dep_name, platform=dependency.platform, has_static_analysis=True)
+            if dep_release is not None:
+                results.append(dep_release)
+        return results
+    
+    def get_bandit_issues(self,
+                          project: str | Project,
+                          platform: str="pypi",
+                          with_dependencies: bool = True) -> List[dict]:
+        """
+        Gets all Bandit issues with / without dependencies
+        """
+        project_name = project if isinstance(project, str) else project.name
+        results = []
+        releases = self.get_analysed_releases(project, platform=platform, with_dependencies=with_dependencies)
+        for release in releases:
+            report = release.bandit_report.first()
+            source = 'Direct' if release.project.name == project_name else 'Indirect'
+            if report is not None:
+                for issue in report.issues:
+                    print(issue.filename)
+                    severity = issue.severity
+                    confidence = issue.confidence
+                    score = bandit_issue_score(severity, confidence)
+                    issue = model_to_dict(issue, recurse=False)
+                    issue['project'] = release.project.name
+                    issue['source'] = source
+                    issue['score'] = score
+                    issue['project_version'] = release.version
+                    test_id = issue.get('test_id')
+                    issue['test_category'] = test_id[:2] if test_id and len(test_id) > 2 else None
+                    results.append(issue)
+        return results
     
     def get_report(self,
                     *projects: str | Project,
@@ -1230,15 +1351,11 @@ if __name__ == "__main__":
     # For the purpose of loading in interactive shell and debugging
     # e.g., py -i src/Aggregator.py
     parser = argparse.ArgumentParser()
-    parser.add_argument('project', type=str, help='The project name', default='jinja2')
+    parser.add_argument('-p', '--project', type=str, help='The project name')
     parser.add_argument('--debug', action='store_true', help='Debug mode')
     logger.remove()
     args = parser.parse_args()
     logger.add(sys.stdout, colorize=True, backtrace=True, diagnose=True, level='DEBUG' if args.debug else 'INFO')
-    aggr = Aggregator("config.yml", debug=True)
-    aggr.load_projects()
-    project = aggr.get_project(args.project)
-    release = aggr.get_release(project)
-    start_time = datetime.datetime.now()
-    report = aggr.get_report(args.project, with_dependencies=True)
-    print(f"report generation for '{args.project}' took {datetime.datetime.now() - start_time}")
+    ag = Aggregator("config.yml", debug=True)
+    ag.load_projects()
+    project = ag.get_project(args.project) if args.project else None

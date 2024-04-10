@@ -1,4 +1,4 @@
-import subprocess, datetime, os, json, lizard, glob, time
+import subprocess, datetime, os, json, lizard, glob, time, argparse
 from pathlib import Path
 from pprint import pprint
 from loguru import logger
@@ -180,3 +180,18 @@ def run_bandit(dir: str | Path,
         'severity_undefined_count': u_sev,
         'severity_confidence': sev_conf,
     }
+
+if __name__ == '__main__':
+    # Run Bandit
+    parser = argparse.ArgumentParser(description='Run Bandit and Lizard on the codebase.')
+    parser.add_argument('dir', type=str, help='The directory to run Bandit and Lizard on.')
+    parser.add_argument('-i', '--includes', type=str, nargs='+', help='The filepaths to include.', default=None)
+    parser.add_argument('-x', '--excludes', type=str, nargs='+', help='The filepaths to exclude (starting with the directory provided).', default=None)
+    args = parser.parse_args()
+    report = run_bandit(
+        dir=args.dir,
+        includes=args.includes,
+        excludes=args.excludes,
+        output='src/__temp__'
+    )
+    pprint(report)

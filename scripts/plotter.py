@@ -70,6 +70,12 @@ class Global:
     colours = [
         "#0cad6f","#4582b1","#f4d06f","#c4603b","#c477bf"
     ]
+    source_palette = [
+        "#2B9EC7",
+        "#C66A50"
+    ]
+    dependency_palette = ["#30bbb9","#2badb1","#259faa","#2091a2","#1b849a","#157692","#10688b","#0a5a83","#054c7b"]
+
     class Colours:
         light_grey = "#c0c0c0"
 
@@ -456,15 +462,43 @@ def plot_overall(overall: dict, *measurements: str):
 
     pass
 
+def plot_bandit(bandit: dict):
+    """
+    Plots Bandit data.
+    Expects a list of dictionaries of issues.
+
+    {
+        project: [ issues ]
+    }
+    """
+    project_count = len(bandit)
+    fig, axs = plt.subplots(project_count, 1, figsize=(10, 8))
+    fig.subplots_adjust(hspace=0.5)
+    i = 0
+    values = ['None', 'Low', 'Medium', 'High', 'Critical']
+    for project_id, issues in bandit.items():
+        ax: plt.Axes = axs[i]
+        platform, project = get_platform(project_id)
+        df = pd.DataFrame(issues)
+        sns.swarmplot(data=df, x='test_category', y='score', hue='source', ax=ax, palette=Global.source_palette)
+        sns.violinplot(data=df, x='test_category', y='score', ax=ax, fill=False, color=Global.Colours.light_grey, cut=0)
+        ax.set_xlabel(None)
+        ax.set_ylabel(None)
+        ax.set_title(project.title())
+        ax.set_yticks(range(len(values)), values)
+        i += 1
+    fig.suptitle("Bandit Test Category Distribution")
+    fig.supxlabel("Test Category")
+
 def combine_timeline_data(data: dict):
     """
     Combines timeline data to a single dictionary
     """
     pass
 
-aggr = Aggregator(args.config)
+ag = Aggregator(args.config)
 # load the projects, arguments are optional
-aggr.load_projects(*args.projects)
+ag.load_projects(*args.projects)
 
 if __name__ == '__main__':
 
@@ -486,7 +520,7 @@ if __name__ == '__main__':
             # get timeline for each project
             platform, project = get_platform(project)
             logger.info(f"Getting timeline for {project} on {platform}...")
-            timeline = aggr.get_vulnerabilities_timeline(project,
+            timeline = ag.get_vulnerabilities_timeline(project,
                                                     start_date=args.start,
                                                     end_date=args.end,
                                                     step=args.step,
@@ -505,7 +539,7 @@ if __name__ == '__main__':
                 platform, project = get_platform(project)
                 # get timeline for each project
                 logger.info(f"Getting dependencies for {project} on {platform}...")
-                indirect_timelines = aggr.get_indirect_vulnerabilities_timeline(project,
+                indirect_timelines = ag.get_indirect_vulnerabilities_timeline(project,
                                                                             start_date=args.start,
                                                                             end_date=args.end,
                                                                             step=args.step,
@@ -523,16 +557,20 @@ if __name__ == '__main__':
         # 4) by impact
         # 5) issues
         overall = {}
+        bandit = {}
         for project in args.projects:
             # get all the vulnerabilities for the project
             platform, project = get_platform(project)
+            bandit_issues = ag.get_bandit_issues(project, platform=platform, with_dependencies=True)
             project_id = f"{platform}:{project}"
+            bandit[project_id] = bandit_issues
             logger.info(f"Getting overall data for {project} on {platform}...")
-            data = aggr.get_report(project, platform=platform, with_dependencies=True)
+            data = ag.get_report(project, platform=platform, with_dependencies=True)
             overall[project_id] = data
             logger.info(f"Got {len(data.get('cves'))} CVEs for {project}")
             logger.info(f"Got {len(data.get('cwes'))} CWEs for {project}")
         plot_overall(overall)
+        plot_bandit(bandit)
         try_json_dump(overall, json_dir / 'overall.json')
 
     if args.show:

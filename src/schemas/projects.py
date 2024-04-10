@@ -133,6 +133,9 @@ class BanditIssue(Model):
     id = AutoField()
     report = ForeignKeyField(BanditReport, backref='issues', on_delete='CASCADE')
     description = TextField(null=False)
+    verified = BooleanField(default=False) # Whether the issue has been verified as true or false
+    package = CharField(null=False)
+    module = CharField(null=False)
     filename = CharField(null=False)
     confidence = CharField(null=True)
     severity = CharField(null=True)

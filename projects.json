@@ -19,7 +19,8 @@
         "django": {
             "repo": {
                 "url": "github.com/django/django",
-                "includes": ["django/", "django.py", "src/"]
+                "includes": ["django/", "django.py", "src/"],
+                "excludes": ["django/test/"]
             }
         },
         "tornado": {
@@ -81,7 +82,8 @@
             "vendor": "palletsprojects",
             "repo": {
                 "url": "github.com/pallets/click",
-                "includes": ["src/", "click/"]
+                "includes": ["src/", "click/"],
+                "excludes": ["src/click/testing.py"]
             }
         },
         "markupsafe": {

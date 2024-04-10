@@ -5,6 +5,26 @@ from pathlib import Path
 from loguru import logger
 from src.schemas.projects import Release, Project
 
+def bandit_value_score(value: str) -> int:
+    """
+    Calculate the score of a Bandit issue severity or confidence value.
+    """
+    value = value.lower()
+    match value:
+        case 'low':
+            return 0
+        case 'medium':
+            return 1
+        case 'high':
+            return 2
+    return 0
+
+def bandit_issue_score(severity: str, confidence: str) -> int:
+    """
+    Calculate the score of a Bandit issue.
+    """
+    return bandit_value_score(severity) + bandit_value_score(confidence)
+
 def parse_requirement(requirement: str) -> dict:
     """
     
