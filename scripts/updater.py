@@ -164,6 +164,7 @@ for project in args.projects:
                 conf = {}
                 if report is not None:
                     for issue in report.issues:
+                        # add skip
                         s = issue.severity.lower()
                         c = issue.confidence.lower()
                         if s not in sev_conf:
@@ -176,6 +177,7 @@ for project in args.projects:
                         issue.score = severity_score + confidence_score
                         issue.save()
                         print(f"Updated score for {rel.project.name} {rel.version} {issue.test_id} to {issue.score}")
+                    # add issue count
                     report.severity_high_count = sev.get('high', 0)
                     report.severity_medium_count = sev.get('medium', 0)
                     report.severity_low_count = sev.get('low', 0)
