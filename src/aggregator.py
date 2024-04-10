@@ -1012,6 +1012,7 @@ class Aggregator:
         for release in releases:
             report = release.bandit_report.first()
             source = 'Direct' if release.project.name == project_name else 'Indirect'
+            release_name = f"{release.project.name}"
             if report is not None:
                 for issue in report.issues:
                     print(issue.filename)
@@ -1027,6 +1028,8 @@ class Aggregator:
                     issue['project'] = release.project.name
                     issue['source'] = source
                     issue['score'] = score
+                    issue['package_module'] = f"{package}.{module}" if package and module else package or module
+                    issue['project_package'] = f"{release_name}.{package}" if package else release_name
                     issue['project_version'] = release.version
                     issue['is_test'] = is_test
                     test_id = issue.get('test_id')

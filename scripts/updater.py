@@ -21,6 +21,7 @@ parser.add_argument("--debug", action="store_true", help="Enable debug logging")
 parser.add_argument("-min", "--minimum-confidence", help="Min confidence level of issues to update")
 parser.add_argument("-max", "--maximum-confidence", help="Max confidence level of issues to update")
 parser.add_argument("-a", "--accept-blank", action="store_true", help="Accept blank input of verification step to skip")
+parser.add_argument("-s", "--score", action="store_true", help="Update scores")
 
 args = parser.parse_args()
 
@@ -156,3 +157,39 @@ for project in args.projects:
             if args.mark_issues:
                 input("Ready? [press enter] ")
                 mark_issues(rel, with_dependencies=args.dependencies)
+            if args.score:
+                report: BanditReport = rel.bandit_report.first()
+                sev_conf = {}
+                sev = {}
+                conf = {}
+                if report is not None:
+                    for issue in report.issues:
+                        s = issue.severity.lower()
+                        c = issue.confidence.lower()
+                        if s not in sev_conf:
+                            sev_conf[s] = {}
+                        sev[s] = sev.get(s, 0) + 1
+                        conf[c] = conf.get(c, 0) + 1
+                        sev_conf[s][c] = sev_conf[s].get(c, 0) + 1
+                        severity_score = bandit_value_score(s)
+                        confidence_score = bandit_value_score(c)
+                        issue.score = severity_score + confidence_score
+                        issue.save()
+                        print(f"Updated score for {rel.project.name} {rel.version} {issue.test_id} to {issue.score}")
+                    report.severity_high_count = sev.get('high', 0)
+                    report.severity_medium_count = sev.get('medium', 0)
+                    report.severity_low_count = sev.get('low', 0)
+                    report.confidence_high_count = conf.get('high', 0)
+                    report.confidence_medium_count = conf.get('medium', 0)
+                    report.confidence_low_count = conf.get('low', 0)
+                    report.severity_h_confidence_h_count = sev_conf.get('high', {}).get('high', 0)
+                    report.severity_h_confidence_m_count = sev_conf.get('high', {}).get('medium', 0)
+                    report.severity_h_confidence_l_count = sev_conf.get('high', {}).get('low', 0)
+                    report.severity_m_confidence_h_count = sev_conf.get('medium', {}).get('high', 0)
+                    report.severity_m_confidence_m_count = sev_conf.get('medium', {}).get('medium', 0)
+                    report.severity_m_confidence_l_count = sev_conf.get('medium', {}).get('low', 0)
+                    report.severity_l_confidence_h_count = sev_conf.get('low', {}).get('high', 0)
+                    report.severity_l_confidence_m_count = sev_conf.get('low', {}).get('medium', 0)
+                    report.severity_l_confidence_l_count = sev_conf.get('low', {}).get('low', 0)
+                    report.save()
+                    print(f"Updated issue count for {rel.project.name} {rel.version}")

@@ -406,7 +406,7 @@ def plot_semver_cve_distribution(overall: dict, *measurements: str):
         ax.set_ylim(0, 10.5)
         ax.set_yticks(np.arange(0, 11, 11//steps))
         ax.set_xticks(np.arange(0, max_version+1, 1))
-    fig.suptitle("CVE Distribution by Major Semantic Version")
+    fig.suptitle("Applicable CVEs by Major Semantic Version")
     fig.supxlabel("Major Semantic Version")
     fig.supylabel("CVSS Base Score")
     fig.savefig(plots_dir / 'semver-cve-distribution.png')
@@ -469,12 +469,14 @@ def plot_bandit(bandit: dict):
     }
     """
     project_count = len(bandit)
-    fig, axs = plt.subplots(project_count, 1, figsize=(10, 8))
-    fig.subplots_adjust(hspace=0.5)
+
+    # plot the test category distribution
+    fig_category, axs_category = plt.subplots(project_count, 1, figsize=(10, 8))
+    fig_category.subplots_adjust(hspace=0.5)
     i = 0
     values = ['None', 'Low', 'Medium', 'High', 'Critical']
     for project_id, issues in bandit.items():
-        ax: plt.Axes = axs[i]
+        ax: plt.Axes = axs_category[i]
         platform, project = get_platform(project_id)
         version = f":{issues[0]['project_version']}" if len(issues) > 0 and issues[0]['project'] == project else ''
         df = pd.DataFrame(issues)
@@ -488,11 +490,43 @@ def plot_bandit(bandit: dict):
         ax.set_title(f"{project.title()}{version}")
         ax.set_yticks(range(len(values)), values)
         i += 1
-    fig.suptitle("Bandit Test Category Distribution")
-    fig.supxlabel("Test Category")
-    fig.savefig(plots_dir / 'bandit-test-category-distribution.png')
+    fig_category.suptitle("Bandit Test Category Distribution")
+    fig_category.supxlabel("Test Category")
+    fig_category.savefig(plots_dir / 'bandit-test-category-distribution.png')
     bandit_json = convert_datetime_to_str(bandit)
-    try_json_dump(bandit_json, json_dir / 'bandit-test-category-distribution.json')
+
+    fig_module, axs_module = plt.subplots(project_count, 1, figsize=(10, 8))
+    fig_module.subplots_adjust(hspace=0.5)
+    i = 0
+    for project_id, issues in bandit.items():
+        ax: plt.Axes = axs_module[i]
+        platform, project = get_platform(project_id)
+        version = f":{issues[0]['project_version']}" if len(issues) > 0 and issues[0]['project'] == project else ''
+        df = pd.DataFrame(issues)
+        # get unique filenames, test ids, and code snippets
+        df = df[ df['is_test'] == False ]
+        # count the number of issues per module
+        df = df.groupby(['project_package', 'source']).size().reset_index(name='count')
+        df = df.sort_values(by=['count'], ascending=False)
+        # top 10 packages
+        df = df.head(10)
+        sns.barplot(data=df, x='project_package', y='count', hue='source', ax=ax, palette=Global.source_palette)
+        sns.barplot(data=df, x='project_package', y='count', hue='source', ax=ax, palette=Global.source_palette)
+        ax.set_xlabel(None)
+        ax.set_ylabel(None)
+        # tilt the x-axis labels
+        for tick in ax.get_xticklabels():
+            tick.set_rotation(15)
+            # set font size
+            tick.set_fontsize(8)
+        ax.set_title(f"{project.title()}{version}")
+        i += 1
+    fig_module.suptitle("Bandit Package Distribution")
+    fig_module.supxlabel("Package")
+    fig_module.supylabel("Issue Count")
+    fig_module.savefig(plots_dir / 'bandit-module-distribution.png')
+
+    try_json_dump(bandit_json, json_dir / 'bandit-distribution.json')
 
 def combine_timeline_data(data: dict):
     """

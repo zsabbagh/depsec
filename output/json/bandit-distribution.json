@@ -20,6 +20,8 @@
             "cwe_id": "CWE-703",
             "project": "django",
             "source": "Direct",
+            "package_module": "apps.config",
+            "project_package": "django.apps",
             "project_version": "5.0.3",
             "is_test": false,
             "test_category": "B1"
@@ -44,6 +46,8 @@
             "cwe_id": "CWE-703",
             "project": "django",
             "source": "Direct",
+            "package_module": "apps.config",
+            "project_package": "django.apps",
             "project_version": "5.0.3",
             "is_test": false,
             "test_category": "B1"
@@ -68,6 +72,8 @@
             "cwe_id": "CWE-259",
             "project": "django",
             "source": "Direct",
+            "package_module": "conf.global_settings",
+            "project_package": "django.conf",
             "project_version": "5.0.3",
             "is_test": false,
             "test_category": "B1"
@@ -92,6 +98,8 @@
             "cwe_id": "CWE-259",
             "project": "django",
             "source": "Direct",
+            "package_module": "conf.global_settings",
+            "project_package": "django.conf",
             "project_version": "5.0.3",
             "is_test": false,
             "test_category": "B1"
@@ -116,6 +124,8 @@
             "cwe_id": "CWE-80",
             "project": "django",
             "source": "Direct",
+            "package_module": "contrib.admin.helpers",
+            "project_package": "django.contrib.admin",
             "project_version": "5.0.3",
             "is_test": false,
             "test_category": "B7"
@@ -140,6 +150,8 @@
             "cwe_id": "CWE-79",
             "project": "django",
             "source": "Direct",
+            "package_module": "contrib.admin.helpers",
+            "project_package": "django.contrib.admin",
             "project_version": "5.0.3",
             "is_test": false,
             "test_category": "B3"
@@ -164,6 +176,8 @@
             "cwe_id": "CWE-80",
             "project": "django",
             "source": "Direct",
+            "package_module": "contrib.admin.helpers",
+            "project_package": "django.contrib.admin",
             "project_version": "5.0.3",
             "is_test": false,
             "test_category": "B7"
@@ -188,6 +202,8 @@
             "cwe_id": "CWE-79",
             "project": "django",
             "source": "Direct",
+            "package_module": "contrib.admin.helpers",
+            "project_package": "django.contrib.admin",
             "project_version": "5.0.3",
             "is_test": false,
             "test_category": "B3"
@@ -212,6 +228,8 @@
             "cwe_id": "CWE-80",
             "project": "django",
             "source": "Direct",
+            "package_module": "contrib.admin.helpers",
+            "project_package": "django.contrib.admin",
             "project_version": "5.0.3",
             "is_test": false,
             "test_category": "B7"
@@ -236,6 +254,8 @@
             "cwe_id": "CWE-79",
             "project": "django",
             "source": "Direct",
+            "package_module": "contrib.admin.helpers",
+            "project_package": "django.contrib.admin",
             "project_version": "5.0.3",
             "is_test": false,
             "test_category": "B3"
@@ -260,6 +280,8 @@
             "cwe_id": "CWE-80",
             "project": "django",
             "source": "Direct",
+            "package_module": "contrib.admin.options",
+            "project_package": "django.contrib.admin",
             "project_version": "5.0.3",
             "is_test": false,
             "test_category": "B7"
@@ -284,6 +306,8 @@
             "cwe_id": "CWE-79",
             "project": "django",
             "source": "Direct",
+            "package_module": "contrib.admin.options",
+            "project_package": "django.contrib.admin",
             "project_version": "5.0.3",
             "is_test": false,
             "test_category": "B3"
@@ -308,6 +332,8 @@
             "cwe_id": "CWE-80",
             "project": "django",
             "source": "Direct",
+            "package_module": "contrib.admin.options",
+            "project_package": "django.contrib.admin",
             "project_version": "5.0.3",
             "is_test": false,
             "test_category": "B7"
@@ -332,6 +358,8 @@
             "cwe_id": "CWE-79",
             "project": "django",
             "source": "Direct",
+            "package_module": "contrib.admin.options",
+            "project_package": "django.contrib.admin",
             "project_version": "5.0.3",
             "is_test": false,
             "test_category": "B3"
@@ -356,6 +384,8 @@
             "cwe_id": "CWE-80",
             "project": "django",
             "source": "Direct",
+            "package_module": "contrib.admin.templatetags.admin_list",
+            "project_package": "django.contrib.admin.templatetags",
             "project_version": "5.0.3",
             "is_test": false,
             "test_category": "B7"
@@ -380,6 +410,8 @@
             "cwe_id": "CWE-79",
             "project": "django",
             "source": "Direct",
+            "package_module": "contrib.admin.templatetags.admin_list",
+            "project_package": "django.contrib.admin.templatetags",
             "project_version": "5.0.3",
             "is_test": false,
             "test_category": "B3"
@@ -404,6 +436,8 @@
             "cwe_id": "CWE-80",
             "project": "django",
             "source": "Direct",
+            "package_module": "contrib.admin.templatetags.admin_list",
+            "project_package": "django.contrib.admin.templatetags",
             "project_version": "5.0.3",
             "is_test": false,
             "test_category": "B7"
@@ -428,6 +462,8 @@
             "cwe_id": "CWE-79",
             "project": "django",
             "source": "Direct",
+            "package_module": "contrib.admin.templatetags.admin_list",
+            "project_package": "django.contrib.admin.templatetags",
             "project_version": "5.0.3",
             "is_test": false,
             "test_category": "B3"
@@ -452,6 +488,8 @@
             "cwe_id": "CWE-79",
             "project": "django",
             "source": "Direct",
+            "package_module": "contrib.admin.templatetags.admin_list",
+            "project_package": "django.contrib.admin.templatetags",
             "project_version": "5.0.3",
             "is_test": false,
             "test_category": "B3"
@@ -476,6 +514,8 @@
             "cwe_id": "CWE-80",
             "project": "django",
             "source": "Direct",
+            "package_module": "contrib.admin.templatetags.admin_list",
+            "project_package": "django.contrib.admin.templatetags",
             "project_version": "5.0.3",
             "is_test": false,
             "test_category": "B7"
@@ -500,6 +540,8 @@
             "cwe_id": "CWE-79",
             "project": "django",
             "source": "Direct",
+            "package_module": "contrib.admin.templatetags.admin_list",
+            "project_package": "django.contrib.admin.templatetags",
             "project_version": "5.0.3",
             "is_test": false,
             "test_category": "B3"
@@ -524,6 +566,8 @@
             "cwe_id": "CWE-80",
             "project": "django",
             "source": "Direct",
+            "package_module": "contrib.admin.templatetags.admin_list",
+            "project_package": "django.contrib.admin.templatetags",
             "project_version": "5.0.3",
             "is_test": false,
             "test_category": "B7"
@@ -548,6 +592,8 @@
             "cwe_id": "CWE-79",
             "project": "django",
             "source": "Direct",
+            "package_module": "contrib.admin.templatetags.admin_list",
+            "project_package": "django.contrib.admin.templatetags",
             "project_version": "5.0.3",
             "is_test": false,
             "test_category": "B3"
@@ -572,6 +618,8 @@
             "cwe_id": "CWE-80",
             "project": "django",
             "source": "Direct",
+            "package_module": "contrib.admin.templatetags.admin_list",
+            "project_package": "django.contrib.admin.templatetags",
             "project_version": "5.0.3",
             "is_test": false,
             "test_category": "B7"
@@ -596,6 +644,8 @@
             "cwe_id": "CWE-79",
             "project": "django",
             "source": "Direct",
+            "package_module": "contrib.admin.templatetags.admin_list",
+            "project_package": "django.contrib.admin.templatetags",
             "project_version": "5.0.3",
             "is_test": false,
             "test_category": "B3"
@@ -620,6 +670,8 @@
             "cwe_id": "CWE-80",
             "project": "django",
             "source": "Direct",
+            "package_module": "contrib.admindocs.utils",
+            "project_package": "django.contrib.admindocs",
             "project_version": "5.0.3",
             "is_test": false,
             "test_category": "B7"
@@ -644,6 +696,8 @@
             "cwe_id": "CWE-79",
             "project": "django",
             "source": "Direct",
+            "package_module": "contrib.admindocs.utils",
+            "project_package": "django.contrib.admindocs",
             "project_version": "5.0.3",
             "is_test": false,
             "test_category": "B3"
@@ -668,6 +722,8 @@
             "cwe_id": "CWE-259",
             "project": "django",
             "source": "Direct",
+            "package_module": "contrib.auth.hashers",
+            "project_package": "django.contrib.auth",
             "project_version": "5.0.3",
             "is_test": false,
             "test_category": "B1"
@@ -692,6 +748,8 @@
             "cwe_id": "CWE-327",
             "project": "django",
             "source": "Direct",
+            "package_module": "contrib.auth.hashers",
+            "project_package": "django.contrib.auth",
             "project_version": "5.0.3",
             "is_test": false,
             "test_category": "B3"
@@ -716,6 +774,8 @@
             "cwe_id": "CWE-327",
             "project": "django",
             "source": "Direct",
+            "package_module": "contrib.auth.hashers",
+            "project_package": "django.contrib.auth",
             "project_version": "5.0.3",
             "is_test": false,
             "test_category": "B3"
@@ -740,6 +800,8 @@
             "cwe_id": "CWE-327",
             "project": "django",
             "source": "Direct",
+            "package_module": "contrib.auth.hashers",
+            "project_package": "django.contrib.auth",
             "project_version": "5.0.3",
             "is_test": false,
             "test_category": "B3"
@@ -764,6 +826,8 @@
             "cwe_id": "CWE-327",
             "project": "django",
             "source": "Direct",
+            "package_module": "contrib.auth.hashers",
+            "project_package": "django.contrib.auth",
             "project_version": "5.0.3",
             "is_test": false,
             "test_category": "B3"
@@ -788,6 +852,8 @@
             "cwe_id": "CWE-259",
             "project": "django",
             "source": "Direct",
+            "package_module": "contrib.auth.management.commands.createsuperuser",
+            "project_package": "django.contrib.auth.management.commands",
             "project_version": "5.0.3",
             "is_test": false,
             "test_category": "B1"
@@ -812,6 +878,8 @@
             "cwe_id": "CWE-259",
             "project": "django",
             "source": "Direct",
+            "package_module": "contrib.auth.views",
+            "project_package": "django.contrib.auth",
             "project_version": "5.0.3",
             "is_test": false,
             "test_category": "B1"
@@ -836,6 +904,8 @@
             "cwe_id": "CWE-259",
             "project": "django",
             "source": "Direct",
+            "package_module": "contrib.auth.views",
+            "project_package": "django.contrib.auth",
             "project_version": "5.0.3",
             "is_test": false,
             "test_category": "B1"
@@ -860,6 +930,8 @@
             "cwe_id": "CWE-80",
             "project": "django",
             "source": "Direct",
+            "package_module": "contrib.flatpages.views",
+            "project_package": "django.contrib.flatpages",
             "project_version": "5.0.3",
             "is_test": false,
             "test_category": "B7"
@@ -884,6 +956,8 @@
             "cwe_id": "CWE-79",
             "project": "django",
             "source": "Direct",
+            "package_module": "contrib.flatpages.views",
+            "project_package": "django.contrib.flatpages",
             "project_version": "5.0.3",
             "is_test": false,
             "test_category": "B3"
@@ -908,6 +982,8 @@
             "cwe_id": "CWE-80",
             "project": "django",
             "source": "Direct",
+            "package_module": "contrib.flatpages.views",
+            "project_package": "django.contrib.flatpages",
             "project_version": "5.0.3",
             "is_test": false,
             "test_category": "B7"
@@ -932,6 +1008,8 @@
             "cwe_id": "CWE-79",
             "project": "django",
             "source": "Direct",
+            "package_module": "contrib.flatpages.views",
+            "project_package": "django.contrib.flatpages",
             "project_version": "5.0.3",
             "is_test": false,
             "test_category": "B3"
@@ -956,6 +1034,8 @@
             "cwe_id": "CWE-89",
             "project": "django",
             "source": "Direct",
+            "package_module": "contrib.gis.db.backends.postgis.operations",
+            "project_package": "django.contrib.gis.db.backends.postgis",
             "project_version": "5.0.3",
             "is_test": false,
             "test_category": "B6"
@@ -980,6 +1060,8 @@
             "cwe_id": "CWE-80",
             "project": "django",
             "source": "Direct",
+            "package_module": "contrib.humanize.templatetags.humanize",
+            "project_package": "django.contrib.humanize.templatetags",
             "project_version": "5.0.3",
             "is_test": false,
             "test_category": "B7"
@@ -1004,6 +1086,8 @@
             "cwe_id": "CWE-79",
             "project": "django",
             "source": "Direct",
+            "package_module": "contrib.humanize.templatetags.humanize",
+            "project_package": "django.contrib.humanize.templatetags",
             "project_version": "5.0.3",
             "is_test": false,
             "test_category": "B3"
@@ -1028,6 +1112,8 @@
             "cwe_id": "CWE-80",
             "project": "django",
             "source": "Direct",
+            "package_module": "contrib.messages.storage.cookie",
+            "project_package": "django.contrib.messages.storage",
             "project_version": "5.0.3",
             "is_test": false,
             "test_category": "B7"
@@ -1052,6 +1138,8 @@
             "cwe_id": "CWE-79",
             "project": "django",
             "source": "Direct",
+            "package_module": "contrib.messages.storage.cookie",
+            "project_package": "django.contrib.messages.storage",
             "project_version": "5.0.3",
             "is_test": false,
             "test_category": "B3"
@@ -1076,6 +1164,8 @@
             "cwe_id": "CWE-703",
             "project": "django",
             "source": "Direct",
+            "package_module": "contrib.sessions.backends.base",
+            "project_package": "django.contrib.sessions.backends",
             "project_version": "5.0.3",
             "is_test": false,
             "test_category": "B1"
@@ -1100,6 +1190,8 @@
             "cwe_id": "CWE-502",
             "project": "django",
             "source": "Direct",
+            "package_module": "core.cache.backends.db",
+            "project_package": "django.core.cache.backends",
             "project_version": "5.0.3",
             "is_test": false,
             "test_category": "B4"
@@ -1124,6 +1216,8 @@
             "cwe_id": "CWE-89",
             "project": "django",
             "source": "Direct",
+            "package_module": "core.cache.backends.db",
+            "project_package": "django.core.cache.backends",
             "project_version": "5.0.3",
             "is_test": false,
             "test_category": "B6"
@@ -1148,6 +1242,8 @@
             "cwe_id": "CWE-502",
             "project": "django",
             "source": "Direct",
+            "package_module": "core.cache.backends.db",
+            "project_package": "django.core.cache.backends",
             "project_version": "5.0.3",
             "is_test": false,
             "test_category": "B3"
@@ -1172,6 +1268,8 @@
             "cwe_id": "CWE-89",
             "project": "django",
             "source": "Direct",
+            "package_module": "core.cache.backends.db",
+            "project_package": "django.core.cache.backends",
             "project_version": "5.0.3",
             "is_test": false,
             "test_category": "B6"
@@ -1196,6 +1294,8 @@
             "cwe_id": "CWE-89",
             "project": "django",
             "source": "Direct",
+            "package_module": "core.cache.backends.db",
+            "project_package": "django.core.cache.backends",
             "project_version": "5.0.3",
             "is_test": false,
             "test_category": "B6"
@@ -1220,6 +1320,8 @@
             "cwe_id": "CWE-89",
             "project": "django",
             "source": "Direct",
+            "package_module": "core.cache.backends.db",
+            "project_package": "django.core.cache.backends",
             "project_version": "5.0.3",
             "is_test": false,
             "test_category": "B6"
@@ -1244,6 +1346,8 @@
             "cwe_id": "CWE-89",
             "project": "django",
             "source": "Direct",
+            "package_module": "core.cache.backends.db",
+            "project_package": "django.core.cache.backends",
             "project_version": "5.0.3",
             "is_test": false,
             "test_category": "B6"
@@ -1268,6 +1372,8 @@
             "cwe_id": "CWE-89",
             "project": "django",
             "source": "Direct",
+            "package_module": "core.cache.backends.db",
+            "project_package": "django.core.cache.backends",
             "project_version": "5.0.3",
             "is_test": false,
             "test_category": "B6"
@@ -1292,6 +1398,8 @@
             "cwe_id": "CWE-89",
             "project": "django",
             "source": "Direct",
+            "package_module": "core.cache.backends.db",
+            "project_package": "django.core.cache.backends",
             "project_version": "5.0.3",
             "is_test": false,
             "test_category": "B6"
@@ -1316,6 +1424,8 @@
             "cwe_id": "CWE-89",
             "project": "django",
             "source": "Direct",
+            "package_module": "core.cache.backends.db",
+            "project_package": "django.core.cache.backends",
             "project_version": "5.0.3",
             "is_test": false,
             "test_category": "B6"
@@ -1340,6 +1450,8 @@
             "cwe_id": "CWE-89",
             "project": "django",
             "source": "Direct",
+            "package_module": "core.cache.backends.db",
+            "project_package": "django.core.cache.backends",
             "project_version": "5.0.3",
             "is_test": false,
             "test_category": "B6"
@@ -1364,6 +1476,8 @@
             "cwe_id": "CWE-89",
             "project": "django",
             "source": "Direct",
+            "package_module": "core.cache.backends.db",
+            "project_package": "django.core.cache.backends",
             "project_version": "5.0.3",
             "is_test": false,
             "test_category": "B6"
@@ -1388,6 +1502,8 @@
             "cwe_id": "CWE-89",
             "project": "django",
             "source": "Direct",
+            "package_module": "core.cache.backends.db",
+            "project_package": "django.core.cache.backends",
             "project_version": "5.0.3",
             "is_test": false,
             "test_category": "B6"
@@ -1412,6 +1528,8 @@
             "cwe_id": "CWE-502",
             "project": "django",
             "source": "Direct",
+            "package_module": "core.cache.backends.filebased",
+            "project_package": "django.core.cache.backends",
             "project_version": "5.0.3",
             "is_test": false,
             "test_category": "B4"
@@ -1436,6 +1554,8 @@
             "cwe_id": "CWE-502",
             "project": "django",
             "source": "Direct",
+            "package_module": "core.cache.backends.filebased",
+            "project_package": "django.core.cache.backends",
             "project_version": "5.0.3",
             "is_test": false,
             "test_category": "B3"
@@ -1460,6 +1580,8 @@
             "cwe_id": "CWE-502",
             "project": "django",
             "source": "Direct",
+            "package_module": "core.cache.backends.filebased",
+            "project_package": "django.core.cache.backends",
             "project_version": "5.0.3",
             "is_test": false,
             "test_category": "B3"
@@ -1484,6 +1606,8 @@
             "cwe_id": "CWE-502",
             "project": "django",
             "source": "Direct",
+            "package_module": "core.cache.backends.filebased",
+            "project_package": "django.core.cache.backends",
             "project_version": "5.0.3",
             "is_test": false,
             "test_category": "B3"
@@ -1508,6 +1632,8 @@
             "cwe_id": "CWE-502",
             "project": "django",
             "source": "Direct",
+            "package_module": "core.cache.backends.locmem",
+            "project_package": "django.core.cache.backends",
             "project_version": "5.0.3",
             "is_test": false,
             "test_category": "B4"
@@ -1532,6 +1658,8 @@
             "cwe_id": "CWE-502",
             "project": "django",
             "source": "Direct",
+            "package_module": "core.cache.backends.locmem",
+            "project_package": "django.core.cache.backends",
             "project_version": "5.0.3",
             "is_test": false,
             "test_category": "B3"
@@ -1556,6 +1684,8 @@
             "cwe_id": "CWE-502",
             "project": "django",
             "source": "Direct",
+            "package_module": "core.cache.backends.locmem",
+            "project_package": "django.core.cache.backends",
             "project_version": "5.0.3",
             "is_test": false,
             "test_category": "B3"
@@ -1580,6 +1710,8 @@
             "cwe_id": "CWE-502",
             "project": "django",
             "source": "Direct",
+            "package_module": "core.cache.backends.redis",
+            "project_package": "django.core.cache.backends",
             "project_version": "5.0.3",
             "is_test": false,
             "test_category": "B4"
@@ -1604,6 +1736,8 @@
             "cwe_id": "CWE-502",
             "project": "django",
             "source": "Direct",
+            "package_module": "core.cache.backends.redis",
+            "project_package": "django.core.cache.backends",
             "project_version": "5.0.3",
             "is_test": false,
             "test_category": "B3"
@@ -1628,6 +1762,8 @@
             "cwe_id": "CWE-330",
             "project": "django",
             "source": "Direct",
+            "package_module": "core.cache.backends.redis",
+            "project_package": "django.core.cache.backends",
             "project_version": "5.0.3",
             "is_test": false,
             "test_category": "B3"
@@ -1652,6 +1788,8 @@
             "cwe_id": "CWE-259",
             "project": "django",
             "source": "Direct",
+            "package_module": "core.checks.security.base",
+            "project_package": "django.core.checks.security",
             "project_version": "5.0.3",
             "is_test": false,
             "test_category": "B1"
@@ -1676,6 +1814,8 @@
             "cwe_id": "CWE-78",
             "project": "django",
             "source": "Direct",
+            "package_module": "core.management.commands.dbshell",
+            "project_package": "django.core.management.commands",
             "project_version": "5.0.3",
             "is_test": false,
             "test_category": "B4"
@@ -1700,6 +1840,8 @@
             "cwe_id": "CWE-605",
             "project": "django",
             "source": "Direct",
+            "package_module": "core.management.commands.runserver",
+            "project_package": "django.core.management.commands",
             "project_version": "5.0.3",
             "is_test": false,
             "test_category": "B1"
@@ -1724,6 +1866,8 @@
             "cwe_id": "CWE-78",
             "project": "django",
             "source": "Direct",
+            "package_module": "core.management.commands.shell",
+            "project_package": "django.core.management.commands",
             "project_version": "5.0.3",
             "is_test": false,
             "test_category": "B1"
@@ -1748,6 +1892,8 @@
             "cwe_id": "CWE-78",
             "project": "django",
             "source": "Direct",
+            "package_module": "core.management.commands.shell",
+            "project_package": "django.core.management.commands",
             "project_version": "5.0.3",
             "is_test": false,
             "test_category": "B1"
@@ -1772,6 +1918,8 @@
             "cwe_id": "CWE-78",
             "project": "django",
             "source": "Direct",
+            "package_module": "core.management.commands.shell",
+            "project_package": "django.core.management.commands",
             "project_version": "5.0.3",
             "is_test": false,
             "test_category": "B1"
@@ -1796,6 +1944,8 @@
             "cwe_id": "CWE-78",
             "project": "django",
             "source": "Direct",
+            "package_module": "core.management.utils",
+            "project_package": "django.core.management",
             "project_version": "5.0.3",
             "is_test": false,
             "test_category": "B4"
@@ -1820,6 +1970,8 @@
             "cwe_id": "CWE-78",
             "project": "django",
             "source": "Direct",
+            "package_module": "core.management.utils",
+            "project_package": "django.core.management",
             "project_version": "5.0.3",
             "is_test": false,
             "test_category": "B4"
@@ -1844,6 +1996,8 @@
             "cwe_id": "CWE-78",
             "project": "django",
             "source": "Direct",
+            "package_module": "core.management.utils",
+            "project_package": "django.core.management",
             "project_version": "5.0.3",
             "is_test": false,
             "test_category": "B6"
@@ -1868,6 +2022,8 @@
             "cwe_id": "CWE-78",
             "project": "django",
             "source": "Direct",
+            "package_module": "core.management.utils",
+            "project_package": "django.core.management",
             "project_version": "5.0.3",
             "is_test": false,
             "test_category": "B6"
@@ -1892,6 +2048,8 @@
             "cwe_id": "CWE-20",
             "project": "django",
             "source": "Direct",
+            "package_module": "core.serializers.xml_serializer",
+            "project_package": "django.core.serializers",
             "project_version": "5.0.3",
             "is_test": false,
             "test_category": "B4"
@@ -1916,6 +2074,8 @@
             "cwe_id": "CWE-20",
             "project": "django",
             "source": "Direct",
+            "package_module": "core.serializers.xml_serializer",
+            "project_package": "django.core.serializers",
             "project_version": "5.0.3",
             "is_test": false,
             "test_category": "B4"
@@ -1940,6 +2100,8 @@
             "cwe_id": "CWE-20",
             "project": "django",
             "source": "Direct",
+            "package_module": "core.serializers.xml_serializer",
+            "project_package": "django.core.serializers",
             "project_version": "5.0.3",
             "is_test": false,
             "test_category": "B4"
@@ -1964,6 +2126,8 @@
             "cwe_id": "CWE-20",
             "project": "django",
             "source": "Direct",
+            "package_module": "core.serializers.xml_serializer",
+            "project_package": "django.core.serializers",
             "project_version": "5.0.3",
             "is_test": false,
             "test_category": "B3"
@@ -1988,6 +2152,8 @@
             "cwe_id": "CWE-78",
             "project": "django",
             "source": "Direct",
+            "package_module": "db.backends.base.client",
+            "project_package": "django.db.backends.base",
             "project_version": "5.0.3",
             "is_test": false,
             "test_category": "B4"
@@ -2012,6 +2178,8 @@
             "cwe_id": "CWE-78",
             "project": "django",
             "source": "Direct",
+            "package_module": "db.backends.base.client",
+            "project_package": "django.db.backends.base",
             "project_version": "5.0.3",
             "is_test": false,
             "test_category": "B6"
@@ -2036,6 +2204,8 @@
             "cwe_id": "CWE-89",
             "project": "django",
             "source": "Direct",
+            "package_module": "db.backends.base.operations",
+            "project_package": "django.db.backends.base",
             "project_version": "5.0.3",
             "is_test": false,
             "test_category": "B6"
@@ -2060,6 +2230,8 @@
             "cwe_id": "CWE-89",
             "project": "django",
             "source": "Direct",
+            "package_module": "db.backends.mysql.base",
+            "project_package": "django.db.backends.mysql",
             "project_version": "5.0.3",
             "is_test": false,
             "test_category": "B6"
@@ -2084,6 +2256,8 @@
             "cwe_id": "CWE-78",
             "project": "django",
             "source": "Direct",
+            "package_module": "db.backends.mysql.creation",
+            "project_package": "django.db.backends.mysql",
             "project_version": "5.0.3",
             "is_test": false,
             "test_category": "B4"
@@ -2108,6 +2282,8 @@
             "cwe_id": "CWE-78",
             "project": "django",
             "source": "Direct",
+            "package_module": "db.backends.mysql.creation",
+            "project_package": "django.db.backends.mysql",
             "project_version": "5.0.3",
             "is_test": false,
             "test_category": "B6"
@@ -2132,6 +2308,8 @@
             "cwe_id": "CWE-78",
             "project": "django",
             "source": "Direct",
+            "package_module": "db.backends.mysql.creation",
+            "project_package": "django.db.backends.mysql",
             "project_version": "5.0.3",
             "is_test": false,
             "test_category": "B6"
@@ -2156,6 +2334,8 @@
             "cwe_id": "CWE-89",
             "project": "django",
             "source": "Direct",
+            "package_module": "db.backends.mysql.introspection",
+            "project_package": "django.db.backends.mysql",
             "project_version": "5.0.3",
             "is_test": false,
             "test_category": "B6"
@@ -2180,6 +2360,8 @@
             "cwe_id": "CWE-89",
             "project": "django",
             "source": "Direct",
+            "package_module": "db.backends.mysql.schema",
+            "project_package": "django.db.backends.mysql",
             "project_version": "5.0.3",
             "is_test": false,
             "test_category": "B6"
@@ -2204,6 +2386,8 @@
             "cwe_id": "CWE-89",
             "project": "django",
             "source": "Direct",
+            "package_module": "db.backends.oracle.base",
+            "project_package": "django.db.backends.oracle",
             "project_version": "5.0.3",
             "is_test": false,
             "test_category": "B6"
@@ -2228,6 +2412,8 @@
             "cwe_id": "CWE-259",
             "project": "django",
             "source": "Direct",
+            "package_module": "db.backends.oracle.creation",
+            "project_package": "django.db.backends.oracle",
             "project_version": "5.0.3",
             "is_test": false,
             "test_category": "B1"
@@ -2252,6 +2438,8 @@
             "cwe_id": "CWE-89",
             "project": "django",
             "source": "Direct",
+            "package_module": "db.backends.oracle.introspection",
+            "project_package": "django.db.backends.oracle",
             "project_version": "5.0.3",
             "is_test": false,
             "test_category": "B6"
@@ -2276,6 +2464,8 @@
             "cwe_id": "CWE-89",
             "project": "django",
             "source": "Direct",
+            "package_module": "db.backends.oracle.operations",
+            "project_package": "django.db.backends.oracle",
             "project_version": "5.0.3",
             "is_test": false,
             "test_category": "B6"
@@ -2300,6 +2490,8 @@
             "cwe_id": "CWE-89",
             "project": "django",
             "source": "Direct",
+            "package_module": "db.backends.oracle.operations",
+            "project_package": "django.db.backends.oracle",
             "project_version": "5.0.3",
             "is_test": false,
             "test_category": "B6"
@@ -2324,6 +2516,8 @@
             "cwe_id": "CWE-89",
             "project": "django",
             "source": "Direct",
+            "package_module": "db.backends.oracle.operations",
+            "project_package": "django.db.backends.oracle",
             "project_version": "5.0.3",
             "is_test": false,
             "test_category": "B6"
@@ -2348,6 +2542,8 @@
             "cwe_id": "CWE-89",
             "project": "django",
             "source": "Direct",
+            "package_module": "db.backends.oracle.schema",
+            "project_package": "django.db.backends.oracle",
             "project_version": "5.0.3",
             "is_test": false,
             "test_category": "B6"
@@ -2372,6 +2568,8 @@
             "cwe_id": "CWE-89",
             "project": "django",
             "source": "Direct",
+            "package_module": "db.backends.oracle.schema",
+            "project_package": "django.db.backends.oracle",
             "project_version": "5.0.3",
             "is_test": false,
             "test_category": "B6"
@@ -2396,6 +2594,8 @@
             "cwe_id": "CWE-89",
             "project": "django",
             "source": "Direct",
+            "package_module": "db.backends.postgresql.introspection",
+            "project_package": "django.db.backends.postgresql",
             "project_version": "5.0.3",
             "is_test": false,
             "test_category": "B6"
@@ -2420,6 +2620,8 @@
             "cwe_id": "CWE-89",
             "project": "django",
             "source": "Direct",
+            "package_module": "db.backends.postgresql.operations",
+            "project_package": "django.db.backends.postgresql",
             "project_version": "5.0.3",
             "is_test": false,
             "test_category": "B6"
@@ -2444,6 +2646,8 @@
             "cwe_id": "CWE-327",
             "project": "django",
             "source": "Direct",
+            "package_module": "db.backends.sqlite3._functions",
+            "project_package": "django.db.backends.sqlite3",
             "project_version": "5.0.3",
             "is_test": false,
             "test_category": "B3"
@@ -2468,6 +2672,8 @@
             "cwe_id": "CWE-327",
             "project": "django",
             "source": "Direct",
+            "package_module": "db.backends.sqlite3._functions",
+            "project_package": "django.db.backends.sqlite3",
             "project_version": "5.0.3",
             "is_test": false,
             "test_category": "B3"
@@ -2492,6 +2698,8 @@
             "cwe_id": "CWE-89",
             "project": "django",
             "source": "Direct",
+            "package_module": "db.backends.sqlite3.base",
+            "project_package": "django.db.backends.sqlite3",
             "project_version": "5.0.3",
             "is_test": false,
             "test_category": "B6"
@@ -2516,6 +2724,8 @@
             "cwe_id": "CWE-89",
             "project": "django",
             "source": "Direct",
+            "package_module": "db.backends.sqlite3.introspection",
+            "project_package": "django.db.backends.sqlite3",
             "project_version": "5.0.3",
             "is_test": false,
             "test_category": "B6"
@@ -2540,6 +2750,8 @@
             "cwe_id": "CWE-89",
             "project": "django",
             "source": "Direct",
+            "package_module": "db.backends.sqlite3.introspection",
+            "project_package": "django.db.backends.sqlite3",
             "project_version": "5.0.3",
             "is_test": false,
             "test_category": "B6"
@@ -2564,6 +2776,8 @@
             "cwe_id": "CWE-259",
             "project": "django",
             "source": "Direct",
+            "package_module": "db.backends.sqlite3.introspection",
+            "project_package": "django.db.backends.sqlite3",
             "project_version": "5.0.3",
             "is_test": false,
             "test_category": "B1"
@@ -2588,6 +2802,8 @@
             "cwe_id": "CWE-89",
             "project": "django",
             "source": "Direct",
+            "package_module": "db.backends.sqlite3.operations",
+            "project_package": "django.db.backends.sqlite3",
             "project_version": "5.0.3",
             "is_test": false,
             "test_category": "B6"
@@ -2612,6 +2828,8 @@
             "cwe_id": "CWE-89",
             "project": "django",
             "source": "Direct",
+            "package_module": "db.backends.sqlite3.schema",
+            "project_package": "django.db.backends.sqlite3",
             "project_version": "5.0.3",
             "is_test": false,
             "test_category": "B6"
@@ -2636,6 +2854,8 @@
             "cwe_id": "CWE-89",
             "project": "django",
             "source": "Direct",
+            "package_module": "db.backends.sqlite3.schema",
+            "project_package": "django.db.backends.sqlite3",
             "project_version": "5.0.3",
             "is_test": false,
             "test_category": "B6"
@@ -2660,6 +2880,8 @@
             "cwe_id": "CWE-78",
             "project": "django",
             "source": "Direct",
+            "package_module": "db.migrations.questioner",
+            "project_package": "django.db.migrations",
             "project_version": "5.0.3",
             "is_test": false,
             "test_category": "B3"
@@ -2684,6 +2906,8 @@
             "cwe_id": "CWE-89",
             "project": "django",
             "source": "Direct",
+            "package_module": "db.models.fields.related_descriptors",
+            "project_package": "django.db.models.fields",
             "project_version": "5.0.3",
             "is_test": false,
             "test_category": "B6"
@@ -2708,6 +2932,8 @@
             "cwe_id": "CWE-89",
             "project": "django",
             "source": "Direct",
+            "package_module": "db.models.sql.compiler",
+            "project_package": "django.db.models.sql",
             "project_version": "5.0.3",
             "is_test": false,
             "test_category": "B6"
@@ -2732,6 +2958,8 @@
             "cwe_id": "CWE-89",
             "project": "django",
             "source": "Direct",
+            "package_module": "db.models.sql.compiler",
+            "project_package": "django.db.models.sql",
             "project_version": "5.0.3",
             "is_test": false,
             "test_category": "B6"
@@ -2756,6 +2984,8 @@
             "cwe_id": "CWE-89",
             "project": "django",
             "source": "Direct",
+            "package_module": "db.models.sql.compiler",
+            "project_package": "django.db.models.sql",
             "project_version": "5.0.3",
             "is_test": false,
             "test_category": "B6"
@@ -2780,6 +3010,8 @@
             "cwe_id": "CWE-89",
             "project": "django",
             "source": "Direct",
+            "package_module": "db.models.sql.compiler",
+            "project_package": "django.db.models.sql",
             "project_version": "5.0.3",
             "is_test": false,
             "test_category": "B6"
@@ -2804,6 +3036,8 @@
             "cwe_id": "CWE-89",
             "project": "django",
             "source": "Direct",
+            "package_module": "db.models.sql.compiler",
+            "project_package": "django.db.models.sql",
             "project_version": "5.0.3",
             "is_test": false,
             "test_category": "B6"
@@ -2828,6 +3062,8 @@
             "cwe_id": "CWE-89",
             "project": "django",
             "source": "Direct",
+            "package_module": "db.models.sql.compiler",
+            "project_package": "django.db.models.sql",
             "project_version": "5.0.3",
             "is_test": false,
             "test_category": "B6"
@@ -2852,6 +3088,8 @@
             "cwe_id": "CWE-89",
             "project": "django",
             "source": "Direct",
+            "package_module": "db.models.sql.compiler",
+            "project_package": "django.db.models.sql",
             "project_version": "5.0.3",
             "is_test": false,
             "test_category": "B6"
@@ -2876,6 +3114,8 @@
             "cwe_id": "CWE-89",
             "project": "django",
             "source": "Direct",
+            "package_module": "db.models.sql.compiler",
+            "project_package": "django.db.models.sql",
             "project_version": "5.0.3",
             "is_test": false,
             "test_category": "B6"
@@ -2900,6 +3140,8 @@
             "cwe_id": "CWE-89",
             "project": "django",
             "source": "Direct",
+            "package_module": "db.models.sql.compiler",
+            "project_package": "django.db.models.sql",
             "project_version": "5.0.3",
             "is_test": false,
             "test_category": "B6"
@@ -2924,6 +3166,8 @@
             "cwe_id": "CWE-89",
             "project": "django",
             "source": "Direct",
+            "package_module": "db.models.sql.compiler",
+            "project_package": "django.db.models.sql",
             "project_version": "5.0.3",
             "is_test": false,
             "test_category": "B6"
@@ -2948,6 +3192,8 @@
             "cwe_id": "CWE-89",
             "project": "django",
             "source": "Direct",
+            "package_module": "db.models.sql.compiler",
+            "project_package": "django.db.models.sql",
             "project_version": "5.0.3",
             "is_test": false,
             "test_category": "B6"
@@ -2972,6 +3218,8 @@
             "cwe_id": "CWE-80",
             "project": "django",
             "source": "Direct",
+            "package_module": "forms.utils",
+            "project_package": "django.forms",
             "project_version": "5.0.3",
             "is_test": false,
             "test_category": "B7"
@@ -2996,6 +3244,8 @@
             "cwe_id": "CWE-79",
             "project": "django",
             "source": "Direct",
+            "package_module": "forms.utils",
+            "project_package": "django.forms",
             "project_version": "5.0.3",
             "is_test": false,
             "test_category": "B3"
@@ -3020,6 +3270,8 @@
             "cwe_id": "CWE-80",
             "project": "django",
             "source": "Direct",
+            "package_module": "forms.widgets",
+            "project_package": "django.forms",
             "project_version": "5.0.3",
             "is_test": false,
             "test_category": "B7"
@@ -3044,6 +3296,8 @@
             "cwe_id": "CWE-79",
             "project": "django",
             "source": "Direct",
+            "package_module": "forms.widgets",
+            "project_package": "django.forms",
             "project_version": "5.0.3",
             "is_test": false,
             "test_category": "B3"
@@ -3068,6 +3322,8 @@
             "cwe_id": "CWE-80",
             "project": "django",
             "source": "Direct",
+            "package_module": "forms.widgets",
+            "project_package": "django.forms",
             "project_version": "5.0.3",
             "is_test": false,
             "test_category": "B7"
@@ -3092,6 +3348,8 @@
             "cwe_id": "CWE-79",
             "project": "django",
             "source": "Direct",
+            "package_module": "forms.widgets",
+            "project_package": "django.forms",
             "project_version": "5.0.3",
             "is_test": false,
             "test_category": "B3"
@@ -3116,6 +3374,8 @@
             "cwe_id": "CWE-703",
             "project": "django",
             "source": "Direct",
+            "package_module": "http.response",
+            "project_package": "django.http",
             "project_version": "5.0.3",
             "is_test": false,
             "test_category": "B1"
@@ -3140,6 +3400,8 @@
             "cwe_id": "CWE-703",
             "project": "django",
             "source": "Direct",
+            "package_module": "http.response",
+            "project_package": "django.http",
             "project_version": "5.0.3",
             "is_test": false,
             "test_category": "B1"
@@ -3164,6 +3426,8 @@
             "cwe_id": "CWE-259",
             "project": "django",
             "source": "Direct",
+            "package_module": "middleware.csrf",
+            "project_package": "django.middleware",
             "project_version": "5.0.3",
             "is_test": false,
             "test_category": "B1"
@@ -3188,6 +3452,8 @@
             "cwe_id": "CWE-259",
             "project": "django",
             "source": "Direct",
+            "package_module": "middleware.csrf",
+            "project_package": "django.middleware",
             "project_version": "5.0.3",
             "is_test": false,
             "test_category": "B1"
@@ -3212,6 +3478,8 @@
             "cwe_id": "CWE-259",
             "project": "django",
             "source": "Direct",
+            "package_module": "middleware.csrf",
+            "project_package": "django.middleware",
             "project_version": "5.0.3",
             "is_test": false,
             "test_category": "B1"
@@ -3236,6 +3504,8 @@
             "cwe_id": "CWE-259",
             "project": "django",
             "source": "Direct",
+            "package_module": "middleware.csrf",
+            "project_package": "django.middleware",
             "project_version": "5.0.3",
             "is_test": false,
             "test_category": "B1"
@@ -3260,6 +3530,8 @@
             "cwe_id": "CWE-259",
             "project": "django",
             "source": "Direct",
+            "package_module": "middleware.csrf",
+            "project_package": "django.middleware",
             "project_version": "5.0.3",
             "is_test": false,
             "test_category": "B1"
@@ -3284,6 +3556,8 @@
             "cwe_id": "CWE-80",
             "project": "django",
             "source": "Direct",
+            "package_module": "template.base",
+            "project_package": "django.template",
             "project_version": "5.0.3",
             "is_test": false,
             "test_category": "B7"
@@ -3308,6 +3582,8 @@
             "cwe_id": "CWE-79",
             "project": "django",
             "source": "Direct",
+            "package_module": "template.base",
+            "project_package": "django.template",
             "project_version": "5.0.3",
             "is_test": false,
             "test_category": "B3"
@@ -3332,6 +3608,8 @@
             "cwe_id": "CWE-80",
             "project": "django",
             "source": "Direct",
+            "package_module": "template.base",
+            "project_package": "django.template",
             "project_version": "5.0.3",
             "is_test": false,
             "test_category": "B7"
@@ -3356,6 +3634,8 @@
             "cwe_id": "CWE-79",
             "project": "django",
             "source": "Direct",
+            "package_module": "template.base",
+            "project_package": "django.template",
             "project_version": "5.0.3",
             "is_test": false,
             "test_category": "B3"
@@ -3380,6 +3660,8 @@
             "cwe_id": "CWE-80",
             "project": "django",
             "source": "Direct",
+            "package_module": "template.base",
+            "project_package": "django.template",
             "project_version": "5.0.3",
             "is_test": false,
             "test_category": "B7"
@@ -3404,6 +3686,8 @@
             "cwe_id": "CWE-79",
             "project": "django",
             "source": "Direct",
+            "package_module": "template.base",
+            "project_package": "django.template",
             "project_version": "5.0.3",
             "is_test": false,
             "test_category": "B3"
@@ -3428,6 +3712,8 @@
             "cwe_id": "CWE-80",
             "project": "django",
             "source": "Direct",
+            "package_module": "template.base",
+            "project_package": "django.template",
             "project_version": "5.0.3",
             "is_test": false,
             "test_category": "B7"
@@ -3452,6 +3738,8 @@
             "cwe_id": "CWE-79",
             "project": "django",
             "source": "Direct",
+            "package_module": "template.base",
+            "project_package": "django.template",
             "project_version": "5.0.3",
             "is_test": false,
             "test_category": "B3"
@@ -3476,6 +3764,8 @@
             "cwe_id": "CWE-80",
             "project": "django",
             "source": "Direct",
+            "package_module": "template.base",
+            "project_package": "django.template",
             "project_version": "5.0.3",
             "is_test": false,
             "test_category": "B7"
@@ -3500,6 +3790,8 @@
             "cwe_id": "CWE-80",
             "project": "django",
             "source": "Direct",
+            "package_module": "template.defaultfilters",
+            "project_package": "django.template",
             "project_version": "5.0.3",
             "is_test": false,
             "test_category": "B7"
@@ -3524,6 +3816,8 @@
             "cwe_id": "CWE-79",
             "project": "django",
             "source": "Direct",
+            "package_module": "template.defaultfilters",
+            "project_package": "django.template",
             "project_version": "5.0.3",
             "is_test": false,
             "test_category": "B3"
@@ -3548,6 +3842,8 @@
             "cwe_id": "CWE-80",
             "project": "django",
             "source": "Direct",
+            "package_module": "template.defaultfilters",
+            "project_package": "django.template",
             "project_version": "5.0.3",
             "is_test": false,
             "test_category": "B7"
@@ -3572,6 +3868,8 @@
             "cwe_id": "CWE-79",
             "project": "django",
             "source": "Direct",
+            "package_module": "template.defaultfilters",
+            "project_package": "django.template",
             "project_version": "5.0.3",
             "is_test": false,
             "test_category": "B3"
@@ -3596,6 +3894,8 @@
             "cwe_id": "CWE-80",
             "project": "django",
             "source": "Direct",
+            "package_module": "template.defaultfilters",
+            "project_package": "django.template",
             "project_version": "5.0.3",
             "is_test": false,
             "test_category": "B7"
@@ -3620,6 +3920,8 @@
             "cwe_id": "CWE-79",
             "project": "django",
             "source": "Direct",
+            "package_module": "template.defaultfilters",
+            "project_package": "django.template",
             "project_version": "5.0.3",
             "is_test": false,
             "test_category": "B3"
@@ -3644,6 +3946,8 @@
             "cwe_id": "CWE-80",
             "project": "django",
             "source": "Direct",
+            "package_module": "template.defaultfilters",
+            "project_package": "django.template",
             "project_version": "5.0.3",
             "is_test": false,
             "test_category": "B7"
@@ -3668,6 +3972,8 @@
             "cwe_id": "CWE-79",
             "project": "django",
             "source": "Direct",
+            "package_module": "template.defaultfilters",
+            "project_package": "django.template",
             "project_version": "5.0.3",
             "is_test": false,
             "test_category": "B3"
@@ -3692,6 +3998,8 @@
             "cwe_id": "CWE-80",
             "project": "django",
             "source": "Direct",
+            "package_module": "template.defaultfilters",
+            "project_package": "django.template",
             "project_version": "5.0.3",
             "is_test": false,
             "test_category": "B7"
@@ -3716,6 +4024,8 @@
             "cwe_id": "CWE-79",
             "project": "django",
             "source": "Direct",
+            "package_module": "template.defaultfilters",
+            "project_package": "django.template",
             "project_version": "5.0.3",
             "is_test": false,
             "test_category": "B3"
@@ -3740,6 +4050,8 @@
             "cwe_id": "CWE-80",
             "project": "django",
             "source": "Direct",
+            "package_module": "template.defaultfilters",
+            "project_package": "django.template",
             "project_version": "5.0.3",
             "is_test": false,
             "test_category": "B7"
@@ -3764,6 +4076,8 @@
             "cwe_id": "CWE-79",
             "project": "django",
             "source": "Direct",
+            "package_module": "template.defaultfilters",
+            "project_package": "django.template",
             "project_version": "5.0.3",
             "is_test": false,
             "test_category": "B3"
@@ -3788,6 +4102,8 @@
             "cwe_id": "CWE-80",
             "project": "django",
             "source": "Direct",
+            "package_module": "template.defaultfilters",
+            "project_package": "django.template",
             "project_version": "5.0.3",
             "is_test": false,
             "test_category": "B7"
@@ -3812,6 +4128,8 @@
             "cwe_id": "CWE-79",
             "project": "django",
             "source": "Direct",
+            "package_module": "template.defaultfilters",
+            "project_package": "django.template",
             "project_version": "5.0.3",
             "is_test": false,
             "test_category": "B3"
@@ -3836,6 +4154,8 @@
             "cwe_id": "CWE-80",
             "project": "django",
             "source": "Direct",
+            "package_module": "template.defaultfilters",
+            "project_package": "django.template",
             "project_version": "5.0.3",
             "is_test": false,
             "test_category": "B7"
@@ -3860,6 +4180,8 @@
             "cwe_id": "CWE-79",
             "project": "django",
             "source": "Direct",
+            "package_module": "template.defaultfilters",
+            "project_package": "django.template",
             "project_version": "5.0.3",
             "is_test": false,
             "test_category": "B3"
@@ -3884,6 +4206,8 @@
             "cwe_id": "CWE-80",
             "project": "django",
             "source": "Direct",
+            "package_module": "template.defaultfilters",
+            "project_package": "django.template",
             "project_version": "5.0.3",
             "is_test": false,
             "test_category": "B7"
@@ -3908,6 +4232,8 @@
             "cwe_id": "CWE-79",
             "project": "django",
             "source": "Direct",
+            "package_module": "template.defaultfilters",
+            "project_package": "django.template",
             "project_version": "5.0.3",
             "is_test": false,
             "test_category": "B3"
@@ -3932,6 +4258,8 @@
             "cwe_id": "CWE-80",
             "project": "django",
             "source": "Direct",
+            "package_module": "template.defaultfilters",
+            "project_package": "django.template",
             "project_version": "5.0.3",
             "is_test": false,
             "test_category": "B7"
@@ -3956,6 +4284,8 @@
             "cwe_id": "CWE-79",
             "project": "django",
             "source": "Direct",
+            "package_module": "template.defaultfilters",
+            "project_package": "django.template",
             "project_version": "5.0.3",
             "is_test": false,
             "test_category": "B3"
@@ -3980,6 +4310,8 @@
             "cwe_id": "CWE-80",
             "project": "django",
             "source": "Direct",
+            "package_module": "template.defaultfilters",
+            "project_package": "django.template",
             "project_version": "5.0.3",
             "is_test": false,
             "test_category": "B7"
@@ -4004,6 +4336,8 @@
             "cwe_id": "CWE-79",
             "project": "django",
             "source": "Direct",
+            "package_module": "template.defaultfilters",
+            "project_package": "django.template",
             "project_version": "5.0.3",
             "is_test": false,
             "test_category": "B3"
@@ -4028,6 +4362,8 @@
             "cwe_id": "CWE-80",
             "project": "django",
             "source": "Direct",
+            "package_module": "template.defaultfilters",
+            "project_package": "django.template",
             "project_version": "5.0.3",
             "is_test": false,
             "test_category": "B7"
@@ -4052,6 +4388,8 @@
             "cwe_id": "CWE-79",
             "project": "django",
             "source": "Direct",
+            "package_module": "template.defaultfilters",
+            "project_package": "django.template",
             "project_version": "5.0.3",
             "is_test": false,
             "test_category": "B3"
@@ -4076,6 +4414,8 @@
             "cwe_id": "CWE-330",
             "project": "django",
             "source": "Direct",
+            "package_module": "template.defaultfilters",
+            "project_package": "django.template",
             "project_version": "5.0.3",
             "is_test": false,
             "test_category": "B3"
@@ -4100,6 +4440,8 @@
             "cwe_id": "CWE-80",
             "project": "django",
             "source": "Direct",
+            "package_module": "template.defaultfilters",
+            "project_package": "django.template",
             "project_version": "5.0.3",
             "is_test": false,
             "test_category": "B7"
@@ -4124,6 +4466,8 @@
             "cwe_id": "CWE-79",
             "project": "django",
             "source": "Direct",
+            "package_module": "template.defaultfilters",
+            "project_package": "django.template",
             "project_version": "5.0.3",
             "is_test": false,
             "test_category": "B3"
@@ -4148,6 +4492,8 @@
             "cwe_id": "CWE-80",
             "project": "django",
             "source": "Direct",
+            "package_module": "template.defaulttags",
+            "project_package": "django.template",
             "project_version": "5.0.3",
             "is_test": false,
             "test_category": "B7"
@@ -4172,6 +4518,8 @@
             "cwe_id": "CWE-79",
             "project": "django",
             "source": "Direct",
+            "package_module": "template.defaulttags",
+            "project_package": "django.template",
             "project_version": "5.0.3",
             "is_test": false,
             "test_category": "B3"
@@ -4196,6 +4544,8 @@
             "cwe_id": "CWE-259",
             "project": "django",
             "source": "Direct",
+            "package_module": "template.defaulttags",
+            "project_package": "django.template",
             "project_version": "5.0.3",
             "is_test": false,
             "test_category": "B1"
@@ -4220,6 +4570,8 @@
             "cwe_id": "CWE-80",
             "project": "django",
             "source": "Direct",
+            "package_module": "template.defaulttags",
+            "project_package": "django.template",
             "project_version": "5.0.3",
             "is_test": false,
             "test_category": "B7"
@@ -4244,6 +4596,8 @@
             "cwe_id": "CWE-79",
             "project": "django",
             "source": "Direct",
+            "package_module": "template.defaulttags",
+            "project_package": "django.template",
             "project_version": "5.0.3",
             "is_test": false,
             "test_category": "B3"
@@ -4268,6 +4622,8 @@
             "cwe_id": "CWE-80",
             "project": "django",
             "source": "Direct",
+            "package_module": "template.loader_tags",
+            "project_package": "django.template",
             "project_version": "5.0.3",
             "is_test": false,
             "test_category": "B7"
@@ -4292,6 +4648,8 @@
             "cwe_id": "CWE-79",
             "project": "django",
             "source": "Direct",
+            "package_module": "template.loader_tags",
+            "project_package": "django.template",
             "project_version": "5.0.3",
             "is_test": false,
             "test_category": "B3"
@@ -4316,6 +4674,8 @@
             "cwe_id": "CWE-327",
             "project": "django",
             "source": "Direct",
+            "package_module": "template.loaders.cached",
+            "project_package": "django.template.loaders",
             "project_version": "5.0.3",
             "is_test": false,
             "test_category": "B3"
@@ -4340,6 +4700,8 @@
             "cwe_id": "CWE-259",
             "project": "django",
             "source": "Direct",
+            "package_module": "template.smartif",
+            "project_package": "django.template",
             "project_version": "5.0.3",
             "is_test": false,
             "test_category": "B1"
@@ -4364,6 +4726,8 @@
             "cwe_id": "CWE-259",
             "project": "django",
             "source": "Direct",
+            "package_module": "template.smartif",
+            "project_package": "django.template",
             "project_version": "5.0.3",
             "is_test": false,
             "test_category": "B1"
@@ -4388,6 +4752,8 @@
             "cwe_id": "CWE-259",
             "project": "django",
             "source": "Direct",
+            "package_module": "template.smartif",
+            "project_package": "django.template",
             "project_version": "5.0.3",
             "is_test": false,
             "test_category": "B1"
@@ -4412,6 +4778,8 @@
             "cwe_id": "CWE-259",
             "project": "django",
             "source": "Direct",
+            "package_module": "template.smartif",
+            "project_package": "django.template",
             "project_version": "5.0.3",
             "is_test": false,
             "test_category": "B1"
@@ -4436,6 +4804,8 @@
             "cwe_id": "CWE-80",
             "project": "django",
             "source": "Direct",
+            "package_module": "templatetags.i18n",
+            "project_package": "django.templatetags",
             "project_version": "5.0.3",
             "is_test": false,
             "test_category": "B7"
@@ -4460,6 +4830,8 @@
             "cwe_id": "CWE-79",
             "project": "django",
             "source": "Direct",
+            "package_module": "templatetags.i18n",
+            "project_package": "django.templatetags",
             "project_version": "5.0.3",
             "is_test": false,
             "test_category": "B3"
@@ -4484,6 +4856,8 @@
             "cwe_id": "CWE-80",
             "project": "django",
             "source": "Direct",
+            "package_module": "templatetags.i18n",
+            "project_package": "django.templatetags",
             "project_version": "5.0.3",
             "is_test": false,
             "test_category": "B7"
@@ -4508,6 +4882,8 @@
             "cwe_id": "CWE-502",
             "project": "django",
             "source": "Direct",
+            "package_module": "test.runner",
+            "project_package": "django.test",
             "project_version": "5.0.3",
             "is_test": true,
             "test_category": "B4"
@@ -4532,6 +4908,8 @@
             "cwe_id": "CWE-502",
             "project": "django",
             "source": "Direct",
+            "package_module": "test.runner",
+            "project_package": "django.test",
             "project_version": "5.0.3",
             "is_test": true,
             "test_category": "B3"
@@ -4556,6 +4934,8 @@
             "cwe_id": "CWE-330",
             "project": "django",
             "source": "Direct",
+            "package_module": "test.runner",
+            "project_package": "django.test",
             "project_version": "5.0.3",
             "is_test": true,
             "test_category": "B3"
@@ -4580,6 +4960,8 @@
             "cwe_id": "CWE-605",
             "project": "django",
             "source": "Direct",
+            "package_module": "test.selenium",
+            "project_package": "django.test",
             "project_version": "5.0.3",
             "is_test": true,
             "test_category": "B1"
@@ -4604,6 +4986,8 @@
             "cwe_id": "CWE-20",
             "project": "django",
             "source": "Direct",
+            "package_module": "test.utils",
+            "project_package": "django.test",
             "project_version": "5.0.3",
             "is_test": true,
             "test_category": "B4"
@@ -4628,6 +5012,8 @@
             "cwe_id": "CWE-20",
             "project": "django",
             "source": "Direct",
+            "package_module": "test.utils",
+            "project_package": "django.test",
             "project_version": "5.0.3",
             "is_test": true,
             "test_category": "B3"
@@ -4652,6 +5038,8 @@
             "cwe_id": "CWE-20",
             "project": "django",
             "source": "Direct",
+            "package_module": "test.utils",
+            "project_package": "django.test",
             "project_version": "5.0.3",
             "is_test": true,
             "test_category": "B3"
@@ -4676,6 +5064,8 @@
             "cwe_id": "CWE-502",
             "project": "django",
             "source": "Direct",
+            "package_module": "urls.resolvers",
+            "project_package": "django.urls",
             "project_version": "5.0.3",
             "is_test": false,
             "test_category": "B4"
@@ -4700,6 +5090,8 @@
             "cwe_id": "CWE-78",
             "project": "django",
             "source": "Direct",
+            "package_module": "utils.autoreload",
+            "project_package": "django.utils",
             "project_version": "5.0.3",
             "is_test": false,
             "test_category": "B4"
@@ -4724,6 +5116,8 @@
             "cwe_id": "CWE-78",
             "project": "django",
             "source": "Direct",
+            "package_module": "utils.autoreload",
+            "project_package": "django.utils",
             "project_version": "5.0.3",
             "is_test": false,
             "test_category": "B6"
@@ -4748,6 +5142,8 @@
             "cwe_id": "CWE-703",
             "project": "django",
             "source": "Direct",
+            "package_module": "utils.autoreload",
+            "project_package": "django.utils",
             "project_version": "5.0.3",
             "is_test": false,
             "test_category": "B1"
@@ -4772,6 +5168,8 @@
             "cwe_id": "CWE-80",
             "project": "django",
             "source": "Direct",
+            "package_module": "utils.html",
+            "project_package": "django.utils",
             "project_version": "5.0.3",
             "is_test": false,
             "test_category": "B7"
@@ -4796,6 +5194,8 @@
             "cwe_id": "CWE-80",
             "project": "django",
             "source": "Direct",
+            "package_module": "utils.html",
+            "project_package": "django.utils",
             "project_version": "5.0.3",
             "is_test": false,
             "test_category": "B7"
@@ -4820,6 +5220,8 @@
             "cwe_id": "CWE-79",
             "project": "django",
             "source": "Direct",
+            "package_module": "utils.html",
+            "project_package": "django.utils",
             "project_version": "5.0.3",
             "is_test": false,
             "test_category": "B3"
@@ -4844,6 +5246,8 @@
             "cwe_id": "CWE-80",
             "project": "django",
             "source": "Direct",
+            "package_module": "utils.html",
+            "project_package": "django.utils",
             "project_version": "5.0.3",
             "is_test": false,
             "test_category": "B7"
@@ -4868,6 +5272,8 @@
             "cwe_id": "CWE-79",
             "project": "django",
             "source": "Direct",
+            "package_module": "utils.html",
+            "project_package": "django.utils",
             "project_version": "5.0.3",
             "is_test": false,
             "test_category": "B3"
@@ -4892,6 +5298,8 @@
             "cwe_id": "CWE-80",
             "project": "django",
             "source": "Direct",
+            "package_module": "utils.html",
+            "project_package": "django.utils",
             "project_version": "5.0.3",
             "is_test": false,
             "test_category": "B7"
@@ -4916,6 +5324,8 @@
             "cwe_id": "CWE-79",
             "project": "django",
             "source": "Direct",
+            "package_module": "utils.html",
+            "project_package": "django.utils",
             "project_version": "5.0.3",
             "is_test": false,
             "test_category": "B3"
@@ -4940,6 +5350,8 @@
             "cwe_id": "CWE-80",
             "project": "django",
             "source": "Direct",
+            "package_module": "utils.html",
+            "project_package": "django.utils",
             "project_version": "5.0.3",
             "is_test": false,
             "test_category": "B7"
@@ -4964,6 +5376,8 @@
             "cwe_id": "CWE-79",
             "project": "django",
             "source": "Direct",
+            "package_module": "utils.html",
+            "project_package": "django.utils",
             "project_version": "5.0.3",
             "is_test": false,
             "test_category": "B3"
@@ -4988,6 +5402,8 @@
             "cwe_id": "CWE-80",
             "project": "django",
             "source": "Direct",
+            "package_module": "utils.html",
+            "project_package": "django.utils",
             "project_version": "5.0.3",
             "is_test": false,
             "test_category": "B7"
@@ -5012,6 +5428,8 @@
             "cwe_id": "CWE-79",
             "project": "django",
             "source": "Direct",
+            "package_module": "utils.html",
+            "project_package": "django.utils",
             "project_version": "5.0.3",
             "is_test": false,
             "test_category": "B3"
@@ -5036,6 +5454,8 @@
             "cwe_id": "CWE-80",
             "project": "django",
             "source": "Direct",
+            "package_module": "utils.html",
+            "project_package": "django.utils",
             "project_version": "5.0.3",
             "is_test": false,
             "test_category": "B7"
@@ -5060,6 +5480,8 @@
             "cwe_id": "CWE-79",
             "project": "django",
             "source": "Direct",
+            "package_module": "utils.html",
+            "project_package": "django.utils",
             "project_version": "5.0.3",
             "is_test": false,
             "test_category": "B3"
@@ -5084,6 +5506,8 @@
             "cwe_id": "CWE-80",
             "project": "django",
             "source": "Direct",
+            "package_module": "utils.html",
+            "project_package": "django.utils",
             "project_version": "5.0.3",
             "is_test": false,
             "test_category": "B7"
@@ -5108,6 +5532,8 @@
             "cwe_id": "CWE-79",
             "project": "django",
             "source": "Direct",
+            "package_module": "utils.html",
+            "project_package": "django.utils",
             "project_version": "5.0.3",
             "is_test": false,
             "test_category": "B3"
@@ -5132,6 +5558,8 @@
             "cwe_id": "CWE-80",
             "project": "django",
             "source": "Direct",
+            "package_module": "utils.html",
+            "project_package": "django.utils",
             "project_version": "5.0.3",
             "is_test": false,
             "test_category": "B7"
@@ -5156,6 +5584,8 @@
             "cwe_id": "CWE-79",
             "project": "django",
             "source": "Direct",
+            "package_module": "utils.html",
+            "project_package": "django.utils",
             "project_version": "5.0.3",
             "is_test": false,
             "test_category": "B3"
@@ -5180,6 +5610,8 @@
             "cwe_id": "CWE-80",
             "project": "django",
             "source": "Direct",
+            "package_module": "utils.html",
+            "project_package": "django.utils",
             "project_version": "5.0.3",
             "is_test": false,
             "test_category": "B7"
@@ -5204,6 +5636,8 @@
             "cwe_id": "CWE-79",
             "project": "django",
             "source": "Direct",
+            "package_module": "utils.html",
+            "project_package": "django.utils",
             "project_version": "5.0.3",
             "is_test": false,
             "test_category": "B3"
@@ -5228,6 +5662,8 @@
             "cwe_id": "CWE-703",
             "project": "django",
             "source": "Direct",
+            "package_module": "utils.http",
+            "project_package": "django.utils",
             "project_version": "5.0.3",
             "is_test": false,
             "test_category": "B1"
@@ -5252,6 +5688,8 @@
             "cwe_id": "CWE-330",
             "project": "django",
             "source": "Direct",
+            "package_module": "utils.lorem_ipsum",
+            "project_package": "django.utils",
             "project_version": "5.0.3",
             "is_test": false,
             "test_category": "B3"
@@ -5276,6 +5714,8 @@
             "cwe_id": "CWE-330",
             "project": "django",
             "source": "Direct",
+            "package_module": "utils.lorem_ipsum",
+            "project_package": "django.utils",
             "project_version": "5.0.3",
             "is_test": false,
             "test_category": "B3"
@@ -5300,6 +5740,8 @@
             "cwe_id": "CWE-330",
             "project": "django",
             "source": "Direct",
+            "package_module": "utils.lorem_ipsum",
+            "project_package": "django.utils",
             "project_version": "5.0.3",
             "is_test": false,
             "test_category": "B3"
@@ -5324,6 +5766,8 @@
             "cwe_id": "CWE-330",
             "project": "django",
             "source": "Direct",
+            "package_module": "utils.lorem_ipsum",
+            "project_package": "django.utils",
             "project_version": "5.0.3",
             "is_test": false,
             "test_category": "B3"
@@ -5348,6 +5792,8 @@
             "cwe_id": "CWE-80",
             "project": "django",
             "source": "Direct",
+            "package_module": "utils.numberformat",
+            "project_package": "django.utils",
             "project_version": "5.0.3",
             "is_test": false,
             "test_category": "B7"
@@ -5372,6 +5818,8 @@
             "cwe_id": "CWE-79",
             "project": "django",
             "source": "Direct",
+            "package_module": "utils.numberformat",
+            "project_package": "django.utils",
             "project_version": "5.0.3",
             "is_test": false,
             "test_category": "B3"
@@ -5396,6 +5844,8 @@
             "cwe_id": "CWE-80",
             "project": "django",
             "source": "Direct",
+            "package_module": "utils.numberformat",
+            "project_package": "django.utils",
             "project_version": "5.0.3",
             "is_test": false,
             "test_category": "B7"
@@ -5420,6 +5870,8 @@
             "cwe_id": "CWE-79",
             "project": "django",
             "source": "Direct",
+            "package_module": "utils.numberformat",
+            "project_package": "django.utils",
             "project_version": "5.0.3",
             "is_test": false,
             "test_category": "B3"
@@ -5444,6 +5896,8 @@
             "cwe_id": "CWE-80",
             "project": "django",
             "source": "Direct",
+            "package_module": "utils.translation.trans_real",
+            "project_package": "django.utils.translation",
             "project_version": "5.0.3",
             "is_test": false,
             "test_category": "B7"
@@ -5468,6 +5922,8 @@
             "cwe_id": "CWE-79",
             "project": "django",
             "source": "Direct",
+            "package_module": "utils.translation.trans_real",
+            "project_package": "django.utils.translation",
             "project_version": "5.0.3",
             "is_test": false,
             "test_category": "B3"
@@ -5492,6 +5948,8 @@
             "cwe_id": "CWE-80",
             "project": "django",
             "source": "Direct",
+            "package_module": "utils.translation.trans_real",
+            "project_package": "django.utils.translation",
             "project_version": "5.0.3",
             "is_test": false,
             "test_category": "B7"
@@ -5516,6 +5974,8 @@
             "cwe_id": "CWE-79",
             "project": "django",
             "source": "Direct",
+            "package_module": "utils.translation.trans_real",
+            "project_package": "django.utils.translation",
             "project_version": "5.0.3",
             "is_test": false,
             "test_category": "B3"
@@ -5540,6 +6000,8 @@
             "cwe_id": "CWE-78",
             "project": "django",
             "source": "Direct",
+            "package_module": "utils.version",
+            "project_package": "django.utils",
             "project_version": "5.0.3",
             "is_test": false,
             "test_category": "B4"
@@ -5564,6 +6026,8 @@
             "cwe_id": "CWE-78",
             "project": "django",
             "source": "Direct",
+            "package_module": "utils.version",
+            "project_package": "django.utils",
             "project_version": "5.0.3",
             "is_test": false,
             "test_category": "B6"
@@ -5588,6 +6052,8 @@
             "cwe_id": "CWE-78",
             "project": "django",
             "source": "Direct",
+            "package_module": "utils.version",
+            "project_package": "django.utils",
             "project_version": "5.0.3",
             "is_test": false,
             "test_category": "B6"
@@ -5612,6 +6078,8 @@
             "cwe_id": "CWE-20",
             "project": "django",
             "source": "Direct",
+            "package_module": "utils.xmlutils",
+            "project_package": "django.utils",
             "project_version": "5.0.3",
             "is_test": false,
             "test_category": "B4"
@@ -5638,6 +6106,8 @@
             "cwe_id": "CWE-78",
             "project": "flask",
             "source": "Direct",
+            "package_module": "cli",
+            "project_package": "flask",
             "project_version": "3.0.2",
             "is_test": false,
             "test_category": "B3"
@@ -5662,6 +6132,8 @@
             "cwe_id": "CWE-703",
             "project": "flask",
             "source": "Direct",
+            "package_module": "config",
+            "project_package": "flask",
             "project_version": "3.0.2",
             "is_test": false,
             "test_category": "B1"
@@ -5686,6 +6158,8 @@
             "cwe_id": "CWE-78",
             "project": "flask",
             "source": "Direct",
+            "package_module": "config",
+            "project_package": "flask",
             "project_version": "3.0.2",
             "is_test": false,
             "test_category": "B1"
@@ -5696,8 +6170,8 @@
             "description": "Try, Except, Pass detected.",
             "true_positive": null,
             "verified": false,
-            "package": ".",
-            "module": "_compat.py",
+            "package": "",
+            "module": "_compat",
             "filename": "/Users/zakariasabbagh/Documents/GitHub/private/securipy/repositories/click/src/click/_compat.py",
             "score": 2,
             "confidence": "high",
@@ -5710,6 +6184,8 @@
             "cwe_id": "CWE-703",
             "project": "click",
             "source": "Indirect",
+            "package_module": "_compat",
+            "project_package": "click",
             "project_version": "8.1.7",
             "is_test": false,
             "test_category": "B1"
@@ -5720,8 +6196,8 @@
             "description": "Try, Except, Pass detected.",
             "true_positive": null,
             "verified": false,
-            "package": ".",
-            "module": "_compat.py",
+            "package": "",
+            "module": "_compat",
             "filename": "/Users/zakariasabbagh/Documents/GitHub/private/securipy/repositories/click/src/click/_compat.py",
             "score": 2,
             "confidence": "high",
@@ -5734,6 +6210,8 @@
             "cwe_id": "CWE-703",
             "project": "click",
             "source": "Indirect",
+            "package_module": "_compat",
+            "project_package": "click",
             "project_version": "8.1.7",
             "is_test": false,
             "test_category": "B1"
@@ -5744,8 +6222,8 @@
             "description": "Standard pseudo-random generators are not suitable for security/cryptographic purposes.",
             "true_positive": null,
             "verified": false,
-            "package": ".",
-            "module": "_compat.py",
+            "package": "",
+            "module": "_compat",
             "filename": "/Users/zakariasabbagh/Documents/GitHub/private/securipy/repositories/click/src/click/_compat.py",
             "score": 2,
             "confidence": "high",
@@ -5758,6 +6236,8 @@
             "cwe_id": "CWE-330",
             "project": "click",
             "source": "Indirect",
+            "package_module": "_compat",
+            "project_package": "click",
             "project_version": "8.1.7",
             "is_test": false,
             "test_category": "B3"
@@ -5768,8 +6248,8 @@
             "description": "Try, Except, Pass detected.",
             "true_positive": null,
             "verified": false,
-            "package": ".",
-            "module": "_compat.py",
+            "package": "",
+            "module": "_compat",
             "filename": "/Users/zakariasabbagh/Documents/GitHub/private/securipy/repositories/click/src/click/_compat.py",
             "score": 2,
             "confidence": "high",
@@ -5782,6 +6262,8 @@
             "cwe_id": "CWE-703",
             "project": "click",
             "source": "Indirect",
+            "package_module": "_compat",
+            "project_package": "click",
             "project_version": "8.1.7",
             "is_test": false,
             "test_category": "B1"
@@ -5792,8 +6274,8 @@
             "description": "Try, Except, Pass detected.",
             "true_positive": null,
             "verified": false,
-            "package": ".",
-            "module": "_compat.py",
+            "package": "",
+            "module": "_compat",
             "filename": "/Users/zakariasabbagh/Documents/GitHub/private/securipy/repositories/click/src/click/_compat.py",
             "score": 2,
             "confidence": "high",
@@ -5806,6 +6288,8 @@
             "cwe_id": "CWE-703",
             "project": "click",
             "source": "Indirect",
+            "package_module": "_compat",
+            "project_package": "click",
             "project_version": "8.1.7",
             "is_test": false,
             "test_category": "B1"
@@ -5816,8 +6300,8 @@
             "description": "Starting a process with a shell: Seems safe, but may be changed in the future, consider rewriting without shell",
             "true_positive": null,
             "verified": false,
-            "package": ".",
-            "module": "_termui_impl.py",
+            "package": "",
+            "module": "_termui_impl",
             "filename": "/Users/zakariasabbagh/Documents/GitHub/private/securipy/repositories/click/src/click/_termui_impl.py",
             "score": 2,
             "confidence": "high",
@@ -5830,6 +6314,8 @@
             "cwe_id": "CWE-78",
             "project": "click",
             "source": "Indirect",
+            "package_module": "_termui_impl",
+            "project_package": "click",
             "project_version": "8.1.7",
             "is_test": false,
             "test_category": "B6"
@@ -5840,8 +6326,8 @@
             "description": "Starting a process with a partial executable path",
             "true_positive": null,
             "verified": false,
-            "package": ".",
-            "module": "_termui_impl.py",
+            "package": "",
+            "module": "_termui_impl",
             "filename": "/Users/zakariasabbagh/Documents/GitHub/private/securipy/repositories/click/src/click/_termui_impl.py",
             "score": 2,
             "confidence": "high",
@@ -5854,6 +6340,8 @@
             "cwe_id": "CWE-78",
             "project": "click",
             "source": "Indirect",
+            "package_module": "_termui_impl",
+            "project_package": "click",
             "project_version": "8.1.7",
             "is_test": false,
             "test_category": "B6"
@@ -5864,8 +6352,8 @@
             "description": "Starting a process with a shell, possible injection detected, security issue.",
             "true_positive": null,
             "verified": false,
-            "package": ".",
-            "module": "_termui_impl.py",
+            "package": "",
+            "module": "_termui_impl",
             "filename": "/Users/zakariasabbagh/Documents/GitHub/private/securipy/repositories/click/src/click/_termui_impl.py",
             "score": 4,
             "confidence": "high",
@@ -5878,6 +6366,8 @@
             "cwe_id": "CWE-78",
             "project": "click",
             "source": "Indirect",
+            "package_module": "_termui_impl",
+            "project_package": "click",
             "project_version": "8.1.7",
             "is_test": false,
             "test_category": "B6"
@@ -5888,8 +6378,8 @@
             "description": "Consider possible security implications associated with the subprocess module.",
             "true_positive": null,
             "verified": false,
-            "package": ".",
-            "module": "_termui_impl.py",
+            "package": "",
+            "module": "_termui_impl",
             "filename": "/Users/zakariasabbagh/Documents/GitHub/private/securipy/repositories/click/src/click/_termui_impl.py",
             "score": 2,
             "confidence": "high",
@@ -5902,6 +6392,8 @@
             "cwe_id": "CWE-78",
             "project": "click",
             "source": "Indirect",
+            "package_module": "_termui_impl",
+            "project_package": "click",
             "project_version": "8.1.7",
             "is_test": false,
             "test_category": "B4"
@@ -5912,8 +6404,8 @@
             "description": "subprocess call with shell=True identified, security issue.",
             "true_positive": null,
             "verified": false,
-            "package": ".",
-            "module": "_termui_impl.py",
+            "package": "",
+            "module": "_termui_impl",
             "filename": "/Users/zakariasabbagh/Documents/GitHub/private/securipy/repositories/click/src/click/_termui_impl.py",
             "score": 4,
             "confidence": "high",
@@ -5926,6 +6418,8 @@
             "cwe_id": "CWE-78",
             "project": "click",
             "source": "Indirect",
+            "package_module": "_termui_impl",
+            "project_package": "click",
             "project_version": "8.1.7",
             "is_test": false,
             "test_category": "B6"
@@ -5936,8 +6430,8 @@
             "description": "Starting a process with a shell, possible injection detected, security issue.",
             "true_positive": null,
             "verified": false,
-            "package": ".",
-            "module": "_termui_impl.py",
+            "package": "",
+            "module": "_termui_impl",
             "filename": "/Users/zakariasabbagh/Documents/GitHub/private/securipy/repositories/click/src/click/_termui_impl.py",
             "score": 4,
             "confidence": "high",
@@ -5950,6 +6444,8 @@
             "cwe_id": "CWE-78",
             "project": "click",
             "source": "Indirect",
+            "package_module": "_termui_impl",
+            "project_package": "click",
             "project_version": "8.1.7",
             "is_test": false,
             "test_category": "B6"
@@ -5960,8 +6456,8 @@
             "description": "Starting a process with a shell, possible injection detected, security issue.",
             "true_positive": null,
             "verified": false,
-            "package": ".",
-            "module": "_termui_impl.py",
+            "package": "",
+            "module": "_termui_impl",
             "filename": "/Users/zakariasabbagh/Documents/GitHub/private/securipy/repositories/click/src/click/_termui_impl.py",
             "score": 4,
             "confidence": "high",
@@ -5974,6 +6470,8 @@
             "cwe_id": "CWE-78",
             "project": "click",
             "source": "Indirect",
+            "package_module": "_termui_impl",
+            "project_package": "click",
             "project_version": "8.1.7",
             "is_test": false,
             "test_category": "B6"
@@ -5984,8 +6482,8 @@
             "description": "Consider possible security implications associated with the subprocess module.",
             "true_positive": null,
             "verified": false,
-            "package": ".",
-            "module": "_termui_impl.py",
+            "package": "",
+            "module": "_termui_impl",
             "filename": "/Users/zakariasabbagh/Documents/GitHub/private/securipy/repositories/click/src/click/_termui_impl.py",
             "score": 2,
             "confidence": "high",
@@ -5998,6 +6496,8 @@
             "cwe_id": "CWE-78",
             "project": "click",
             "source": "Indirect",
+            "package_module": "_termui_impl",
+            "project_package": "click",
             "project_version": "8.1.7",
             "is_test": false,
             "test_category": "B4"
@@ -6008,8 +6508,8 @@
             "description": "subprocess call with shell=True identified, security issue.",
             "true_positive": null,
             "verified": false,
-            "package": ".",
-            "module": "_termui_impl.py",
+            "package": "",
+            "module": "_termui_impl",
             "filename": "/Users/zakariasabbagh/Documents/GitHub/private/securipy/repositories/click/src/click/_termui_impl.py",
             "score": 4,
             "confidence": "high",
@@ -6022,6 +6522,8 @@
             "cwe_id": "CWE-78",
             "project": "click",
             "source": "Indirect",
+            "package_module": "_termui_impl",
+            "project_package": "click",
             "project_version": "8.1.7",
             "is_test": false,
             "test_category": "B6"
@@ -6032,8 +6534,8 @@
             "description": "Consider possible security implications associated with the subprocess module.",
             "true_positive": null,
             "verified": false,
-            "package": ".",
-            "module": "_termui_impl.py",
+            "package": "",
+            "module": "_termui_impl",
             "filename": "/Users/zakariasabbagh/Documents/GitHub/private/securipy/repositories/click/src/click/_termui_impl.py",
             "score": 2,
             "confidence": "high",
@@ -6046,6 +6548,8 @@
             "cwe_id": "CWE-78",
             "project": "click",
             "source": "Indirect",
+            "package_module": "_termui_impl",
+            "project_package": "click",
             "project_version": "8.1.7",
             "is_test": false,
             "test_category": "B4"
@@ -6056,8 +6560,8 @@
             "description": "subprocess call - check for execution of untrusted input.",
             "true_positive": null,
             "verified": false,
-            "package": ".",
-            "module": "_termui_impl.py",
+            "package": "",
+            "module": "_termui_impl",
             "filename": "/Users/zakariasabbagh/Documents/GitHub/private/securipy/repositories/click/src/click/_termui_impl.py",
             "score": 2,
             "confidence": "high",
@@ -6070,6 +6574,8 @@
             "cwe_id": "CWE-78",
             "project": "click",
             "source": "Indirect",
+            "package_module": "_termui_impl",
+            "project_package": "click",
             "project_version": "8.1.7",
             "is_test": false,
             "test_category": "B6"
@@ -6080,8 +6586,8 @@
             "description": "Starting a process with a shell, possible injection detected, security issue.",
             "true_positive": null,
             "verified": false,
-            "package": ".",
-            "module": "_termui_impl.py",
+            "package": "",
+            "module": "_termui_impl",
             "filename": "/Users/zakariasabbagh/Documents/GitHub/private/securipy/repositories/click/src/click/_termui_impl.py",
             "score": 4,
             "confidence": "high",
@@ -6094,6 +6600,8 @@
             "cwe_id": "CWE-78",
             "project": "click",
             "source": "Indirect",
+            "package_module": "_termui_impl",
+            "project_package": "click",
             "project_version": "8.1.7",
             "is_test": false,
             "test_category": "B6"
@@ -6104,8 +6612,8 @@
             "description": "Starting a process with a shell, possible injection detected, security issue.",
             "true_positive": null,
             "verified": false,
-            "package": ".",
-            "module": "_termui_impl.py",
+            "package": "",
+            "module": "_termui_impl",
             "filename": "/Users/zakariasabbagh/Documents/GitHub/private/securipy/repositories/click/src/click/_termui_impl.py",
             "score": 4,
             "confidence": "high",
@@ -6118,6 +6626,8 @@
             "cwe_id": "CWE-78",
             "project": "click",
             "source": "Indirect",
+            "package_module": "_termui_impl",
+            "project_package": "click",
             "project_version": "8.1.7",
             "is_test": false,
             "test_category": "B6"
@@ -6128,8 +6638,8 @@
             "description": "Starting a process with a partial executable path",
             "true_positive": null,
             "verified": false,
-            "package": ".",
-            "module": "_termui_impl.py",
+            "package": "",
+            "module": "_termui_impl",
             "filename": "/Users/zakariasabbagh/Documents/GitHub/private/securipy/repositories/click/src/click/_termui_impl.py",
             "score": 2,
             "confidence": "high",
@@ -6142,6 +6652,8 @@
             "cwe_id": "CWE-78",
             "project": "click",
             "source": "Indirect",
+            "package_module": "_termui_impl",
+            "project_package": "click",
             "project_version": "8.1.7",
             "is_test": false,
             "test_category": "B6"
@@ -6152,8 +6664,8 @@
             "description": "subprocess call - check for execution of untrusted input.",
             "true_positive": null,
             "verified": false,
-            "package": ".",
-            "module": "_termui_impl.py",
+            "package": "",
+            "module": "_termui_impl",
             "filename": "/Users/zakariasabbagh/Documents/GitHub/private/securipy/repositories/click/src/click/_termui_impl.py",
             "score": 2,
             "confidence": "high",
@@ -6166,6 +6678,8 @@
             "cwe_id": "CWE-78",
             "project": "click",
             "source": "Indirect",
+            "package_module": "_termui_impl",
+            "project_package": "click",
             "project_version": "8.1.7",
             "is_test": false,
             "test_category": "B6"
@@ -6176,8 +6690,8 @@
             "description": "Try, Except, Pass detected.",
             "true_positive": null,
             "verified": false,
-            "package": ".",
-            "module": "_winconsole.py",
+            "package": "",
+            "module": "_winconsole",
             "filename": "/Users/zakariasabbagh/Documents/GitHub/private/securipy/repositories/click/src/click/_winconsole.py",
             "score": 2,
             "confidence": "high",
@@ -6190,6 +6704,8 @@
             "cwe_id": "CWE-703",
             "project": "click",
             "source": "Indirect",
+            "package_module": "_winconsole",
+            "project_package": "click",
             "project_version": "8.1.7",
             "is_test": false,
             "test_category": "B1"
@@ -6200,8 +6716,8 @@
             "description": "Consider possible security implications associated with the subprocess module.",
             "true_positive": null,
             "verified": false,
-            "package": ".",
-            "module": "shell_completion.py",
+            "package": "",
+            "module": "shell_completion",
             "filename": "/Users/zakariasabbagh/Documents/GitHub/private/securipy/repositories/click/src/click/shell_completion.py",
             "score": 2,
             "confidence": "high",
@@ -6214,6 +6730,8 @@
             "cwe_id": "CWE-78",
             "project": "click",
             "source": "Indirect",
+            "package_module": "shell_completion",
+            "project_package": "click",
             "project_version": "8.1.7",
             "is_test": false,
             "test_category": "B4"
@@ -6224,8 +6742,8 @@
             "description": "Starting a process with a partial executable path",
             "true_positive": null,
             "verified": false,
-            "package": ".",
-            "module": "shell_completion.py",
+            "package": "",
+            "module": "shell_completion",
             "filename": "/Users/zakariasabbagh/Documents/GitHub/private/securipy/repositories/click/src/click/shell_completion.py",
             "score": 2,
             "confidence": "high",
@@ -6238,6 +6756,8 @@
             "cwe_id": "CWE-78",
             "project": "click",
             "source": "Indirect",
+            "package_module": "shell_completion",
+            "project_package": "click",
             "project_version": "8.1.7",
             "is_test": false,
             "test_category": "B6"
@@ -6248,8 +6768,8 @@
             "description": "subprocess call - check for execution of untrusted input.",
             "true_positive": null,
             "verified": false,
-            "package": ".",
-            "module": "shell_completion.py",
+            "package": "",
+            "module": "shell_completion",
             "filename": "/Users/zakariasabbagh/Documents/GitHub/private/securipy/repositories/click/src/click/shell_completion.py",
             "score": 2,
             "confidence": "high",
@@ -6262,6 +6782,8 @@
             "cwe_id": "CWE-78",
             "project": "click",
             "source": "Indirect",
+            "package_module": "shell_completion",
+            "project_package": "click",
             "project_version": "8.1.7",
             "is_test": false,
             "test_category": "B6"
@@ -6272,8 +6794,8 @@
             "description": "Try, Except, Pass detected.",
             "true_positive": null,
             "verified": false,
-            "package": ".",
-            "module": "testing.py",
+            "package": "",
+            "module": "testing",
             "filename": "/Users/zakariasabbagh/Documents/GitHub/private/securipy/repositories/click/src/click/testing.py",
             "score": 2,
             "confidence": "high",
@@ -6286,6 +6808,8 @@
             "cwe_id": "CWE-703",
             "project": "click",
             "source": "Indirect",
+            "package_module": "testing",
+            "project_package": "click",
             "project_version": "8.1.7",
             "is_test": true,
             "test_category": "B1"
@@ -6296,8 +6820,8 @@
             "description": "Try, Except, Pass detected.",
             "true_positive": null,
             "verified": false,
-            "package": ".",
-            "module": "testing.py",
+            "package": "",
+            "module": "testing",
             "filename": "/Users/zakariasabbagh/Documents/GitHub/private/securipy/repositories/click/src/click/testing.py",
             "score": 2,
             "confidence": "high",
@@ -6310,6 +6834,8 @@
             "cwe_id": "CWE-703",
             "project": "click",
             "source": "Indirect",
+            "package_module": "testing",
+            "project_package": "click",
             "project_version": "8.1.7",
             "is_test": true,
             "test_category": "B1"
@@ -6320,8 +6846,8 @@
             "description": "Try, Except, Pass detected.",
             "true_positive": null,
             "verified": false,
-            "package": ".",
-            "module": "utils.py",
+            "package": "",
+            "module": "utils",
             "filename": "/Users/zakariasabbagh/Documents/GitHub/private/securipy/repositories/click/src/click/utils.py",
             "score": 2,
             "confidence": "high",
@@ -6334,6 +6860,8 @@
             "cwe_id": "CWE-703",
             "project": "click",
             "source": "Indirect",
+            "package_module": "utils",
+            "project_package": "click",
             "project_version": "8.1.7",
             "is_test": false,
             "test_category": "B1"
@@ -6344,8 +6872,8 @@
             "description": "Try, Except, Pass detected.",
             "true_positive": null,
             "verified": false,
-            "package": ".",
-            "module": "timed.py",
+            "package": "",
+            "module": "timed",
             "filename": "/Users/zakariasabbagh/Documents/GitHub/private/securipy/repositories/itsdangerous/src/itsdangerous/timed.py",
             "score": 2,
             "confidence": "high",
@@ -6358,6 +6886,8 @@
             "cwe_id": "CWE-703",
             "project": "itsdangerous",
             "source": "Indirect",
+            "package_module": "timed",
+            "project_package": "itsdangerous",
             "project_version": "2.1.2",
             "is_test": false,
             "test_category": "B1"
@@ -6368,8 +6898,8 @@
             "description": "Consider possible security implications associated with the subprocess module.",
             "true_positive": null,
             "verified": false,
-            "package": ".",
-            "module": "_reloader.py",
+            "package": "",
+            "module": "_reloader",
             "filename": "/Users/zakariasabbagh/Documents/GitHub/private/securipy/repositories/werkzeug/src/werkzeug/_reloader.py",
             "score": 2,
             "confidence": "high",
@@ -6382,6 +6912,8 @@
             "cwe_id": "CWE-78",
             "project": "werkzeug",
             "source": "Indirect",
+            "package_module": "_reloader",
+            "project_package": "werkzeug",
             "project_version": "3.0.1",
             "is_test": false,
             "test_category": "B4"
@@ -6392,8 +6924,8 @@
             "description": "subprocess call - check for execution of untrusted input.",
             "true_positive": null,
             "verified": false,
-            "package": ".",
-            "module": "_reloader.py",
+            "package": "",
+            "module": "_reloader",
             "filename": "/Users/zakariasabbagh/Documents/GitHub/private/securipy/repositories/werkzeug/src/werkzeug/_reloader.py",
             "score": 2,
             "confidence": "high",
@@ -6406,6 +6938,8 @@
             "cwe_id": "CWE-78",
             "project": "werkzeug",
             "source": "Indirect",
+            "package_module": "_reloader",
+            "project_package": "werkzeug",
             "project_version": "3.0.1",
             "is_test": false,
             "test_category": "B6"
@@ -6417,7 +6951,7 @@
             "true_positive": null,
             "verified": false,
             "package": "datastructures",
-            "module": "datastructures/file_storage.py",
+            "module": "file_storage",
             "filename": "/Users/zakariasabbagh/Documents/GitHub/private/securipy/repositories/werkzeug/src/werkzeug/datastructures/file_storage.py",
             "score": 2,
             "confidence": "high",
@@ -6430,6 +6964,8 @@
             "cwe_id": "CWE-703",
             "project": "werkzeug",
             "source": "Indirect",
+            "package_module": "datastructures.file_storage",
+            "project_package": "werkzeug.datastructures",
             "project_version": "3.0.1",
             "is_test": false,
             "test_category": "B1"
@@ -6441,7 +6977,7 @@
             "true_positive": null,
             "verified": false,
             "package": "debug",
-            "module": "debug/__init__.py",
+            "module": "__init__",
             "filename": "/Users/zakariasabbagh/Documents/GitHub/private/securipy/repositories/werkzeug/src/werkzeug/debug/__init__.py",
             "score": 4,
             "confidence": "high",
@@ -6454,6 +6990,8 @@
             "cwe_id": "CWE-327",
             "project": "werkzeug",
             "source": "Indirect",
+            "package_module": "debug.__init__",
+            "project_package": "werkzeug.debug",
             "project_version": "3.0.1",
             "is_test": false,
             "test_category": "B3"
@@ -6465,7 +7003,7 @@
             "true_positive": null,
             "verified": false,
             "package": "debug",
-            "module": "debug/__init__.py",
+            "module": "__init__",
             "filename": "/Users/zakariasabbagh/Documents/GitHub/private/securipy/repositories/werkzeug/src/werkzeug/debug/__init__.py",
             "score": 2,
             "confidence": "high",
@@ -6478,6 +7016,8 @@
             "cwe_id": "CWE-78",
             "project": "werkzeug",
             "source": "Indirect",
+            "package_module": "debug.__init__",
+            "project_package": "werkzeug.debug",
             "project_version": "3.0.1",
             "is_test": false,
             "test_category": "B4"
@@ -6489,7 +7029,7 @@
             "true_positive": null,
             "verified": false,
             "package": "debug",
-            "module": "debug/__init__.py",
+            "module": "__init__",
             "filename": "/Users/zakariasabbagh/Documents/GitHub/private/securipy/repositories/werkzeug/src/werkzeug/debug/__init__.py",
             "score": 2,
             "confidence": "high",
@@ -6502,6 +7042,8 @@
             "cwe_id": "CWE-78",
             "project": "werkzeug",
             "source": "Indirect",
+            "package_module": "debug.__init__",
+            "project_package": "werkzeug.debug",
             "project_version": "3.0.1",
             "is_test": false,
             "test_category": "B6"
@@ -6513,7 +7055,7 @@
             "true_positive": null,
             "verified": false,
             "package": "debug",
-            "module": "debug/__init__.py",
+            "module": "__init__",
             "filename": "/Users/zakariasabbagh/Documents/GitHub/private/securipy/repositories/werkzeug/src/werkzeug/debug/__init__.py",
             "score": 2,
             "confidence": "high",
@@ -6526,6 +7068,8 @@
             "cwe_id": "CWE-78",
             "project": "werkzeug",
             "source": "Indirect",
+            "package_module": "debug.__init__",
+            "project_package": "werkzeug.debug",
             "project_version": "3.0.1",
             "is_test": false,
             "test_category": "B6"
@@ -6537,7 +7081,7 @@
             "true_positive": null,
             "verified": false,
             "package": "debug",
-            "module": "debug/__init__.py",
+            "module": "__init__",
             "filename": "/Users/zakariasabbagh/Documents/GitHub/private/securipy/repositories/werkzeug/src/werkzeug/debug/__init__.py",
             "score": 4,
             "confidence": "high",
@@ -6550,6 +7094,8 @@
             "cwe_id": "CWE-327",
             "project": "werkzeug",
             "source": "Indirect",
+            "package_module": "debug.__init__",
+            "project_package": "werkzeug.debug",
             "project_version": "3.0.1",
             "is_test": false,
             "test_category": "B3"
@@ -6561,7 +7107,7 @@
             "true_positive": null,
             "verified": false,
             "package": "debug",
-            "module": "debug/console.py",
+            "module": "console",
             "filename": "/Users/zakariasabbagh/Documents/GitHub/private/securipy/repositories/werkzeug/src/werkzeug/debug/console.py",
             "score": 3,
             "confidence": "high",
@@ -6574,6 +7120,8 @@
             "cwe_id": "CWE-78",
             "project": "werkzeug",
             "source": "Indirect",
+            "package_module": "debug.console",
+            "project_package": "werkzeug.debug",
             "project_version": "3.0.1",
             "is_test": false,
             "test_category": "B1"
@@ -6585,7 +7133,7 @@
             "true_positive": null,
             "verified": false,
             "package": "debug",
-            "module": "debug/repr.py",
+            "module": "repr",
             "filename": "/Users/zakariasabbagh/Documents/GitHub/private/securipy/repositories/werkzeug/src/werkzeug/debug/repr.py",
             "score": 2,
             "confidence": "high",
@@ -6598,6 +7146,8 @@
             "cwe_id": "CWE-703",
             "project": "werkzeug",
             "source": "Indirect",
+            "package_module": "debug.repr",
+            "project_package": "werkzeug.debug",
             "project_version": "3.0.1",
             "is_test": false,
             "test_category": "B1"
@@ -6608,8 +7158,8 @@
             "description": "Use of weak SHA1 hash for security. Consider usedforsecurity=False",
             "true_positive": null,
             "verified": false,
-            "package": ".",
-            "module": "http.py",
+            "package": "",
+            "module": "http",
             "filename": "/Users/zakariasabbagh/Documents/GitHub/private/securipy/repositories/werkzeug/src/werkzeug/http.py",
             "score": 4,
             "confidence": "high",
@@ -6622,6 +7172,8 @@
             "cwe_id": "CWE-327",
             "project": "werkzeug",
             "source": "Indirect",
+            "package_module": "http",
+            "project_package": "werkzeug",
             "project_version": "3.0.1",
             "is_test": false,
             "test_category": "B3"
@@ -6633,7 +7185,7 @@
             "true_positive": null,
             "verified": false,
             "package": "middleware",
-            "module": "middleware/lint.py",
+            "module": "lint",
             "filename": "/Users/zakariasabbagh/Documents/GitHub/private/securipy/repositories/werkzeug/src/werkzeug/middleware/lint.py",
             "score": 2,
             "confidence": "high",
@@ -6646,6 +7198,8 @@
             "cwe_id": "CWE-703",
             "project": "werkzeug",
             "source": "Indirect",
+            "package_module": "middleware.lint",
+            "project_package": "werkzeug.middleware",
             "project_version": "3.0.1",
             "is_test": false,
             "test_category": "B1"
@@ -6657,7 +7211,7 @@
             "true_positive": null,
             "verified": false,
             "package": "routing",
-            "module": "routing/rules.py",
+            "module": "rules",
             "filename": "/Users/zakariasabbagh/Documents/GitHub/private/securipy/repositories/werkzeug/src/werkzeug/routing/rules.py",
             "score": 3,
             "confidence": "high",
@@ -6670,6 +7224,8 @@
             "cwe_id": "CWE-78",
             "project": "werkzeug",
             "source": "Indirect",
+            "package_module": "routing.rules",
+            "project_package": "werkzeug.routing",
             "project_version": "3.0.1",
             "is_test": false,
             "test_category": "B1"
@@ -6680,8 +7236,8 @@
             "description": "Try, Except, Pass detected.",
             "true_positive": null,
             "verified": false,
-            "package": ".",
-            "module": "serving.py",
+            "package": "",
+            "module": "serving",
             "filename": "/Users/zakariasabbagh/Documents/GitHub/private/securipy/repositories/werkzeug/src/werkzeug/serving.py",
             "score": 2,
             "confidence": "high",
@@ -6694,6 +7250,8 @@
             "cwe_id": "CWE-703",
             "project": "werkzeug",
             "source": "Indirect",
+            "package_module": "serving",
+            "project_package": "werkzeug",
             "project_version": "3.0.1",
             "is_test": false,
             "test_category": "B1"
@@ -6704,8 +7262,8 @@
             "description": "Possible binding to all interfaces.",
             "true_positive": null,
             "verified": false,
-            "package": ".",
-            "module": "serving.py",
+            "package": "",
+            "module": "serving",
             "filename": "/Users/zakariasabbagh/Documents/GitHub/private/securipy/repositories/werkzeug/src/werkzeug/serving.py",
             "score": 2,
             "confidence": "medium",
@@ -6718,6 +7276,8 @@
             "cwe_id": "CWE-605",
             "project": "werkzeug",
             "source": "Indirect",
+            "package_module": "serving",
+            "project_package": "werkzeug",
             "project_version": "3.0.1",
             "is_test": false,
             "test_category": "B1"
@@ -6728,8 +7288,8 @@
             "description": "Possible binding to all interfaces.",
             "true_positive": null,
             "verified": false,
-            "package": ".",
-            "module": "serving.py",
+            "package": "",
+            "module": "serving",
             "filename": "/Users/zakariasabbagh/Documents/GitHub/private/securipy/repositories/werkzeug/src/werkzeug/serving.py",
             "score": 2,
             "confidence": "medium",
@@ -6742,6 +7302,8 @@
             "cwe_id": "CWE-605",
             "project": "werkzeug",
             "source": "Indirect",
+            "package_module": "serving",
+            "project_package": "werkzeug",
             "project_version": "3.0.1",
             "is_test": false,
             "test_category": "B1"
@@ -6752,8 +7314,8 @@
             "description": "Standard pseudo-random generators are not suitable for security/cryptographic purposes.",
             "true_positive": null,
             "verified": false,
-            "package": ".",
-            "module": "test.py",
+            "package": "",
+            "module": "test",
             "filename": "/Users/zakariasabbagh/Documents/GitHub/private/securipy/repositories/werkzeug/src/werkzeug/test.py",
             "score": 2,
             "confidence": "high",
@@ -6766,6 +7328,8 @@
             "cwe_id": "CWE-330",
             "project": "werkzeug",
             "source": "Indirect",
+            "package_module": "test",
+            "project_package": "werkzeug",
             "project_version": "3.0.1",
             "is_test": true,
             "test_category": "B3"
@@ -6776,8 +7340,8 @@
             "description": "Try, Except, Pass detected.",
             "true_positive": null,
             "verified": false,
-            "package": ".",
-            "module": "test.py",
+            "package": "",
+            "module": "test",
             "filename": "/Users/zakariasabbagh/Documents/GitHub/private/securipy/repositories/werkzeug/src/werkzeug/test.py",
             "score": 2,
             "confidence": "high",
@@ -6790,6 +7354,8 @@
             "cwe_id": "CWE-703",
             "project": "werkzeug",
             "source": "Indirect",
+            "package_module": "test",
+            "project_package": "werkzeug",
             "project_version": "3.0.1",
             "is_test": true,
             "test_category": "B1"
@@ -6800,8 +7366,8 @@
             "description": "Try, Except, Pass detected.",
             "true_positive": null,
             "verified": false,
-            "package": ".",
-            "module": "test.py",
+            "package": "",
+            "module": "test",
             "filename": "/Users/zakariasabbagh/Documents/GitHub/private/securipy/repositories/werkzeug/src/werkzeug/test.py",
             "score": 2,
             "confidence": "high",
@@ -6814,6 +7380,8 @@
             "cwe_id": "CWE-703",
             "project": "werkzeug",
             "source": "Indirect",
+            "package_module": "test",
+            "project_package": "werkzeug",
             "project_version": "3.0.1",
             "is_test": true,
             "test_category": "B1"
@@ -6840,6 +7408,8 @@
             "cwe_id": "CWE-259",
             "project": "tornado",
             "source": "Direct",
+            "package_module": "auth",
+            "project_package": "tornado",
             "project_version": "6.3.3",
             "is_test": false,
             "test_category": "B1"
@@ -6864,6 +7434,8 @@
             "cwe_id": "CWE-259",
             "project": "tornado",
             "source": "Direct",
+            "package_module": "auth",
+            "project_package": "tornado",
             "project_version": "6.3.3",
             "is_test": false,
             "test_category": "B1"
@@ -6888,6 +7460,8 @@
             "cwe_id": "CWE-259",
             "project": "tornado",
             "source": "Direct",
+            "package_module": "auth",
+            "project_package": "tornado",
             "project_version": "6.3.3",
             "is_test": false,
             "test_category": "B1"
@@ -6912,6 +7486,8 @@
             "cwe_id": "CWE-259",
             "project": "tornado",
             "source": "Direct",
+            "package_module": "auth",
+            "project_package": "tornado",
             "project_version": "6.3.3",
             "is_test": false,
             "test_category": "B1"
@@ -6936,6 +7512,8 @@
             "cwe_id": "CWE-78",
             "project": "tornado",
             "source": "Direct",
+            "package_module": "autoreload",
+            "project_package": "tornado",
             "project_version": "6.3.3",
             "is_test": false,
             "test_category": "B4"
@@ -6960,6 +7538,8 @@
             "cwe_id": "CWE-78",
             "project": "tornado",
             "source": "Direct",
+            "package_module": "autoreload",
+            "project_package": "tornado",
             "project_version": "6.3.3",
             "is_test": false,
             "test_category": "B6"
@@ -6984,6 +7564,8 @@
             "cwe_id": "CWE-78",
             "project": "tornado",
             "source": "Direct",
+            "package_module": "autoreload",
+            "project_package": "tornado",
             "project_version": "6.3.3",
             "is_test": false,
             "test_category": "B6"
@@ -7008,6 +7590,8 @@
             "cwe_id": "CWE-78",
             "project": "tornado",
             "source": "Direct",
+            "package_module": "autoreload",
+            "project_package": "tornado",
             "project_version": "6.3.3",
             "is_test": false,
             "test_category": "B6"
@@ -7032,6 +7616,8 @@
             "cwe_id": "CWE-703",
             "project": "tornado",
             "source": "Direct",
+            "package_module": "http1connection",
+            "project_package": "tornado",
             "project_version": "6.3.3",
             "is_test": false,
             "test_category": "B1"
@@ -7056,6 +7642,8 @@
             "cwe_id": "CWE-259",
             "project": "tornado",
             "source": "Direct",
+            "package_module": "httpclient",
+            "project_package": "tornado",
             "project_version": "6.3.3",
             "is_test": false,
             "test_category": "B1"
@@ -7080,6 +7668,8 @@
             "cwe_id": "CWE-605",
             "project": "tornado",
             "source": "Direct",
+            "package_module": "httpserver",
+            "project_package": "tornado",
             "project_version": "6.3.3",
             "is_test": false,
             "test_category": "B1"
@@ -7104,6 +7694,8 @@
             "cwe_id": "CWE-703",
             "project": "tornado",
             "source": "Direct",
+            "package_module": "httputil",
+            "project_package": "tornado",
             "project_version": "6.3.3",
             "is_test": false,
             "test_category": "B1"
@@ -7128,6 +7720,8 @@
             "cwe_id": "CWE-703",
             "project": "tornado",
             "source": "Direct",
+            "package_module": "httputil",
+            "project_package": "tornado",
             "project_version": "6.3.3",
             "is_test": false,
             "test_category": "B1"
@@ -7152,6 +7746,8 @@
             "cwe_id": "CWE-330",
             "project": "tornado",
             "source": "Direct",
+            "package_module": "ioloop",
+            "project_package": "tornado",
             "project_version": "6.3.3",
             "is_test": false,
             "test_category": "B3"
@@ -7176,6 +7772,8 @@
             "cwe_id": "CWE-703",
             "project": "tornado",
             "source": "Direct",
+            "package_module": "log",
+            "project_package": "tornado",
             "project_version": "6.3.3",
             "is_test": false,
             "test_category": "B1"
@@ -7200,6 +7798,8 @@
             "cwe_id": "CWE-78",
             "project": "tornado",
             "source": "Direct",
+            "package_module": "process",
+            "project_package": "tornado",
             "project_version": "6.3.3",
             "is_test": false,
             "test_category": "B4"
@@ -7224,6 +7824,8 @@
             "cwe_id": "CWE-78",
             "project": "tornado",
             "source": "Direct",
+            "package_module": "process",
+            "project_package": "tornado",
             "project_version": "6.3.3",
             "is_test": false,
             "test_category": "B6"
@@ -7248,6 +7850,8 @@
             "cwe_id": "CWE-703",
             "project": "tornado",
             "source": "Direct",
+            "package_module": "test.asyncio_test",
+            "project_package": "tornado.test",
             "project_version": "6.3.3",
             "is_test": true,
             "test_category": "B1"
@@ -7272,6 +7876,8 @@
             "cwe_id": "CWE-259",
             "project": "tornado",
             "source": "Direct",
+            "package_module": "test.auth_test",
+            "project_package": "tornado.test",
             "project_version": "6.3.3",
             "is_test": true,
             "test_category": "B1"
@@ -7296,6 +7902,8 @@
             "cwe_id": "CWE-259",
             "project": "tornado",
             "source": "Direct",
+            "package_module": "test.auth_test",
+            "project_package": "tornado.test",
             "project_version": "6.3.3",
             "is_test": true,
             "test_category": "B1"
@@ -7320,6 +7928,8 @@
             "cwe_id": "CWE-259",
             "project": "tornado",
             "source": "Direct",
+            "package_module": "test.auth_test",
+            "project_package": "tornado.test",
             "project_version": "6.3.3",
             "is_test": true,
             "test_category": "B1"
@@ -7344,6 +7954,8 @@
             "cwe_id": "CWE-259",
             "project": "tornado",
             "source": "Direct",
+            "package_module": "test.auth_test",
+            "project_package": "tornado.test",
             "project_version": "6.3.3",
             "is_test": true,
             "test_category": "B1"
@@ -7368,6 +7980,8 @@
             "cwe_id": "CWE-259",
             "project": "tornado",
             "source": "Direct",
+            "package_module": "test.auth_test",
+            "project_package": "tornado.test",
             "project_version": "6.3.3",
             "is_test": true,
             "test_category": "B1"
@@ -7392,6 +8006,8 @@
             "cwe_id": "CWE-259",
             "project": "tornado",
             "source": "Direct",
+            "package_module": "test.auth_test",
+            "project_package": "tornado.test",
             "project_version": "6.3.3",
             "is_test": true,
             "test_category": "B1"
@@ -7416,6 +8032,8 @@
             "cwe_id": "CWE-259",
             "project": "tornado",
             "source": "Direct",
+            "package_module": "test.auth_test",
+            "project_package": "tornado.test",
             "project_version": "6.3.3",
             "is_test": true,
             "test_category": "B1"
@@ -7440,6 +8058,8 @@
             "cwe_id": "CWE-259",
             "project": "tornado",
             "source": "Direct",
+            "package_module": "test.auth_test",
+            "project_package": "tornado.test",
             "project_version": "6.3.3",
             "is_test": true,
             "test_category": "B1"
@@ -7464,6 +8084,8 @@
             "cwe_id": "CWE-259",
             "project": "tornado",
             "source": "Direct",
+            "package_module": "test.auth_test",
+            "project_package": "tornado.test",
             "project_version": "6.3.3",
             "is_test": true,
             "test_category": "B1"
@@ -7488,6 +8110,8 @@
             "cwe_id": "CWE-78",
             "project": "tornado",
             "source": "Direct",
+            "package_module": "test.autoreload_test",
+            "project_package": "tornado.test",
             "project_version": "6.3.3",
             "is_test": true,
             "test_category": "B4"
@@ -7512,6 +8136,8 @@
             "cwe_id": "CWE-78",
             "project": "tornado",
             "source": "Direct",
+            "package_module": "test.autoreload_test",
+            "project_package": "tornado.test",
             "project_version": "6.3.3",
             "is_test": true,
             "test_category": "B4"
@@ -7536,6 +8162,8 @@
             "cwe_id": "CWE-78",
             "project": "tornado",
             "source": "Direct",
+            "package_module": "test.autoreload_test",
+            "project_package": "tornado.test",
             "project_version": "6.3.3",
             "is_test": true,
             "test_category": "B6"
@@ -7560,6 +8188,8 @@
             "cwe_id": "CWE-78",
             "project": "tornado",
             "source": "Direct",
+            "package_module": "test.autoreload_test",
+            "project_package": "tornado.test",
             "project_version": "6.3.3",
             "is_test": true,
             "test_category": "B6"
@@ -7584,6 +8214,8 @@
             "cwe_id": "CWE-327",
             "project": "tornado",
             "source": "Direct",
+            "package_module": "test.curl_httpclient_test",
+            "project_package": "tornado.test",
             "project_version": "6.3.3",
             "is_test": true,
             "test_category": "B3"
@@ -7608,6 +8240,8 @@
             "cwe_id": "CWE-327",
             "project": "tornado",
             "source": "Direct",
+            "package_module": "test.curl_httpclient_test",
+            "project_package": "tornado.test",
             "project_version": "6.3.3",
             "is_test": true,
             "test_category": "B3"
@@ -7632,6 +8266,8 @@
             "cwe_id": "CWE-327",
             "project": "tornado",
             "source": "Direct",
+            "package_module": "test.curl_httpclient_test",
+            "project_package": "tornado.test",
             "project_version": "6.3.3",
             "is_test": true,
             "test_category": "B3"
@@ -7656,6 +8292,8 @@
             "cwe_id": "CWE-259",
             "project": "tornado",
             "source": "Direct",
+            "package_module": "test.curl_httpclient_test",
+            "project_package": "tornado.test",
             "project_version": "6.3.3",
             "is_test": true,
             "test_category": "B1"
@@ -7680,6 +8318,8 @@
             "cwe_id": "CWE-259",
             "project": "tornado",
             "source": "Direct",
+            "package_module": "test.curl_httpclient_test",
+            "project_package": "tornado.test",
             "project_version": "6.3.3",
             "is_test": true,
             "test_category": "B1"
@@ -7704,6 +8344,8 @@
             "cwe_id": "CWE-78",
             "project": "tornado",
             "source": "Direct",
+            "package_module": "test.httpclient_test",
+            "project_package": "tornado.test",
             "project_version": "6.3.3",
             "is_test": true,
             "test_category": "B4"
@@ -7728,6 +8370,8 @@
             "cwe_id": "CWE-259",
             "project": "tornado",
             "source": "Direct",
+            "package_module": "test.httpclient_test",
+            "project_package": "tornado.test",
             "project_version": "6.3.3",
             "is_test": true,
             "test_category": "B1"
@@ -7752,6 +8396,8 @@
             "cwe_id": "CWE-259",
             "project": "tornado",
             "source": "Direct",
+            "package_module": "test.httpclient_test",
+            "project_package": "tornado.test",
             "project_version": "6.3.3",
             "is_test": true,
             "test_category": "B1"
@@ -7776,6 +8422,8 @@
             "cwe_id": "CWE-259",
             "project": "tornado",
             "source": "Direct",
+            "package_module": "test.httpclient_test",
+            "project_package": "tornado.test",
             "project_version": "6.3.3",
             "is_test": true,
             "test_category": "B1"
@@ -7800,6 +8448,8 @@
             "cwe_id": "CWE-259",
             "project": "tornado",
             "source": "Direct",
+            "package_module": "test.httpclient_test",
+            "project_package": "tornado.test",
             "project_version": "6.3.3",
             "is_test": true,
             "test_category": "B1"
@@ -7824,6 +8474,8 @@
             "cwe_id": "CWE-259",
             "project": "tornado",
             "source": "Direct",
+            "package_module": "test.httpclient_test",
+            "project_package": "tornado.test",
             "project_version": "6.3.3",
             "is_test": true,
             "test_category": "B1"
@@ -7848,6 +8500,8 @@
             "cwe_id": "CWE-78",
             "project": "tornado",
             "source": "Direct",
+            "package_module": "test.httpclient_test",
+            "project_package": "tornado.test",
             "project_version": "6.3.3",
             "is_test": true,
             "test_category": "B6"
@@ -7872,6 +8526,8 @@
             "cwe_id": "CWE-502",
             "project": "tornado",
             "source": "Direct",
+            "package_module": "test.httputil_test",
+            "project_package": "tornado.test",
             "project_version": "6.3.3",
             "is_test": true,
             "test_category": "B4"
@@ -7896,6 +8552,8 @@
             "cwe_id": "CWE-502",
             "project": "tornado",
             "source": "Direct",
+            "package_module": "test.httputil_test",
+            "project_package": "tornado.test",
             "project_version": "6.3.3",
             "is_test": true,
             "test_category": "B3"
@@ -7920,6 +8578,8 @@
             "cwe_id": "CWE-78",
             "project": "tornado",
             "source": "Direct",
+            "package_module": "test.import_test",
+            "project_package": "tornado.test",
             "project_version": "6.3.3",
             "is_test": true,
             "test_category": "B4"
@@ -7944,6 +8604,8 @@
             "cwe_id": "CWE-78",
             "project": "tornado",
             "source": "Direct",
+            "package_module": "test.import_test",
+            "project_package": "tornado.test",
             "project_version": "6.3.3",
             "is_test": true,
             "test_category": "B6"
@@ -7968,6 +8630,8 @@
             "cwe_id": "CWE-78",
             "project": "tornado",
             "source": "Direct",
+            "package_module": "test.import_test",
+            "project_package": "tornado.test",
             "project_version": "6.3.3",
             "is_test": true,
             "test_category": "B6"
@@ -7992,6 +8656,8 @@
             "cwe_id": "CWE-78",
             "project": "tornado",
             "source": "Direct",
+            "package_module": "test.ioloop_test",
+            "project_package": "tornado.test",
             "project_version": "6.3.3",
             "is_test": true,
             "test_category": "B4"
@@ -8016,6 +8682,8 @@
             "cwe_id": "CWE-78",
             "project": "tornado",
             "source": "Direct",
+            "package_module": "test.ioloop_test",
+            "project_package": "tornado.test",
             "project_version": "6.3.3",
             "is_test": true,
             "test_category": "B6"
@@ -8040,6 +8708,8 @@
             "cwe_id": "CWE-330",
             "project": "tornado",
             "source": "Direct",
+            "package_module": "test.iostream_test",
+            "project_package": "tornado.test",
             "project_version": "6.3.3",
             "is_test": true,
             "test_category": "B3"
@@ -8064,6 +8734,8 @@
             "cwe_id": "CWE-327",
             "project": "tornado",
             "source": "Direct",
+            "package_module": "test.iostream_test",
+            "project_package": "tornado.test",
             "project_version": "6.3.3",
             "is_test": true,
             "test_category": "B3"
@@ -8088,6 +8760,8 @@
             "cwe_id": "CWE-327",
             "project": "tornado",
             "source": "Direct",
+            "package_module": "test.iostream_test",
+            "project_package": "tornado.test",
             "project_version": "6.3.3",
             "is_test": true,
             "test_category": "B3"
@@ -8112,6 +8786,8 @@
             "cwe_id": "CWE-330",
             "project": "tornado",
             "source": "Direct",
+            "package_module": "test.iostream_test",
+            "project_package": "tornado.test",
             "project_version": "6.3.3",
             "is_test": true,
             "test_category": "B3"
@@ -8136,6 +8812,8 @@
             "cwe_id": "CWE-78",
             "project": "tornado",
             "source": "Direct",
+            "package_module": "test.log_test",
+            "project_package": "tornado.test",
             "project_version": "6.3.3",
             "is_test": true,
             "test_category": "B4"
@@ -8160,6 +8838,8 @@
             "cwe_id": "CWE-78",
             "project": "tornado",
             "source": "Direct",
+            "package_module": "test.log_test",
+            "project_package": "tornado.test",
             "project_version": "6.3.3",
             "is_test": true,
             "test_category": "B6"
@@ -8184,6 +8864,8 @@
             "cwe_id": "CWE-78",
             "project": "tornado",
             "source": "Direct",
+            "package_module": "test.netutil_test",
+            "project_package": "tornado.test",
             "project_version": "6.3.3",
             "is_test": true,
             "test_category": "B4"
@@ -8208,6 +8890,8 @@
             "cwe_id": "CWE-78",
             "project": "tornado",
             "source": "Direct",
+            "package_module": "test.netutil_test",
+            "project_package": "tornado.test",
             "project_version": "6.3.3",
             "is_test": true,
             "test_category": "B6"
@@ -8232,6 +8916,8 @@
             "cwe_id": "CWE-78",
             "project": "tornado",
             "source": "Direct",
+            "package_module": "test.process_test",
+            "project_package": "tornado.test",
             "project_version": "6.3.3",
             "is_test": true,
             "test_category": "B4"
@@ -8256,6 +8942,8 @@
             "cwe_id": "CWE-330",
             "project": "tornado",
             "source": "Direct",
+            "package_module": "test.queues_test",
+            "project_package": "tornado.test",
             "project_version": "6.3.3",
             "is_test": true,
             "test_category": "B3"
@@ -8280,6 +8968,8 @@
             "cwe_id": "CWE-78",
             "project": "tornado",
             "source": "Direct",
+            "package_module": "test.tcpserver_test",
+            "project_package": "tornado.test",
             "project_version": "6.3.3",
             "is_test": true,
             "test_category": "B4"
@@ -8304,6 +8994,8 @@
             "cwe_id": "CWE-78",
             "project": "tornado",
             "source": "Direct",
+            "package_module": "test.tcpserver_test",
+            "project_package": "tornado.test",
             "project_version": "6.3.3",
             "is_test": true,
             "test_category": "B6"
@@ -8328,6 +9020,8 @@
             "cwe_id": "CWE-78",
             "project": "tornado",
             "source": "Direct",
+            "package_module": "test.util",
+            "project_package": "tornado.test",
             "project_version": "6.3.3",
             "is_test": true,
             "test_category": "B1"
@@ -8352,6 +9046,8 @@
             "cwe_id": "CWE-259",
             "project": "tornado",
             "source": "Direct",
+            "package_module": "test.web_test",
+            "project_package": "tornado.test",
             "project_version": "6.3.3",
             "is_test": true,
             "test_category": "B1"
@@ -8376,6 +9072,8 @@
             "cwe_id": "CWE-259",
             "project": "tornado",
             "source": "Direct",
+            "package_module": "test.web_test",
+            "project_package": "tornado.test",
             "project_version": "6.3.3",
             "is_test": true,
             "test_category": "B1"
@@ -8400,6 +9098,8 @@
             "cwe_id": "CWE-259",
             "project": "tornado",
             "source": "Direct",
+            "package_module": "test.web_test",
+            "project_package": "tornado.test",
             "project_version": "6.3.3",
             "is_test": true,
             "test_category": "B1"
@@ -8424,6 +9124,8 @@
             "cwe_id": "CWE-259",
             "project": "tornado",
             "source": "Direct",
+            "package_module": "test.web_test",
+            "project_package": "tornado.test",
             "project_version": "6.3.3",
             "is_test": true,
             "test_category": "B1"
@@ -8448,6 +9150,8 @@
             "cwe_id": "CWE-259",
             "project": "tornado",
             "source": "Direct",
+            "package_module": "test.web_test",
+            "project_package": "tornado.test",
             "project_version": "6.3.3",
             "is_test": true,
             "test_category": "B1"
@@ -8472,6 +9176,8 @@
             "cwe_id": "CWE-259",
             "project": "tornado",
             "source": "Direct",
+            "package_module": "test.web_test",
+            "project_package": "tornado.test",
             "project_version": "6.3.3",
             "is_test": true,
             "test_category": "B1"
@@ -8496,6 +9202,8 @@
             "cwe_id": "CWE-78",
             "project": "tornado",
             "source": "Direct",
+            "package_module": "util",
+            "project_package": "tornado",
             "project_version": "6.3.3",
             "is_test": false,
             "test_category": "B1"
@@ -8520,6 +9228,8 @@
             "cwe_id": "CWE-327",
             "project": "tornado",
             "source": "Direct",
+            "package_module": "web",
+            "project_package": "tornado",
             "project_version": "6.3.3",
             "is_test": false,
             "test_category": "B3"
@@ -8544,6 +9254,8 @@
             "cwe_id": "CWE-327",
             "project": "tornado",
             "source": "Direct",
+            "package_module": "websocket",
+            "project_package": "tornado",
             "project_version": "6.3.3",
             "is_test": false,
             "test_category": "B3"
