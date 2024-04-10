@@ -311,12 +311,11 @@ def plot_overall_cve_distribution(overall: dict, *measurements: str):
     for i, project in enumerate(project_names):
         ax = axs[i]
         project_data = df[df['Project'] == project]
-        colour = Global.colours[i]
         sns.swarmplot(data=project_data,
                       x='Source',
                       y='CVSS Base Score',
                       ax=ax,
-                      color=colour,
+                      palette=Global.source_palette,
                       size=5)
         sns.violinplot(data=project_data,
                     x='Source',
@@ -392,13 +391,12 @@ def plot_semver_cve_distribution(overall: dict, *measurements: str):
     for i, project in enumerate(project_names):
         ax: plt.Axes = axs[i]
         project_data = df[df['Project'] == project]
-        project_data = project_data.sort_values(by=['Major', 'Source'], ascending=False)
-        min_version = project_data['Major'].min()
+        project_data = project_data.sort_values(by=['Major', 'Minor', 'Source'], ascending=True)
         max_version = project_data['Major'].max()
-        logger.info(f"Project {project} version range: {min_version} - {max_version}")
         project_unique: pd.DataFrame = project_data.copy()
         project_unique = project_unique.drop_duplicates(subset=['Major', 'CVE ID'])
-        sns.countplot(data=project_unique, x='Major', hue='Source', ax=ax, color=Global.colours[i], zorder=2)
+        sns.swarmplot(data=project_unique, x='Major', y='CVSS Base Score', hue='Source', ax=ax, palette=Global.source_palette, zorder=2)
+        sns.violinplot(data=project_unique, x='Major', y='CVSS Base Score', ax=ax, fill=False, color=Global.Colours.light_grey, cut=0, zorder=0)
         # ax2 = ax.twinx()
         # sns.countplot(data=project_unique, x='Major', ax=ax2, color=Global.Colours.light_grey, hue='Source', width=0.1, zorder=1)
         steps = 5
@@ -407,8 +405,7 @@ def plot_semver_cve_distribution(overall: dict, *measurements: str):
         ax.set_ylabel(None)
         ax.set_ylim(0, 10.5)
         ax.set_yticks(np.arange(0, 11, 11//steps))
-        ax.set_xlim(0.9, max_version+0.1)
-        ax.set_xticks(np.arange(1, max_version+1, 1))
+        ax.set_xticks(np.arange(0, max_version+1, 1))
     fig.suptitle("CVE Distribution by Major Semantic Version")
     fig.supxlabel("Major Semantic Version")
     fig.supylabel("CVSS Base Score")
@@ -479,16 +476,23 @@ def plot_bandit(bandit: dict):
     for project_id, issues in bandit.items():
         ax: plt.Axes = axs[i]
         platform, project = get_platform(project_id)
+        version = f":{issues[0]['project_version']}" if len(issues) > 0 and issues[0]['project'] == project else ''
         df = pd.DataFrame(issues)
+        # sort the X-axis by the test category
+        df = df.sort_values(by=['test_category', 'source'], ascending=True)
+        df = df[ df['is_test'] == False ]
         sns.swarmplot(data=df, x='test_category', y='score', hue='source', ax=ax, palette=Global.source_palette)
         sns.violinplot(data=df, x='test_category', y='score', ax=ax, fill=False, color=Global.Colours.light_grey, cut=0)
         ax.set_xlabel(None)
         ax.set_ylabel(None)
-        ax.set_title(project.title())
+        ax.set_title(f"{project.title()}{version}")
         ax.set_yticks(range(len(values)), values)
         i += 1
     fig.suptitle("Bandit Test Category Distribution")
     fig.supxlabel("Test Category")
+    fig.savefig(plots_dir / 'bandit-test-category-distribution.png')
+    bandit_json = convert_datetime_to_str(bandit)
+    try_json_dump(bandit_json, json_dir / 'bandit-test-category-distribution.json')
 
 def combine_timeline_data(data: dict):
     """

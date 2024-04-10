@@ -1076,6 +1076,11 @@ class Aggregator:
             if report is not None:
                 for issue in report.issues:
                     print(issue.filename)
+                    module = issue.module if issue.module else ''
+                    package = issue.package if issue.package else ''
+                    is_test = package.startswith('test') or 'test' in module
+                    if is_test:
+                        logger.warning(f"Detected test file {issue.filename} for {project_name} {release.version}, test ID {issue.test_id}")
                     severity = issue.severity
                     confidence = issue.confidence
                     score = bandit_issue_score(severity, confidence)
@@ -1084,6 +1089,7 @@ class Aggregator:
                     issue['source'] = source
                     issue['score'] = score
                     issue['project_version'] = release.version
+                    issue['is_test'] = is_test
                     test_id = issue.get('test_id')
                     issue['test_category'] = test_id[:2] if test_id and len(test_id) > 2 else None
                     results.append(issue)
