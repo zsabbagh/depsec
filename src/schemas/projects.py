@@ -137,6 +137,7 @@ class BanditIssue(Model):
     package = CharField(null=False)
     module = CharField(null=False)
     filename = CharField(null=False)
+    score = IntegerField(null=True)
     confidence = CharField(null=True)
     severity = CharField(null=True)
     more_info = CharField(null=True)

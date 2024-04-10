@@ -241,6 +241,7 @@ class Aggregator:
                      sort_semantically: bool = True,
                      before: str | int | datetime.datetime = None,
                      after: str | int | datetime.datetime = None,
+                     has_static_analysis: bool = False,
                      requirements: str = None) -> List[Release]:
         """
         Gets all releases of a project 
@@ -283,6 +284,9 @@ class Aggregator:
                 if not version_satisfies_requirements(version, requirements):
                     logger.debug(f"Version {release.version} does not satisfy requirements {requirements} for {project_name}")
                     continue
+            if has_static_analysis and release.nloc_total is None:
+                logger.debug(f"Skipping release {release.version} without static analysis for {project_name}")
+                continue
             releases.append(release)
         if sort_semantically:
             releases = sorted(releases, key=lambda x : semver.parse(x.version), reverse=descending)
@@ -924,71 +928,6 @@ class Aggregator:
         release.save()
         return results
     
-    def _update_modules(self, project: str | Project, version: str = None, platform: str="pypi", repo_dir: str = None, with_dependencies: bool = True) -> None:
-        """
-        Updates 'module' field of a release
-        """
-        if repo_dir is None:
-            logger.error("Repository directory not provided")
-            return
-        repo_dir = Path(repo_dir).absolute()
-        releases = self.get_analysed_releases(project, platform=platform, with_dependencies=with_dependencies)
-        for release in releases:
-            report = release.bandit_report.first()
-            release_name = release.project.name
-            if report is not None:
-                for issue in report.issues:
-                    module = issue.module
-                    if module is None:
-                        path = Path(issue.filename)
-                        dirs = path.parts
-                        dir_str = None
-                        for i in range(len(dirs)-1, -1, -1):
-                            if dirs[i] == release_name:
-                                dir_str = '/'.join(dirs[i+1:])
-                                break
-                        module = dir_str
-                        package = str(Path(dir_str).parent)
-                        issue.module = module
-                        issue.package = package
-                        issue.save()
-                        print(f"Updated module for {release.project.name} {release.version} {issue.test_id} to {module}, and package {package}")
-
-    
-    def _mark_issues(self, project: str | Project, version: str = None, platform: str="pypi", with_dependencies: bool = True, skip_verified: bool = True, mark_tests: bool = True) -> None:
-        """
-        Mark issues as verified
-        """
-        releases = self.get_analysed_releases(project, platform=platform, with_dependencies=with_dependencies)
-        for release in releases:
-            report = release.bandit_report.first()
-            release_name = f"{release.project.name} {release.version}"
-            if report is not None:
-                for issue in report.issues:
-                    if skip_verified and issue.verified:
-                        print(f"Skip issue entered: Issue already verified for {release_name}")
-                        continue
-                    if mark_tests:
-                        if issue.package.startswith('test'):
-                            print(f"Skip issue entered: Issue in tests for {release_name}")
-                            issue.verified = False
-                            issue.save()
-                            continue
-                    print(f"Processing issue for {release_name}")
-                    pprint(model_to_dict(issue, recurse=False))
-                    inp = None
-                    while inp is None:
-                        inp = input("Mark as verified? [y/n]: ")
-                        inp = inp.strip().lower()
-                        if inp == 'y':
-                            issue.verified = True
-                            issue.save()
-                            print(f"Issue marked as verified for {release_name}")
-                        elif inp == 'n':
-                            print(f"Issue not marked as verified for {release_name}")
-                        else:
-                            inp = None
-                            print(f"Invalid input, please try again")
     
     def get_bandit_report(self,
                           project_or_release: str | Project,
