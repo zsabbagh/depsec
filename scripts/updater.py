@@ -71,55 +71,53 @@ def update_modules(release: Release, repo_dir: str = None) -> None:
             issue.save()
             print(f"Updated module for {release.project.name} {release.version} {issue.test_id} to {package}.{module}")
 
-def mark_issues(project: str | Project, version: str = None, platform: str="pypi", with_dependencies: bool = True, mark_tests: bool = True) -> None:
+def mark_issues(release: Release, with_dependencies: bool = True, mark_tests: bool = True) -> None:
     """
     Mark issues as verified
     """
-    releases = ag.get_analysed_releases(project, platform=platform, with_dependencies=with_dependencies)
     mx = args.maximum_confidence
     mn = args.minimum_confidence
     mx = bandit_value_score(mx) if mx is not None else None
     mn = bandit_value_score(mn) if mn is not None else None
-    for release in releases:
-        report = release.bandit_report.first()
-        release_name = f"{release.project.name} {release.version}"
-        if report is not None:
-            for issue in report.issues:
-                score = bandit_value_score(issue.confidence)
-                if (mx is not None and score >= mx) or (mn is not None and score <= mn):
-                    print(f"Skip issue entered: Issue confidence '{issue.confidence}' does not match '< {args.maximum_confidence} | > {args.minimum_confidence}' for {release_name}")
+    report = release.bandit_report.first()
+    release_name = f"{release.project.name} {release.version}"
+    if report is not None:
+        for issue in report.issues:
+            score = bandit_value_score(issue.confidence)
+            if (mx is not None and score >= mx) or (mn is not None and score <= mn):
+                print(f"Skip issue entered: Issue confidence '{issue.confidence}' does not match '< {args.maximum_confidence} | > {args.minimum_confidence}' for {release_name}")
+                continue
+            pprint_issue(issue)
+            if not args.noskip and issue.verified:
+                print(f"Skip issue entered: Issue already verified for {release_name}")
+                continue
+            if mark_tests:
+                if (issue.package.startswith('test') or 'test' in issue.module) and input("Test detected. Skip OK? ").strip().lower() == '':
+                    print(f"Skip issue entered: Issue in tests for {release_name}")
+                    issue.verified = False
+                    issue.true_positive = False
+                    issue.save()
                     continue
-                pprint_issue(issue)
-                if not args.noskip and issue.verified:
-                    print(f"Skip issue entered: Issue already verified for {release_name}")
-                    continue
-                if mark_tests:
-                    if (issue.package.startswith('test') or 'test' in issue.module) and input("Test detected. Skip OK? ").strip().lower() == '':
-                        print(f"Skip issue entered: Issue in tests for {release_name}")
-                        issue.verified = False
-                        issue.true_positive = False
-                        issue.save()
-                        continue
-                print(f"Processing issue for {release_name}")
-                inp = None
-                while inp is None:
-                    inp = input("Mark as verified? [y/n]: ")
-                    inp = inp.strip().lower()
-                    if inp == 'y':
-                        issue.verified = True
-                        issue.true_positive = True
-                        issue.save()
-                        print(f"Issue marked as verified for {release_name}")
-                    elif inp == 'n':
-                        issue.verified = True
-                        issue.true_positive = False
-                        issue.save()
-                        print(f"Issue marked as verified for {release_name} as undeclared")
-                    elif args.accept_blank and inp == '':
-                        inp = True
-                    else:
-                        inp = None
-                        print(f"Invalid input, please try again")
+            print(f"Processing issue for {release_name}")
+            inp = None
+            while inp is None:
+                inp = input("Mark as verified? [y/n]: ")
+                inp = inp.strip().lower()
+                if inp == 'y':
+                    issue.verified = True
+                    issue.true_positive = True
+                    issue.save()
+                    print(f"Issue marked as verified for {release_name}")
+                elif inp == 'n':
+                    issue.verified = True
+                    issue.true_positive = False
+                    issue.save()
+                    print(f"Issue marked as verified for {release_name} as undeclared")
+                elif args.accept_blank and inp == '':
+                    inp = True
+                else:
+                    inp = None
+                    print(f"Invalid input, please try again")
 
 for project in args.projects:
     version = None
@@ -152,8 +150,9 @@ for project in args.projects:
                 if dep_release is not None:
                     process.append(dep_release)
         for rel in process:
-            print(f"Processing {rel.project.name} {rel.version}")
+            print(f"Processing {rel.project.name} {rel.version}, commit: {rel.commit_hash} @ {rel.commit_at}")
             if args.update_modules:
-                update_modules(release, repo_dir=args.repo_dir)
+                update_modules(rel, repo_dir=args.repo_dir)
             if args.mark_issues:
-                mark_issues(release, version, with_dependencies=args.dependencies)
+                input("Ready? [press enter] ")
+                mark_issues(rel, with_dependencies=args.dependencies)
