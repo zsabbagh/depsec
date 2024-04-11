@@ -67,6 +67,15 @@ if not kpiset_timeline.issubset(valid_kpis):
 sns.set_theme(style='darkgrid')
 
 class Global:
+    # #0BD095, #0B84E0, #2E099C
+    project_palette = {
+        "django": "#0BD095",
+        "Django": "#0BD095",
+        "flask": "#0B84E0",
+        "Flask": "#0B84E0",
+        "tornado": "#2E099C",
+        "Tornado": "#2E099C"
+    }
     colours = [
         "#0cad6f","#4582b1","#f4d06f","#c4603b","#c477bf"
     ]
@@ -88,7 +97,6 @@ class Global:
         "B6": "#5b1878",
         "B7": "#b1136d"
     }
-    dependency_palette = ["#30bbb9","#2badb1","#259faa","#2091a2","#1b849a","#157692","#10688b","#0a5a83","#054c7b"]
 
     class Colours:
         light_grey = "#c0c0c0"
@@ -373,7 +381,7 @@ def plot_overall_cwe_distribution(overall: dict, *measurements: str):
         project_data = df[df['Project'] == project]
         project_data = project_data.sort_values(by='CVE Count', ascending=False)
         project_data = project_data.head(10)
-        sns.barplot(data=project_data, x='CWE ID', y='CVE Count', ax=ax, color=Global.colours[i])
+        sns.barplot(data=project_data, x='CWE ID', y='CVE Count', ax=ax, color=Global.project_palette[project])
         max_count = max(project_data['CVE Count'])
         ylim = max_count + 1 if max_count > 10 else 5
         step = ylim // 5
