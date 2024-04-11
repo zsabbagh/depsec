@@ -66,6 +66,17 @@ if not kpiset_timeline.issubset(valid_kpis):
 
 sns.set_theme(style='darkgrid')
 
+class Translate:
+    test_category = {
+        "B1": "B1: Miscellaneous",
+        "B2": "B2: Miscofiguration",
+        "B3": "B3: Blacklist calls",
+        "B4": "B4: Blacklist imports",
+        "B5": "B5: Cryptography",
+        "B6": "B6: Injection",
+        "B7": "B7: XSS",
+    }
+
 class Global:
     # #0BD095, #0B84E0, #2E099C
     project_palette = {
@@ -84,11 +95,11 @@ class Global:
     #   "#C66A50"
     # ]
     source_palette = {
-        "Direct": "#2B9EC7",
-        "Indirect": "#C66A50"
+        "Direct": "#325B8B",
+        "Indirect": "#0BD095"
     }
     # #50ffb1, #3accc0, #2398ce, #145aa9, #041c83, #5b1878, #b1136d
-    issues_palette = {
+    test_category_palette = {
         "B1": "#50ffb1",
         "B2": "#3accc0",
         "B3": "#2398ce",
@@ -507,6 +518,7 @@ def plot_bandit(bandit: dict):
         df = df[ df['is_test'] == False ]
         sns.swarmplot(data=df, x='test_category', y='score', hue='source', ax=ax, palette=Global.source_palette)
         sns.violinplot(data=df, x='test_category', y='score', ax=ax, fill=False, color=Global.Colours.light_grey, cut=0)
+        unique_categories = df['test_category'].unique()
         ax.set_xlabel(None)
         ax.set_ylabel(None)
         ax.set_title(f"{project.title()}{version}")
@@ -547,10 +559,11 @@ def plot_bandit(bandit: dict):
                         'count': [0]
                     })
                     df = pd.concat([df, row], ignore_index=True)
+        # translate the test category
         df = df.merge(total_count, on='project_package', how='left')
         df = df.sort_values(by=['total_count', 'test_category'], ascending=[False, True])
         # top 10 packages
-        sns.barplot(data=df, x='project_package', y='count', hue='test_category', ax=ax, palette=Global.issues_palette, width=0.5)
+        sns.barplot(data=df, x='project_package', y='count', hue='test_category', ax=ax, palette=Global.test_category_palette, width=0.5)
         ax.set_xlabel(None)
         ax.set_ylabel(None)
         # set the legend title
