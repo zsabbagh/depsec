@@ -554,7 +554,7 @@ def plot_bandit(bandit: dict):
             tick.set_fontsize(8)
         ax.set_title(f"{project.title()}{version}")
         i += 1
-    fig_module.suptitle("Bandit Issues by Package")
+    fig_module.suptitle("Top 10 Package Bandit Issue Distribution")
     fig_module.supxlabel("Package")
     fig_module.supylabel("Issue Count")
     fig_module.savefig(plots_dir / 'bandit-module-distribution.png')
