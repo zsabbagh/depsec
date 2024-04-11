@@ -70,10 +70,24 @@ class Global:
     colours = [
         "#0cad6f","#4582b1","#f4d06f","#c4603b","#c477bf"
     ]
-    source_palette = [
-        "#2B9EC7",
-        "#C66A50"
-    ]
+    # source_palette = [
+    #   "#2B9EC7",
+    #   "#C66A50"
+    # ]
+    source_palette = {
+        "Direct": "#2B9EC7",
+        "Indirect": "#C66A50"
+    }
+    # #50ffb1, #3accc0, #2398ce, #145aa9, #041c83, #5b1878, #b1136d
+    issues_palette = {
+        "B1": "#50ffb1",
+        "B2": "#3accc0",
+        "B3": "#2398ce",
+        "B4": "#145aa9",
+        "B5": "#041c83",
+        "B6": "#5b1878",
+        "B7": "#b1136d"
+    }
     dependency_palette = ["#30bbb9","#2badb1","#259faa","#2091a2","#1b849a","#157692","#10688b","#0a5a83","#054c7b"]
 
     class Colours:
@@ -506,14 +520,33 @@ def plot_bandit(bandit: dict):
         # get unique filenames, test ids, and code snippets
         df = df[ df['is_test'] == False ]
         # count the number of issues per module
-        df = df.groupby(['project_package', 'source']).size().reset_index(name='count')
-        df = df.sort_values(by=['count'], ascending=False)
+        total_count = df.groupby(['project_package']).size().reset_index(name='total_count')
+        total_count = total_count.sort_values(by='total_count', ascending=False).head(10)
+        # in df, drop the columns that are not in total_count
+        df = df[df['project_package'].isin(total_count['project_package'])]
+        unique_categories = df['test_category'].unique()
+        unique_categories = sorted(unique_categories)
+        df = df.groupby(['project_package', 'test_category']).size().reset_index(name='count')
+        for project_package in total_count['project_package']:
+            # add 0 counts for missing categories
+            project_categories: pd.DataFrame = df[df['project_package'] == project_package]['test_category'].unique()
+            for test_category in unique_categories:
+                if test_category not in project_categories:
+                    # add row
+                    row = pd.DataFrame({
+                        'project_package': [project_package],
+                        'test_category': [test_category],
+                        'count': [0]
+                    })
+                    df = pd.concat([df, row], ignore_index=True)
+        df = df.merge(total_count, on='project_package', how='left')
+        df = df.sort_values(by=['total_count', 'test_category'], ascending=[False, True])
         # top 10 packages
-        df = df.head(10)
-        sns.barplot(data=df, x='project_package', y='count', hue='source', ax=ax, palette=Global.source_palette)
-        sns.barplot(data=df, x='project_package', y='count', hue='source', ax=ax, palette=Global.source_palette)
+        sns.barplot(data=df, x='project_package', y='count', hue='test_category', ax=ax, palette=Global.issues_palette, width=0.5)
         ax.set_xlabel(None)
         ax.set_ylabel(None)
+        # set the legend title
+        ax.legend(title='Test Category')
         # tilt the x-axis labels
         for tick in ax.get_xticklabels():
             tick.set_rotation(15)
@@ -521,7 +554,7 @@ def plot_bandit(bandit: dict):
             tick.set_fontsize(8)
         ax.set_title(f"{project.title()}{version}")
         i += 1
-    fig_module.suptitle("Bandit Package Distribution")
+    fig_module.suptitle("Bandit Issues by Package")
     fig_module.supxlabel("Package")
     fig_module.supylabel("Issue Count")
     fig_module.savefig(plots_dir / 'bandit-module-distribution.png')
