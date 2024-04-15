@@ -1320,14 +1320,6 @@ class Aggregator:
             return {}
         project_name = release.project.name
         apps = cve.get('applicability', [])
-        result = {
-            'start_to_patched': None,
-            'start_to_published': None,
-            'published_to_patched': None,
-            'release_to_patched': None,
-            'release_to_published': None,
-            'not_patched': False,
-        }
         releases = self.get_releases(project_name, platform=release.project.platform)
         releases = sorted(releases, key=lambda x: x.published_at)
         first_release = releases[0] if len(releases) > 0 else None
@@ -1346,7 +1338,7 @@ class Aggregator:
                     'release_to_published': cve_published - release.published_at,
                     'not_patched': not_patched,
                 }
-        return result
+        return {}
     
     def __compute_tech_lag(self, cve: dict, release: Release, constraints: str) -> bool:
         """
@@ -1375,7 +1367,7 @@ class Aggregator:
 
     def df_cves(self, project: str | Project, platform: str="pypi", by_cwe: bool = False) -> pd.DataFrame:
         """
-        Returns a DataFrame of CVEs per release.
+        Returns a DataFrame of CVEs per release, where a "release" refers to a project's release including dependency releases.
         Gets the latest release of each dependency before the main project's release's release date.
         """
         project = self.get_project(project, platform)
