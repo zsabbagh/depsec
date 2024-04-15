@@ -1337,6 +1337,7 @@ class Aggregator:
                 start_date = app.get('start_date') if app.get('start_date') is not None else first_release.published_at
                 not_patched = app.get('version_end') is None
                 patched_date = app.get('patched_at')
+                # the first "applicability" targets the release, as the apps are disjoint ranges
                 return {
                     'start_to_patched': patched_date - start_date if patched_date is not None else None,
                     'start_to_published': cve_published - start_date,
@@ -1346,6 +1347,30 @@ class Aggregator:
                     'not_patched': not_patched,
                 }
         return result
+    
+    def __compute_tech_lag(self, cve: dict, release: Release, constraints: str) -> bool:
+        """
+        Computes whether a release has "technical lag" for a CVE.
+        A technical lag is when a dependency constraint disallows a patch for a CVE.
+        """
+        max_version, include_end = get_max_version(constraints)
+        if include_end:
+            patch = max_version.release[2] if len(max_version.release) > 2 else 0
+            patch += 1
+            max_version = semver.parse(f"{max_version.major}.{max_version.minor}.{patch}")
+        if max_version is None:
+            return False
+        for app in cve.get('applicability', []):
+            if db.is_applicable(release, app):
+                version_start = app.get('version_start')
+                version_end = app.get('version_end')
+                excl_start = app.get('exclude_start', False)
+                excl_end = app.get('exclude_end', False)
+                if version_in_range(max_version, version_start, version_end, excl_start, excl_end):
+                    return True
+                return False
+        return False
+
 
 
     def df_cves(self, project: str | Project, platform: str="pypi", by_cwe: bool = False) -> pd.DataFrame:
@@ -1361,12 +1386,13 @@ class Aggregator:
         vulnerabilities[project_name] = self.get_vulnerabilities(project, platform=platform)
         for rel, deps in release_deps:
             rel: Release
-            to_process = [rel]
+            to_process = [(rel, None)]
             for dep in deps:
+                # get the latest release of each dependency before the main project's release
                 dep_project = self.get_release(dep.name, dep.version, platform=dep.platform, requirements=dep.requirements, before=rel.published_at)
                 if dep_project is not None:
-                    to_process.append(dep_project)
-            for release in to_process:
+                    to_process.append((dep_project, dep.requirements))
+            for release, constraints in to_process:
                 print(f"Processing {release.project.name} {release.version}")
                 release_name = release.project.name
                 if release_name not in vulnerabilities:
@@ -1375,7 +1401,6 @@ class Aggregator:
                 cves = vulnerabilities.get(release_name, {}).get('cves', None)
                 for cve_id in cves:
                     cve = cves[cve_id]
-                    # currently this uses the latest release, hence certain CVEs are not present
                     try:
                         version = semver.parse(release.version)
                     except:
@@ -1384,8 +1409,12 @@ class Aggregator:
                         cve['major'] = version.major if version is not None else None
                         cve['minor'] = version.minor if version is not None else None
                         cve['source'] = 'Direct' if release_name == project_name else 'Indirect'
-                        cve['project'] = release_name
-                        cve['release'] = release.version
+                        cve['release_requirements'] = constraints
+                        # add whether the release has "technical lag"
+                        cve['project'] = project_name
+                        cve['release_name'] = release_name
+                        cve['release_version'] = release.version
+                        cve['technical_lag'] = self.__compute_tech_lag(cve, release, constraints)
                         patch_lag = self.__patch_lag(cve, release)
                         cve.update(patch_lag)
                         if by_cwe:
@@ -1400,10 +1429,10 @@ class Aggregator:
                                 k: v for k, v in cve.items() if type(v) not in [dict, list]
                             })
         # ensure uniqueness of crucial columns
-        return pd.DataFrame(df_cves).drop_duplicates(['project', 'release', 'cve_id'])
-
-    def df_cwes_per_release():
-        pass
+        columns = ['release_name', 'release_version', 'cve_id']
+        if by_cwe:
+            columns.append('cwe_id')
+        return pd.DataFrame(df_cves).drop_duplicates(columns)
 
     def df_issues(self, project: str | Project, platform: str="pypi") -> pd.DataFrame:
         release_deps = self.get_releases_and_dependencies(project, platform=platform, analysed=True)

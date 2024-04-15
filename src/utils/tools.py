@@ -41,6 +41,35 @@ def parse_requirement(requirement: str) -> dict:
         return None
     return operator, version
 
+def parse_requirements(requirements: str) -> list:
+    """
+    Parse a list of requirements.
+    """
+    if requirements is None:
+        return []
+    if type(requirements) == str:
+        requirements = requirements.strip().split(',')
+    results = [parse_requirement(requirement) for requirement in requirements]
+    return [result for result in results if result]
+
+def get_max_version(requirements: str) -> str:
+    """
+    Get the maximum version from a list of requirements.
+
+    requirements: The requirements to check
+
+    Returns: The maximum version and whether it is inclusive
+    """
+    requirements = parse_requirements(requirements)
+    max_version = include_end = None
+    for requirement in requirements:
+        operator, version = requirement
+        include_end = operator.startswith('<=')
+        if operator.startswith('<'):
+            if max_version is None or semver.parse(version) > semver.parse(max_version):
+                max_version = semver.parse(version)
+    return max_version, include_end
+
 def version_satisfies_requirements(v: str, requirements: str) -> bool:
     """
     Check if a version satisfies the requirements.
