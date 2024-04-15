@@ -424,7 +424,7 @@ def plot_semver_cve_distribution(overall: dict, *measurements: str):
     for i, project in enumerate(project_names):
         ax: plt.Axes = axs[i]
         project_data = df[df['Project'] == project]
-        project_data = project_data.sort_values(by=['Major', 'Minor', 'Source'], ascending=True)
+        project_data = project_data.sort_values(by=['Major', 'Source'], ascending=True)
         max_version = project_data['Major'].max()
         project_unique: pd.DataFrame = project_data.copy()
         project_unique = project_unique.drop_duplicates(subset=['Major', 'CVE ID'])

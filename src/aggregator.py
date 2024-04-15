@@ -1,4 +1,4 @@
-import time, yaml, json, glob, sys
+import time, yaml, json, glob, sys, pandas as pd, datetime as dt
 import src.schemas.nvd as nvd
 import src.schemas.cwe as cwe
 import src.utils.db as db
@@ -218,7 +218,7 @@ class Aggregator:
                 published_at = release.get('published_at', None)
                 try:
                     # transform the date to a datetime object
-                    published_at = datetime.datetime.strptime(published_at, '%Y-%m-%dT%H:%M:%S.%fZ')
+                    published_at = dt.datetime.strptime(published_at, '%Y-%m-%dT%H:%M:%S.%fZ')
                 except:
                     published_at = None
                 release = Release.create(
@@ -239,9 +239,9 @@ class Aggregator:
                      descending: bool = True,
                      exclude_deprecated: bool = True,
                      sort_semantically: bool = True,
-                     before: str | int | datetime.datetime = None,
-                     after: str | int | datetime.datetime = None,
-                     has_static_analysis: bool = False,
+                     before: str | int | dt.datetime = None,
+                     after: str | int | dt.datetime = None,
+                     analysed: bool = False,
                      requirements: str = None) -> List[Release]:
         """
         Gets all releases of a project 
@@ -252,8 +252,8 @@ class Aggregator:
         descending: bool, default: True
         exclude_deprecated: bool, default: True
         sort_semantically: bool, default: True, this will sort the releases based on the semantic versioning
-        before: str | int | datetime.datetime, default: None, if provided, only the releases before the date are returned
-        after: str | int | datetime.datetime, default: None, if provided, only the releases after the date are returned
+        before: str | int | dt.datetime, default: None, if provided, only the releases before the date are returned
+        after: str | int | dt.datetime, default: None, if provided, only the releases after the date are returned
         requirements: str, default: None, if provided (a comma separated list of requirements), only the releases that satisfy the requirements are returned
         """
         project = self.get_project(project, platform)
@@ -267,7 +267,7 @@ class Aggregator:
             try:
                 version = semver.parse(release.version)
             except Exception as e:
-                logger.error(f"Error parsing version {release.version} for {project_name}: {e}")
+                logger.debug(f"Error parsing version {release.version} for {project_name}: {e}")
                 continue
             if before_date is not None and release.published_at > before_date:
                 continue
@@ -276,7 +276,7 @@ class Aggregator:
             if version is None:
                 logger.error(f"Invalid version {release.version} for {project_name}")
                 continue
-            if exclude_deprecated and version_deprecated(version):
+            if exclude_deprecated and not version_is_stable(version):
                 logger.debug(f"Skipping deprecated version {release.version} for {project_name}")
                 continue
             if requirements is not None:
@@ -284,7 +284,7 @@ class Aggregator:
                 if not version_satisfies_requirements(version, requirements):
                     logger.debug(f"Version {release.version} does not satisfy requirements {requirements} for {project_name}")
                     continue
-            if has_static_analysis and release.nloc_total is None:
+            if analysed and release.nloc_total is None:
                 logger.debug(f"Skipping release {release.version} without static analysis for {project_name}")
                 continue
             releases.append(release)
@@ -298,20 +298,20 @@ class Aggregator:
                     project_or_release: str | Project | Release,
                     version: str = None,
                     platform: str="pypi",
-                    before: str | int | datetime.datetime = None,
+                    before: str | int | dt.datetime = None,
                     requirements: str = None,
-                    has_static_analysis: bool = False,
-                    after: str | int | datetime.datetime = None) -> Release:
+                    analysed: bool = False,
+                    after: str | int | dt.datetime = None) -> Release:
         """
         Get a specific release of a project, uses latest release if version is None
 
         project: str | Project, the project name or the project object
         version: str, the version number, if None, the latest release is used
         platform: str, default: pypi
-        before: str | int | datetime.datetime, default: None, if provided, only the releases before the date are returned
-        after: str | int | datetime.datetime, default: None, if provided, only the releases after the date are returned
+        before: str | int | dt.datetime, default: None, if provided, only the releases before the date are returned
+        after: str | int | dt.datetime, default: None, if provided, only the releases after the date are returned
         requirements: str, default: None, if provided (a comma separated list of requirements), only the releases that satisfy the requirements are returned
-        has_static_analysis: bool, default: False, if True, a release with static analysis is returned if available
+        analysed: bool, default: False, if True, a release with static analysis is returned if available
         """
         if isinstance(project_or_release, Release):
             return project_or_release
@@ -321,9 +321,9 @@ class Aggregator:
         version = version if version else project.latest_release
         before_date = strint_to_date(before)
         after_date = strint_to_date(after)
-        if before_date is not None or after_date is not None or requirements is not None or has_static_analysis:
+        if before_date is not None or after_date is not None or requirements is not None or analysed:
             releases = self.get_releases(project.name, platform=platform, before=before_date, after=after, sort_semantically=True, requirements=requirements)
-            if has_static_analysis:
+            if analysed:
                 for rel in releases:
                     if rel.nloc_total is not None:
                         return rel
@@ -336,7 +336,7 @@ class Aggregator:
 
     def get_most_recent_release(self,
                                 project: str | Project,
-                                date: datetime.datetime = None,
+                                date: dt.datetime = None,
                                 platform: str="pypi",
                                 exclude_deprecated: bool = False,
                                 sort_semantically: bool = True) -> Release:
@@ -347,7 +347,7 @@ class Aggregator:
         rels = Release.select().where(Release.project == project,
                                       Release.published_at <= date)
         if exclude_deprecated:
-            rels = [ rel for rel in rels if not version_deprecated(semver.parse(rel.version)) ]
+            rels = [ rel for rel in rels if version_is_stable(semver.parse(rel.version)) ]
         
         if sort_semantically:
             rels = sorted(rels, key=lambda x : semver.parse(x.version), reverse=True)
@@ -358,7 +358,7 @@ class Aggregator:
 
     def get_release_timeline(self,
                                 project_name: str,
-                                start_date: str | int | datetime.datetime = 2019,
+                                start_date: str | int | dt.datetime = 2019,
                                 end_date: str = None,
                                 step: str = 'y',
                                 platform: str="pypi",
@@ -377,7 +377,7 @@ class Aggregator:
             logger.error(f"Project {project_name} not found")
             return None
         if not end_date:
-            end_date = datetime.datetime.now()
+            end_date = dt.datetime.now()
         # for each date in the range, get the most recent releases and check for vulnerabilities
         results: list = []
         # releases are sorted in descending order
@@ -440,7 +440,9 @@ class Aggregator:
             if release is None:
                 logger.error(f"Release '{version}' not found for {project_name}")
                 return None
-        releases = self.get_releases(project.name, platform=platform, descending=False, sort_semantically=True, requirements=f">0.9")
+        # we do not skip deprecated versions here as the "first" release might be deprecated
+        releases = self.get_releases(project.name, platform=platform, descending=False, sort_semantically=False, requirements=f">0.9", exclude_deprecated=False)
+        releases = sorted(releases, key=lambda x : x.published_at, reverse=False) if releases is not None else []
         first_release = releases[0] if len(releases) > 0 else None
         logger.debug(f"Querying databases for vulnerabilities of {project_name} {version}")
         product_name = project.product or project_name
@@ -458,6 +460,7 @@ class Aggregator:
         processed_versions = {}
         logger.debug(f"Got {len(cpes)} CPEs for {project.vendor} {project.name} {version}")
         for cpe in cpes:
+            cpe: nvd.CPE
             logger.debug(f"Processing CPE {cpe.vendor} {cpe.product} {cpe.version_start} - {cpe.version_end}")
             # Get release of versions since some contain letters
             node = cpe.node
@@ -503,10 +506,13 @@ class Aggregator:
                     'exclude_start': exclude_start,
                     'version_end': cpe.version_end if bool(cpe.version_end) else None,
                     'exclude_end': exclude_end,
-                    'start_date': start_date,
+                    'start_date': start_date if start_date is not None else (
+                        first_release.published_at if first_release is not None else None
+                    ),
                     'end_date': end_date,
                 }
-                add = datetime_in_range(release_published_at, start_date, end_date, exclude_start, exclude_end) if release_published_at is not None else True
+                # check applicability on release version instead of release date, since the date might be in range, but the version not
+                add = version_in_range(version, cpe.version_start, cpe.version_end, exclude_start, exclude_end) if bool(version) else True
             if add:
                 vulnset.add(cve.id)
                 if cve.cve_id not in cves:
@@ -533,6 +539,7 @@ class Aggregator:
             apps = cve.get('applicability', [])
             apps = db.compute_version_ranges(project, apps)
             for app in apps:
+                # add project name to clarify the applicability
                 app['project'] = project_name
                 v_end = app.get('version_end')
                 if app.get('exclude_end', False) is False:
@@ -553,7 +560,6 @@ class Aggregator:
             cw['cves'] = sorted(list(set(cw['cves'])))
         return results
     
-    
     def get_indirect_vulnerabilities(self,
                                      project_name: str,
                                      version: str = None,
@@ -561,7 +567,7 @@ class Aggregator:
                                      exclude_deprecated: bool = True,
                                      include_categories: bool = False,
                                      most_recent_version: bool = True,
-                                     before: str | int | datetime.datetime = None,
+                                     before: str | int | dt.datetime = None,
                                      sort_semantically: bool = True,) -> List[nvd.CVE]:
         """
         Get indirect vulnerabilities of a project and a specific version number (release)
@@ -609,8 +615,6 @@ class Aggregator:
                 for cve_id in vulnerabilities.get('cves', {}):
                     # add project name to applicability
                     cve = vulnerabilities['cves'][cve_id]
-                    for app in cve.get('applicability', []):
-                        app['project'] = depname
                     if cve_id in cves:
                         cves[cve_id]['applicability'].extend(cve.get('applicability', []))
                     else:
@@ -717,7 +721,7 @@ class Aggregator:
                                                 step: str = 'y',
                                                 platform: str="pypi",
                                                 exclude_deprecated: bool = False,
-                                                force: bool = False) -> List[tuple]:
+                                                force: bool = False) -> dict:
         """
         Returns a list of vulnerabilities for a project in a specific time range.
         For each date, the most recent release is used to check for vulnerabilities.
@@ -813,7 +817,7 @@ class Aggregator:
         return results
     
     def get_dependencies(self,
-                         project: str | Project,
+                         project_or_release: str | Project | Release,
                          version: str = None,
                          platform: str="pypi",
                          force: bool = False) -> List[ReleaseDependency]:
@@ -825,23 +829,13 @@ class Aggregator:
         version: str, if None, the latest release is used
         platform: str, default: pypi
         """
-        # Force lowercase
-        # Get the project
-        project_name = project.name if isinstance(project, Project) else project
-        project = self.get_project(project_name)
-        if project is None:
-            return None
-        project_name = project.name
-        # Get the release
-        version = version if version else project.latest_release
-        # Get the release
-        release = Release.get_or_none(
-            Release.project == project,
-            Release.version == version
-        )
+        release = self.get_release(project_or_release, version, platform)
         if release is None:
             logger.error(f"Release '{version}' not found for {project_name}")
             return None
+        project_name = project_or_release if type(project_or_release) == str else (
+            project_or_release.project.name if type(project_or_release) == Release else project_or_release.name
+        )
         if not force:
             if release.dependency_count == 0:
                 logger.debug(f"No dependencies found for {project_name} {version}")
@@ -856,7 +850,6 @@ class Aggregator:
             for dep in release.dependencies:
                 dep.delete_instance()
         # No dependencies in database, query the API
-        logger.debug(f"Querying libraries.io for dependencies of {project_name} {version}")
         result = self.osi.query_dependencies(project_name, version, platform)
         if result is None or 'nodes' not in result:
             logger.error(f"Dependencies not found for {project_name} {version}")
@@ -986,7 +979,7 @@ class Aggregator:
         platform: str, default: pypi
         with_dependencies: bool, default: True, if True, dependencies are included in the list
         """
-        release = self.get_release(project, platform=platform, has_static_analysis=True)
+        release = self.get_release(project, platform=platform, analysed=True)
         results = []
         if release is None:
             logger.error(f"No release found for {project}")
@@ -994,7 +987,7 @@ class Aggregator:
         results.append(release)
         for dependency in release.dependencies:
             dep_name = dependency.name
-            dep_release = self.get_release(dep_name, platform=dependency.platform, has_static_analysis=True)
+            dep_release = self.get_release(dep_name, platform=dependency.platform, analysed=True)
             if dep_release is not None:
                 results.append(dep_release)
         return results
@@ -1015,7 +1008,6 @@ class Aggregator:
             release_name = f"{release.project.name}"
             if report is not None:
                 for issue in report.issues:
-                    print(issue.filename)
                     module = issue.module if issue.module else ''
                     package = issue.package if issue.package else ''
                     is_test = package.startswith('test') or 'test' in module
@@ -1049,7 +1041,7 @@ class Aggregator:
 
         *projects: str | Project, the project name or the project object, which could be dependencies
         platform: str, default: pypi
-        exclude_deprecated: bool, default: True, if True, deprecated releases are excluded
+        exclude_deprecated: bool, default: True, if True, deprecated releases are excluded (non-stable)
         only_latest: bool, default: False, if True, only the latest release is used for CVEs
         with_dependencies: bool, default: False, if True, dependencies are included in the report
 
@@ -1197,7 +1189,7 @@ class Aggregator:
                 for key in brel:
                     # if the key is not in the latest release, add it
                     # this is to avoid overwriting the latest release's data, yet adding static code analysis data
-                    if type(brel[key]) in [str, int, float, datetime.datetime] and latest_rel.get(key) is None:
+                    if type(brel[key]) in [str, int, float, dt.datetime] and latest_rel.get(key) is None:
                         latest_rel[key] = brel[key]
             else:
                 logger.error(f"No bandit report found for {project_name}")
@@ -1227,7 +1219,7 @@ class Aggregator:
         for lrel in results['latest']:
             for dep in results['latest'][lrel].get('dependencies', {}).values():
                 depname = dep['name']
-                dproj = self.get_release(depname, dep['version'], platform=dep['platform'], requirements=dep['requirements'], has_static_analysis=True)
+                dproj = self.get_release(depname, dep['version'], platform=dep['platform'], requirements=dep['requirements'], analysed=True)
                 if dproj is None:
                     logger.error(f"Dependency {depname} {dep['version']} not found")
                     continue
@@ -1235,7 +1227,7 @@ class Aggregator:
                 dproj_dict = model_to_dict(dproj, recurse=False)
                 dproj_dict['bandit_report'] = model_to_dict(bandit_report, recurse=False) if bandit_report else None
                 for key in dproj_dict:
-                    if type(dproj_dict[key]) in [str, int, float, datetime.datetime, dict] and dep.get(key) is None:
+                    if type(dproj_dict[key]) in [str, int, float, dt.datetime, dict] and dep.get(key) is None:
                         dep[key] = dproj_dict[key]
             bandit_report = results['latest'][lrel].get('bandit_report', {})
             if 'issues' in bandit_report:
@@ -1294,6 +1286,137 @@ class Aggregator:
                 bandit['count']['issues_medium'] = bandit['count'].get('medium', 0) + medium
                 bandit['count']['issues_low'] = bandit['count'].get('low', 0) + low
         return results
+    
+    # we need these dataframes, where "release" includes dependencies by "source"
+    # structure: Project | Version | Source | 
+    # 1) CVEs per release
+    # 2) CWEs per release
+    # 4) Bandit Issues per release
+    # 5) Static Analysis Summary per release
+
+    def get_releases_and_dependencies(self, project: str | Project, platform: str="pypi", analysed: bool = True) -> List[tuple]:
+        """
+        Gets a list of tuples where each tuple contains a release and its dependencies
+
+        returns:
+        [(release, [dependency, ...])]
+        """
+        results = []
+        releases = self.get_releases(project, platform=platform, analysed=analysed, exclude_deprecated=True)
+        if releases is None:
+            return results
+        for release in releases:
+            dependencies = self.get_dependencies(project, release.version, platform)
+            dependencies = dependencies if dependencies is not None else []
+            results.append((release, dependencies))
+        return results
+    
+    def __patch_lag(self, cve: dict, release: Release) -> dict:
+        """
+        Returns a dictionary of patch lag KPIs for a CVE
+        """
+        if release is None:
+            logger.error(f"Release cannot be None")
+            return {}
+        project_name = release.project.name
+        apps = cve.get('applicability', [])
+        result = {
+            'start_to_patched': None,
+            'start_to_published': None,
+            'published_to_patched': None,
+            'release_to_patched': None,
+            'release_to_published': None,
+            'not_patched': False,
+        }
+        releases = self.get_releases(project_name, platform=release.project.platform)
+        releases = sorted(releases, key=lambda x: x.published_at)
+        first_release = releases[0] if len(releases) > 0 else None
+        cve_published = cve.get('published_at')
+        for app in apps:
+            if db.is_applicable(release, app):
+                start_date = app.get('start_date') if app.get('start_date') is not None else first_release.published_at
+                not_patched = app.get('version_end') is None
+                patched_date = app.get('patched_at')
+                return {
+                    'start_to_patched': patched_date - start_date if patched_date is not None else None,
+                    'start_to_published': cve_published - start_date,
+                    'published_to_patched': patched_date - cve_published if patched_date is not None else None,
+                    'release_to_patched': patched_date - release.published_at if patched_date is not None else None,
+                    'release_to_published': cve_published - release.published_at,
+                    'not_patched': not_patched,
+                }
+        return result
+
+
+    def df_cves(self, project: str | Project, platform: str="pypi", by_cwe: bool = False) -> pd.DataFrame:
+        """
+        Returns a DataFrame of CVEs per release.
+        Gets the latest release of each dependency before the main project's release's release date.
+        """
+        project = self.get_project(project, platform)
+        project_name = project.name
+        release_deps = self.get_releases_and_dependencies(project, platform=platform, analysed=False)
+        df_cves = []
+        vulnerabilities = {}
+        vulnerabilities[project_name] = self.get_vulnerabilities(project, platform=platform)
+        for rel, deps in release_deps:
+            rel: Release
+            to_process = [rel]
+            for dep in deps:
+                dep_project = self.get_release(dep.name, dep.version, platform=dep.platform, requirements=dep.requirements, before=rel.published_at)
+                if dep_project is not None:
+                    to_process.append(dep_project)
+            for release in to_process:
+                print(f"Processing {release.project.name} {release.version}")
+                release_name = release.project.name
+                if release_name not in vulnerabilities:
+                    vulnerabilities[release_name] = self.get_vulnerabilities(release.project, platform=platform)
+                    print(f"Got {len(vulnerabilities[release_name].get('cves', {}))} vulnerabilities for {release_name}")
+                cves = vulnerabilities.get(release_name, {}).get('cves', None)
+                for cve_id in cves:
+                    cve = cves[cve_id]
+                    # currently this uses the latest release, hence certain CVEs are not present
+                    try:
+                        version = semver.parse(release.version)
+                    except:
+                        version = None
+                    if db.is_applicable(release, cve):
+                        cve['major'] = version.major if version is not None else None
+                        cve['minor'] = version.minor if version is not None else None
+                        cve['source'] = 'Direct' if release_name == project_name else 'Indirect'
+                        cve['project'] = release_name
+                        cve['release'] = release.version
+                        patch_lag = self.__patch_lag(cve, release)
+                        cve.update(patch_lag)
+                        if by_cwe:
+                            for cwe_id in cve.get('cwes', []):
+                                cve_copy = deepcopy(cve)
+                                cve_copy['cwe_id'] = cwe_id
+                                df_cves.append({
+                                    k: v for k, v in cve_copy.items() if type(v) not in [dict, list]
+                                })
+                        else:
+                            df_cves.append({
+                                k: v for k, v in cve.items() if type(v) not in [dict, list]
+                            })
+        # ensure uniqueness of crucial columns
+        return pd.DataFrame(df_cves).drop_duplicates(['project', 'release', 'cve_id'])
+
+    def df_cwes_per_release():
+        pass
+
+    def df_issues(self, project: str | Project, platform: str="pypi") -> pd.DataFrame:
+        release_deps = self.get_releases_and_dependencies(project, platform=platform, analysed=True)
+        df = []
+        for rel, deps in release_deps:
+            rel: Release
+            to_process = [rel]
+            for dep in deps:
+                dep_release = self.get_release(dep.name, dep.version, platform=dep.platform, requirements=dep.requirements, analysed=True)
+                if dep_release is not None:
+                    to_process.append(dep_release)
+            for release in to_process:
+                df.append(model_to_dict(release, recurse=False))
     
 if __name__ == "__main__":
     # For the purpose of loading in interactive shell and debugging

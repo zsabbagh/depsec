@@ -110,12 +110,12 @@ def version_in_range(v: str, start: str = None, end: str = None, exclude_start: 
     is_before_end = end is None or (v < end if exclude_end else v <= end)
     return is_after_start and is_before_end
 
-def version_deprecated(v: str) -> bool:
+def version_is_stable(v: str) -> bool:
     """
-    Check if a version is deprecated.
+    Check if a version is deprecated or not a stable release.
     """
     v = semver.parse(v) if type(v) == str else v
-    return v.major < 1 if v else False
+    return (v.major >= 1 and v.pre is None) if v else False
 
 def datetime_increment(dt: datetime.datetime, step: str = 'm'):
     """

@@ -555,4 +555,3 @@ def semver_cve_distribution(overall_data: dict, project_name: str, *kpis) -> pd.
                 res[kpi_title] = value
             results.append(res)
     return pd.DataFrame(results)
-

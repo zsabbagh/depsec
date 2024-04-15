@@ -12,8 +12,11 @@ def is_applicable(release: Release | str | dict, applicability: dict | list) -> 
     Checks if a release is applicable to a specific version range.
 
     release: Release object | version string | dictionary with version and published_at, at least version
-    applicability: The version range or the list of version ranges
+    applicability: The version range or the list of version ranges, or the CVE object containing 'applicability'
     """
+    if 'applicability' in applicability:
+        # got a cve
+        applicability = applicability['applicability']
     apps = applicability if type(applicability) == list else [applicability]
     applies = False
     version = release.version if isinstance(release, Release) else (
@@ -36,15 +39,8 @@ def is_applicable(release: Release | str | dict, applicability: dict | list) -> 
             if version_in_range(version, version_start, version_end, exclude_start, exclude_end):
                 applies = True
                 break
-        if release_date is None:
-            continue
-        start_date = app.get('start_date')
-        end_date = app.get('end_date')
-        if datetime_in_range(release_date, start_date, end_date, exclude_start, exclude_end):
-            applies = True
-            break
+            # do not check datetime as it is not applicable
     return applies
-        
 
 # This file contains utility functions
 # to translate data structures of PeeWee models
