@@ -41,6 +41,24 @@ def parse_requirement(requirement: str) -> dict:
         return None
     return operator, version
 
+def date_range(start_date: str | int | datetime.datetime, end_date: str | int | datetime.datetime, step: str = 'm'):
+    """
+    Generate a range of dates.
+
+    start_date: The start date
+    end_date: The end date
+    step: The step size ('m' for months, 'y' for years)
+    """
+    start_date = strint_to_date(start_date)
+    end_date = strint_to_date(end_date)
+    if start_date is None:
+        return
+    end_date = datetime.datetime.now() if end_date is None else end_date
+    current_date = start_date
+    while current_date < end_date:
+        yield current_date
+        current_date = datetime_increment(current_date, step)
+
 def parse_requirements(requirements: str) -> list:
     """
     Parse a list of requirements.
