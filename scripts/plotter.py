@@ -40,7 +40,7 @@ parser.add_argument('-o', '--overall', help='Plot the overall data', nargs='+', 
 parser.add_argument('--debug', help='The debug level of the logger', action='store_true')
 parser.add_argument('--show', help='Show the plots', action='store_true')
 parser.add_argument('--dependencies', help="Generate plots for each project's dependencies as well", action='store_true')
-parser.add_argument('--force', help='Force reload of dependencies', action='store_true')
+parser.add_argument('--force', help='Force reload', action='store_true')
 
 # TODO: Add possibility to combine KPIs as left and right y-axis
 
@@ -343,13 +343,13 @@ def plot_overall_cve_distribution(cves: pd.DataFrame):
         ax = axs[i]
         project_df = cves[cves['project'] == project]
         project_df = project_df.drop_duplicates(subset=['source', 'cve_id'])
-        sns.swarmplot(project_df, x='release', y='cvss_base_score', hue="source", ax=ax, palette=Global.source_palette)
+        sns.scatterplot(project_df, x='published_to_patched', y='cvss_base_score', hue="source", ax=ax, palette=Global.source_palette)
         ax.set_title(project.title())
         ax.set_xlabel(None)
         ax.set_ylabel(None)
         ax.set_ylim(0, 10.5)
         ax.set_yticks(np.arange(0, 11, 11//5))
-    fig.suptitle("CVSS Base Score Distribution")
+    fig.suptitle("CVE Patch Time and CVSS Base Score Distribution")
     fig.supxlabel("Days from Published to Patched")
     fig.supylabel("CVSS Base Score")
     fig.savefig(plots_dir / 'overall-cve-distribution.png')
@@ -462,6 +462,8 @@ def plot_issues(issues: pd.DataFrame):
     """
     projects = sorted(list(issues['project'].unique()))
     project_count = len(projects)
+
+    issues = issues[issues['is_test'] == False]
 
     # plot the test category distribution
     fig_category, axs_category = plt.subplots(project_count, 1, figsize=(10, 8))
@@ -649,10 +651,10 @@ if __name__ == '__main__':
                 logger.error(f"Could not find project '{project}' on platform '{platform}'")
                 continue
             latest_analysed = ag.get_release(project, platform, analysed=True)
-            if cves_overall_df.empty or project_name not in cves_overall_df['project'].unique():
+            if args.force or cves_overall_df.empty or project_name not in cves_overall_df['project'].unique():
                 df = ag.df_cves_per_project(project, platform)
                 cves_overall_df = pd.concat([cves_overall_df, df], ignore_index=True)
-            if cves_df.empty or project_name not in cves_df['project'].unique():
+            if args.force or cves_df.empty or project_name not in cves_df['project'].unique():
                 df = ag.df_cves(project, platform)
                 cves_df = pd.concat([cves_df, df], ignore_index=True)
             project_id = f"{platform}:{project}"
@@ -662,17 +664,16 @@ if __name__ == '__main__':
             # get only the latest analysed version
             # df = df[df['project_version'] == latest_analysed.version]
             # static_df = pd.concat([static_df, df], ignore_index=True)
-            if issues_df.empty or project_name not in issues_df['project'].unique():
+            if args.force or issues_df.empty or project_name not in issues_df['project'].unique():
                 df = ag.df_static(project, platform, with_issues=True, only_latest=True)
                 issues_df = pd.concat([issues_df, df], ignore_index=True)
         cves_df.to_csv(cve_path, index=False)
         issues_df.to_csv(cwe_path, index=False)
         static_df.to_csv(issues_path, index=False)
-        # plot_semver_cve_distribution(cves_df)
-        print(f"Plotting {len(cves_overall_df)} CVEs...")
-        time.sleep(1)
+        cves_overall_df.to_csv(cve_overall_path, index=False)
+        plot_semver_cve_distribution(cves_df)
         plot_overall_cve_distribution(cves_overall_df)
-        # plot_issues(issues_df)
+        plot_issues(issues_df)
 
     if args.show:
         plt.show()

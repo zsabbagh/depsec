@@ -233,6 +233,8 @@ class Aggregator:
             project.latest_release = latest_release.version
             project.save()
         return project
+    
+    
 
     def get_releases(self,
                      project: str | Project,
@@ -295,6 +297,42 @@ class Aggregator:
             releases = sorted(releases, key=lambda x : x.published_at, reverse=descending)
         return releases
     
+    def _update_releases(self, project: Project | str, platform: str="pypi"):
+        project = self.get_project(project)
+        projects = [project]
+        dependencies = self.get_dependencies(project)
+        for dep in dependencies:
+            dep = self.get_project(dep.name, platform)
+            projects.append(dep)
+        for project in projects:
+            print(f"Updating {project.name} releases")
+            proj = self.get_project(project)
+            res = self.osi.query_package(project.name, platform=project.platform)
+            latest_release = self.get_release(project)
+            for vdict in res.get('versions', []):
+                published_at = vdict.get('publishedAt', None)
+                vkey = vdict.get('versionKey', {})
+                version = vkey.get('version', None)
+                if published_at is not None:
+                    release = Release.get_or_none(
+                        Release.project == project,
+                        Release.version == version
+                    )
+                    if release is None:
+                        if version.endswith('.0'):
+                            version = version[:-2]
+                        release = Release.get_or_none(
+                            Release.project == project,
+                            Release.version == version
+                        )
+                        if release is None:
+                            print(f"Project {project.name} {version} not found")
+                            continue
+                    published_at = dt.datetime.strptime(published_at, '%Y-%m-%dT%H:%M:%SZ')
+                    print(f"Updating {project.name} {version} with date {published_at}")
+                    release.published_at = published_at
+                    release.save()
+
     def get_release(self,
                     project_or_release: str | Project | Release,
                     version: str = None,
@@ -491,8 +529,8 @@ class Aggregator:
             if vuln_cpe_id in vulnset and not has_exact_version:
                 logger.debug(f"Vulnerability {vuln_cpe_id} already in set")
                 continue
-            start_date: datetime = start_release.published_at if start_release else None
-            end_date: datetime = end_release.published_at if end_release else None
+            start_date: datetime = (start_release.commit_at or start_release.published_at) if start_release else None
+            end_date: datetime = (end_release.commit_at or end_release.published_at) if end_release else None
             logger.debug(f"Getting vulnerabilities for {cpe.vendor}:{cpe.product}:{cpe.version} {cpe.version_start} ({start_date}) - {cpe.version_end}({end_date})")
             add = False
             if has_exact_version:
@@ -923,7 +961,6 @@ class Aggregator:
         release.save()
         return results
     
-    
     def get_bandit_report(self,
                           project_or_release: str | Project,
                           version: str = None,
@@ -1351,12 +1388,12 @@ class Aggregator:
         for app in apps:
             if isinstance(release_or_project, Project) or db.is_applicable(release_or_project, app):
                 start_date = app.get('start_date') if app.get('start_date') is not None else first_release.published_at
-                not_patched = app.get('version_end') is None
                 patched_date = app.get('patched_at')
+                patched = patched_date is not None
                 # the first "applicability" targets the release, as the apps are disjoint ranges
-                result.get('start_to_patched').append((patched_date - start_date).days if not_patched else None)
+                result.get('start_to_patched').append((patched_date - start_date).days if patched else None)
                 result.get('start_to_published').append((cve_published - start_date).days)
-                result.get('published_to_patched').append((patched_date - cve_published).days if not_patched else None)
+                result.get('published_to_patched').append((patched_date - cve_published).days if patched else None)
         results = {}
         for key in result:
             ls = [ x for x in result[key] if x is not None ]
