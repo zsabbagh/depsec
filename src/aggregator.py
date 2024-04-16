@@ -169,7 +169,7 @@ class Aggregator:
             # If the package is in the database, return it
             logger.debug(f"Found {project_name} in database")
             if not project.osi_verified:
-                self._update_releases(project)
+                self._verify_dates(project)
             return project
         elif project is not None:
             logger.debug(f"Project {project_name} in database but no releases found")
@@ -234,7 +234,7 @@ class Aggregator:
             latest_release = Release.select().where(Release.project == project).order_by(Release.published_at.desc()).first()
             project.latest_release = latest_release.version
             project.save()
-        self._update_releases(project, platform)
+        self._verify_dates(project, platform)
         return project
     
     
@@ -307,8 +307,7 @@ class Aggregator:
             releases = sorted(releases, key=lambda x : x.published_at, reverse=descending)
         return releases
     
-    def _update_releases(self, project: Project | str):
-        print(f"Updating {project.name} releases")
+    def _verify_dates(self, project: Project | str):
         res = self.osi.query_package(project.name, platform=project.platform)
         for vdict in res.get('versions', []):
             published_at = vdict.get('publishedAt', None)
@@ -327,10 +326,8 @@ class Aggregator:
                         Release.version == version
                     )
                     if release is None:
-                        print(f"Project {project.name} {version} not found")
                         continue
                 published_at = dt.datetime.strptime(published_at, '%Y-%m-%dT%H:%M:%SZ')
-                print(f"Updating {project.name} {version} with date {published_at}")
                 release.published_at = published_at
                 release.osi_verified = True
                 release.save()
@@ -1351,7 +1348,6 @@ class Aggregator:
         previous_major = None
         previous_dependencies = []
         for release in releases:
-            print(f"Getting dependencies for {release.project.name} {release.version}")
             dependencies = self.get_dependencies(project, release.version, platform)
             dependencies = dependencies if dependencies is not None else []
             release_version = semver.parse(release.version) if release.version is not None else None
@@ -1561,7 +1557,6 @@ class Aggregator:
             latest_analysed = self.get_release(proj, platform=platform, analysed=True, requirements=constraints)
             vulns = self.get_vulnerabilities(proj, platform=platform)
             cves = vulns.get('cves', {})
-            print(f"Got {len(cves)} CVEs for {projname}")
             for cve_id in cves:
                 cve = cves[cve_id]
                 apps = cve.get('applicability', [])
@@ -1633,7 +1628,6 @@ class Aggregator:
         source_df = self.df_cves(project, platform, by_cwe=False) if not analysed else self.df_static(project, platform, with_issues=with_issues, only_latest=False)
         for date in date_range(start_date, end_date, step):
             date_releases = None
-            print(f"Processing date {date}")
             for rels in releases:
                 if len(rels) == 0:
                     logger.warning(f"Unexpected empty list of releases")
