@@ -10,3 +10,4 @@ datasets
 repositories
 copy-plots.sh
 *test*
+*/output/**/*.csv

@@ -70,6 +70,21 @@ def parse_requirements(requirements: str) -> list:
     results = [parse_requirement(requirement) for requirement in requirements]
     return [result for result in results if result]
 
+def applicability_to_requirements(applicability: list) -> str:
+    """
+    Converts a list of applicability to a string of requirements of version ranges.
+    """
+    reqs = []
+    for app in applicability:
+        version_start = app.get('version_start')
+        exclude_start = app.get('exclude_start')
+        version_end = app.get('version_end', '')
+        exclude_end = app.get('exclude_end', '')
+        prefix = '(' if exclude_start else '['
+        suffix = ')' if exclude_end else ']'
+        reqs.append(f"{prefix}{version_start},{version_end}{suffix}")
+    return ','.join(reqs)
+
 def get_max_version(requirements: str) -> str:
     """
     Get the maximum version from a list of requirements.

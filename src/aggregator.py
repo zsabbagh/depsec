@@ -3,6 +3,7 @@ import src.schemas.nvd as nvd
 import src.schemas.cwe as cwe
 import src.utils.db as db
 import argparse
+import numpy as np
 from copy import deepcopy
 from packaging import version as semver
 from playhouse.shortcuts import model_to_dict
@@ -840,7 +841,7 @@ class Aggregator:
         if not force:
             if release.dependency_count == 0:
                 logger.debug(f"No dependencies found for {project_name} {version}")
-                return None
+                return []
             elif release.dependency_count is not None:
                 dependencies = [ dep for dep in release.dependencies ]
                 # Found dependencies in the database
@@ -1306,9 +1307,18 @@ class Aggregator:
         releases = self.get_releases(project, platform=platform, analysed=analysed, exclude_deprecated=True, sort_semantically=sort_semantically)
         if releases is None:
             return results
+        previous_major = None
+        previous_dependencies = []
         for release in releases:
+            print(f"Getting dependencies for {release.project.name} {release.version}")
             dependencies = self.get_dependencies(project, release.version, platform)
             dependencies = dependencies if dependencies is not None else []
+            release_version = semver.parse(release.version) if release.version is not None else None
+            if previous_major == release_version.major and len(previous_dependencies) > 0 and len(dependencies) == 0:
+                dependencies = previous_dependencies
+            else:
+                previous_major = release_version.major
+                previous_dependencies = dependencies
             result = [(release, None)]
             for dep in dependencies:
                 # get the latest release of each dependency before the main project's release
@@ -1321,34 +1331,41 @@ class Aggregator:
                 break
         return results
     
-    def __patch_lag(self, cve: dict, release: Release) -> dict:
+    def __patch_lag(self, cve: dict, release_or_project: Release | Project) -> dict:
         """
         Returns a dictionary of patch lag KPIs for a CVE
         """
-        if release is None:
-            logger.error(f"Release cannot be None")
-            return {}
-        project_name = release.project.name
+        project = release_or_project.project if isinstance(release_or_project, Release) else release_or_project
+        project_name = project.name
+        platform = project.platform
         apps = cve.get('applicability', [])
-        releases = self.get_releases(project_name, platform=release.project.platform)
+        releases = self.get_releases(project_name, platform=platform)
         releases = sorted(releases, key=lambda x: x.published_at)
         first_release = releases[0] if len(releases) > 0 else None
         cve_published = cve.get('published_at')
+        result = {
+            'start_to_patched': [],
+            'start_to_published': [],
+            'published_to_patched': [],
+        }
         for app in apps:
-            if db.is_applicable(release, app):
+            if isinstance(release_or_project, Project) or db.is_applicable(release_or_project, app):
                 start_date = app.get('start_date') if app.get('start_date') is not None else first_release.published_at
                 not_patched = app.get('version_end') is None
                 patched_date = app.get('patched_at')
                 # the first "applicability" targets the release, as the apps are disjoint ranges
-                return {
-                    'start_to_patched': (patched_date - start_date).days if patched_date is not None else None,
-                    'start_to_published': (cve_published - start_date).days,
-                    'published_to_patched': (patched_date - cve_published).days if patched_date is not None else None,
-                    'release_to_patched': (patched_date - release.published_at).days if patched_date is not None else None,
-                    'release_to_published': (cve_published - release.published_at).days,
-                    'not_patched': not_patched,
-                }
-        return {}
+                result.get('start_to_patched').append((patched_date - start_date).days if not_patched else None)
+                result.get('start_to_published').append((cve_published - start_date).days)
+                result.get('published_to_patched').append((patched_date - cve_published).days if not_patched else None)
+        results = {}
+        for key in result:
+            ls = [ x for x in result[key] if x is not None ]
+            if len(ls) == 0:
+                results[key] = None
+            else:
+                results[f"{key}"] = np.mean(ls)
+                results[f"{key}_std"] = np.std(ls)
+        return results
     
     def __compute_tech_lag(self, cve: dict, release: Release, constraints: str) -> bool:
         """
@@ -1386,8 +1403,13 @@ class Aggregator:
             exit(1)
         result = model_to_dict(model, recurse=False) if isinstance(model, Model) else model
         major = minor = None
-        project_name = main_release.project.name
-        project_version = main_release.version
+        project = main_release.project if isinstance(main_release, Release) else (
+            main_release if isinstance(main_release, Project) else None
+        )
+        project_name = project.name
+        project_version = main_release.version if isinstance(main_release, Release) else (
+            project.latest_release if project is not None else None
+        )
         try:
             version = semver.parse(project_version)
             major = version.major
@@ -1401,6 +1423,22 @@ class Aggregator:
         result['source'] = 'Direct' if release.project.name == project_name else 'Indirect'
         result['release'] = release.project.name
         result['release_version'] = release.version
+        result['release_requirements'] = constraints
+        result['inherited_from'] = dependency.inherited_from if dependency is not None else None
+        return { k: v for k, v in result.items() if type(v) not in [dict, list] }
+    
+    def __model_with_project_data(self, model: Model, project: Project, dep_proj: Project, dependency: ReleaseDependency) -> dict:
+        """
+        Adds release data to a dictionary
+        """
+        constraints = dependency.requirements if dependency is not None else None
+        if type(model) != dict and not isinstance(model, Model):
+            logger.error(f"Incorrect typing logic. Expected 'dict' or 'Model'")
+            exit(1)
+        result = model_to_dict(model, recurse=False) if isinstance(model, Model) else model
+        result['project'] = project.name
+        result['source'] = 'Direct' if dep_proj.name == project.name else 'Indirect'
+        result['release'] = dep_proj.name
         result['release_requirements'] = constraints
         result['inherited_from'] = dependency.inherited_from if dependency is not None else None
         return { k: v for k, v in result.items() if type(v) not in [dict, list] }
@@ -1431,24 +1469,79 @@ class Aggregator:
                 cves = vulnerabilities.get(release_name, {}).get('cves', None)
                 for cve_id in cves:
                     cve = cves[cve_id]
-                    if db.is_applicable(release, cve):
-                        # add whether the release has "technical lag"
-                        model_dict = self.__model_with_release_data(cve, main_release, release, dependency)
-                        model_dict['technical_lag'] = self.__compute_tech_lag(cve, release, constraints)
-                        patch_lag = self.__patch_lag(cve, release)
-                        model_dict.update(patch_lag)
-                        if by_cwe:
-                            for cwe_id in cve.get('cwes', []):
-                                model_dict['cwe_id'] = cwe_id
+                    apps = cve.get('applicability', [])
+                    for app in apps:
+                        applies = db.is_applicable(release, app)
+                        if applies:
+                            # add whether the release has "technical lag"
+                            model_dict = self.__model_with_release_data(cve, main_release, release, dependency)
+                            model_dict['technical_lag'] = self.__compute_tech_lag(cve, release, constraints)
+                            model_dict['version_start'] = app.get('version_start')
+                            model_dict['version_end'] = app.get('version_end')
+                            patch_lag = self.__patch_lag(cve, release)
+                            model_dict.update(patch_lag)
+                            if by_cwe:
+                                for cwe_id in cve.get('cwes', []):
+                                    model_dict['cwe_id'] = cwe_id
+                                    df_cves.append(model_dict)
+                            else:
                                 df_cves.append(model_dict)
-                        else:
-                            df_cves.append(model_dict)
+                            break
         # ensure uniqueness of crucial columns
         columns = ['release', 'release_version', 'cve_id']
         if by_cwe:
             columns.append('cwe_id')
         return pd.DataFrame(df_cves).drop_duplicates(columns)
-
+    
+    def df_cves_per_project(self, project: str | Project, platform: str="pypi", by_cwe: bool = False) -> pd.DataFrame:
+        """
+        Returns a DataFrame of CVEs per project, where a "project" refers to a project's release including each dependency's project
+        representations.
+        """
+        project = self.get_project(project, platform)
+        main_project = project
+        project_name = project.name
+        release_deps = self.get_dependencies(project, platform=platform)
+        projects = [project]
+        project_names = set([project_name])
+        dependencies = {}
+        for dep in release_deps:
+            dep_proj = self.get_project(dep.name, platform=dep.platform)
+            if dep_proj is not None and dep_proj.name not in project_names:
+                dependencies[dep_proj.name] = dep
+                projects.append(dep_proj)
+        df_cves = []
+        for proj in projects:
+            # releases are lists of tuples, where each tuple is a release and its dependency
+            # again, the releases are tuples of the release and whether it is derived from a dependency
+            projname = proj.name
+            dep = dependencies.get(projname, None)
+            constraints = dep.requirements if dep is not None else None
+            latest_analysed = self.get_release(proj, platform=platform, analysed=True, requirements=constraints)
+            vulns = self.get_vulnerabilities(proj, platform=platform)
+            cves = vulns.get('cves', {})
+            print(f"Got {len(cves)} CVEs for {projname}")
+            for cve_id in cves:
+                cve = cves[cve_id]
+                apps = cve.get('applicability', [])
+                app_ranges = applicability_to_requirements(apps)
+                model_dict = self.__model_with_project_data(cve, main_project, proj, dep)
+                model_dict['technical_lag'] = self.__compute_tech_lag(cve, latest_analysed, constraints)
+                model_dict['applicability'] = app_ranges
+                patch_lag = self.__patch_lag(cve, proj)
+                model_dict.update(patch_lag)
+                if by_cwe:
+                    for cwe_id in cve.get('cwes', []):
+                        model_dict['cwe_id'] = cwe_id
+                        df_cves.append(model_dict)
+                else:
+                    df_cves.append(model_dict)
+        # ensure uniqueness of crucial columns
+        columns = ['project', 'release', 'cve_id']
+        if by_cwe:
+            columns.append('cwe_id')
+        return pd.DataFrame(df_cves).drop_duplicates(columns)
+    
     def df_static(self, project: str | Project, platform: str="pypi", with_issues: bool = False, only_latest: bool = True) -> pd.DataFrame:
         release_deps = self.get_releases_with_dependencies(project, platform=platform, analysed=True, only_latest=only_latest)
         df = []

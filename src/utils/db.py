@@ -22,9 +22,6 @@ def is_applicable(release: Release | str | dict, applicability: dict | list) -> 
     version = release.version if isinstance(release, Release) else (
         semver.parse(release) if isinstance(release, str) else semver.parse(release['version']) if 'version' in release else None
     )
-    release_date = release.published_at if isinstance(release, Release) else (
-        release['published_at'] if (type(release) == dict and 'published_at' in release) else None
-    )
     if version is None:
         logger.error(f"Could not parse version from release type: {type(release).__name__}")
         return False

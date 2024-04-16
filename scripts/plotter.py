@@ -96,7 +96,9 @@ class Global:
     # ]
     source_palette = {
         "Direct": "#325B8B",
-        "Indirect": "#0BD095"
+        False: "#325B8B",
+        "Indirect": "#0BD095",
+        True: "#0BD095"
     }
     # #50ffb1, #3accc0, #2398ce, #145aa9, #041c83, #5b1878, #b1136d
     test_category_palette = {
@@ -207,6 +209,8 @@ if not output_dir.exists():
 # create the subdirectories
 json_dir = output_dir / 'json'
 plots_dir = output_dir / 'plots'
+csv_dir = output_dir / 'csv'
+csv_dir.mkdir(exist_ok=True)
 json_dir.mkdir(exist_ok=True)
 plots_dir.mkdir(exist_ok=True)
 
@@ -326,44 +330,27 @@ def plot_timelines(timelines: dict, title_prefix: str = ''):
         fig.savefig(plots_dir / f"{prefix}{filename}.png")
 
 
-def plot_overall_cve_distribution(overall: dict, *measurements: str):
+def plot_overall_cve_distribution(cves: pd.DataFrame):
     """
     Plots CVE distribution of an overall dictionary
     """
-    # CVE distribution
-    df: pd.DataFrame = pd.DataFrame()
-    project_ids = sorted(list(overall.keys()))
-    project_names = []
-    for project_id in project_ids:
-        platform, project_name = get_platform(project_id)
-        project_names.append(project_name)
-        data = overall[project_id]
-        res = compute.cve_distribution(data, project_name)
-        df = pd.concat([df, res], ignore_index=True)
-    fig, axs = plt.subplots(1, len(project_ids), figsize=(10, 8))
+    project_names = sorted(list(cves['project'].unique()))
+    project_count = len(project_names)
+    fig, axs = plt.subplots(project_count, 1, figsize=(10, 8))
+    axs = [axs] if project_count == 1 else axs
+    fig.subplots_adjust(hspace=0.5)
     for i, project in enumerate(project_names):
         ax = axs[i]
-        project_data = df[df['Project'] == project]
-        sns.swarmplot(data=project_data,
-                      x='Source',
-                      y='CVSS Base Score',
-                      ax=ax,
-                      palette=Global.source_palette,
-                      size=5)
-        sns.violinplot(data=project_data,
-                    x='Source',
-                    y='CVSS Base Score',
-                    ax=ax,
-                    fill=False,
-                    color=Global.Colours.light_grey,
-                    cut=0)
+        project_df = cves[cves['project'] == project]
+        project_df = project_df.drop_duplicates(subset=['source', 'cve_id'])
+        sns.swarmplot(project_df, x='release', y='cvss_base_score', hue="source", ax=ax, palette=Global.source_palette)
         ax.set_title(project.title())
         ax.set_xlabel(None)
         ax.set_ylabel(None)
         ax.set_ylim(0, 10.5)
-        ax.set_yticks(np.arange(0, 11, 1))
+        ax.set_yticks(np.arange(0, 11, 11//5))
     fig.suptitle("CVSS Base Score Distribution")
-    fig.supxlabel("Project")
+    fig.supxlabel("Days from Published to Patched")
     fig.supylabel("CVSS Base Score")
     fig.savefig(plots_dir / 'overall-cve-distribution.png')
 
@@ -406,50 +393,68 @@ def plot_overall_cwe_distribution(overall: dict, *measurements: str):
     fig.supylabel("CVE Count")
     fig.savefig(plots_dir / 'overall-cwe-distribution.png')
 
-def plot_semver_cve_distribution(overall: dict, *measurements: str):
+def plot_semver_cve_distribution(cves: pd.DataFrame, *kpis: str):
     """
     Plots the distribution of SemVer releases
     """
-    project_ids = sorted(list(overall.keys()))
-    project_names = []
-    df: pd.DataFrame = pd.DataFrame()
-    for project_id in project_ids:
-        platform, project_name = get_platform(project_id)
-        project_names.append(project_name)
-        data = overall[project_id]
-        res = compute.semver_cve_distribution(data, project_name)
-        df = pd.concat([df, res], ignore_index=True)
-    fig, axs = plt.subplots(len(project_ids), 1, figsize=(10, 8))
-    fig.subplots_adjust(hspace=0.5)
+    print(f"Attemping to plot {len(cves)} CVEs...")
+    project_names = sorted(list(cves['project'].unique()))
+    for kpi in ['cvss_base_score', 'published_to_patched']:
+        # the first KPIs are CVE values
+        kpi_filename = kpi.replace('_', '-')
+        fig, axs = plt.subplots(len(project_names), 1, figsize=(10, 8))
+        fig.subplots_adjust(hspace=0.5)
+        title = "Applicable CVEs by Major Semantic Version"
+        ylabel = "CVSS Base Score"
+        match kpi:
+            case "published_to_patched":
+                title = "CVEs Published to Patched by Major Semantic Version"
+                ylabel = "Days"
+        for i, project in enumerate(project_names):
+            ax: plt.Axes = axs[i]
+            project_data = cves[cves['project'] == project]
+            project_data = project_data.sort_values(by=['major', 'source'], ascending=True)
+            max_version = project_data['major'].max()
+            project_unique: pd.DataFrame = project_data.copy()
+            # ensure that the same CVE is not counted twice
+            project_unique = project_unique.drop_duplicates(subset=['major', 'cve_id'])
+            sns.violinplot(data=project_unique, x='major', y=kpi, ax=ax, fill=False, color=Global.Colours.light_grey, cut=0, zorder=0)
+            sns.swarmplot(data=project_unique, x='major', y=kpi, hue='source', ax=ax, palette=Global.source_palette, zorder=1)
+            steps = 5
+            ax.set_title(project.title())
+            ax.set_xlabel(None)
+            ax.set_xticks(np.arange(0, max_version+1, 1))
+            ax.set_ylabel(None)
+            if kpi.startswith('cvss'):
+                ax.set_ylim(0, 10.5)
+                ax.set_yticks(np.arange(0, 11, 11//steps))
+        fig.suptitle(title)
+        fig.supxlabel("Major Semantic Version")
+        fig.supylabel(ylabel)
+        fig.savefig(plots_dir / f'semver-cve-distribution-{kpi_filename}.png')
+    # set right y-axis label
+    fig_lag, axs_lag = plt.subplots(len(project_names), 1, figsize=(10, 8))
+    fig_lag.subplots_adjust(hspace=0.5)
     for i, project in enumerate(project_names):
-        ax: plt.Axes = axs[i]
-        project_data = df[df['Project'] == project]
-        project_data = project_data.sort_values(by=['Major', 'Source'], ascending=True)
-        max_version = project_data['Major'].max()
+        ax: plt.Axes = axs_lag[i]
+        project_data = cves[cves['project'] == project]
+        project_data = project_data.sort_values(by=['major', 'source'], ascending=True)
+        max_version = project_data['major'].max()
         project_unique: pd.DataFrame = project_data.copy()
-        project_unique = project_unique.drop_duplicates(subset=['Major', 'CVE ID'])
-        sns.swarmplot(data=project_unique, x='Major', y='CVSS Base Score', hue='Source', ax=ax, palette=Global.source_palette, zorder=2)
-        sns.violinplot(data=project_unique, x='Major', y='CVSS Base Score', ax=ax, fill=False, color=Global.Colours.light_grey, cut=0, zorder=0)
-        # ax2 = ax.twinx()
-        # sns.countplot(data=project_unique, x='Major', ax=ax2, color=Global.Colours.light_grey, hue='Source', width=0.1, zorder=1)
+        # ensure that the same CVE is not counted twice
+        project_unique = project_unique.drop_duplicates(subset=['major', 'cve_id'])
+        project_unique = project_unique[project_unique['technical_lag'] == True]
+        project_unique = project_unique.groupby(['major']).size().reset_index(name='count')
+        sns.barplot(data=project_unique, x='major', y='count', ax=ax, color=Global.project_palette[project], zorder=0)
         steps = 5
         ax.set_title(project.title())
         ax.set_xlabel(None)
         ax.set_ylabel(None)
-        ax.set_ylim(0, 10.5)
         ax.set_yticks(np.arange(0, 11, 11//steps))
         ax.set_xticks(np.arange(0, max_version+1, 1))
-    fig.suptitle("Applicable CVEs by Major Semantic Version")
-    fig.supxlabel("Major Semantic Version")
-    fig.supylabel("CVSS Base Score")
-    fig.savefig(plots_dir / 'semver-cve-distribution.png')
-    # set right y-axis label
-
-def plot_semver_bandit_distribution(overall: dict, *measurements: str):
-    """
-    Plots the distribution of Bandit issues
-    """
-    pass
+    fig_lag.suptitle("CVEs Introduced by Technical Lag")
+    fig_lag.supxlabel("Major Semantic Version")
+    fig_lag.supylabel("Count")
 
 def plot_issues(issues: pd.DataFrame):
     """
@@ -540,6 +545,15 @@ ag = Aggregator(args.config)
 # load the projects, arguments are optional
 ag.load_projects(*args.projects)
 
+def get_argument(arg: str):
+    """
+    Gets the argument from the command line
+    """
+    if ':' in arg:
+        parts = list(filter(bool, arg.split(':')))
+        return parts[0], parts[1] if len(parts) > 1 else None
+    return arg, None
+
 if __name__ == '__main__':
 
     # extract the files to present in the JSON
@@ -598,39 +612,70 @@ if __name__ == '__main__':
         # 4) by impact
         # 5) issues
         cves_df = pd.DataFrame()
+        cves_overall_df = pd.DataFrame()
         cwes_df = pd.DataFrame()
         issues_df = pd.DataFrame()
         static_df = pd.DataFrame()
+        cve_overall_path = csv_dir / 'cves_overall.csv'
+        cve_path = csv_dir / 'cves.csv'
+        cwe_path = csv_dir / 'cwes.csv'
+        issues_path = csv_dir / 'issues.csv'
+        ok = False
+        if cve_overall_path.exists():
+            try:
+                cves_overall_df = pd.read_csv(cve_overall_path)
+                ok = True
+            except:
+                pass
+        if cve_path.exists():
+            try:
+                cves_df = pd.read_csv(cve_path)
+            except:
+                pass
+        if cwe_path.exists():
+            try:
+                cwes_df = pd.read_csv(cwe_path)
+            except:
+                pass
+        if issues_path.exists():
+            try:
+                issues_df = pd.read_csv(issues_path)
+            except:
+                pass
         for project in args.projects:
-            platform, project = get_platform(project)
+            platform, project_name = get_platform(project)
             proj = ag.get_project(project, platform)
-            latest_analysed = ag.get_release(project, platform, analysed=True)
             if proj is None:
                 logger.error(f"Could not find project '{project}' on platform '{platform}'")
                 continue
+            latest_analysed = ag.get_release(project, platform, analysed=True)
+            if cves_overall_df.empty or project_name not in cves_overall_df['project'].unique():
+                df = ag.df_cves_per_project(project, platform)
+                cves_overall_df = pd.concat([cves_overall_df, df], ignore_index=True)
+            if cves_df.empty or project_name not in cves_df['project'].unique():
+                df = ag.df_cves(project, platform)
+                cves_df = pd.concat([cves_df, df], ignore_index=True)
             project_id = f"{platform}:{project}"
-            # df = ag.df_cves(project, platform)
-            # cves_df = pd.concat([cves_df, df], ignore_index=True)
             # df = ag.df_cves(project, platform, by_cwe=True)
             # cwes_df = pd.concat([cwes_df, df], ignore_index=True)
             # df = ag.df_static(project, platform)
             # get only the latest analysed version
             # df = df[df['project_version'] == latest_analysed.version]
             # static_df = pd.concat([static_df, df], ignore_index=True)
-            df = ag.df_static(project, platform, with_issues=True, only_latest=True)
-            issues_df = pd.concat([issues_df, df], ignore_index=True)
-        plot_issues(issues_df)
+            if issues_df.empty or project_name not in issues_df['project'].unique():
+                df = ag.df_static(project, platform, with_issues=True, only_latest=True)
+                issues_df = pd.concat([issues_df, df], ignore_index=True)
+        cves_df.to_csv(cve_path, index=False)
+        issues_df.to_csv(cwe_path, index=False)
+        static_df.to_csv(issues_path, index=False)
+        # plot_semver_cve_distribution(cves_df)
+        print(f"Plotting {len(cves_overall_df)} CVEs...")
+        time.sleep(1)
+        plot_overall_cve_distribution(cves_overall_df)
+        # plot_issues(issues_df)
 
     if args.show:
         plt.show()
         
-    # TODO: do the same above but for each dependencies
-    
-    # TODO: create LaTeX tables with the data
-
-    # TODO: store the data in a JSON directory
-        
-    # TODO: plot complexity of code
-    # include TIMESTAMP OF NVD FILE
     if args.show:
         plt.show()
