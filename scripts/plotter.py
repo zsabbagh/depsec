@@ -37,7 +37,7 @@ parser.add_argument('-p', '--projects', nargs='+', help='The projects to plot', 
 parser.add_argument('--output', help='The output directory', default='output')
 parser.add_argument('-t', '--timeline', help='Plot the timeline', nargs='+', default=[])
 parser.add_argument('-o', '--overall', help='Plot the overall data', nargs='+', default=[])
-parser.add_argument('--debug', help='The debug level of the logger', default='INFO')
+parser.add_argument('--debug', help='The debug level of the logger', action='store_true')
 parser.add_argument('--show', help='Show the plots', action='store_true')
 parser.add_argument('--dependencies', help="Generate plots for each project's dependencies as well", action='store_true')
 parser.add_argument('--force', help='Force reload of dependencies', action='store_true')
@@ -197,7 +197,7 @@ def try_json_dump(data: dict, path: Path):
 
 # set the logger level
 logger.remove()
-logger.add(sink=sys.stdout, level=args.debug)
+logger.add(sink=sys.stdout, level='INFO' if not args.debug else 'DEBUG')
 
 output_dir = Path(args.output)
 if not output_dir.exists():
@@ -451,68 +451,22 @@ def plot_semver_bandit_distribution(overall: dict, *measurements: str):
     """
     pass
 
-def plot_overall(overall: dict, *measurements: str):
+def plot_issues(issues: pd.DataFrame):
     """
-    Expects a dictionary with the following structure:
-
-    <project>: {
-        'cves': { <cve-id>: {} },
-        'cwes': { <cwe-id>: {} },
-        'releases': { <release-id>: {} }
-        'latest': {},
-        'bandit': {
-            'by_test'
-            'by_cwe'
-            'count'
-        },
-    }
+    Expects an issue-centred DataFrame
     """
-    # this will be more hard-coded plotting, given the wide variety of data
-
-    logger.info(f"Plotting overall data for {len(overall)} projects...")
-    # plotting the overall data
-    plot_overall_cve_distribution(overall)
-    plot_overall_cwe_distribution(overall)
-
-    # TODO: overall time KPIs (time to fix, time to CVE publish)
-
-    # TODO: scatter plot of CVEs, x-axis: exploitability, y-axis: impact
-            
-
-    # TODO: bar chart of CWE categories, sorted by number of vulnerabilities
-
-    # TODO: KPIs per minor/major release (count, severity, impact, patch lag)
-    plot_semver_cve_distribution(overall)
-
-    # TODO: frequency plot of Bandit test ID issues
-
-    # TODO: frequency plot of Bandit severity/confidence
-
-    # TODO: bandit issues / nloc
-
-    pass
-
-def plot_bandit(bandit: dict):
-    """
-    Plots Bandit data.
-    Expects a list of dictionaries of issues.
-
-    {
-        project: [ issues ]
-    }
-    """
-    project_count = len(bandit)
+    projects = sorted(list(issues['project'].unique()))
+    project_count = len(projects)
 
     # plot the test category distribution
     fig_category, axs_category = plt.subplots(project_count, 1, figsize=(10, 8))
     fig_category.subplots_adjust(hspace=0.5)
     i = 0
     values = ['None', 'Low', 'Medium', 'High', 'Critical']
-    for project_id, issues in bandit.items():
+    for project in projects:
         ax: plt.Axes = axs_category[i]
-        platform, project = get_platform(project_id)
-        version = f":{issues[0]['project_version']}" if len(issues) > 0 and issues[0]['project'] == project else ''
-        df = pd.DataFrame(issues)
+        df = issues[issues['project'] == project].copy()
+        version = df['project_version'].unique()[0]
         # sort the X-axis by the test category
         df = df.sort_values(by=['test_category', 'source'], ascending=True)
         df = df[ df['is_test'] == False ]
@@ -521,24 +475,20 @@ def plot_bandit(bandit: dict):
         unique_categories = df['test_category'].unique()
         ax.set_xlabel(None)
         ax.set_ylabel(None)
-        ax.set_title(f"{project.title()}{version}")
+        ax.set_title(f"{project.title()}:{version}")
         ax.set_yticks(range(len(values)), values)
         i += 1
     fig_category.suptitle("Bandit Test Category Distribution")
     fig_category.supxlabel("Test Category")
     fig_category.savefig(plots_dir / 'bandit-test-category-distribution.png')
-    bandit_json = convert_datetime_to_str(bandit)
 
     fig_module, axs_module = plt.subplots(project_count, 1, figsize=(10, 8))
     fig_module.subplots_adjust(hspace=0.5)
     i = 0
-    for project_id, issues in bandit.items():
+    for project in projects:
         ax: plt.Axes = axs_module[i]
-        platform, project = get_platform(project_id)
-        version = f":{issues[0]['project_version']}" if len(issues) > 0 and issues[0]['project'] == project else ''
-        df = pd.DataFrame(issues)
-        # get unique filenames, test ids, and code snippets
-        df = df[ df['is_test'] == False ]
+        df = issues[issues['project'] == project].copy()
+        version = df['project_version'].unique()[0]
         # count the number of issues per module
         total_count = df.groupby(['project_package']).size().reset_index(name='total_count')
         total_count = total_count.sort_values(by='total_count', ascending=False).head(10)
@@ -580,8 +530,6 @@ def plot_bandit(bandit: dict):
     fig_module.supylabel("Issue Count")
     fig_module.savefig(plots_dir / 'bandit-module-distribution.png')
 
-    try_json_dump(bandit_json, json_dir / 'bandit-distribution.json')
-
 def combine_timeline_data(data: dict):
     """
     Combines timeline data to a single dictionary
@@ -607,6 +555,7 @@ if __name__ == '__main__':
     if args.timeline:
     
         # timeline plot section
+        # TODO: update with new dataframe functions
         timelines = {}
         for project in args.projects:
             # get timeline for each project
@@ -648,22 +597,29 @@ if __name__ == '__main__':
         # 3) by severity
         # 4) by impact
         # 5) issues
-        overall = {}
-        bandit = {}
+        cves_df = pd.DataFrame()
+        cwes_df = pd.DataFrame()
+        issues_df = pd.DataFrame()
+        static_df = pd.DataFrame()
         for project in args.projects:
-            # get all the vulnerabilities for the project
             platform, project = get_platform(project)
-            bandit_issues = ag.get_bandit_issues(project, platform=platform, with_dependencies=True)
+            proj = ag.get_project(project, platform)
+            latest_analysed = ag.get_release(project, platform, analysed=True)
+            if proj is None:
+                logger.error(f"Could not find project '{project}' on platform '{platform}'")
+                continue
             project_id = f"{platform}:{project}"
-            bandit[project_id] = bandit_issues
-            logger.info(f"Getting overall data for {project} on {platform}...")
-            data = ag.get_report(project, platform=platform, with_dependencies=True)
-            overall[project_id] = data
-            logger.info(f"Got {len(data.get('cves'))} CVEs for {project}")
-            logger.info(f"Got {len(data.get('cwes'))} CWEs for {project}")
-        plot_overall(overall)
-        plot_bandit(bandit)
-        try_json_dump(overall, json_dir / 'overall.json')
+            # df = ag.df_cves(project, platform)
+            # cves_df = pd.concat([cves_df, df], ignore_index=True)
+            # df = ag.df_cves(project, platform, by_cwe=True)
+            # cwes_df = pd.concat([cwes_df, df], ignore_index=True)
+            # df = ag.df_static(project, platform)
+            # get only the latest analysed version
+            # df = df[df['project_version'] == latest_analysed.version]
+            # static_df = pd.concat([static_df, df], ignore_index=True)
+            df = ag.df_static(project, platform, with_issues=True, only_latest=True)
+            issues_df = pd.concat([issues_df, df], ignore_index=True)
+        plot_issues(issues_df)
 
     if args.show:
         plt.show()

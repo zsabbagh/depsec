@@ -1295,7 +1295,7 @@ class Aggregator:
     # 4) Bandit Issues per release
     # 5) Static Analysis Summary per release
 
-    def get_releases_with_dependencies(self, project: str | Project, platform: str="pypi", analysed: bool = True, before_release: bool = True, sort_semantically: bool = True) -> List[list]:
+    def get_releases_with_dependencies(self, project: str | Project, platform: str="pypi", analysed: bool = True, before_release: bool = True, sort_semantically: bool = True, only_latest: bool = False) -> List[list]:
         """
         Gets a list of tuples where each tuple contains a release and its dependencies
 
@@ -1317,6 +1317,8 @@ class Aggregator:
                 if deprel is not None:
                     result.append((deprel, dep))
             results.append(result)
+            if only_latest:
+                break
         return results
     
     def __patch_lag(self, cve: dict, release: Release) -> dict:
@@ -1447,8 +1449,8 @@ class Aggregator:
             columns.append('cwe_id')
         return pd.DataFrame(df_cves).drop_duplicates(columns)
 
-    def df_static(self, project: str | Project, platform: str="pypi", with_issues: bool = False) -> pd.DataFrame:
-        release_deps = self.get_releases_with_dependencies(project, platform=platform, analysed=True)
+    def df_static(self, project: str | Project, platform: str="pypi", with_issues: bool = False, only_latest: bool = True) -> pd.DataFrame:
+        release_deps = self.get_releases_with_dependencies(project, platform=platform, analysed=True, only_latest=only_latest)
         df = []
         for releases in release_deps:
             if len(releases) == 0:
@@ -1465,6 +1467,11 @@ class Aggregator:
                         confidence = issue.confidence
                         issue_dict = self.__model_with_release_data(issue, main_release, release, dependency)
                         issue_dict['severity_score'] = bandit_value_score(severity)
+                        issue_dict['test_category'] = issue.test_id[:2] if issue.test_id and len(issue.test_id) > 2 else None
+                        package = issue.package or ''
+                        module = issue.module or ''
+                        issue_dict['is_test'] = package.startswith('test') or 'test' in module
+                        issue_dict['project_package'] = f"{release.project.name}.{package}"
                         issue_dict['confidence_score'] = bandit_value_score(confidence)
                         issue_dict['score'] = bandit_issue_score(severity, confidence)
                         df.append(issue_dict)
@@ -1489,7 +1496,7 @@ class Aggregator:
         project = self.get_project(project, platform)
         releases = self.get_releases_with_dependencies(project, platform=platform, analysed=analysed)
         df = pd.DataFrame()
-        source_df = self.df_cves(project, platform, by_cwe=False) if not analysed else self.df_static(project, platform, with_issues=with_issues)
+        source_df = self.df_cves(project, platform, by_cwe=False) if not analysed else self.df_static(project, platform, with_issues=with_issues, only_latest=False)
         for date in date_range(start_date, end_date, step):
             date_releases = None
             print(f"Processing date {date}")
