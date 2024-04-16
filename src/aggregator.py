@@ -399,7 +399,8 @@ class Aggregator:
                             platform: str="pypi",
                             include_categories: bool = False) -> dict:
         """
-        Get vulnerabilities of a project and a specific version number (release)
+        Get vulnerabilities of a project and a specific version number (release).
+        If a version is not provided, the all vulnerabilities are returned.
 
         returns: 
         {
@@ -1294,12 +1295,12 @@ class Aggregator:
     # 4) Bandit Issues per release
     # 5) Static Analysis Summary per release
 
-    def get_releases_and_dependencies(self, project: str | Project, platform: str="pypi", analysed: bool = True) -> List[tuple]:
+    def get_releases_with_dependencies(self, project: str | Project, platform: str="pypi", analysed: bool = True, before_release: bool = True) -> List[tuple]:
         """
         Gets a list of tuples where each tuple contains a release and its dependencies
 
         returns:
-        [(release, [dependency, ...])]
+        [[(release, None), (deprel, dep), ...], ...], list of lists where each list contains all releases with the dependency object it is derived from
         """
         results = []
         releases = self.get_releases(project, platform=platform, analysed=analysed, exclude_deprecated=True)
@@ -1308,7 +1309,14 @@ class Aggregator:
         for release in releases:
             dependencies = self.get_dependencies(project, release.version, platform)
             dependencies = dependencies if dependencies is not None else []
-            results.append((release, dependencies))
+            result = [(release, None)]
+            for dep in dependencies:
+                # get the latest release of each dependency before the main project's release
+                before_date = release.published_at if before_release else None
+                deprel = self.get_release(dep.name, dep.version, platform=dep.platform, requirements=dep.requirements, before=before_date)
+                if deprel is not None:
+                    result.append((deprel, dep))
+            results.append(result)
         return results
     
     def __patch_lag(self, cve: dict, release: Release) -> dict:
@@ -1331,11 +1339,11 @@ class Aggregator:
                 patched_date = app.get('patched_at')
                 # the first "applicability" targets the release, as the apps are disjoint ranges
                 return {
-                    'start_to_patched': patched_date - start_date if patched_date is not None else None,
-                    'start_to_published': cve_published - start_date,
-                    'published_to_patched': patched_date - cve_published if patched_date is not None else None,
-                    'release_to_patched': patched_date - release.published_at if patched_date is not None else None,
-                    'release_to_published': cve_published - release.published_at,
+                    'start_to_patched': (patched_date - start_date).days if patched_date is not None else None,
+                    'start_to_published': (cve_published - start_date).days,
+                    'published_to_patched': (patched_date - cve_published).days if patched_date is not None else None,
+                    'release_to_patched': (patched_date - release.published_at).days if patched_date is not None else None,
+                    'release_to_published': (cve_published - release.published_at).days,
                     'not_patched': not_patched,
                 }
         return {}
@@ -1345,6 +1353,9 @@ class Aggregator:
         Computes whether a release has "technical lag" for a CVE.
         A technical lag is when a dependency constraint disallows a patch for a CVE.
         """
+        if constraints is None:
+            # if there are no constraints, there cannot be a technical lag
+            return False
         max_version, include_end = get_max_version(constraints)
         if include_end:
             patch = max_version.release[2] if len(max_version.release) > 2 else 0
@@ -1364,32 +1375,31 @@ class Aggregator:
         return False
 
 
-
     def df_cves(self, project: str | Project, platform: str="pypi", by_cwe: bool = False) -> pd.DataFrame:
         """
-        Returns a DataFrame of CVEs per release, where a "release" refers to a project's release including dependency releases.
+        Returns a DataFrame of CVEs per release, where a "release" refers to a project's release including each dependency's releases.
         Gets the latest release of each dependency before the main project's release's release date.
         """
         project = self.get_project(project, platform)
         project_name = project.name
-        release_deps = self.get_releases_and_dependencies(project, platform=platform, analysed=False)
+        release_deps = self.get_releases_with_dependencies(project, platform=platform, analysed=False)
         df_cves = []
         vulnerabilities = {}
         vulnerabilities[project_name] = self.get_vulnerabilities(project, platform=platform)
-        for rel, deps in release_deps:
+        for releases in release_deps:
+            if len(releases) == 0:
+                logger.warning(f"Unexpected empty list of releases")
+                continue
+            # releases are lists of tuples, where each tuple is a release and its dependency
             rel: Release
-            to_process = [(rel, None)]
-            for dep in deps:
-                # get the latest release of each dependency before the main project's release
-                dep_project = self.get_release(dep.name, dep.version, platform=dep.platform, requirements=dep.requirements, before=rel.published_at)
-                if dep_project is not None:
-                    to_process.append((dep_project, dep.requirements))
-            for release, constraints in to_process:
-                print(f"Processing {release.project.name} {release.version}")
+            main_release = releases[0][0] # the first release is the main project's release
+            release_version = main_release.version
+            for release, dependency in releases:
+                # again, the releases are tuples of the release and whether it is derived from a dependency
+                constraints = dependency.requirements if dependency is not None else None
                 release_name = release.project.name
                 if release_name not in vulnerabilities:
                     vulnerabilities[release_name] = self.get_vulnerabilities(release.project, platform=platform)
-                    print(f"Got {len(vulnerabilities[release_name].get('cves', {}))} vulnerabilities for {release_name}")
                 cves = vulnerabilities.get(release_name, {}).get('cves', None)
                 for cve_id in cves:
                     cve = cves[cve_id]
@@ -1401,11 +1411,13 @@ class Aggregator:
                         cve['major'] = version.major if version is not None else None
                         cve['minor'] = version.minor if version is not None else None
                         cve['source'] = 'Direct' if release_name == project_name else 'Indirect'
-                        cve['release_requirements'] = constraints
                         # add whether the release has "technical lag"
                         cve['project'] = project_name
-                        cve['release_name'] = release_name
+                        cve['project_version'] = release_version
+                        cve['release'] = release_name
+                        cve['inherited_from'] = dependency.inherited_from if dependency is not None else None
                         cve['release_version'] = release.version
+                        cve['release_requirements'] = constraints
                         cve['technical_lag'] = self.__compute_tech_lag(cve, release, constraints)
                         patch_lag = self.__patch_lag(cve, release)
                         cve.update(patch_lag)
@@ -1421,23 +1433,67 @@ class Aggregator:
                                 k: v for k, v in cve.items() if type(v) not in [dict, list]
                             })
         # ensure uniqueness of crucial columns
-        columns = ['release_name', 'release_version', 'cve_id']
+        columns = ['release', 'release_version', 'cve_id']
         if by_cwe:
             columns.append('cwe_id')
         return pd.DataFrame(df_cves).drop_duplicates(columns)
 
-    def df_issues(self, project: str | Project, platform: str="pypi") -> pd.DataFrame:
-        release_deps = self.get_releases_and_dependencies(project, platform=platform, analysed=True)
+    def df_static(self, project: str | Project, platform: str="pypi", with_issues: bool = False) -> pd.DataFrame:
+        release_deps = self.get_releases_with_dependencies(project, platform=platform, analysed=True)
         df = []
-        for rel, deps in release_deps:
-            rel: Release
-            to_process = [rel]
-            for dep in deps:
-                dep_release = self.get_release(dep.name, dep.version, platform=dep.platform, requirements=dep.requirements, analysed=True)
-                if dep_release is not None:
-                    to_process.append(dep_release)
-            for release in to_process:
-                df.append(model_to_dict(release, recurse=False))
+        project_name = project if isinstance(project, str) else project.name
+        for releases in release_deps:
+            if len(releases) == 0:
+                logger.warning(f"Unexpected empty list of releases")
+                continue
+            main_release = releases[0][0]
+            main_version = semver.parse(main_release.version) if main_release is not None else None
+            for release, dependency in releases:
+                constraints = dependency.requirements if dependency is not None else None
+                bandit_report = self.get_bandit_report(release)
+                if bandit_report is None:
+                    continue
+                if with_issues:
+                    for issue in bandit_report.issues:
+                        severity = issue.severity
+                        confidence = issue.confidence
+                        issue_dict = model_to_dict(issue, recurse=False)
+                        issue_dict['project'] = project_name
+                        issue_dict['severity_score'] = bandit_value_score(severity)
+                        issue_dict['confidence_score'] = bandit_value_score(confidence)
+                        issue_dict['score'] = bandit_issue_score(severity, confidence)
+                        issue_dict['major'] = main_version.major if main_version is not None else None
+                        issue_dict['minor'] = main_version.minor if main_version is not None else None
+                        issue_dict['project_version'] = main_release.version
+                        issue_dict['release'] = release.project.name
+                        issue_dict['inherited_from'] = dependency.inherited_from if dependency is not None else None
+                        issue_dict['release_version'] = release.version
+                        issue_dict['release_requirements'] = constraints
+                        issue_dict['source'] = 'Direct' if release.project.name == project_name else 'Indirect'
+                        df.append({
+                            k: v for k, v in issue_dict.items() if type(v) not in [dict, list]
+                        })
+                else:
+                    bandit_report = model_to_dict(bandit_report, recurse=False)
+                    release_name = release.project.name
+                    rel_dict = model_to_dict(release, recurse=False)
+                    for k in bandit_report:
+                        if k not in rel_dict:
+                            rel_dict[k] = bandit_report[k]
+                    rel_dict['project'] = project_name
+                    rel_dict['inherited_from'] = dependency.inherited_from if dependency is not None else None
+                    rel_dict['major'] = main_version.major if main_version is not None else None
+                    rel_dict['minor'] = main_version.minor if main_version is not None else None
+                    rel_dict['project_version'] = main_release.version
+                    rel_dict['release'] = release_name
+                    rel_dict['release_version'] = release.version
+                    rel_dict['release_requirements'] = constraints
+                    rel_dict['source'] = 'Direct' if release_name == project_name else 'Indirect'
+                    df.append({
+                        k: v for k, v in rel_dict.items() if type(v) not in [dict, list]
+                    })
+        return pd.DataFrame(df)
+                
     
 if __name__ == "__main__":
     # For the purpose of loading in interactive shell and debugging
