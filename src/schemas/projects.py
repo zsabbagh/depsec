@@ -38,6 +38,7 @@ class Project(Model):
     latest_release = CharField(null=True)
     dependent_repos = IntegerField(null=True)
     dependent_projects = IntegerField(null=True)
+    osi_verified = BooleanField(default=False)
     updated_at = DateTimeField(default=datetime.datetime.now)
     package_manager_url = CharField(null=True)
     repository_url = CharField(null=True)
@@ -79,6 +80,7 @@ class Release(Model):
     commit_hash = CharField(null=True)
     includes = TextField(null=True)
     excludes = TextField(null=True)
+    osi_verified = BooleanField(default=False)
     dependency_count = IntegerField(null=True)
     class Meta:
         database = DB_PROJECTS.get()

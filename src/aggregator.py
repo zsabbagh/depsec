@@ -168,6 +168,8 @@ class Aggregator:
         if project is not None and project.releases.count() > 0:
             # If the package is in the database, return it
             logger.debug(f"Found {project_name} in database")
+            if not project.osi_verified:
+                self._update_releases(project)
             return project
         elif project is not None:
             logger.debug(f"Project {project_name} in database but no releases found")
@@ -232,6 +234,7 @@ class Aggregator:
             latest_release = Release.select().where(Release.project == project).order_by(Release.published_at.desc()).first()
             project.latest_release = latest_release.version
             project.save()
+        self._update_releases(project, platform)
         return project
     
     
@@ -240,11 +243,12 @@ class Aggregator:
                      project: str | Project,
                      platform: str="pypi",
                      descending: bool = True,
-                     exclude_deprecated: bool = True,
+                     exclude_deprecated: bool = False,
                      sort_semantically: bool = True,
                      before: str | int | dt.datetime = None,
                      after: str | int | dt.datetime = None,
                      analysed: bool = False,
+                     osi_verified: bool = True,
                      requirements: str = None) -> List[Release]:
         """
         Gets all releases of a project 
@@ -267,14 +271,20 @@ class Aggregator:
         before_date = strint_to_date(before)
         after_date = strint_to_date(after)
         for release in project.releases:
+            print(f"Checking release {release.version}, osi_verified: {release.osi_verified}")
             try:
                 version = semver.parse(release.version)
             except Exception as e:
                 logger.debug(f"Error parsing version {release.version} for {project_name}: {e}")
                 continue
+            if osi_verified and not release.osi_verified:
+                logger.info(f"Skipping release {release.version} for {project_name} as it is not OSI verified")
+                continue
             if before_date is not None and release.published_at > before_date:
+                logger.debug(f"Skipping release {release.version} published after {before_date} for {project_name}")
                 continue
             if after_date is not None and release.published_at < after_date:
+                logger.debug(f"Skipping release {release.version} published before {after_date} for {project_name}")
                 continue
             if version is None:
                 logger.error(f"Invalid version {release.version} for {project_name}")
@@ -297,41 +307,35 @@ class Aggregator:
             releases = sorted(releases, key=lambda x : x.published_at, reverse=descending)
         return releases
     
-    def _update_releases(self, project: Project | str, platform: str="pypi"):
-        project = self.get_project(project)
-        projects = [project]
-        dependencies = self.get_dependencies(project)
-        for dep in dependencies:
-            dep = self.get_project(dep.name, platform)
-            projects.append(dep)
-        for project in projects:
-            print(f"Updating {project.name} releases")
-            proj = self.get_project(project)
-            res = self.osi.query_package(project.name, platform=project.platform)
-            latest_release = self.get_release(project)
-            for vdict in res.get('versions', []):
-                published_at = vdict.get('publishedAt', None)
-                vkey = vdict.get('versionKey', {})
-                version = vkey.get('version', None)
-                if published_at is not None:
+    def _update_releases(self, project: Project | str):
+        print(f"Updating {project.name} releases")
+        res = self.osi.query_package(project.name, platform=project.platform)
+        for vdict in res.get('versions', []):
+            published_at = vdict.get('publishedAt', None)
+            vkey = vdict.get('versionKey', {})
+            version = vkey.get('version', None)
+            if published_at is not None:
+                release = Release.get_or_none(
+                    Release.project == project,
+                    Release.version == version
+                )
+                if release is None:
+                    if version.endswith('.0'):
+                        version = version[:-2]
                     release = Release.get_or_none(
                         Release.project == project,
                         Release.version == version
                     )
                     if release is None:
-                        if version.endswith('.0'):
-                            version = version[:-2]
-                        release = Release.get_or_none(
-                            Release.project == project,
-                            Release.version == version
-                        )
-                        if release is None:
-                            print(f"Project {project.name} {version} not found")
-                            continue
-                    published_at = dt.datetime.strptime(published_at, '%Y-%m-%dT%H:%M:%SZ')
-                    print(f"Updating {project.name} {version} with date {published_at}")
-                    release.published_at = published_at
-                    release.save()
+                        print(f"Project {project.name} {version} not found")
+                        continue
+                published_at = dt.datetime.strptime(published_at, '%Y-%m-%dT%H:%M:%SZ')
+                print(f"Updating {project.name} {version} with date {published_at}")
+                release.published_at = published_at
+                release.osi_verified = True
+                release.save()
+        project.osi_verified = True
+        project.save()
 
     def get_release(self,
                     project_or_release: str | Project | Release,
