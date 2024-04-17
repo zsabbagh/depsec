@@ -589,6 +589,7 @@ class Aggregator:
                         if len(rels) > 0:
                             pub_at = rels[0].published_at
                             app['patched_at'] = pub_at
+                            app['osi_verified'] = rels[0].osi_verified
                             app['patched_version'] = rels[0].version
                     if app.get('patched_at') is None:
                         app['patched_at'] = None

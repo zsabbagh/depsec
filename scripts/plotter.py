@@ -362,7 +362,7 @@ def plot_overall_cve_distribution(cves: pd.DataFrame):
         ax.set_xlabel(None)
         ax.set_ylabel(None)
         ax.set_ylim(0, 10.5)
-        ax.set_yticks(np.arange(0, 11, 11//5))
+        ax.set_yticks([0, 4, 7, 9, 10])
         # change legend title
         ax.legend(title='Source', **Global.LEGEND)
     fig.suptitle("Overall CVE Distribution")
@@ -385,7 +385,7 @@ def plot_overall_cve_distribution(cves: pd.DataFrame):
         ax.set_xlabel(None)
         ax.set_ylabel(None)
         ax.set_ylim(0, 10.5)
-        ax.set_yticks(np.arange(0, 11, 11//5))
+        ax.set_yticks([0, 4, 7, 9, 10])
         # change legend title
         ax.legend(title='Source', **Global.LEGEND_XS)
         ax2.set_title(project.title())
@@ -686,15 +686,18 @@ if __name__ == '__main__':
                     issues_df = pd.read_csv(issues_path)
                 except:
                     pass
+        project_names = []
         for project in args.projects:
             platform, project_name = get_platform(project)
             proj = ag.get_project(project, platform)
+            project_names.append(project_name)
             if proj is None:
                 logger.error(f"Could not find project '{project}' on platform '{platform}'")
                 continue
             latest_analysed = ag.get_release(project, platform, analysed=True)
             if cves_overall_df.empty or project_name not in cves_overall_df['project'].unique():
                 df = ag.df_cves_per_project(project, platform)
+                # get published_to_patched
                 cves_overall_df = pd.concat([cves_overall_df, df], ignore_index=True)
             if cves_df.empty or project_name not in cves_df['project'].unique():
                 df = ag.df_cves(project, platform)
@@ -713,6 +716,48 @@ if __name__ == '__main__':
         issues_df.to_csv(cwe_path, index=False)
         static_df.to_csv(issues_path, index=False)
         cves_overall_df.to_csv(cve_overall_path, index=False)
+        # work-in-progress "report" generation (explanation of results)
+        for project_name in project_names:
+            # TODO: make this a JSON report
+            # get the CVEs for the project
+            df_project = cves_overall_df[cves_overall_df['project'] == project_name].copy().drop_duplicates(subset=['release', 'cve_id'])
+            releases = df_project['release'].unique()
+            sources = df_project['source'].unique()
+            cves_total = len(df_project)
+            print(f"{project_name.title()} total CVEs: {cves_total}")
+            for source in sources:
+                df_source = df_project[df_project['source'] == source].copy().drop_duplicates(subset=['cve_id'])
+                cves_total_source = len(df_source)
+                print(f"\t{source} total CVEs: {cves_total_source} ({cves_total_source/(cves_total or 1)*100:.2f}%)")
+            for release in releases:
+                df_release = df_project[df_project['release'] == release].copy().drop_duplicates(subset=['cve_id'])
+                cves_total_release = len(df_release)
+                # print release
+                source = 'SELF' if release == project_name else release
+                print(f"\t{source} total CVEs: {cves_total_release} ({cves_total_release/(cves_total or 1)*100:.2f}%)")
+                # critical
+                print(f"\t...whereof...")
+                df_base_score_critical = df_release[df_release['cvss_base_score'] >= 9.0]
+                cves_critical = len(df_base_score_critical)
+                df_base_score_high = df_release[(df_release['cvss_base_score'] >= 7.0) & (df_release['cvss_base_score'] < 9.0)]
+                cves_high = len(df_base_score_high)
+                df_base_score_medium = df_release[(df_release['cvss_base_score'] >= 4.0) & (df_release['cvss_base_score'] < 7.0)]
+                cves_medium = len(df_base_score_medium)
+                df_base_score_low = df_release[(df_release['cvss_base_score'] >= 0.1) & (df_release['cvss_base_score'] < 4.0)]
+                cves_low = len(df_base_score_low)
+                print(f"\t\tcritical: {cves_critical} ({cves_critical/(cves_total_release or 1)*100:.2f}%)")
+                print(f"\t\thigh: {cves_high} ({cves_high/(cves_total_release or 1)*100:.2f}%)")
+                print(f"\t\tmedium: {cves_medium} ({cves_medium/(cves_total_release or 1)*100:.2f}%)")
+                print(f"\t\tlow: {cves_low} ({cves_low/(cves_total_release or 1)*100:.2f}%)")
+
+                # count those with > 0 days
+                df_gt_0 = df_release[df_release['published_to_patched'] > 0]
+                cves_gt_0 = len(df_gt_0)
+                df_lt_0 = df_release[df_release['published_to_patched'] <= 0]
+                cves_lt_0 = len(df_lt_0)
+                cves_total_div = cves_total_release or 1
+                print(f"\t\tPublished to Patched > 0: {cves_gt_0} ({cves_gt_0/cves_total_div*100:.2f}%)")
+                print(f"\t\tPublished to Patched <= 0: {cves_lt_0} ({cves_lt_0/cves_total_div*100:.2f}%)")
         plot_semver_cve_distribution(cves_df)
         plot_overall_cve_distribution(cves_overall_df)
         plot_issues(issues_df)
