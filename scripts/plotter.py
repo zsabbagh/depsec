@@ -79,6 +79,10 @@ class Translate:
 
 class Global:
     # #0BD095, #0B84E0, #2E099C
+    LEGEND = {'fontsize': 'small', 'framealpha': 0.4, 'title_fontsize': 'small'}
+    LEGEND_XS = {'fontsize': 'x-small', 'framealpha': 0.4, 'title_fontsize': 'x-small'}
+    SUBPLOTS = {'hspace': 0.45, 'right': 0.95, 'left': 0.08}
+    SUBPLOTS_2X = {'hspace': 0.45, 'wspace': 0.2, 'right': 0.95, 'left': 0.1}
     project_palette = {
         "django": "#0BD095",
         "Django": "#0BD095",
@@ -112,7 +116,7 @@ class Global:
     }
 
     class Colours:
-        light_grey = "#c0c0c0"
+        light_grey = "#9EBDC1"
 
 def colour_to_rgb(colour: str):
     """
@@ -329,6 +333,13 @@ def plot_timelines(timelines: dict, title_prefix: str = ''):
         prefix = f"timeline-{prefix}-" if prefix else "timeline-"
         fig.savefig(plots_dir / f"{prefix}{filename}.png")
 
+def set_transparency(ax: plt.Axes, alpha: float):
+    """
+    Sets the transparency of the plot
+    """
+    for art in ax.collections:
+        art.set_alpha(alpha)
+
 
 def plot_overall_cve_distribution(cves: pd.DataFrame):
     """
@@ -336,23 +347,55 @@ def plot_overall_cve_distribution(cves: pd.DataFrame):
     """
     project_names = sorted(list(cves['project'].unique()))
     project_count = len(project_names)
-    fig, axs = plt.subplots(project_count, 1, figsize=(10, 8))
+
+    fig, axs = plt.subplots(1, project_count, figsize=(10, 8))
     axs = [axs] if project_count == 1 else axs
-    fig.subplots_adjust(hspace=0.5)
+    fig.subplots_adjust(**Global.SUBPLOTS)
     for i, project in enumerate(project_names):
         ax = axs[i]
         project_df = cves[cves['project'] == project]
         project_df = project_df.drop_duplicates(subset=['source', 'cve_id'])
-        sns.scatterplot(project_df, x='published_to_patched', y='cvss_base_score', hue="source", ax=ax, palette=Global.source_palette)
+        sns.violinplot(project_df, y='cvss_base_score', ax=ax, color=Global.Colours.light_grey, cut=0, zorder=1)
+        set_transparency(ax, 0.2)
+        sns.swarmplot(project_df, y='cvss_base_score', hue="source", ax=ax, palette=Global.source_palette, zorder=2)
         ax.set_title(project.title())
         ax.set_xlabel(None)
         ax.set_ylabel(None)
         ax.set_ylim(0, 10.5)
         ax.set_yticks(np.arange(0, 11, 11//5))
+        # change legend title
+        ax.legend(title='Source', **Global.LEGEND)
+    fig.suptitle("Overall CVE Distribution")
+    fig.supylabel("CVSS Base Score")
+    fig.supxlabel("Project")
+    fig.savefig(plots_dir / 'cve-overall.png')
+
+    fig, axs = plt.subplots(project_count, 2, figsize=(10, 8))
+    axs = [axs] if project_count == 1 else axs
+    fig.subplots_adjust(**Global.SUBPLOTS_2X)
+    for i, project in enumerate(project_names):
+        axes = axs[i]
+        ax = axes[0]
+        ax2 = axes[1]
+        project_df = cves[cves['project'] == project]
+        project_df = project_df.drop_duplicates(subset=['source', 'cve_id'])
+        sns.scatterplot(project_df, x='published_to_patched', y='cvss_base_score', hue="source", ax=ax, palette=Global.source_palette)
+        sns.kdeplot(project_df, x='published_to_patched', ax=ax2, color=Global.project_palette[project], fill=True)
+        ax.set_title(project.title())
+        ax.set_xlabel(None)
+        ax.set_ylabel(None)
+        ax.set_ylim(0, 10.5)
+        ax.set_yticks(np.arange(0, 11, 11//5))
+        # change legend title
+        ax.legend(title='Source', **Global.LEGEND_XS)
+        ax2.set_title(project.title())
+        ax2.set_xlabel(None)
+        ax2.set_ylabel(None)
+        ax2.tick_params(axis='y', rotation=20, labelsize='x-small')
     fig.suptitle("CVE Patch Time and CVSS Base Score Distribution")
     fig.supxlabel("Days from Published to Patched")
-    fig.supylabel("CVSS Base Score")
-    fig.savefig(plots_dir / 'overall-cve-distribution.png')
+    fig.supylabel("CVSS Base Score | Density")
+    fig.savefig(plots_dir / 'cve-overall-lag-score.png')
 
 def plot_overall_cwe_distribution(overall: dict, *measurements: str):
     """
@@ -373,7 +416,7 @@ def plot_overall_cwe_distribution(overall: dict, *measurements: str):
             cwe_count[cwe_id] += res[res['CWE ID'] == cwe_id]['CVE Count']
         df = pd.concat([df, res], ignore_index=True)
     fig, axs = plt.subplots(len(project_ids), 1, figsize=(10, 8))
-    plt.subplots_adjust(hspace=0.5)
+    plt.subplots_adjust(**Global.SUBPLOTS)
     for i, project in enumerate(project_names):
         ax: plt.Axes = axs[i]
         project_data = df[df['Project'] == project]
@@ -403,7 +446,7 @@ def plot_semver_cve_distribution(cves: pd.DataFrame, *kpis: str):
         # the first KPIs are CVE values
         kpi_filename = kpi.replace('_', '-')
         fig, axs = plt.subplots(len(project_names), 1, figsize=(10, 8))
-        fig.subplots_adjust(hspace=0.5)
+        fig.subplots_adjust(**Global.SUBPLOTS)
         title = "Applicable CVEs by Major Semantic Version"
         ylabel = "CVSS Base Score"
         match kpi:
@@ -434,7 +477,7 @@ def plot_semver_cve_distribution(cves: pd.DataFrame, *kpis: str):
         fig.savefig(plots_dir / f'semver-cve-distribution-{kpi_filename}.png')
     # set right y-axis label
     fig_lag, axs_lag = plt.subplots(len(project_names), 1, figsize=(10, 8))
-    fig_lag.subplots_adjust(hspace=0.5)
+    fig_lag.subplots_adjust(**Global.SUBPLOTS)
     for i, project in enumerate(project_names):
         ax: plt.Axes = axs_lag[i]
         project_data = cves[cves['project'] == project]
@@ -467,7 +510,7 @@ def plot_issues(issues: pd.DataFrame):
 
     # plot the test category distribution
     fig_category, axs_category = plt.subplots(project_count, 1, figsize=(10, 8))
-    fig_category.subplots_adjust(hspace=0.5)
+    fig_category.subplots_adjust(**Global.SUBPLOTS)
     i = 0
     values = ['None', 'Low', 'Medium', 'High', 'Critical']
     for project in projects:
@@ -490,7 +533,7 @@ def plot_issues(issues: pd.DataFrame):
     fig_category.savefig(plots_dir / 'bandit-test-category-distribution.png')
 
     fig_module, axs_module = plt.subplots(project_count, 1, figsize=(10, 8))
-    fig_module.subplots_adjust(hspace=0.5)
+    fig_module.subplots_adjust(**Global.SUBPLOTS)
     i = 0
     for project in projects:
         ax: plt.Axes = axs_module[i]
@@ -524,7 +567,7 @@ def plot_issues(issues: pd.DataFrame):
         ax.set_xlabel(None)
         ax.set_ylabel(None)
         # set the legend title
-        ax.legend(title='Test Category')
+        ax.legend(title='Test Category', **Global.LEGEND)
         # tilt the x-axis labels
         for tick in ax.get_xticklabels():
             tick.set_rotation(15)
@@ -622,28 +665,27 @@ if __name__ == '__main__':
         cve_path = csv_dir / 'cves.csv'
         cwe_path = csv_dir / 'cwes.csv'
         issues_path = csv_dir / 'issues.csv'
-        ok = False
-        if cve_overall_path.exists():
-            try:
-                cves_overall_df = pd.read_csv(cve_overall_path)
-                ok = True
-            except:
-                pass
-        if cve_path.exists():
-            try:
-                cves_df = pd.read_csv(cve_path)
-            except:
-                pass
-        if cwe_path.exists():
-            try:
-                cwes_df = pd.read_csv(cwe_path)
-            except:
-                pass
-        if issues_path.exists():
-            try:
-                issues_df = pd.read_csv(issues_path)
-            except:
-                pass
+        if not args.force:
+            if cve_overall_path.exists():
+                try:
+                    cves_overall_df = pd.read_csv(cve_overall_path)
+                except:
+                    pass
+            if cve_path.exists():
+                try:
+                    cves_df = pd.read_csv(cve_path)
+                except:
+                    pass
+            if cwe_path.exists():
+                try:
+                    cwes_df = pd.read_csv(cwe_path)
+                except:
+                    pass
+            if issues_path.exists():
+                try:
+                    issues_df = pd.read_csv(issues_path)
+                except:
+                    pass
         for project in args.projects:
             platform, project_name = get_platform(project)
             proj = ag.get_project(project, platform)
@@ -651,10 +693,10 @@ if __name__ == '__main__':
                 logger.error(f"Could not find project '{project}' on platform '{platform}'")
                 continue
             latest_analysed = ag.get_release(project, platform, analysed=True)
-            if args.force or cves_overall_df.empty or project_name not in cves_overall_df['project'].unique():
+            if cves_overall_df.empty or project_name not in cves_overall_df['project'].unique():
                 df = ag.df_cves_per_project(project, platform)
                 cves_overall_df = pd.concat([cves_overall_df, df], ignore_index=True)
-            if args.force or cves_df.empty or project_name not in cves_df['project'].unique():
+            if cves_df.empty or project_name not in cves_df['project'].unique():
                 df = ag.df_cves(project, platform)
                 cves_df = pd.concat([cves_df, df], ignore_index=True)
             project_id = f"{platform}:{project}"
@@ -664,7 +706,7 @@ if __name__ == '__main__':
             # get only the latest analysed version
             # df = df[df['project_version'] == latest_analysed.version]
             # static_df = pd.concat([static_df, df], ignore_index=True)
-            if args.force or issues_df.empty or project_name not in issues_df['project'].unique():
+            if issues_df.empty or project_name not in issues_df['project'].unique():
                 df = ag.df_static(project, platform, with_issues=True, only_latest=True)
                 issues_df = pd.concat([issues_df, df], ignore_index=True)
         cves_df.to_csv(cve_path, index=False)
