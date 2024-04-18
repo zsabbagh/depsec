@@ -41,14 +41,12 @@ def _compute(df: pd.DataFrame, total: int, key: str, **kpis) -> pd.DataFrame:
             elif cve_count == 1:
                 results[kpi][sev] = {
                     'count': 1,
-                    'cve_id': df_tmp['cve_id'].values[0],
                     'percentage': f"{100 / (total or 1)}%",
                     'value': df_tmp[key].values[0],
                 }
             else:
                 results[kpi][sev] = {
                     'count': cve_count,
-                    'cve_ids': sorted(df_tmp['cve_id'].values),
                     'percentage': f"{df_tmp['cve_id'].nunique() / (total or 1):.2%}%",
                     'mean': df_tmp[key].mean(),
                     'std': df_tmp[key].std(),
@@ -115,9 +113,9 @@ def cve_report(df: pd.DataFrame) -> dict:
                 cves_release = df_release['cve_id'].nunique()
                 r[release]['cves_total'] = cves_release
                 r[release]['cves_percentage'] = f"{cves_release / (cves_project or 1):.2%}%"
-                positive_patch = df_release['published_to_patched'] >= 0
-                negative_patch = df_release['published_to_patched'] < 0
-                r[release]['patch_time'] = _compute(df_release, cves_project, 'published_to_patched', positive_patch=positive_patch, negative_patch=negative_patch)
+                after_publication = df_release['published_to_patched'] >= 0
+                before_publication = df_release['published_to_patched'] < 0
+                r[release]['patch_time'] = _compute(df_release, cves_project, 'published_to_patched', after_publication=after_publication, before_publication=before_publication)
                 severities = _cve_severity(df_release)
                 r[release]['severities'] = sevs = {}
                 for severity in severities:
