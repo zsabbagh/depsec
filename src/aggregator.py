@@ -1576,8 +1576,14 @@ class Aggregator:
                 patch_lag = self.__patch_lag(cve, proj)
                 model_dict.update(patch_lag)
                 if by_cwe:
-                    for cwe_id in cve.get('cwes', []):
-                        model_dict['cwe_id'] = cwe_id
+                    cwes = cve.get('cwes', [])
+                    if cwes:
+                        for cwe_id in cve.get('cwes', []):
+                            mcopy = model_dict.copy()
+                            mcopy['cwe_id'] = cwe_id
+                            df_cves.append(mcopy)
+                    else:
+                        model_dict['cwe_id'] = None
                         df_cves.append(model_dict)
                 else:
                     df_cves.append(model_dict)

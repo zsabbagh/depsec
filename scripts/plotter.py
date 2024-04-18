@@ -87,6 +87,8 @@ class Global:
     SUBPLOTS = {'hspace': 0.45, 'right': 0.95, 'left': 0.08}
     SUBPLOTS_2X = {'hspace': 0.45, 'wspace': 0.2, 'right': 0.95, 'left': 0.1}
     project_palette = {
+        "total": "#9EBDC1",
+        "Total": "#9EBDC1",
         "django": "#0BD095",
         "Django": "#0BD095",
         "flask": "#0B84E0",
@@ -154,7 +156,10 @@ def release_colours(project_name: str, *releases: str):
     """
     Generates a palette of colours for releases
     """
-    palette = {}
+    palette = {
+        k: Global.Colours.light_grey for k in releases
+    }
+    palette['total'] = Global.Colours.light_grey
     for i, release in enumerate(releases):
         release = release.lower()
         if release == project_name.lower():
@@ -426,37 +431,51 @@ def plot_overall_cve_distribution(cves: pd.DataFrame):
     fig.supylabel("CVSS Base Score | Density")
     fig.savefig(plots_dir / 'cve-overall-lag-score.png')
 
-def plot_overall_cwe_distribution(overall: dict, *measurements: str):
+def plot_overall_cwe_distribution(df: pd.DataFrame):
     """
     Plots CWE distribution
     """
-    df: pd.DataFrame = pd.DataFrame()
-    cwe_count = {}
-    project_ids = sorted(list(overall.keys()))
-    project_names = []
-    for project_id in  project_ids:
-        platform, project_name = get_platform(project_id)
-        project_names.append(project_name)
-        data = overall[project_id]
-        res: pd.DataFrame = compute.cwe_distribution(data, project_name)
-        for cwe_id in res['CWE ID']:
-            if cwe_id not in cwe_count:
-                cwe_count[cwe_id] = 0
-            cwe_count[cwe_id] += res[res['CWE ID'] == cwe_id]['CVE Count']
-        df = pd.concat([df, res], ignore_index=True)
-    fig, axs = plt.subplots(len(project_ids), 1, figsize=(10, 8))
+    # guarantee uniqueness of the crucial columns
+    df = df.drop_duplicates(subset=['project', 'release', 'cwe_id', 'cve_id'])
+    project_names = sorted(list(df['project'].unique()))
+    project_count = len(project_names)
+    fig, axs = plt.subplots(project_count, 1, figsize=(10, 8))
     plt.subplots_adjust(**Global.SUBPLOTS)
     for i, project in enumerate(project_names):
         ax: plt.Axes = axs[i]
-        project_data = df[df['Project'] == project]
-        project_data = project_data.sort_values(by='CVE Count', ascending=False)
-        project_data = project_data.head(10)
-        sns.barplot(data=project_data, x='CWE ID', y='CVE Count', ax=ax, color=Global.project_palette[project])
-        max_count = max(project_data['CVE Count'])
+        df_project = df[df['project'] == project]
+        if project not in Global.release_palettes:
+            releases = sorted(list(df_project['release'].unique()))
+            Global.release_palettes[project] = release_colours(project, *releases)
+        palette = Global.release_palettes[project]
+        # cwe count
+        df_cwe_count = df_project.groupby(['cwe_id']).size().reset_index(name='count')
+        # sort by count descending
+        df_cwe_count = df_cwe_count.sort_values(by='count', ascending=False)
+        # take head
+        df_cwe_count = df_cwe_count.head(10)
+        df_unique = df_project.drop_duplicates(subset=['project', 'cwe_id'])
+        # drop the columns that are not in df_cwe_count
+        df_unique = df_unique[df_unique['cwe_id'].isin(df_cwe_count['cwe_id'])]
+        # add count
+        df_unique = df_unique.groupby(['release', 'cwe_id']).size().reset_index(name='count')
+        # add the 'total_count' column
+        df_unique['total_count'] = df_unique['cwe_id'].map(df_cwe_count.set_index('cwe_id')['count'])
+        # rename the 'release' to "total" for all rows in the cwe_count df
+        df_cwe_count['release'] = 'total'
+        df_cwe_count['total_count'] = df_cwe_count['count']
+        # concatenate the two dataframes
+        df_cwe_count = pd.concat([df_cwe_count, df_unique], ignore_index=True)
+        # sort by total_count and group by release
+        df_cwe_count = df_cwe_count.sort_values(by=['total_count', 'release'], ascending=[False, True])
+        # sort by count
+        sns.barplot(data=df_cwe_count, x='cwe_id', y='count', hue='release', ax=ax, palette=palette)
+        max_count = max(df_cwe_count['total_count'])
         ylim = max_count + 1 if max_count > 10 else 5
         step = ylim // 5
         ax.set_ylim(0, ylim)
         ax.set_yticks(np.arange(0, ylim, step))
+        ax.legend(title='Release', **Global.LEGEND)
         ax.set_title(project.title())
         ax.set_xlabel(None)
         ax.set_ylabel(None)
@@ -687,14 +706,18 @@ if __name__ == '__main__':
         # 5) issues
         cves_df = pd.DataFrame()
         cves_overall_df = pd.DataFrame()
-        cwes_df = pd.DataFrame()
         issues_df = pd.DataFrame()
         static_df = pd.DataFrame()
         cve_overall_path = csv_dir / 'cves_overall.csv'
         cve_path = csv_dir / 'cves.csv'
-        cwe_path = csv_dir / 'cwes.csv'
+        static_path = csv_dir / 'static.csv'
         issues_path = csv_dir / 'issues.csv'
         if not args.force:
+            if static_path.exists():
+                try:
+                    static_df = pd.read_csv(static_path)
+                except:
+                    pass
             if cve_overall_path.exists():
                 try:
                     cves_overall_df = pd.read_csv(cve_overall_path)
@@ -703,11 +726,6 @@ if __name__ == '__main__':
             if cve_path.exists():
                 try:
                     cves_df = pd.read_csv(cve_path)
-                except:
-                    pass
-            if cwe_path.exists():
-                try:
-                    cwes_df = pd.read_csv(cwe_path)
                 except:
                     pass
             if issues_path.exists():
@@ -725,7 +743,7 @@ if __name__ == '__main__':
                 continue
             latest_analysed = ag.get_release(project, platform, analysed=True)
             if cves_overall_df.empty or project_name not in cves_overall_df['project'].unique():
-                df = ag.df_cves_per_project(project, platform)
+                df = ag.df_cves_per_project(project, platform, by_cwe=True)
                 # get published_to_patched
                 cves_overall_df = pd.concat([cves_overall_df, df], ignore_index=True)
             if cves_df.empty or project_name not in cves_df['project'].unique():
@@ -742,8 +760,8 @@ if __name__ == '__main__':
                 df = ag.df_static(project, platform, with_issues=True, only_latest=True)
                 issues_df = pd.concat([issues_df, df], ignore_index=True)
         cves_df.to_csv(cve_path, index=False)
-        issues_df.to_csv(cwe_path, index=False)
-        static_df.to_csv(issues_path, index=False)
+        issues_df.to_csv(issues_path, index=False)
+        static_df.to_csv(static_path, index=False)
         cves_overall_df.to_csv(cve_overall_path, index=False)
 
         # generate reports of the overall findings to explain the plots
@@ -752,7 +770,9 @@ if __name__ == '__main__':
 
         # work-in-progress "report" generation (explanation of results)
         plot_semver_cve_distribution(cves_df)
-        plot_overall_cve_distribution(cves_overall_df)
+        cves_without_cwes = cves_overall_df.drop_duplicates(subset=['project', 'release', 'cve_id']).copy()
+        plot_overall_cve_distribution(cves_without_cwes)
+        plot_overall_cwe_distribution(cves_overall_df)
         plot_issues(issues_df)
 
     if args.show:
