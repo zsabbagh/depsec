@@ -38,17 +38,26 @@ def _compute(df: pd.DataFrame, total: int, key: str, **kpis) -> pd.DataFrame:
             if cve_count == 0:
                 # skip empty dataframes
                 continue
-            results[kpi][sev] = {
-                'count': cve_count,
-                'percentage': f"{df_tmp['cve_id'].nunique() / (total or 1):.2%}%",
-                'mean': df_tmp[key].mean(),
-                'std': df_tmp[key].std(),
-                'min': df_tmp[key].min(),
-                '25%': df_tmp[key].quantile(0.25),
-                '50%': df_tmp[key].quantile(0.50),
-                '75%': df_tmp[key].quantile(0.75),
-                'max': df_tmp[key].max(),
-            }
+            elif cve_count == 1:
+                results[kpi][sev] = {
+                    'count': 1,
+                    'cve_id': df_tmp['cve_id'].values[0],
+                    'percentage': f"{1 / (total or 1)}%",
+                    'value': df_tmp[key].values[0],
+                }
+            else:
+                results[kpi][sev] = {
+                    'count': cve_count,
+                    'cve_ids': sorted(df_tmp['cve_id'].values),
+                    'percentage': f"{df_tmp['cve_id'].nunique() / (total or 1):.2%}%",
+                    'mean': df_tmp[key].mean(),
+                    'std': df_tmp[key].std(),
+                    'min': df_tmp[key].min(),
+                    '25%': df_tmp[key].quantile(0.25),
+                    '50%': df_tmp[key].quantile(0.50),
+                    '75%': df_tmp[key].quantile(0.75),
+                    'max': df_tmp[key].max(),
+                }
     if len(results) == 1:
         return results[list(results.keys())[0]]
     return results

@@ -220,6 +220,7 @@ def try_json_dump(data: dict, path: Path):
     try:
         with open(path, 'w') as f:
             json.dump(data, f, indent=4)
+            logger.info(f"Successfully stored data to path '{path.name}'")
     except Exception as e:
         logger.error(f"Could not store data to path '{path.name}': {e}")
         exit(1)
@@ -746,7 +747,7 @@ if __name__ == '__main__':
         cves_overall_df.to_csv(cve_overall_path, index=False)
 
         report = rep.cve_report(cves_overall_df)
-        pprint(report)
+        try_json_dump(report, json_dir / 'cve_report.json')
 
         # work-in-progress "report" generation (explanation of results)
         for project_name in project_names:
