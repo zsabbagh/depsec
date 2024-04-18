@@ -39,6 +39,12 @@ def is_applicable(release: Release | str | dict, applicability: dict | list) -> 
             # do not check datetime as it is not applicable
     return applies
 
+def reliable_published_date(release: Release) -> datetime.datetime | None:
+    """
+    Gets the most reliable published date for a release.
+    """
+    return (release and ((release.osi_verified and release.published_at) or release.commit_at)) or None
+
 # This file contains utility functions
 # to translate data structures of PeeWee models
 # to other data structures.
@@ -87,9 +93,9 @@ def compute_version_ranges(project: Project, apps: list):
             applicabilities.append({
                 'version_start': str(previous_version),
                 'version_end': rel.version,
-                'start_date': start_rel.published_at if start_rel else None,
+                'start_date': reliable_published_date(start_rel),
                 'exclude_start': False,
-                'end_date': end_rel.published_at if end_rel else None,
+                'end_date': reliable_published_date(end_rel),
                 'exclude_end': True,
             })
             previous_version = rel.version

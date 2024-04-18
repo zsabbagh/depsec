@@ -529,9 +529,9 @@ class Aggregator:
             if vuln_cpe_id in vulnset and not has_exact_version:
                 logger.debug(f"Vulnerability {vuln_cpe_id} already in set")
                 continue
-            start_date: datetime = (start_release.commit_at or start_release.published_at) if start_release else None
+            start_date: datetime = db.reliable_published_date(start_release)
             # get the commit if it is not OSI verified
-            end_date: datetime = (end_release and ((end_release.osi_verified and end_release.published_at) or end_release.commit_at)) or None
+            end_date: datetime = db.reliable_published_date(end_release)
             logger.debug(f"Getting vulnerabilities for {cpe.vendor}:{cpe.product}:{cpe.version} {cpe.version_start} ({start_date}) - {cpe.version_end}({end_date})")
             add = False
             if has_exact_version:
@@ -577,6 +577,7 @@ class Aggregator:
                     cves[cve.cve_id]['applicability'].append(applicability)
         # translate 'version' applicability to 'version_start' and 'version_end'
         for _, cve in cves.items():
+            cve_id = cve.get('cve_id')
             apps = cve.get('applicability', [])
             apps = db.compute_version_ranges(project, apps)
             for app in apps:
@@ -587,15 +588,17 @@ class Aggregator:
                     if v_end is not None:
                         rels = self.get_releases(project.name, platform=platform, descending=False, sort_semantically=True, requirements=f">{v_end}")
                         if len(rels) > 0:
-                            pub_at = rels[0].published_at
+                            rel = rels[0]
+                            pub_at = db.reliable_published_date(rel)
                             app['patched_at'] = pub_at
-                            app['osi_verified'] = rels[0].osi_verified
-                            app['patched_version'] = rels[0].version
+                            app['verified'] = True
+                            app['patched_version'] = rel.version
                     if app.get('patched_at') is None:
                         app['patched_at'] = None
                         app['patched_version'] = None
                 else:
                     app['patched_at'] = app.get('end_date')
+                    app['verified'] = True
                     app['patched_version'] = app.get('version_end')
             cve['applicability'] = apps
         for _, cw in cwes.items():
@@ -1389,12 +1392,12 @@ class Aggregator:
         cve_id = cve.get('cve_id')
         for app in apps:
             # pick only the latest within the same range
-            if not app.get('osi_verified', False):
+            if not app.get('verified', False):
                 logger.debug(f"Skipping OSI not verified applicability for {cve_id}")
                 continue
             if isinstance(release_or_project, Project) or db.is_applicable(release_or_project, app):
                 start_date = app.get('start_date') if app.get('start_date') is not None else first_release.published_at
-                patched_date = app.get('patched_at')
+                patched_date = app.get('patched_at') or app.get('end_date')
                 patched = patched_date is not None
                 # the first "applicability" targets the release, as the apps are disjoint ranges
                 result.get('start_to_patched').append((patched_date - start_date).days if patched else None)
