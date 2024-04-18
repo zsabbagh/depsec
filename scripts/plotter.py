@@ -4,6 +4,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 import pandas as pd
 import src.utils.compute as compute
+import src.utils.rep as rep
 from copy import deepcopy
 from pprint import pprint
 from pathlib import Path
@@ -77,6 +78,8 @@ class Translate:
         "B7": "B7: XSS",
     }
 
+# TODO: Generate palette of releases that are not the project, but indirect ones, where the main project is "blue" and the indirect ones shades of "turquoise" or something
+
 class Global:
     # #0BD095, #0B84E0, #2E099C
     LEGEND = {'fontsize': 'small', 'framealpha': 0.4, 'title_fontsize': 'small'}
@@ -91,6 +94,10 @@ class Global:
         "tornado": "#2E099C",
         "Tornado": "#2E099C"
     }
+    release_palettes = {}
+    colours_indirect = [
+        "#65fca6", "#0bd095", "#14babe", "#1da3e7"
+    ]
     colours = [
         "#0cad6f","#4582b1","#f4d06f","#c4603b","#c477bf"
     ]
@@ -116,6 +123,8 @@ class Global:
     }
 
     class Colours:
+        direct = "#325B8B"
+        indirect = "#0BD095"
         light_grey = "#9EBDC1"
 
 def colour_to_rgb(colour: str):
@@ -140,6 +149,20 @@ def tone_colour(colour: str, factor: float):
     new_rgb = tuple(int(c * factor) for c in rgb)
     new_rgb = tuple(min(255, c) for c in new_rgb)
     return rgb_to_colour(new_rgb)
+
+def release_colours(project_name: str, *releases: str):
+    """
+    Generates a palette of colours for releases
+    """
+    palette = {}
+    for i, release in enumerate(releases):
+        release = release.lower()
+        if release == project_name.lower():
+            palette[release] = Global.Colours.direct
+        else:
+            palette[release] = Global.colours_indirect[i % len(Global.colours_indirect)]
+    return palette
+
 
 def plot_grouped_bar(*args):
     pass
@@ -353,11 +376,15 @@ def plot_overall_cve_distribution(cves: pd.DataFrame):
     fig.subplots_adjust(**Global.SUBPLOTS)
     for i, project in enumerate(project_names):
         ax = axs[i]
+        releases = sorted(list(cves[cves['project'] == project]['release'].unique()))
+        if project not in Global.release_palettes:
+            Global.release_palettes[project] = release_colours(project, *releases)
+        palette = Global.release_palettes[project]
         project_df = cves[cves['project'] == project]
-        project_df = project_df.drop_duplicates(subset=['source', 'cve_id'])
+        project_df = project_df.drop_duplicates(subset=['release', 'cve_id'])
         sns.violinplot(project_df, y='cvss_base_score', ax=ax, color=Global.Colours.light_grey, cut=0, zorder=1)
         set_transparency(ax, 0.2)
-        sns.swarmplot(project_df, y='cvss_base_score', hue="source", ax=ax, palette=Global.source_palette, zorder=2)
+        sns.swarmplot(project_df, y='cvss_base_score', hue="release", ax=ax, palette=palette, zorder=2)
         ax.set_title(project.title())
         ax.set_xlabel(None)
         ax.set_ylabel(None)
@@ -377,9 +404,10 @@ def plot_overall_cve_distribution(cves: pd.DataFrame):
         axes = axs[i]
         ax = axes[0]
         ax2 = axes[1]
+        palette = Global.release_palettes[project]
         project_df = cves[cves['project'] == project]
         project_df = project_df.drop_duplicates(subset=['source', 'cve_id'])
-        sns.scatterplot(project_df, x='published_to_patched', y='cvss_base_score', hue="source", ax=ax, palette=Global.source_palette)
+        sns.scatterplot(project_df, x='published_to_patched', y='cvss_base_score', hue="release", ax=ax, palette=palette)
         sns.kdeplot(project_df, x='published_to_patched', ax=ax2, color=Global.project_palette[project], fill=True)
         ax.set_title(project.title())
         ax.set_xlabel(None)
@@ -716,6 +744,10 @@ if __name__ == '__main__':
         issues_df.to_csv(cwe_path, index=False)
         static_df.to_csv(issues_path, index=False)
         cves_overall_df.to_csv(cve_overall_path, index=False)
+
+        report = rep.cve_report(cves_overall_df)
+        pprint(report)
+
         # work-in-progress "report" generation (explanation of results)
         for project_name in project_names:
             # TODO: make this a JSON report
