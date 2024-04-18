@@ -42,7 +42,7 @@ def _compute(df: pd.DataFrame, total: int, key: str, **kpis) -> pd.DataFrame:
                 results[kpi][sev] = {
                     'count': 1,
                     'cve_id': df_tmp['cve_id'].values[0],
-                    'percentage': f"{1 / (total or 1)}%",
+                    'percentage': f"{100 / (total or 1)}%",
                     'value': df_tmp[key].values[0],
                 }
             else:

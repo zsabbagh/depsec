@@ -271,7 +271,6 @@ class Aggregator:
         before_date = strint_to_date(before)
         after_date = strint_to_date(after)
         for release in project.releases:
-            print(f"Checking release {release.version}, osi_verified: {release.osi_verified}")
             try:
                 version = semver.parse(release.version)
             except Exception as e:
@@ -531,7 +530,8 @@ class Aggregator:
                 logger.debug(f"Vulnerability {vuln_cpe_id} already in set")
                 continue
             start_date: datetime = (start_release.commit_at or start_release.published_at) if start_release else None
-            end_date: datetime = (end_release.commit_at or end_release.published_at) if end_release else None
+            # get the commit if it is not OSI verified
+            end_date: datetime = (end_release and ((end_release.osi_verified and end_release.published_at) or end_release.commit_at)) or None
             logger.debug(f"Getting vulnerabilities for {cpe.vendor}:{cpe.product}:{cpe.version} {cpe.version_start} ({start_date}) - {cpe.version_end}({end_date})")
             add = False
             if has_exact_version:
@@ -1386,7 +1386,12 @@ class Aggregator:
             'start_to_published': [],
             'published_to_patched': [],
         }
+        cve_id = cve.get('cve_id')
         for app in apps:
+            # pick only the latest within the same range
+            if not app.get('osi_verified', False):
+                logger.debug(f"Skipping OSI not verified applicability for {cve_id}")
+                continue
             if isinstance(release_or_project, Project) or db.is_applicable(release_or_project, app):
                 start_date = app.get('start_date') if app.get('start_date') is not None else first_release.published_at
                 patched_date = app.get('patched_at')
