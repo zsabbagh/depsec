@@ -404,8 +404,8 @@ def plot_overall_cve_distribution(cves: pd.DataFrame):
         palette = Global.release_palettes[project]
         project_df = cves[cves['project'] == project]
         project_df = project_df.drop_duplicates(subset=['source', 'cve_id'])
-        sns.scatterplot(project_df, x='published_to_patched', y='cvss_base_score', hue="release", ax=ax, palette=palette)
-        sns.kdeplot(project_df, x='published_to_patched', ax=ax2, color=Global.project_palette[project], fill=True)
+        sns.scatterplot(project_df, x='published_to_patched_mean', y='cvss_base_score', hue="release", ax=ax, palette=palette)
+        sns.kdeplot(project_df, x='published_to_patched_mean', ax=ax2, color=Global.project_palette[project], fill=True)
         ax.set_title(project.title())
         ax.set_xlabel(None)
         ax.set_ylabel(None)

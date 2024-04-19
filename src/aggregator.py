@@ -1383,8 +1383,10 @@ class Aggregator:
         releases = self.get_releases(project_name, platform=platform)
         releases = sorted(releases, key=lambda x: x.published_at)
         first_release = releases[0] if len(releases) > 0 else None
+        first_published = db.reliable_published_date(first_release)
         cve_published = cve.get('published_at')
         result = {
+            'cve_id': [],
             'start_to_patched': [],
             'start_to_published': [],
             'published_to_patched': [],
@@ -1396,22 +1398,33 @@ class Aggregator:
                 logger.debug(f"Skipping OSI not verified applicability for {cve_id}")
                 continue
             if isinstance(release_or_project, Project) or db.is_applicable(release_or_project, app):
-                start_date = app.get('start_date') if app.get('start_date') is not None else first_release.published_at
+                start_date = app.get('start_date') or first_published
                 patched_date = app.get('patched_at') or app.get('end_date')
                 patched = patched_date is not None
                 # the first "applicability" targets the release, as the apps are disjoint ranges
+                result.get('cve_id').append(cve_id)
                 result.get('start_to_patched').append((patched_date - start_date).days if patched else None)
                 result.get('start_to_published').append((cve_published - start_date).days)
                 result.get('published_to_patched').append((patched_date - cve_published).days if patched else None)
-        results = {}
-        for key in result:
-            ls = [ x for x in result[key] if x is not None ]
-            if len(ls) == 0:
-                results[key] = None
-            else:
-                results[f"{key}"] = np.mean(ls)
-                results[f"{key}_std"] = np.std(ls)
-        return results
+        return pd.DataFrame(result)
+    
+    def __patch_lag_stats(self, cve: dict, release_or_project: Release | Project) -> dict:
+        """
+        Get patch lag as statistics for a CVE
+        """
+        patch_lag = self.__patch_lag(cve, release_or_project)
+        result = {}
+        for col in patch_lag.columns:
+            if col == 'cve_id':
+                continue
+            result[col] = {
+                'mean': patch_lag[col].mean(),
+                'median': patch_lag[col].median(),
+                'std': patch_lag[col].std(),
+                'min': patch_lag[col].min(),
+                'max': patch_lag[col].max(),
+            }
+        return result
     
     def __compute_tech_lag(self, cve: dict, release: Release, constraints: str) -> bool:
         """
@@ -1524,7 +1537,7 @@ class Aggregator:
                             model_dict['technical_lag'] = self.__compute_tech_lag(cve, release, constraints)
                             model_dict['version_start'] = app.get('version_start')
                             model_dict['version_end'] = app.get('version_end')
-                            patch_lag = self.__patch_lag(cve, release)
+                            patch_lag = self.__patch_lag_stats(cve, release)
                             model_dict.update(patch_lag)
                             if by_cwe:
                                 for cwe_id in cve.get('cwes', []):
@@ -1539,7 +1552,7 @@ class Aggregator:
             columns.append('cwe_id')
         return pd.DataFrame(df_cves).drop_duplicates(columns)
     
-    def df_cves_per_project(self, project: str | Project, platform: str="pypi", by_cwe: bool = False) -> pd.DataFrame:
+    def df_cves_per_project(self, project: str | Project, platform: str="pypi", by_cwe: bool = False, by_patch: bool = False) -> pd.DataFrame:
         """
         Returns a DataFrame of CVEs per project, where a "project" refers to a project's release including each dependency's project
         representations.
@@ -1573,20 +1586,33 @@ class Aggregator:
                 model_dict = self.__model_with_project_data(cve, main_project, proj, dep)
                 model_dict['technical_lag'] = self.__compute_tech_lag(cve, latest_analysed, constraints)
                 model_dict['applicability'] = app_ranges
-                patch_lag = self.__patch_lag(cve, proj)
-                model_dict.update(patch_lag)
+                models = []
                 if by_cwe:
                     cwes = cve.get('cwes', [])
                     if cwes:
                         for cwe_id in cve.get('cwes', []):
                             mcopy = model_dict.copy()
                             mcopy['cwe_id'] = cwe_id
-                            df_cves.append(mcopy)
+                            models.append(mcopy)
                     else:
                         model_dict['cwe_id'] = None
-                        df_cves.append(model_dict)
+                        models.append(model_dict)
                 else:
-                    df_cves.append(model_dict)
+                    models.append(model_dict)
+                patch_lag = self.__patch_lag(cve, proj) if by_patch else self.__patch_lag_stats(cve, proj)
+                for model in models:
+                    if by_patch:
+                        mcopy = model.copy()
+                        for col in patch_lag.columns:
+                            if col == 'cve_id':
+                                continue
+                            mcopy[col] = patch_lag[col].values[0]
+                        df_cves.append(mcopy)
+                    else:
+                        for key in patch_lag:
+                            for s in patch_lag[key]:
+                                model[f"{key}_{s}"] = patch_lag[key][s]
+                        df_cves.append(model)
         # ensure uniqueness of crucial columns
         columns = ['project', 'release', 'cve_id']
         if by_cwe:

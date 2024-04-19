@@ -113,9 +113,9 @@ def cve_report(df: pd.DataFrame) -> dict:
                 cves_release = df_release['cve_id'].nunique()
                 r[release]['cves_total'] = cves_release
                 r[release]['cves_percentage'] = f"{cves_release / (cves_project or 1):.2%}%"
-                after_publication = df_release['published_to_patched'] >= 0
-                before_publication = df_release['published_to_patched'] < 0
-                r[release]['patch_time'] = _compute(df_release, cves_project, 'published_to_patched', after_publication=after_publication, before_publication=before_publication)
+                after_publication = df_release['published_to_patched_mean'] >= 0
+                before_publication = df_release['published_to_patched_mean'] < 0
+                r[release]['patch_time'] = _compute(df_release, cves_project, 'published_to_patched_mean', after_publication=after_publication, before_publication=before_publication)
                 severities = _cve_severity(df_release)
                 r[release]['severities'] = sevs = {}
                 for severity in severities:
