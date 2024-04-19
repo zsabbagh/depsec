@@ -97,16 +97,7 @@ class Global:
         "Tornado": "#2E099C"
     }
     release_palettes = {}
-    colours_indirect = [
-        "#65fca6", "#0bd095", "#14babe", "#1da3e7"
-    ]
-    colours = [
-        "#0cad6f","#4582b1","#f4d06f","#c4603b","#c477bf"
-    ]
-    # source_palette = [
-    #   "#2B9EC7",
-    #   "#C66A50"
-    # ]
+    colours_indirect = ["#00c48d","#00ced9","#0598f3","#865fe1","#b754d8"]
     source_palette = {
         "Direct": "#325B8B",
         False: "#325B8B",
@@ -561,11 +552,17 @@ def plot_issues(issues: pd.DataFrame):
     for project in projects:
         ax: plt.Axes = axs_category[i]
         df = issues[issues['project'] == project].copy()
+        releases = sorted(list(df['release'].unique()))
+        palette = release_colours(project, *releases)
         version = df['project_version'].unique()[0]
+        order = [project]
+        for release in releases:
+            if release != project:
+                order.append(release)
         # sort the X-axis by the test category
-        df = df.sort_values(by=['test_category', 'source'], ascending=True)
+        df = df.sort_values(by=['test_category', 'release'], ascending=True)
         df = df[ df['is_test'] == False ]
-        sns.swarmplot(data=df, x='test_category', y='score', hue='source', ax=ax, palette=Global.source_palette)
+        sns.swarmplot(data=df, x='test_category', y='score', hue='release', ax=ax, palette=palette, hue_order=order)
         sns.violinplot(data=df, x='test_category', y='score', ax=ax, fill=False, color=Global.Colours.light_grey, cut=0)
         unique_categories = df['test_category'].unique()
         ax.set_xlabel(None)
