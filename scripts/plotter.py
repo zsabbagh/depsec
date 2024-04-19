@@ -125,7 +125,7 @@ class Global:
     }
 
     class Colours:
-        direct = "#325B8B"
+        direct = "#165DA0"
         indirect = "#0BD095"
         light_grey = "#9EBDC1"
 
@@ -436,7 +436,8 @@ def plot_overall_cwe_distribution(df: pd.DataFrame):
     Plots CWE distribution
     """
     # guarantee uniqueness of the crucial columns
-    df = df.drop_duplicates(subset=['project', 'release', 'cwe_id', 'cve_id'])
+    df = df.drop_duplicates(subset=['project', 'release', 'cwe_id', 'cve_id']).copy()
+    df = df[df['cwe_id'] != None]
     project_names = sorted(list(df['project'].unique()))
     project_count = len(project_names)
     fig, axs = plt.subplots(project_count, 1, figsize=(10, 8))
@@ -448,13 +449,13 @@ def plot_overall_cwe_distribution(df: pd.DataFrame):
             releases = sorted(list(df_project['release'].unique()))
             Global.release_palettes[project] = release_colours(project, *releases)
         palette = Global.release_palettes[project]
-        # cwe count
-        df_cwe_count = df_project.groupby(['cwe_id']).size().reset_index(name='count')
+        # cwe count distinct cve_id
+        df_cwe_count = df_project.groupby(['cwe_id']).size().reset_index(name='count').copy()
         # sort by count descending
         df_cwe_count = df_cwe_count.sort_values(by='count', ascending=False)
         # take head
         df_cwe_count = df_cwe_count.head(10)
-        df_unique = df_project.drop_duplicates(subset=['project', 'cwe_id'])
+        df_unique = df_project[df_project['cwe_id'].isin(df_cwe_count['cwe_id'])]
         # drop the columns that are not in df_cwe_count
         df_unique = df_unique[df_unique['cwe_id'].isin(df_cwe_count['cwe_id'])]
         # add count
@@ -462,15 +463,11 @@ def plot_overall_cwe_distribution(df: pd.DataFrame):
         # add the 'total_count' column
         df_unique['total_count'] = df_unique['cwe_id'].map(df_cwe_count.set_index('cwe_id')['count'])
         # rename the 'release' to "total" for all rows in the cwe_count df
-        df_cwe_count['release'] = 'total'
-        df_cwe_count['total_count'] = df_cwe_count['count']
-        # concatenate the two dataframes
-        df_cwe_count = pd.concat([df_cwe_count, df_unique], ignore_index=True)
-        # sort by total_count and group by release
-        df_cwe_count = df_cwe_count.sort_values(by=['total_count', 'release'], ascending=[False, True])
+        df_unique = df_unique.sort_values(by=['total_count', 'release'], ascending=[False, True])
         # sort by count
-        sns.barplot(data=df_cwe_count, x='cwe_id', y='count', hue='release', ax=ax, palette=palette)
-        max_count = max(df_cwe_count['total_count'])
+        sns.barplot(data=df_unique, x='cwe_id', y='count', hue='release', ax=ax, palette=palette)
+        sns.barplot(data=df_cwe_count, x='cwe_id', y='count', ax=ax, color=Global.Colours.light_grey, alpha=0.5, zorder=0)
+        max_count = max(df_unique['total_count'])
         ylim = max_count + 1 if max_count > 10 else 5
         step = ylim // 5
         ax.set_ylim(0, ylim)
