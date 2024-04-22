@@ -396,7 +396,7 @@ def plot_overall_cve_distribution(df: pd.DataFrame):
     fig.supxlabel("Project")
     fig.savefig(plots_dir / 'cve-overall.png')
 
-    lag: pd.DataFrame = df.copy()
+    lag: pd.DataFrame = df.drop_duplicates(subset=['project', 'release', 'cve_id', 'version_end']).copy()
 
     fig, axs = plt.subplots(project_count, 2, figsize=(10, 8))
     axs = [axs] if project_count == 1 else axs
@@ -761,13 +761,12 @@ if __name__ == '__main__':
         try_json_dump(rep, json_dir / 'cve_report.json')
 
         # work-in-progress "report" generation (explanation of results)
-        cves_without_cwes = cves_overall_df.drop_duplicates(subset=['project', 'release', 'cve_id']).copy()
         if 'cwe' in args.overall:
             plot_overall_cwe_distribution(cves_overall_df)
         if 'issues' in args.overall:
             plot_issues(issues_df)
         if 'cve' in args.overall:
-            plot_overall_cve_distribution(cves_without_cwes)
+            plot_overall_cve_distribution(cves_overall_df)
         if 'semver' in args.overall:
             plot_semver_cve_distribution(cves_overall_df)
 

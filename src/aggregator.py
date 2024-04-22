@@ -1423,13 +1423,17 @@ class Aggregator:
         for col in patch_lag.columns:
             if col == 'cve_id':
                 continue
-            result[col] = {
-                'mean': patch_lag[col].mean(),
-                'median': patch_lag[col].median(),
-                'std': patch_lag[col].std(),
-                'min': patch_lag[col].min(),
-                'max': patch_lag[col].max(),
-            }
+            try:
+                result[col] = {
+                    'mean': patch_lag[col].mean(),
+                    'median': patch_lag[col].median(),
+                    'std': patch_lag[col].std(),
+                    'min': patch_lag[col].min(),
+                    'max': patch_lag[col].max(),
+                }
+            except TypeError:
+                # if the column is not numeric
+                continue
         return result
     
     def __compute_tech_lag(self, cve: dict, release: Release, constraints: str) -> bool:
@@ -1710,3 +1714,4 @@ if __name__ == "__main__":
     ag = Aggregator("config.yml", debug=True)
     ag.load_projects()
     project = ag.get_project(args.project) if args.project else None
+    v = ag.get_vulnerabilities(project)
