@@ -730,9 +730,9 @@
                         "patched_version": "1.8.14"
                     },
                     {
-                        "version_start": "1.9",
+                        "version_start": "1.9.0",
                         "version_end": "1.9.8",
-                        "start_date": "2015-12-01 23:55:38",
+                        "start_date": null,
                         "exclude_start": false,
                         "end_date": "2016-07-18 18:19:55",
                         "exclude_end": true,

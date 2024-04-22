@@ -90,6 +90,12 @@ def _split_by_release(df: pd.DataFrame) -> pd.DataFrame:
         for release in df['release'].unique()
     }
 
+def get_mean(df: pd.DataFrame, key: str) -> float:
+    if f"{key}_mean" in df:
+        return df
+    df[f"{key}_mean"] = df[key].mean()
+    return df
+
 def cve_report(df: pd.DataFrame) -> dict:
     """
     Generate a report of the provided DataFrame
@@ -109,6 +115,7 @@ def cve_report(df: pd.DataFrame) -> dict:
             r = res['sources'][source]
             for release in r:
                 df_release = r[release]
+                df_release = get_mean(df_release, 'published_to_patched')
                 r[release] = {}
                 cves_release = df_release['cve_id'].nunique()
                 r[release]['cves_total'] = cves_release

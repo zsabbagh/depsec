@@ -1390,6 +1390,9 @@ class Aggregator:
             'start_to_patched': [],
             'start_to_published': [],
             'published_to_patched': [],
+            'patched_date': [],
+            'version_end': [],
+            'exclude_version_end': [],
         }
         cve_id = cve.get('cve_id')
         for app in apps:
@@ -1406,6 +1409,9 @@ class Aggregator:
                 result.get('start_to_patched').append((patched_date - start_date).days if patched else None)
                 result.get('start_to_published').append((cve_published - start_date).days)
                 result.get('published_to_patched').append((patched_date - cve_published).days if patched else None)
+                result.get('patched_date').append(patched_date)
+                result.get('version_end').append(app.get('version_end'))
+                result.get('exclude_version_end').append(app.get('exclude_end', False))
         return pd.DataFrame(result)
     
     def __patch_lag_stats(self, cve: dict, release_or_project: Release | Project) -> dict:
@@ -1683,6 +1689,13 @@ class Aggregator:
                 rel_df['date'] = date
             df = pd.concat([df, rel_df])
         return df
+    
+    def get_cve(self, cve_id: str) -> dict:
+        """
+        Gets a CVE by its ID
+        """
+        cve = nvd.CVE.get_or_none(cve_id=cve_id)
+        return cve
                 
     
 if __name__ == "__main__":

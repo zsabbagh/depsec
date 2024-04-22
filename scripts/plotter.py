@@ -361,12 +361,14 @@ def set_transparency(ax: plt.Axes, alpha: float):
         art.set_alpha(alpha)
 
 
-def plot_overall_cve_distribution(cves: pd.DataFrame):
+def plot_overall_cve_distribution(df: pd.DataFrame):
     """
     Plots CVE distribution of an overall dictionary
     """
-    project_names = sorted(list(cves['project'].unique()))
+    project_names = sorted(list(df['project'].unique()))
     project_count = len(project_names)
+
+    cves: pd.DataFrame = df.copy().drop_duplicates(subset=['project', 'release', 'cve_id'])
 
     fig, axs = plt.subplots(1, project_count, figsize=(10, 8))
     axs = [axs] if project_count == 1 else axs
@@ -394,6 +396,8 @@ def plot_overall_cve_distribution(cves: pd.DataFrame):
     fig.supxlabel("Project")
     fig.savefig(plots_dir / 'cve-overall.png')
 
+    lag: pd.DataFrame = df.copy()
+
     fig, axs = plt.subplots(project_count, 2, figsize=(10, 8))
     axs = [axs] if project_count == 1 else axs
     fig.subplots_adjust(**Global.SUBPLOTS_2X)
@@ -402,10 +406,10 @@ def plot_overall_cve_distribution(cves: pd.DataFrame):
         ax = axes[0]
         ax2 = axes[1]
         palette = Global.release_palettes[project]
-        project_df = cves[cves['project'] == project]
+        project_df = lag[lag['project'] == project]
         project_df = project_df.drop_duplicates(subset=['source', 'cve_id'])
-        sns.scatterplot(project_df, x='published_to_patched_mean', y='cvss_base_score', hue="release", ax=ax, palette=palette)
-        sns.kdeplot(project_df, x='published_to_patched_mean', ax=ax2, color=Global.project_palette[project], fill=True)
+        sns.scatterplot(project_df, x='published_to_patched', y='cvss_base_score', hue="release", ax=ax, palette=palette)
+        sns.kdeplot(project_df, x='published_to_patched', ax=ax2, color=Global.project_palette[project], fill=True)
         ax.set_title(project.title())
         ax.set_xlabel(None)
         ax.set_ylabel(None)
@@ -420,7 +424,7 @@ def plot_overall_cve_distribution(cves: pd.DataFrame):
     fig.suptitle("CVE Patch Time and CVSS Base Score Distribution")
     fig.supxlabel("Days from Published to Patched")
     fig.supylabel("CVSS Base Score | Density")
-    fig.savefig(plots_dir / 'cve-overall-lag-score.png')
+    fig.savefig(plots_dir / 'TESTcve-overall-lag-score.png')
 
 def plot_overall_cwe_distribution(df: pd.DataFrame):
     """
@@ -472,11 +476,11 @@ def plot_overall_cwe_distribution(df: pd.DataFrame):
     fig.supylabel("CVE Count")
     fig.savefig(plots_dir / 'overall-cwe-distribution.png')
 
-def plot_semver_cve_distribution(cves: pd.DataFrame, *kpis: str):
+def plot_semver_cve_distribution(df: pd.DataFrame, *kpis: str):
     """
     Plots the distribution of SemVer releases
     """
-    print(f"Attemping to plot {len(cves)} CVEs...")
+    print(f"Attemping to plot {len(df)} CVEs...")
     project_names = sorted(list(cves['project'].unique()))
     for kpi in ['cvss_base_score', 'published_to_patched']:
         # the first KPIs are CVE values
@@ -737,19 +741,13 @@ if __name__ == '__main__':
                 continue
             latest_analysed = ag.get_release(project, platform, analysed=True)
             if cves_overall_df.empty or project_name not in cves_overall_df['project'].unique():
-                df = ag.df_cves_per_project(project, platform, by_cwe=True)
+                df = ag.df_cves_per_project(project, platform, by_cwe=True, by_patch=True)
                 # get published_to_patched
                 cves_overall_df = pd.concat([cves_overall_df, df], ignore_index=True)
             if cves_df.empty or project_name not in cves_df['project'].unique():
                 df = ag.df_cves(project, platform)
                 cves_df = pd.concat([cves_df, df], ignore_index=True)
             project_id = f"{platform}:{project}"
-            # df = ag.df_cves(project, platform, by_cwe=True)
-            # cwes_df = pd.concat([cwes_df, df], ignore_index=True)
-            # df = ag.df_static(project, platform)
-            # get only the latest analysed version
-            # df = df[df['project_version'] == latest_analysed.version]
-            # static_df = pd.concat([static_df, df], ignore_index=True)
             if issues_df.empty or project_name not in issues_df['project'].unique():
                 df = ag.df_static(project, platform, with_issues=True, only_latest=True)
                 issues_df = pd.concat([issues_df, df], ignore_index=True)
@@ -763,11 +761,15 @@ if __name__ == '__main__':
         try_json_dump(rep, json_dir / 'cve_report.json')
 
         # work-in-progress "report" generation (explanation of results)
-        plot_semver_cve_distribution(cves_df)
         cves_without_cwes = cves_overall_df.drop_duplicates(subset=['project', 'release', 'cve_id']).copy()
-        plot_overall_cve_distribution(cves_without_cwes)
-        plot_overall_cwe_distribution(cves_overall_df)
-        plot_issues(issues_df)
+        if 'cwe' in args.overall:
+            plot_overall_cwe_distribution(cves_overall_df)
+        if 'issues' in args.overall:
+            plot_issues(issues_df)
+        if 'cve' in args.overall:
+            plot_overall_cve_distribution(cves_without_cwes)
+        if 'semver' in args.overall:
+            plot_semver_cve_distribution(cves_overall_df)
 
     if args.show:
         plt.show()
