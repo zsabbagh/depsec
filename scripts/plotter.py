@@ -534,12 +534,12 @@ def plot_semver(df: pd.DataFrame, static_df: pd.DataFrame):
         ax_cve_count = axss[0]
         ax_nloc = axss[2]
         axss[1].set_title(f"{project.title()}")
-        sdf = static_df[static_df['project'] == project].drop_duplicates(subset=['project', 'release', 'release_version']).copy()
+        sdf = static_df[static_df['project'] == project].drop_duplicates(subset=['project', 'release', 'major', 'release_version']).copy()
+        sdf = sdf[sdf['nloc_total'] >= 0]
         idx = sdf.groupby(['project', 'release', 'major'])['nloc_total'].idxmax()
         # sdf is the static data for the project
         sdf = sdf.loc[idx]
         pdf = cves[cves['project'] == project]
-        pdf = pdf.drop_duplicates(subset=['major', 'release', 'cve_id'])
         count_col = 'cve_count'
         pdf = add_count(pdf, ['project', 'major', 'release'], 'cve_id', count_col)
         # for each release not in the project, add a row with 0 CVEs
@@ -552,6 +552,13 @@ def plot_semver(df: pd.DataFrame, static_df: pd.DataFrame):
                     srow = sdf[(sdf['major'] == i) & (sdf['release'] == rel)].copy()
                     srow[count_col] = 0
                     pdf = pd.concat([pdf, srow], ignore_index=True)
+        
+        for i, row in pdf[pdf['nloc_total'].isna()].iterrows():
+            release = row['release']
+            major = row['major']
+            srow = sdf[(sdf['release'] == release) & (sdf['major'] == major)].copy()
+            # upate the nloc_total
+            pdf.loc[i, 'nloc_total'] = srow['nloc_total'].values[0]
         
         # get the CVE count per major version
         if project not in Global.release_palettes:
@@ -836,8 +843,6 @@ if __name__ == '__main__':
         if 'cve' in overall_keys:
             plot_cves(cves_overall_df)
         if 'semver' in overall_keys:
-            print(f"Columns in static_df: {static_df.columns}")
-            print(f"Columns in cves_df: {cves_df.columns}")
             plot_semver(cves_df, static_df)
 
     if args.show:

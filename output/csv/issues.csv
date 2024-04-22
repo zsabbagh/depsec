@@ -1329,6 +1329,112 @@ id,report,description,true_positive,verified,package,module,filename,score,confi
 121             pass
 122 
 ","120, 121",CWE-703,3,0,801,flask,3.0.2,Indirect,itsdangerous,2.1.2,>=2.1.2,,0,B1,False,itsdangerous.,2
+274890,2146,Consider possible security implications associated with pickle module.,,False,,,/Users/zakariasabbagh/Documents/GitHub/private/securipy/repositories/jinja/src/jinja2/bccache.py,2,high,low,https://bandit.readthedocs.io/en/1.7.7/blacklists/blacklist_imports.html#b403-import-pickle,B403,blacklist,"11 import os
+12 import pickle
+13 import stat
+",12,CWE-502,3,0,11473,flask,3.0.2,Indirect,jinja2,3.1.3,>=3.1.2,,0,B4,False,jinja2.,2
+274891,2146,"Pickle and modules that wrap it can be unsafe when used to deserialize untrusted data, possible security issue.",,False,,,/Users/zakariasabbagh/Documents/GitHub/private/securipy/repositories/jinja/src/jinja2/bccache.py,3,high,medium,https://bandit.readthedocs.io/en/1.7.7/blacklists/blacklist_calls.html#b301-pickle,B301,blacklist,"70         # the source code of the file changed, we need to reload
+71         checksum = pickle.load(f)
+72         if self.checksum != checksum:
+",71,CWE-502,3,0,11473,flask,3.0.2,Indirect,jinja2,3.1.3,>=3.1.2,,1,B3,False,jinja2.,2
+274892,2146,Deserialization with the marshal module is possibly dangerous.,,False,,,/Users/zakariasabbagh/Documents/GitHub/private/securipy/repositories/jinja/src/jinja2/bccache.py,3,high,medium,https://bandit.readthedocs.io/en/1.7.7/blacklists/blacklist_calls.html#b302-marshal,B302,blacklist,"76         try:
+77             self.code = marshal.load(f)
+78         except (EOFError, ValueError, TypeError):
+",77,CWE-502,3,0,11473,flask,3.0.2,Indirect,jinja2,3.1.3,>=3.1.2,,1,B3,False,jinja2.,2
+274893,2146,Use of weak SHA1 hash for security. Consider usedforsecurity=False,,False,,,/Users/zakariasabbagh/Documents/GitHub/private/securipy/repositories/jinja/src/jinja2/bccache.py,4,high,high,https://bandit.readthedocs.io/en/1.7.7/plugins/b324_hashlib.html,B324,hashlib,"153         """"""Returns the unique hash key for this template name.""""""
+154         hash = sha1(name.encode(""utf-8""))
+155 
+",154,CWE-327,3,0,11473,flask,3.0.2,Indirect,jinja2,3.1.3,>=3.1.2,,2,B3,False,jinja2.,2
+274894,2146,Use of weak SHA1 hash for security. Consider usedforsecurity=False,,False,,,/Users/zakariasabbagh/Documents/GitHub/private/securipy/repositories/jinja/src/jinja2/bccache.py,4,high,high,https://bandit.readthedocs.io/en/1.7.7/plugins/b324_hashlib.html,B324,hashlib,"162         """"""Returns a checksum for the source.""""""
+163         return sha1(source.encode(""utf-8"")).hexdigest()
+164 
+",163,CWE-327,3,0,11473,flask,3.0.2,Indirect,jinja2,3.1.3,>=3.1.2,,2,B3,False,jinja2.,2
+274895,2146,Possible hardcoded password: 'environment',,False,,,/Users/zakariasabbagh/Documents/GitHub/private/securipy/repositories/jinja/src/jinja2/compiler.py,1,medium,low,https://bandit.readthedocs.io/en/1.7.7/plugins/b105_hardcoded_password_string.html,B105,hardcoded_password_string,"1414 
+1415                 if pass_arg == ""environment"":
+1416 
+",1415,CWE-259,3,0,11473,flask,3.0.2,Indirect,jinja2,3.1.3,>=3.1.2,,0,B1,False,jinja2.,1
+274896,2146,Use of exec detected.,,False,,,/Users/zakariasabbagh/Documents/GitHub/private/securipy/repositories/jinja/src/jinja2/debug.py,3,high,medium,https://bandit.readthedocs.io/en/1.7.7/plugins/b102_exec_used.html,B102,exec_used,"144     try:
+145         exec(code, globals, locals)
+146     except BaseException:
+",145,CWE-78,3,0,11473,flask,3.0.2,Indirect,jinja2,3.1.3,>=3.1.2,,1,B1,False,jinja2.,2
+274897,2146,"Try, Except, Pass detected.",,False,,,/Users/zakariasabbagh/Documents/GitHub/private/securipy/repositories/jinja/src/jinja2/environment.py,2,high,low,https://bandit.readthedocs.io/en/1.7.7/plugins/b110_try_except_pass.html,B110,try_except_pass,"470                     attr = str(argument)
+471                 except Exception:
+472                     pass
+473                 else:
+","471, 472",CWE-703,3,0,11473,flask,3.0.2,Indirect,jinja2,3.1.3,>=3.1.2,,0,B1,False,jinja2.,2
+274898,2146,Use of exec detected.,,False,,,/Users/zakariasabbagh/Documents/GitHub/private/securipy/repositories/jinja/src/jinja2/environment.py,3,high,medium,https://bandit.readthedocs.io/en/1.7.7/plugins/b102_exec_used.html,B102,exec_used,"1221         namespace = {""environment"": environment, ""__file__"": code.co_filename}
+1222         exec(code, namespace)
+1223         rv = cls._from_namespace(environment, namespace, globals)
+",1222,CWE-78,3,0,11473,flask,3.0.2,Indirect,jinja2,3.1.3,>=3.1.2,,1,B1,False,jinja2.,2
+274899,2146,Standard pseudo-random generators are not suitable for security/cryptographic purposes.,,False,,,/Users/zakariasabbagh/Documents/GitHub/private/securipy/repositories/jinja/src/jinja2/filters.py,2,high,low,https://bandit.readthedocs.io/en/1.7.7/blacklists/blacklist_calls.html#b311-random,B311,blacklist,"671     try:
+672         return random.choice(seq)
+673     except IndexError:
+",672,CWE-330,3,0,11473,flask,3.0.2,Indirect,jinja2,3.1.3,>=3.1.2,,0,B3,False,jinja2.,2
+274900,2146,Possible hardcoded password: 'keyword',,False,,,/Users/zakariasabbagh/Documents/GitHub/private/securipy/repositories/jinja/src/jinja2/lexer.py,1,medium,low,https://bandit.readthedocs.io/en/1.7.7/plugins/b105_hardcoded_password_string.html,B105,hardcoded_password_string,"636                 value = self._normalize_newlines(value_str)
+637             elif token == ""keyword"":
+638                 token = value_str
+",637,CWE-259,3,0,11473,flask,3.0.2,Indirect,jinja2,3.1.3,>=3.1.2,,0,B1,False,jinja2.,1
+274901,2146,Possible hardcoded password: '#bygroup',,False,,,/Users/zakariasabbagh/Documents/GitHub/private/securipy/repositories/jinja/src/jinja2/lexer.py,1,medium,low,https://bandit.readthedocs.io/en/1.7.7/plugins/b105_hardcoded_password_string.html,B105,hardcoded_password_string,"762                         # group that matched
+763                         elif token == ""#bygroup"":
+764                             for key, value in m.groupdict().items():
+",763,CWE-259,3,0,11473,flask,3.0.2,Indirect,jinja2,3.1.3,>=3.1.2,,0,B1,False,jinja2.,1
+274902,2146,Use of weak SHA1 hash for security. Consider usedforsecurity=False,,False,,,/Users/zakariasabbagh/Documents/GitHub/private/securipy/repositories/jinja/src/jinja2/loaders.py,4,high,high,https://bandit.readthedocs.io/en/1.7.7/plugins/b324_hashlib.html,B324,hashlib,"628     def get_template_key(name: str) -> str:
+629         return ""tmpl_"" + sha1(name.encode(""utf-8"")).hexdigest()
+630 
+",629,CWE-327,3,0,11473,flask,3.0.2,Indirect,jinja2,3.1.3,>=3.1.2,,2,B3,False,jinja2.,2
+274903,2146,Possible hardcoded password: 'sub',,False,,,/Users/zakariasabbagh/Documents/GitHub/private/securipy/repositories/jinja/src/jinja2/parser.py,1,medium,low,https://bandit.readthedocs.io/en/1.7.7/plugins/b105_hardcoded_password_string.html,B105,hardcoded_password_string,"632 
+633         if token_type == ""sub"":
+634             next(self.stream)
+",633,CWE-259,3,0,11473,flask,3.0.2,Indirect,jinja2,3.1.3,>=3.1.2,,0,B1,False,jinja2.,1
+274904,2146,Possible hardcoded password: 'add',,False,,,/Users/zakariasabbagh/Documents/GitHub/private/securipy/repositories/jinja/src/jinja2/parser.py,1,medium,low,https://bandit.readthedocs.io/en/1.7.7/plugins/b105_hardcoded_password_string.html,B105,hardcoded_password_string,"635             node = nodes.Neg(self.parse_unary(False), lineno=lineno)
+636         elif token_type == ""add"":
+637             next(self.stream)
+",636,CWE-259,3,0,11473,flask,3.0.2,Indirect,jinja2,3.1.3,>=3.1.2,,0,B1,False,jinja2.,1
+274905,2146,Possible hardcoded password: 'dot',,False,,,/Users/zakariasabbagh/Documents/GitHub/private/securipy/repositories/jinja/src/jinja2/parser.py,1,medium,low,https://bandit.readthedocs.io/en/1.7.7/plugins/b105_hardcoded_password_string.html,B105,hardcoded_password_string,"775             token_type = self.stream.current.type
+776             if token_type == ""dot"" or token_type == ""lbracket"":
+777                 node = self.parse_subscript(node)
+",776,CWE-259,3,0,11473,flask,3.0.2,Indirect,jinja2,3.1.3,>=3.1.2,,0,B1,False,jinja2.,1
+274906,2146,Possible hardcoded password: 'lbracket',,False,,,/Users/zakariasabbagh/Documents/GitHub/private/securipy/repositories/jinja/src/jinja2/parser.py,1,medium,low,https://bandit.readthedocs.io/en/1.7.7/plugins/b105_hardcoded_password_string.html,B105,hardcoded_password_string,"775             token_type = self.stream.current.type
+776             if token_type == ""dot"" or token_type == ""lbracket"":
+777                 node = self.parse_subscript(node)
+",776,CWE-259,3,0,11473,flask,3.0.2,Indirect,jinja2,3.1.3,>=3.1.2,,0,B1,False,jinja2.,1
+274907,2146,Possible hardcoded password: 'lparen',,False,,,/Users/zakariasabbagh/Documents/GitHub/private/securipy/repositories/jinja/src/jinja2/parser.py,1,medium,low,https://bandit.readthedocs.io/en/1.7.7/plugins/b105_hardcoded_password_string.html,B105,hardcoded_password_string,"779             # and getitem) as well as filters and tests
+780             elif token_type == ""lparen"":
+781                 node = self.parse_call(node)
+",780,CWE-259,3,0,11473,flask,3.0.2,Indirect,jinja2,3.1.3,>=3.1.2,,0,B1,False,jinja2.,1
+274908,2146,Possible hardcoded password: 'pipe',,False,,,/Users/zakariasabbagh/Documents/GitHub/private/securipy/repositories/jinja/src/jinja2/parser.py,1,medium,low,https://bandit.readthedocs.io/en/1.7.7/plugins/b105_hardcoded_password_string.html,B105,hardcoded_password_string,"788             token_type = self.stream.current.type
+789             if token_type == ""pipe"":
+790                 node = self.parse_filter(node)  # type: ignore
+",789,CWE-259,3,0,11473,flask,3.0.2,Indirect,jinja2,3.1.3,>=3.1.2,,0,B1,False,jinja2.,1
+274909,2146,Possible hardcoded password: 'name',,False,,,/Users/zakariasabbagh/Documents/GitHub/private/securipy/repositories/jinja/src/jinja2/parser.py,1,medium,low,https://bandit.readthedocs.io/en/1.7.7/plugins/b105_hardcoded_password_string.html,B105,hardcoded_password_string,"790                 node = self.parse_filter(node)  # type: ignore
+791             elif token_type == ""name"" and self.stream.current.value == ""is"":
+792                 node = self.parse_test(node)
+",791,CWE-259,3,0,11473,flask,3.0.2,Indirect,jinja2,3.1.3,>=3.1.2,,0,B1,False,jinja2.,1
+274910,2146,Possible hardcoded password: 'lparen',,False,,,/Users/zakariasabbagh/Documents/GitHub/private/securipy/repositories/jinja/src/jinja2/parser.py,1,medium,low,https://bandit.readthedocs.io/en/1.7.7/plugins/b105_hardcoded_password_string.html,B105,hardcoded_password_string,"794             # and getitem) as well as filters and tests
+795             elif token_type == ""lparen"":
+796                 node = self.parse_call(node)
+",795,CWE-259,3,0,11473,flask,3.0.2,Indirect,jinja2,3.1.3,>=3.1.2,,0,B1,False,jinja2.,1
+274911,2146,"Try, Except, Pass detected.",,False,,,/Users/zakariasabbagh/Documents/GitHub/private/securipy/repositories/jinja/src/jinja2/sandbox.py,2,high,low,https://bandit.readthedocs.io/en/1.7.7/plugins/b110_try_except_pass.html,B110,try_except_pass,"307                     attr = str(argument)
+308                 except Exception:
+309                     pass
+310                 else:
+","308, 309",CWE-703,3,0,11473,flask,3.0.2,Indirect,jinja2,3.1.3,>=3.1.2,,0,B1,False,jinja2.,2
+274912,2146,Standard pseudo-random generators are not suitable for security/cryptographic purposes.,,False,,,/Users/zakariasabbagh/Documents/GitHub/private/securipy/repositories/jinja/src/jinja2/utils.py,2,high,low,https://bandit.readthedocs.io/en/1.7.7/blacklists/blacklist_calls.html#b311-random,B311,blacklist,"358         # each paragraph contains out of 20 to 100 words.
+359         for idx, _ in enumerate(range(randrange(min, max))):
+360             while True:
+",359,CWE-330,3,0,11473,flask,3.0.2,Indirect,jinja2,3.1.3,>=3.1.2,,0,B3,False,jinja2.,2
+274913,2146,Standard pseudo-random generators are not suitable for security/cryptographic purposes.,,False,,,/Users/zakariasabbagh/Documents/GitHub/private/securipy/repositories/jinja/src/jinja2/utils.py,2,high,low,https://bandit.readthedocs.io/en/1.7.7/blacklists/blacklist_calls.html#b311-random,B311,blacklist,"360             while True:
+361                 word = choice(words)
+362                 if word != last:
+",361,CWE-330,3,0,11473,flask,3.0.2,Indirect,jinja2,3.1.3,>=3.1.2,,0,B3,False,jinja2.,2
+274914,2146,Standard pseudo-random generators are not suitable for security/cryptographic purposes.,,False,,,/Users/zakariasabbagh/Documents/GitHub/private/securipy/repositories/jinja/src/jinja2/utils.py,2,high,low,https://bandit.readthedocs.io/en/1.7.7/blacklists/blacklist_calls.html#b311-random,B311,blacklist,"368             # add commas
+369             if idx - randrange(3, 8) > last_comma:
+370                 last_comma = idx
+",369,CWE-330,3,0,11473,flask,3.0.2,Indirect,jinja2,3.1.3,>=3.1.2,,0,B3,False,jinja2.,2
+274915,2146,Standard pseudo-random generators are not suitable for security/cryptographic purposes.,,False,,,/Users/zakariasabbagh/Documents/GitHub/private/securipy/repositories/jinja/src/jinja2/utils.py,2,high,low,https://bandit.readthedocs.io/en/1.7.7/blacklists/blacklist_calls.html#b311-random,B311,blacklist,"373             # add end of sentences
+374             if idx - randrange(10, 20) > last_fullstop:
+375                 last_comma = last_fullstop = idx
+",374,CWE-330,3,0,11473,flask,3.0.2,Indirect,jinja2,3.1.3,>=3.1.2,,0,B3,False,jinja2.,2
 272808,2061,Consider possible security implications associated with the subprocess module.,,False,,_reloader,/Users/zakariasabbagh/Documents/GitHub/private/securipy/repositories/werkzeug/src/werkzeug/_reloader.py,2,high,low,https://bandit.readthedocs.io/en/1.7.7/blacklists/blacklist_imports.html#b404-import-subprocess,B404,blacklist,"4 import os
 5 import subprocess
 6 import sys

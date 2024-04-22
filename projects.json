@@ -5,7 +5,7 @@
             "vendor": "palletsprojects",
             "repo": {
                 "url": "github.com/pallets/jinja",
-                "tags": "jinja2:@version",
+                "tags": "@version",
                 "includes": ["jinja2/", "src/"]
             }
         },

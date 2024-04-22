@@ -74,11 +74,11 @@ for platform, projects in data.items():
     for project_name in projects:
 
         if project_name.lower() in excluded_projects:
-            logger.info(f"Excluding {platform} project '{project_name}'")
+            logger.debug(f"Excluding {platform} project '{project_name}'")
             continue
 
         if only and project_name.lower() not in only:
-            logger.info(f"Skipping {platform} project '{project_name}', only '{', '.join(list(only))}' provided")
+            logger.debug(f"Skipping {platform} project '{project_name}', only '{', '.join(list(only))}' provided")
             continue
 
         logger.info(f"Processing {platform} project {project_name}")
@@ -153,6 +153,7 @@ for platform, projects in data.items():
         logger.info(f"Releases found for {repo_name}: {', '.join(rels)}")
 
         for version in sorted(versions.keys(), key=semver.parse, reverse=True):
+            print(f"Processing {project_name}:{version}...")
             if bool(args.limit) and processed > args.limit:
                 logger.info(f"Limit of {args.limit} reached, stopping")
                 break
@@ -182,7 +183,7 @@ for platform, projects in data.items():
                 logger.info(f"Updating {project_name}:{version} includes to '{incl_str}'")
                 release.includes = incl_str
             release.save()
-            if 'lizard' in args.do:
+            if 'lizard' in args.do or 'all' in args.do:
                 res = run_lizard(repo_path, includes, excludes)
                 nloc = res.get('nloc')
                 avg_nloc = res.get('nloc_average')
@@ -195,7 +196,7 @@ for platform, projects in data.items():
                 release.nloc_average = round(avg_nloc, 2) if avg_nloc is not None else None
                 release.ccn_average = round(avg_ccn, 2) if avg_ccn is not None else None
                 logger.info(f"{project_name}:{version}, files: {files_counted}, NLOC {nloc}")
-            if 'bandit' in args.do:
+            if 'bandit' in args.do or 'all' in args.do:
                 res = run_bandit(repo_path, includes, excludes, temp_dir, skips=args.skips)
                 if not res:
                     logger.error(f"Bandit failed for {project_name}:{version}")
