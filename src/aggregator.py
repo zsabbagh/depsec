@@ -1487,6 +1487,7 @@ class Aggregator:
             pass
         result['major'] = major
         result['minor'] = minor
+        result['nloc_total'] = release.nloc_total
         result['project'] = project_name
         result['project_version'] = project_version
         result['source'] = 'Direct' if release.project.name == project_name else 'Indirect'

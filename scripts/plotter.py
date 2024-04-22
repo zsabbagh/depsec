@@ -52,6 +52,7 @@ args.projects = sorted(list(map(str.lower, args.projects)))
 
 args.timeline = sorted(list(map(str.lower, args.timeline)))
 args.overall = sorted(list(map(str.lower, args.overall)))
+overall_keys = set(args.overall)
 
 if len(args.timeline) > 0 and args.timeline[0] in ['all', '*']:
     args.timeline = list(compute.KPIS_TIMELINE.keys())
@@ -86,6 +87,7 @@ class Global:
     LEGEND_XS = {'fontsize': 'x-small', 'framealpha': 0.4, 'title_fontsize': 'x-small'}
     SUBPLOTS = {'hspace': 0.45, 'right': 0.95, 'left': 0.08}
     SUBPLOTS_2X = {'hspace': 0.45, 'wspace': 0.2, 'right': 0.95, 'left': 0.1}
+    SUBPLOTS_3X = {'hspace': 0.45, 'wspace': 0.25, 'right': 0.95, 'left': 0.1}
     project_palette = {
         "total": "#9EBDC1",
         "Total": "#9EBDC1",
@@ -159,9 +161,50 @@ def release_colours(project_name: str, *releases: str):
             palette[release] = Global.colours_indirect[i % len(Global.colours_indirect)]
     return palette
 
+def barplot_labels(ax: plt.Axes, fontsize: str = 'small'):
+    """
+    Adds labels to a barplot
+    """
+    for i in ax.containers:
+        # round the value to 2 decimal places
+        ax.bar_label(i, label_type='edge', fontsize=fontsize)
 
-def plot_grouped_bar(*args):
-    pass
+def adjust_labels(ax: plt.Axes, axis: str = 'x', rotation: int = 45, fontsize: int = 8):
+    """
+    Rotates the labels of the x-axis
+    """
+    labels = ax.get_xticklabels() if axis == 'x' else ax.get_yticklabels()
+    for tick in labels:
+        tick.set_rotation(rotation)
+        tick.set_fontsize(fontsize)
+
+def add_stats(df: pd.DataFrame, groupby: list, *columns: str):
+    """
+    Adds the mean of a column to the DataFrame
+    """
+    df = df.copy()
+    for column in columns:
+        col = df.groupby(groupby)[column]
+        mean = col.transform('mean')
+        median = col.transform('median')
+        mx = col.transform('max')
+        mn = col.transform('min')
+        sm = col.transform('sum')
+        df[f"{column}_mean"] = mean
+        df[f"{column}_median"] = median
+        df[f"{column}_max"] = mx
+        df[f"{column}_min"] = mn
+        df[f"{column}_sum"] = sm
+    return df
+
+def add_count(df: pd.DataFrame, groupby: list, id: str = None, name='count'):
+    """
+    Adds a count column to the DataFrame based on a groupby, named 'count'
+    """
+    unique = groupby + [id] if id is not None else groupby
+    df_copy = df.copy().drop_duplicates(subset=unique).groupby(groupby).size().reset_index(name=name)
+    df = df.merge(df_copy, on=groupby, how='left')
+    return df
 
 def get_platform(project: str):
     """
@@ -476,68 +519,92 @@ def plot_overall_cwe_distribution(df: pd.DataFrame):
     fig.supylabel("CVE Count")
     fig.savefig(plots_dir / 'overall-cwe-distribution.png')
 
-def plot_semver_cve_distribution(df: pd.DataFrame, *kpis: str):
+def plot_semver(df: pd.DataFrame, static_df: pd.DataFrame):
     """
     Plots the distribution of SemVer releases
     """
     print(f"Attemping to plot {len(df)} CVEs...")
-    project_names = sorted(list(cves['project'].unique()))
-    for kpi in ['cvss_base_score', 'published_to_patched']:
-        # the first KPIs are CVE values
-        kpi_filename = kpi.replace('_', '-')
-        fig, axs = plt.subplots(len(project_names), 1, figsize=(10, 8))
-        fig.subplots_adjust(**Global.SUBPLOTS)
-        title = "Applicable CVEs by Major Semantic Version"
-        ylabel = "CVSS Base Score"
-        match kpi:
-            case "published_to_patched":
-                title = "CVEs Published to Patched by Major Semantic Version"
-                ylabel = "Days"
-        for i, project in enumerate(project_names):
-            ax: plt.Axes = axs[i]
-            project_data = cves[cves['project'] == project]
-            project_data = project_data.sort_values(by=['major', 'source'], ascending=True)
-            max_version = project_data['major'].max()
-            project_unique: pd.DataFrame = project_data.copy()
-            # ensure that the same CVE is not counted twice
-            project_unique = project_unique.drop_duplicates(subset=['major', 'cve_id'])
-            sns.violinplot(data=project_unique, x='major', y=kpi, ax=ax, fill=False, color=Global.Colours.light_grey, cut=0, zorder=0)
-            sns.swarmplot(data=project_unique, x='major', y=kpi, hue='source', ax=ax, palette=Global.source_palette, zorder=1)
-            steps = 5
-            ax.set_title(project.title())
-            ax.set_xlabel(None)
-            ax.set_xticks(np.arange(0, max_version+1, 1))
-            ax.set_ylabel(None)
-            if kpi.startswith('cvss'):
-                ax.set_ylim(0, 10.5)
-                ax.set_yticks(np.arange(0, 11, 11//steps))
-        fig.suptitle(title)
-        fig.supxlabel("Major Semantic Version")
-        fig.supylabel(ylabel)
-        fig.savefig(plots_dir / f'semver-cve-distribution-{kpi_filename}.png')
-    # set right y-axis label
-    fig_lag, axs_lag = plt.subplots(len(project_names), 1, figsize=(10, 8))
-    fig_lag.subplots_adjust(**Global.SUBPLOTS)
+    project_names = sorted(list(df['project'].unique()))
+    cves = df.copy()
+    fig, axs = plt.subplots(len(project_names), 3, figsize=(10, 8))
+    fig.subplots_adjust(**Global.SUBPLOTS_3X)
     for i, project in enumerate(project_names):
-        ax: plt.Axes = axs_lag[i]
-        project_data = cves[cves['project'] == project]
-        project_data = project_data.sort_values(by=['major', 'source'], ascending=True)
-        max_version = project_data['major'].max()
-        project_unique: pd.DataFrame = project_data.copy()
-        # ensure that the same CVE is not counted twice
-        project_unique = project_unique.drop_duplicates(subset=['major', 'cve_id'])
-        project_unique = project_unique[project_unique['technical_lag'] == True]
-        project_unique = project_unique.groupby(['major']).size().reset_index(name='count')
-        sns.barplot(data=project_unique, x='major', y='count', ax=ax, color=Global.project_palette[project], zorder=0)
-        steps = 5
-        ax.set_title(project.title())
-        ax.set_xlabel(None)
-        ax.set_ylabel(None)
-        ax.set_yticks(np.arange(0, 11, 11//steps))
-        ax.set_xticks(np.arange(0, max_version+1, 1))
-    fig_lag.suptitle("CVEs Introduced by Technical Lag")
-    fig_lag.supxlabel("Major Semantic Version")
-    fig_lag.supylabel("Count")
+        axss: plt.Axes = axs[i]
+        ax_cves_per_nloc = axss[1]
+        ax_cve_count = axss[0]
+        ax_nloc = axss[2]
+        axss[1].set_title(f"{project.title()}")
+        sdf = static_df[static_df['project'] == project].drop_duplicates(subset=['project', 'release', 'release_version']).copy()
+        idx = sdf.groupby(['project', 'release', 'major'])['nloc_total'].idxmax()
+        # sdf is the static data for the project
+        sdf = sdf.loc[idx]
+        pdf = cves[cves['project'] == project]
+        pdf = pdf.drop_duplicates(subset=['major', 'release', 'cve_id'])
+        count_col = 'cve_count'
+        pdf = add_count(pdf, ['project', 'major', 'release'], 'cve_id', count_col)
+        # for each release not in the project, add a row with 0 CVEs
+        max_version = max(pdf['major'])
+        for i in range(1, max_version+1):
+            releases = list(sdf[sdf['major'] == i]['release'].unique())
+            rels = pdf[pdf['major'] == i]['release'].unique()
+            for rel in releases:
+                if rel not in rels:
+                    srow = sdf[(sdf['major'] == i) & (sdf['release'] == rel)].copy()
+                    srow[count_col] = 0
+                    pdf = pd.concat([pdf, srow], ignore_index=True)
+        
+        # get the CVE count per major version
+        if project not in Global.release_palettes:
+            releases = sorted(list(pdf['release'].unique()))
+            rels = []
+            for release in releases:
+                if release in pdf[pdf['cve_count'] > 0]['release'].unique():
+                    rels.append(release)
+            Global.release_palettes[project] = release_colours(project, *rels)
+        palette = Global.release_palettes[project]
+        releases = sdf['release'].unique()
+        for rel in releases:
+            # make release colour in palette grey if it has 0 CVEs
+            majors = pdf[pdf['release'] == rel]['major'].unique()
+            dtmp = pdf[(pdf['release'] == rel) & (pdf['cve_count'] == 0)]
+            if dtmp['major'].unique().size == majors.size:
+                pdf.loc[pdf['release'] == rel, 'release'] = 'other'
+                palette['other'] = Global.Colours.light_grey
+
+        pdf['cves_per_nloc'] = 10000 * pdf['cve_count'] / pdf['nloc_total']
+        # round the cves_per_nloc to 2 decimal places
+        idx = pdf.groupby(['project', 'major', 'release'])['cve_count'].idxmax()
+        pdf = pdf.loc[idx]
+        pdf['cves_per_nloc'] = pdf['cves_per_nloc'].round(1)
+
+        # drop the 0 CVEs
+        not_other = pdf[pdf['release'] != 'other']
+        sns.barplot(data=not_other, x='major', y=count_col, hue='release', ax=ax_cve_count, palette=palette)
+        barplot_labels(ax_cve_count)
+        sns.barplot(data=not_other, x='major', y='cves_per_nloc', hue='release', ax=ax_cves_per_nloc, palette=palette)
+        barplot_labels(ax_cves_per_nloc)
+        sns.lineplot(data=pdf, x='major', y='nloc_total', hue='release', ax=ax_nloc, palette=palette)
+
+        ax_cves_per_nloc.set_xticks(np.arange(0, max_version+1, 1))
+        ax_cves_per_nloc.set_ylabel(None)
+        ax_cves_per_nloc.legend(title='Release', **Global.LEGEND_XS)
+        ax_cves_per_nloc.set_xlabel(None)
+        ax_cve_count.legend(title='Release', **Global.LEGEND_XS)
+        ax_cve_count.set_xticks(np.arange(0, max_version+1, 1))
+        ax_cve_count.set_xlabel(None)
+        ax_cve_count.set_ylabel(None)
+        ax_nloc.legend(title='Release', **Global.LEGEND_XS)
+        ax_nloc.set_xticks(np.arange(0, max_version+1, 1))
+        ax_nloc.set_xlim(0.9, max_version+0.1)
+        ax_nloc.set_xlabel(None)
+        ax_nloc.set_ylabel(None)
+        adjust_labels(ax_nloc, axis='y', rotation=20, fontsize=8)
+
+
+    fig.suptitle("CVEs per 10,000 NLOC per Major Semantic Version")
+    fig.supxlabel("Major Semantic Version")
+    fig.supylabel("CVE Count | CVEs per 10,000 NLOC | NLOC")
+    fig.savefig(plots_dir / f'cves-per-nloc-semver.png')
 
 def plot_issues(issues: pd.DataFrame):
     """
@@ -615,10 +682,7 @@ def plot_issues(issues: pd.DataFrame):
         # set the legend title
         ax.legend(title='Test Category', **Global.LEGEND)
         # tilt the x-axis labels
-        for tick in ax.get_xticklabels():
-            tick.set_rotation(15)
-            # set font size
-            tick.set_fontsize(8)
+        adjust_labels(ax, axis='x', rotation=15, fontsize=8)
         ax.set_title(f"{project.title()}{version}")
         i += 1
     fig_module.suptitle("Top 10 Package Bandit Issue Distribution")
@@ -751,6 +815,9 @@ if __name__ == '__main__':
             if issues_df.empty or project_name not in issues_df['project'].unique():
                 df = ag.df_static(project, platform, with_issues=True, only_latest=True)
                 issues_df = pd.concat([issues_df, df], ignore_index=True)
+            if static_df.empty or project_name not in static_df['project'].unique():
+                df = ag.df_static(project, platform, with_issues=False, only_latest=False)
+                static_df = pd.concat([static_df, df], ignore_index=True)
         cves_df.to_csv(cve_path, index=False)
         issues_df.to_csv(issues_path, index=False)
         static_df.to_csv(static_path, index=False)
@@ -760,15 +827,18 @@ if __name__ == '__main__':
         rep = report.cve_report(cves_overall_df)
         try_json_dump(rep, json_dir / 'cve_report.json')
 
-        # work-in-progress "report" generation (explanation of results)
-        if 'cwe' in args.overall:
+        if 'cwe' in overall_keys:
+            cwe_df = cves_overall_df.copy()
+            cwe_df = add_stats(cwe_df, ['project', 'release', 'cve_id', 'cwe_id'], 'published_to_patched')
             plot_overall_cwe_distribution(cves_overall_df)
-        if 'issues' in args.overall:
+        if 'issues' in overall_keys:
             plot_issues(issues_df)
-        if 'cve' in args.overall:
+        if 'cve' in overall_keys:
             plot_cves(cves_overall_df)
-        if 'semver' in args.overall:
-            plot_semver_cve_distribution(cves_overall_df)
+        if 'semver' in overall_keys:
+            print(f"Columns in static_df: {static_df.columns}")
+            print(f"Columns in cves_df: {cves_df.columns}")
+            plot_semver(cves_df, static_df)
 
     if args.show:
         plt.show()
