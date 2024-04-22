@@ -361,7 +361,7 @@ def set_transparency(ax: plt.Axes, alpha: float):
         art.set_alpha(alpha)
 
 
-def plot_overall_cve_distribution(df: pd.DataFrame):
+def plot_cves(df: pd.DataFrame):
     """
     Plots CVE distribution of an overall dictionary
     """
@@ -394,7 +394,7 @@ def plot_overall_cve_distribution(df: pd.DataFrame):
     fig.suptitle("Overall CVE Distribution")
     fig.supylabel("CVSS Base Score")
     fig.supxlabel("Project")
-    fig.savefig(plots_dir / 'cve-overall.png')
+    fig.savefig(plots_dir / 'cve.png')
 
     lag: pd.DataFrame = df.drop_duplicates(subset=['project', 'release', 'cve_id', 'version_end']).copy()
 
@@ -424,7 +424,7 @@ def plot_overall_cve_distribution(df: pd.DataFrame):
     fig.suptitle("CVE Patch Time and CVSS Base Score Distribution")
     fig.supxlabel("Days from Published to Patched")
     fig.supylabel("CVSS Base Score | Density")
-    fig.savefig(plots_dir / 'TESTcve-overall-lag-score.png')
+    fig.savefig(plots_dir / 'cve-patch-time.png')
 
 def plot_overall_cwe_distribution(df: pd.DataFrame):
     """
@@ -766,7 +766,7 @@ if __name__ == '__main__':
         if 'issues' in args.overall:
             plot_issues(issues_df)
         if 'cve' in args.overall:
-            plot_overall_cve_distribution(cves_overall_df)
+            plot_cves(cves_overall_df)
         if 'semver' in args.overall:
             plot_semver_cve_distribution(cves_overall_df)
 
