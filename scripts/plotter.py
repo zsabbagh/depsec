@@ -275,8 +275,10 @@ if not output_dir.exists():
 
 # create the subdirectories
 json_dir = output_dir / 'json'
+tex_dir = output_dir / 'tex'
 plots_dir = output_dir / 'plots'
 csv_dir = output_dir / 'csv'
+tex_dir.mkdir(exist_ok=True)
 csv_dir.mkdir(exist_ok=True)
 json_dir.mkdir(exist_ok=True)
 plots_dir.mkdir(exist_ok=True)
@@ -697,6 +699,25 @@ def plot_issues(issues: pd.DataFrame):
     fig_module.supylabel("Issue Count")
     fig_module.savefig(plots_dir / 'bandit-module-distribution.png')
 
+def to_latex(df: pd.DataFrame, file: str | Path, **columns):
+    """
+    To LaTeX
+    """
+    df = df.copy()
+    # only keep the columns that are in the columns
+    if columns:
+        df = df.drop_duplicates(subset=list(columns.keys()))
+        df = df[list(columns.keys())]
+        df = df.rename(columns=columns)
+    else:
+        cols = df.columns
+        cols = {
+            col: col.title for col in cols
+        }
+        df = df.rename(columns=cols)
+    with open(file, 'w') as f:
+        f.write(df.to_latex(index=False))
+
 def combine_timeline_data(data: dict):
     """
     Combines timeline data to a single dictionary
@@ -777,7 +798,9 @@ if __name__ == '__main__':
         cves_overall_df = pd.DataFrame()
         issues_df = pd.DataFrame()
         static_df = pd.DataFrame()
+        techlag_df = pd.DataFrame()
         cve_overall_path = csv_dir / 'cves_overall.csv'
+        techlag_path = csv_dir / 'techlag.csv'
         cve_path = csv_dir / 'cves.csv'
         static_path = csv_dir / 'static.csv'
         issues_path = csv_dir / 'issues.csv'
@@ -785,6 +808,11 @@ if __name__ == '__main__':
             if static_path.exists():
                 try:
                     static_df = pd.read_csv(static_path)
+                except:
+                    pass
+            if techlag_path.exists():
+                try:
+                    techlag_df = pd.read_csv(techlag_path)
                 except:
                     pass
             if cve_overall_path.exists():
@@ -825,6 +853,10 @@ if __name__ == '__main__':
             if static_df.empty or project_name not in static_df['project'].unique():
                 df = ag.df_static(project, platform, with_issues=False, only_latest=False)
                 static_df = pd.concat([static_df, df], ignore_index=True)
+            if techlag_df.empty or project_name not in techlag_df['project'].unique():
+                print(f"Trying to get techlag for {project}")
+                df = ag.df_tech_lag(project, platform)
+                techlag_df = pd.concat([techlag_df, df], ignore_index=True)
         cves_df.to_csv(cve_path, index=False)
         issues_df.to_csv(issues_path, index=False)
         static_df.to_csv(static_path, index=False)
@@ -833,17 +865,25 @@ if __name__ == '__main__':
         # generate reports of the overall findings to explain the plots
         rep = report.cve_report(cves_overall_df)
         try_json_dump(rep, json_dir / 'cve_report.json')
-
-        if 'cwe' in overall_keys:
+        all_input = 'all' in args.overall
+        if 'cwe' in overall_keys or all_input:
             cwe_df = cves_overall_df.copy()
             cwe_df = add_stats(cwe_df, ['project', 'release', 'cve_id', 'cwe_id'], 'published_to_patched')
             plot_overall_cwe_distribution(cves_overall_df)
-        if 'issues' in overall_keys:
+        if 'issues' in overall_keys or all_input:
             plot_issues(issues_df)
-        if 'cve' in overall_keys:
+        if 'cve' in overall_keys or all_input:
             plot_cves(cves_overall_df)
-        if 'semver' in overall_keys:
+        if 'semver' in overall_keys or all_input:
             plot_semver(cves_df, static_df)
+        if 'techlag' in overall_keys or all_input:
+            to_latex(techlag_df, tex_dir / 'techlag.tex',
+                     project='Project',
+                     version='Version',
+                     dependency='Dependency',
+                     requirements='Requirements',
+                     next_version='Next Version')
+            techlag_df.to_csv(techlag_path, index=False)
 
     if args.show:
         plt.show()

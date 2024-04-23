@@ -31,6 +31,16 @@ def pm(model: List[Model] | Model, recurse=False):
         model = fn(model)
     pprint(model)
 
+def pprows(df: pd.DataFrame, *cols: str, n: int = 10):
+    print(f"{' '.join(cols)}")
+    print('-' * 80)
+    for i, row in df.iterrows():
+        for col in cols:
+            print(row[col], end=' ')
+        print()
+        if i > n:
+            break
+
 class Aggregator:
     """
     The Aggregator to communicate with the databases and the APIs
@@ -244,6 +254,7 @@ class Aggregator:
                      platform: str="pypi",
                      descending: bool = True,
                      exclude_deprecated: bool = False,
+                     exclude_nonstable: bool = True,
                      sort_semantically: bool = True,
                      before: str | int | dt.datetime = None,
                      after: str | int | dt.datetime = None,
@@ -288,8 +299,11 @@ class Aggregator:
             if version is None:
                 logger.error(f"Invalid version {release.version} for {project_name}")
                 continue
-            if exclude_deprecated and not version_is_stable(version):
+            if exclude_deprecated and not version.major >= 1:
                 logger.debug(f"Skipping deprecated version {release.version} for {project_name}")
+                continue
+            if exclude_nonstable and version.pre is not None:
+                logger.debug(f"Skipping non-stable version {release.version} for {project_name}")
                 continue
             if requirements is not None:
                 # check if the version satisfies the requirements
@@ -1694,6 +1708,77 @@ class Aggregator:
                 rel_df['date'] = date
             df = pd.concat([df, rel_df])
         return df
+    
+    def df_tech_lag(self, project: str | Project, platform: str="pypi") -> pd.DataFrame:
+        """
+        Returns a DataFrame of technical lag for a project
+        """
+        project = self.get_project(project, platform)
+        releases = self.get_releases(project, platform=platform, descending=False, exclude_deprecated=False, exclude_nonstable=True)
+        df = []
+        rel_deps = {}
+        for i, release in enumerate(releases):
+            version = release.version
+            rel_deps[version] = self.get_dependencies(release, platform=platform)
+        for i, rel in enumerate(releases):
+            version = rel.version
+            vparsed = semver.parse(version)
+            major = vparsed.major
+            release_pub = rel.published_at
+            deps = rel_deps.get(version, [])
+            for dep in deps:
+                depname = dep.name
+                constraints = dep.requirements
+                reqs = parse_requirements(constraints)
+                max_constraint = None
+                for op, v in reqs:
+                    if op.startswith('<'):
+                        max_constraint = f"{op}{v}"
+                        break
+                if max_constraint:
+                    newrels = self.get_releases(project.name, platform, requirements=f">{version},<{major+1}.0.0", descending=False, exclude_deprecated=False, exclude_nonstable=True)
+                    has_solution = False
+                    for newrel in newrels:
+                        # increase the index until a release is found that satisfies the requirements
+                        ndeps = rel_deps.get(newrel.version, [])
+                        has_same = True
+                        new_req = None
+                        for ndep in ndeps:
+                            if ndep.name == depname and max_constraint not in ndep.requirements:
+                                has_same = False
+                                new_req = ndep.requirements
+                                break
+                        if not has_same:
+                            df.append({
+                                'project': project.name,
+                                'version': version,
+                                'published_at': release_pub,
+                                'time_diff': (newrel.published_at - release_pub).days,
+                                'dependency': depname,
+                                'requirements': constraints,
+                                'next_version': newrel.version,
+                                'next_published_at': newrel.published_at,
+                                'next_version': newrel.version,
+                                'next_requirements': new_req,
+                                'technical_lag': True,
+                            })
+                            has_solution = True
+                            break
+                    if not has_solution:
+                        df.append({
+                            'project': project.name,
+                            'version': version,
+                            'published_at': release_pub,
+                            'dependency': depname,
+                            'requirements': constraints,
+                            'time_diff': None,
+                            'next_version': None,
+                            'next_published_at': None,
+                            'next_version': None,
+                            'next_requirements': None,
+                            'technical_lag': True,
+                        })
+        return pd.DataFrame(df)
     
     def get_cve(self, cve_id: str) -> dict:
         """
