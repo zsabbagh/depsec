@@ -17,6 +17,52 @@ from src.schemas.projects import *
 # the purpose is to make the data that have produced the plots available to readers of the report
 from playhouse.shortcuts import model_to_dict
 
+def titlize(df: pd.DataFrame):
+    """
+    Titlize the columns of a DataFrame
+    """
+    df = df.copy()
+    cols = df.columns
+    cols = {
+        col: col.title() for col in cols
+    }
+    df = df.rename(columns=cols)
+    return df
+
+def to_latex(df: pd.DataFrame, file: str | Path, *to_keep: str,  **columns):
+    """
+    To LaTeX
+    """
+    df = df.copy()
+    if len(to_keep) > 0:
+        df = df[to_keep]
+    def apprange(x):
+        x = x.replace('[', '$[')
+        x = x.replace(']', ']$')
+        x = x.replace('(', '$(')
+        x = x.replace(')', ')$')
+        return x
+    perc = lambda x: x.replace('%', '\\%') if type(x) == str else x
+    lambdas = {
+        'verb': lambda x: f"\\texttt{{{x}}}",
+        'bold': lambda x: f"\\textbf{{{x}}}",
+        'math': lambda x: f"${perc(x)}$",
+        'app': apprange
+    }
+    # only keep the columns that are in the columns
+    if len(columns) > 0:
+        for col in columns:
+            lmbd = lambdas.get(columns[col], None)
+            if lmbd:
+                df[col] = df[col].apply(lmbd)
+    cols = df.columns
+    cols = {
+        col: col.title() for col in cols
+    }
+    df = df.rename(columns=cols)
+    with open(file, 'w') as f:
+        f.write(df.to_latex(index=False))
+
 # This is the main script to generate results from the database
 # The script should plot, concerning CVEs:
 # - Timeline, where each month counts the most recent release
@@ -277,9 +323,11 @@ if not output_dir.exists():
 # create the subdirectories
 json_dir = output_dir / 'json'
 tex_dir = output_dir / 'tex'
+table_dir = output_dir / 'tables'
 plots_dir = output_dir / 'plots'
 csv_dir = output_dir / 'csv'
 tex_dir.mkdir(exist_ok=True)
+table_dir.mkdir(exist_ok=True)
 csv_dir.mkdir(exist_ok=True)
 json_dir.mkdir(exist_ok=True)
 plots_dir.mkdir(exist_ok=True)
@@ -407,6 +455,38 @@ def set_transparency(ax: plt.Axes, alpha: float):
         art.set_alpha(alpha)
 
 
+def split_severity(df: pd.DataFrame):
+    """
+    Returns the critical, high, medium, and low severity CVEs
+    """
+    df = df.copy()
+    critical = df[df['cvss_base_score'] >= 9]
+    high = df[(df['cvss_base_score'] >= 7) & (df['cvss_base_score'] < 9)]
+    medium = df[(df['cvss_base_score'] >= 4) & (df['cvss_base_score'] < 7)]
+    low = df[(df['cvss_base_score'] >= 0) & (df['cvss_base_score'] < 4)]
+    return critical, high, medium, low
+
+def percentage(x: int, *totals: int):
+    """
+    Returns the percentage of x from total
+    """
+    if x is None:
+        return ''
+    elif x == 0:
+        return f"$0$"
+    percs = []
+    for total in totals:
+        percs.append(f"${(x / (total or 1)) * 100:.2f}\%$")
+    percs = ', '.join(percs) if percs else ''
+    percs = f" ({percs})" if percs else ''
+    return f"${x}${percs}"
+
+def verbatim(x: str):
+    """
+    Returns the verbatim of x
+    """
+    return f"\\texttt{{{x}}}"
+
 def plot_cves(df: pd.DataFrame):
     """
     Plots CVE distribution of an overall dictionary
@@ -425,6 +505,7 @@ def plot_cves(df: pd.DataFrame):
     fig, axs = plt.subplots(1, project_count, figsize=(10, 8))
     axs = [axs] if project_count == 1 else axs
     fig.subplots_adjust(**Global.SUBPLOTS)
+    dfs = []
     for i, project in enumerate(project_names):
         ax = axs[i]
         releases = sorted(list(cves[cves['project'] == project]['release'].unique()))
@@ -441,6 +522,28 @@ def plot_cves(df: pd.DataFrame):
         ax.set_yticks([0, 4, 7, 9, 10])
         # change legend title
         ax.legend(title='Source', **Global.LEGEND)
+        # table
+        total_count = project_df['cve_id'].nunique()
+        for release in releases:
+            release_df = project_df.copy()[project_df['release'] == release]
+            release_count = release_df['cve_id'].nunique()
+            critical, high, medium, low = split_severity(release_df)
+            critical_count = critical['cve_id'].nunique()
+            high_count = high['cve_id'].nunique()
+            medium_count = medium['cve_id'].nunique()
+            low_count = low['cve_id'].nunique()
+            dfs.append({
+                'project': verbatim(project),
+                'release': verbatim(release),
+                'count': percentage(release_count, total_count),
+                'critical': percentage(critical_count, total_count),
+                'high': percentage(high_count, total_count),
+                'medium': percentage(medium_count, total_count),
+                'low': percentage(low_count, total_count)
+            })
+    dfs = pd.DataFrame(dfs)
+    dfs = titlize(dfs)
+    dfs.to_latex(table_dir / 'cve-distribution.tex', index=False, caption="CVE Distribution by Severity", label="tab:cve-distribution")
     fig.suptitle("Overall CVE Distribution")
     fig.supylabel("CVSS Base Score")
     fig.supxlabel("Project")
@@ -741,24 +844,6 @@ def plot_issues(issues: pd.DataFrame):
     fig_module.supylabel("Issue Count")
     fig_module.savefig(plots_dir / 'bandit-module-distribution.png')
 
-def to_latex(df: pd.DataFrame, file: str | Path, **columns):
-    """
-    To LaTeX
-    """
-    df = df.copy()
-    # only keep the columns that are in the columns
-    if len(columns) > 0:
-        df = df.drop_duplicates(subset=list(columns.keys()))
-        df = df[list(columns.keys())]
-        df = df.rename(columns=columns)
-    else:
-        cols = df.columns
-        cols = {
-            col: col.title() for col in cols
-        }
-        df = df.rename(columns=cols)
-    with open(file, 'w') as f:
-        f.write(df.to_latex(index=False))
 
 def combine_timeline_data(data: dict):
     """
