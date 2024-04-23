@@ -1,9 +1,10 @@
-import argparse, sys, time, pprint, json, datetime
+import argparse, sys, time, pprint, json, datetime, re
 import seaborn as sns
 import numpy as np
 import matplotlib.pyplot as plt
 import pandas as pd
 import src.utils.compute as compute
+import src.utils.tools as tools
 import src.utils.report as report
 from copy import deepcopy
 from pprint import pprint
@@ -413,16 +414,20 @@ def plot_cves(df: pd.DataFrame):
     project_names = sorted(list(df['project'].unique()))
     project_count = len(project_names)
 
+    for project in project_names:
+        releases = sorted(list(df[df['project'] == project]['release'].unique()))
+        if project not in Global.release_palettes:
+            Global.release_palettes[project] = release_colours(project, *releases)
+
     cves: pd.DataFrame = df.copy().drop_duplicates(subset=['project', 'release', 'cve_id'])
 
+    # Overall CVE Distribution
     fig, axs = plt.subplots(1, project_count, figsize=(10, 8))
     axs = [axs] if project_count == 1 else axs
     fig.subplots_adjust(**Global.SUBPLOTS)
     for i, project in enumerate(project_names):
         ax = axs[i]
         releases = sorted(list(cves[cves['project'] == project]['release'].unique()))
-        if project not in Global.release_palettes:
-            Global.release_palettes[project] = release_colours(project, *releases)
         palette = Global.release_palettes[project]
         project_df = cves[cves['project'] == project]
         project_df = project_df.drop_duplicates(subset=['release', 'cve_id'])
@@ -441,8 +446,8 @@ def plot_cves(df: pd.DataFrame):
     fig.supxlabel("Project")
     fig.savefig(plots_dir / 'cve.png')
 
-    lag: pd.DataFrame = df.drop_duplicates(subset=['project', 'release', 'cve_id', 'version_end']).copy()
-
+    # Patch Time
+    lag: pd.DataFrame = df.copy().drop_duplicates(subset=['project', 'release', 'cve_id', 'version_end'])
     fig, axs = plt.subplots(project_count, 2, figsize=(10, 8))
     axs = [axs] if project_count == 1 else axs
     fig.subplots_adjust(**Global.SUBPLOTS_2X)
@@ -470,6 +475,43 @@ def plot_cves(df: pd.DataFrame):
     fig.supxlabel("Days from Published to Patched")
     fig.supylabel("CVSS Base Score | Density")
     fig.savefig(plots_dir / 'cve-patch-time.png')
+
+    return # end of plot_cves, the rest is work-in-progress
+    # Confidentiality, Integrity, Availability
+    cves: pd.DataFrame = df.copy().drop_duplicates(subset=['project', 'release', 'cve_id'])
+    fig, axs = plt.subplots(project_count, 1, figsize=(10, 8))
+    fig.subplots_adjust(**Global.SUBPLOTS)
+    xlabels = {
+        'confidentiality': 0,
+        'integrity': 1,
+        'availability': 2
+    }
+    for i, project in enumerate(project_names):
+        ax = axs[i]
+        project_df = cves[cves['project'] == project]
+        dtmp = pd.DataFrame()
+        for term in ['confidentiality', 'integrity', 'availability']:
+            # map impact to value
+            kpi = f"cvss_{term}_impact"
+            project_df[kpi] = project_df[kpi].map(compute.impact_to_int)
+            d = project_df.copy()
+            d['kpi'] = term
+            d['score'] = d[kpi]
+            # keep only "kpi", "score", "project", and "release"
+            dtmp = pd.concat([dtmp, d[['project', 'release', 'kpi', 'score']]], ignore_index=True)
+        # sort x-axis by Confidentiality, Integrity, Availability
+        dtmp = dtmp.sort_values(by='kpi', key=lambda x: x.map(xlabels))
+        sns.swarmplot(data=dtmp, x='kpi', y='score', hue='release', ax=ax, palette=Global.release_palettes[project])
+        sns.violinplot(data=dtmp, x='kpi', y='score', ax=ax, color=Global.Colours.light_grey, cut=0)
+        ax.set_title(project.title())
+        ax.set_xlabel(None)
+        ax.set_ylabel(None)
+        ax.set_yticks([0, 1, 2], ['None', 'Low', 'High'])
+    fig.suptitle("CVE CIA Impact Distribution")
+    fig.supxlabel("Impact")
+    fig.supylabel("CVSS Impact Score")
+    fig.savefig(plots_dir / 'cve-cia.png')
+
 
 def plot_overall_cwe_distribution(df: pd.DataFrame):
     """
@@ -705,14 +747,14 @@ def to_latex(df: pd.DataFrame, file: str | Path, **columns):
     """
     df = df.copy()
     # only keep the columns that are in the columns
-    if columns:
+    if len(columns) > 0:
         df = df.drop_duplicates(subset=list(columns.keys()))
         df = df[list(columns.keys())]
         df = df.rename(columns=columns)
     else:
         cols = df.columns
         cols = {
-            col: col.title for col in cols
+            col: col.title() for col in cols
         }
         df = df.rename(columns=cols)
     with open(file, 'w') as f:
@@ -874,6 +916,18 @@ if __name__ == '__main__':
             plot_issues(issues_df)
         if 'cve' in overall_keys or all_input:
             plot_cves(cves_overall_df)
+            to_keep = ['project', 'release', 'cve_id', 'applicability']
+            cves_unique = cves_overall_df.drop_duplicates(subset=to_keep)[to_keep].sort_values(by=to_keep)
+            def repl(app):
+                if not app:
+                    return app
+                app = app.replace('[', '$[')
+                app = app.replace(']', ']$')
+                app = app.replace('(', '$(')
+                app = app.replace(')', ')$')
+                return app
+            cves_unique['applicability'] = cves_unique['applicability'].map(repl)
+            to_latex(cves_unique, tex_dir / 'cves.tex')
         if 'semver' in overall_keys or all_input:
             plot_semver(cves_df, static_df)
         if 'techlag' in overall_keys or all_input:
