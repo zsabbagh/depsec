@@ -21,6 +21,8 @@ def titlize(df: pd.DataFrame):
     """
     Titlize the columns of a DataFrame
     """
+    if type(df) in [list, dict]:
+        df = pd.DataFrame(df)
     df = df.copy()
     cols = df.columns
     cols = {
@@ -466,7 +468,21 @@ def split_severity(df: pd.DataFrame):
     low = df[(df['cvss_base_score'] >= 0) & (df['cvss_base_score'] < 4)]
     return critical, high, medium, low
 
-def percentage(x: int, *totals: int):
+def split_impact(df: pd.DataFrame):
+    """
+    Returns tuples of low and high impact for confidentiality, integrity, and availability,
+    in that order
+    """
+    result = []
+    for term in ['confidentiality', 'integrity', 'availability']:
+        kpi = f"cvss_{term}_impact"
+        df[kpi] = df[kpi].map(compute.impact_to_int)
+        low = df[df[kpi] == 1]
+        high = df[df[kpi] == 2]
+        result.append((low, high))
+    return tuple(result)
+
+def percentage(x: int, *totals: int, suffix: str = ''):
     """
     Returns the percentage of x from total
     """
@@ -479,7 +495,8 @@ def percentage(x: int, *totals: int):
         percs.append(f"${(x / (total or 1)) * 100:.2f}\%$")
     percs = ', '.join(percs) if percs else ''
     percs = f" ({percs})" if percs else ''
-    return f"${x}${percs}"
+    suffix = f" {suffix.strip()}" if suffix else ''
+    return f"${x}${percs}{suffix}"
 
 def verbatim(x: str):
     """
@@ -506,6 +523,7 @@ def plot_cves(df: pd.DataFrame):
     axs = [axs] if project_count == 1 else axs
     fig.subplots_adjust(**Global.SUBPLOTS)
     dfs = []
+    df_cia = []
     for i, project in enumerate(project_names):
         ax = axs[i]
         releases = sorted(list(cves[cves['project'] == project]['release'].unique()))
@@ -532,6 +550,16 @@ def plot_cves(df: pd.DataFrame):
             high_count = high['cve_id'].nunique()
             medium_count = medium['cve_id'].nunique()
             low_count = low['cve_id'].nunique()
+            confidentiality, integrity, availability = split_impact(release_df)
+            conf_low, conf_high = confidentiality
+            integrity_low, integrity_high = integrity
+            availability_low, availability_high = availability
+            cl_count = conf_low['cve_id'].nunique()
+            ch_count = conf_high['cve_id'].nunique()
+            il_count = integrity_low['cve_id'].nunique()
+            ih_count = integrity_high['cve_id'].nunique()
+            al_count = availability_low['cve_id'].nunique()
+            ah_count = availability_high['cve_id'].nunique()
             dfs.append({
                 'project': verbatim(project),
                 'release': verbatim(release),
@@ -541,9 +569,20 @@ def plot_cves(df: pd.DataFrame):
                 'medium': percentage(medium_count, total_count),
                 'low': percentage(low_count, total_count)
             })
-    dfs = pd.DataFrame(dfs)
+            df_cia.append({
+                'project': verbatim(project),
+                'release': verbatim(release),
+                'confidentiality': percentage(cl_count, total_count),
+                'integrity': percentage(il_count, total_count),
+                'availability': percentage(al_count, total_count),
+                'confidentiality_high': percentage(ch_count, total_count),
+                'integrity_high': percentage(ih_count, total_count),
+                'availability_high': percentage(ah_count, total_count),
+            })
     dfs = titlize(dfs)
     dfs.to_latex(table_dir / 'cve-distribution.tex', index=False, caption="CVE Distribution by Severity", label="tab:cve-distribution")
+    df_cia = titlize(df_cia)
+    df_cia.to_latex(table_dir / 'cve-cia-distribution.tex', index=False, caption="CVE Distribution by CIA Impact", label="tab:cve-cia-distribution")
     fig.suptitle("Overall CVE Distribution")
     fig.supylabel("CVSS Base Score")
     fig.supxlabel("Project")
@@ -615,6 +654,25 @@ def plot_cves(df: pd.DataFrame):
     fig.supylabel("CVSS Impact Score")
     fig.savefig(plots_dir / 'cve-cia.png')
 
+def top_cwe(df: pd.DataFrame, n: int = 10):
+    """
+    Computes the top N CWEs
+    """
+    df_top_n = df.groupby(['cwe_id']).size().reset_index(name='count').copy()
+    # sort by count descending
+    df_top_n = df_top_n.sort_values(by='count', ascending=False)
+    # take head
+    df_top_n = df_top_n.head(n)
+    df_unique = df[df['cwe_id'].isin(df_top_n['cwe_id'])]
+    # drop the columns that are not in df_top_n
+    df_unique = df_unique[df_unique['cwe_id'].isin(df_top_n['cwe_id'])]
+    # add count
+    df_unique = df_unique.groupby(['release', 'cwe_id']).size().reset_index(name='count')
+    # add the 'total_count' column
+    df_unique['total_count'] = df_unique['cwe_id'].map(df_top_n.set_index('cwe_id')['count'])
+    # rename the 'release' to "total" for all rows in the cwe_count df
+    df_unique = df_unique.sort_values(by=['total_count', 'release'], ascending=[False, True])
+    return df_top_n, df_unique
 
 def plot_overall_cwe_distribution(df: pd.DataFrame):
     """
@@ -627,31 +685,22 @@ def plot_overall_cwe_distribution(df: pd.DataFrame):
     project_count = len(project_names)
     fig, axs = plt.subplots(project_count, 1, figsize=(10, 8))
     plt.subplots_adjust(**Global.SUBPLOTS)
+    # for LaTeX
+    df_tex = []
     for i, project in enumerate(project_names):
         ax: plt.Axes = axs[i]
         df_project = df[df['project'] == project]
+        # to get the total count of CVEs for reporting
+        cves_total = df_project['cve_id'].nunique()
         if project not in Global.release_palettes:
             releases = sorted(list(df_project['release'].unique()))
             Global.release_palettes[project] = release_colours(project, *releases)
         palette = Global.release_palettes[project]
         # cwe count distinct cve_id
-        df_cwe_count = df_project.groupby(['cwe_id']).size().reset_index(name='count').copy()
-        # sort by count descending
-        df_cwe_count = df_cwe_count.sort_values(by='count', ascending=False)
-        # take head
-        df_cwe_count = df_cwe_count.head(10)
-        df_unique = df_project[df_project['cwe_id'].isin(df_cwe_count['cwe_id'])]
-        # drop the columns that are not in df_cwe_count
-        df_unique = df_unique[df_unique['cwe_id'].isin(df_cwe_count['cwe_id'])]
-        # add count
-        df_unique = df_unique.groupby(['release', 'cwe_id']).size().reset_index(name='count')
-        # add the 'total_count' column
-        df_unique['total_count'] = df_unique['cwe_id'].map(df_cwe_count.set_index('cwe_id')['count'])
-        # rename the 'release' to "total" for all rows in the cwe_count df
-        df_unique = df_unique.sort_values(by=['total_count', 'release'], ascending=[False, True])
+        df_top_10, df_unique = top_cwe(df_project, 10)
         # sort by count
         sns.barplot(data=df_unique, x='cwe_id', y='count', hue='release', ax=ax, palette=palette)
-        sns.barplot(data=df_cwe_count, x='cwe_id', y='count', ax=ax, color=Global.Colours.light_grey, alpha=0.5, zorder=0)
+        sns.barplot(data=df_top_10, x='cwe_id', y='count', ax=ax, color=Global.Colours.light_grey, alpha=0.5, zorder=0)
         max_count = max(df_unique['total_count'])
         ylim = max_count + 1 if max_count > 10 else 5
         step = ylim // 5
@@ -661,6 +710,38 @@ def plot_overall_cwe_distribution(df: pd.DataFrame):
         ax.set_title(project.title())
         ax.set_xlabel(None)
         ax.set_ylabel(None)
+        # add the confidentiality, integrity, and availability scores
+        # TODO: Show the TOP 10 CWEs by each CIA impact
+        # create table to LaTeX
+        cwe_ids = df_top_10['cwe_id'].unique()
+        for cwe_id in cwe_ids:
+            cwe_df = df_project[df_project['cwe_id'] == cwe_id].copy()
+            count = cwe_df['cve_id'].nunique()
+            critical, high, medium, low = split_severity(cwe_df)
+            critical_count = critical['cve_id'].nunique()
+            high_count = high['cve_id'].nunique()
+            medium_count = medium['cve_id'].nunique()
+            low_count = low['cve_id'].nunique()
+            cwe_df['cvss_confidentiality_impact'] = cwe_df['cvss_confidentiality_impact'].map(compute.impact_to_int)
+            cwe_df['cvss_integrity_impact'] = cwe_df['cvss_integrity_impact'].map(compute.impact_to_int)
+            cwe_df['cvss_availability_impact'] = cwe_df['cvss_availability_impact'].map(compute.impact_to_int)
+            confidentiality_count = cwe_df[cwe_df['cvss_confidentiality_impact'] >= 1]['cve_id'].nunique()
+            integrity_count = cwe_df[cwe_df['cvss_integrity_impact'] >= 1]['cve_id'].nunique()
+            availability_count = cwe_df[cwe_df['cvss_availability_impact'] >= 1]['cve_id'].nunique()
+            df_tex.append({
+                'project': verbatim(project),
+                'cwe_id': verbatim(cwe_id),
+                'count': percentage(count, cves_total),
+                'total_count': count,
+                'confidentiality': percentage(confidentiality_count, cves_total, count),
+                'integrity': percentage(integrity_count, cves_total, count),
+                'availability': percentage(availability_count, cves_total, count),
+            })
+    df_tex = pd.DataFrame(df_tex)
+    df_tex = df_tex.sort_values(by=['project', 'total_count'], ascending=[True, False])
+    df_tex = df_tex.drop(columns=['total_count'])
+    df_tex = titlize(df_tex)
+    df_tex.to_latex(table_dir / 'cwe-distribution.tex', index=False, caption="CIA impact of top 10 CWEs", label="tab:cwe-distribution")
     fig.suptitle("Top 10 CWEs by CVE Count")
     fig.supxlabel("CWE ID")
     fig.supylabel("CVE Count")
