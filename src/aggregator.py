@@ -1618,6 +1618,10 @@ class Aggregator:
                         for cwe_id in cve.get('cwes', []):
                             mcopy = model_dict.copy()
                             mcopy['cwe_id'] = cwe_id
+                            cw = vulns.get('cwes', {}).get(cwe_id, {})
+                            for k in cw:
+                                if k not in mcopy:
+                                    mcopy[k] = cw[k]
                             models.append(mcopy)
                     else:
                         model_dict['cwe_id'] = None
