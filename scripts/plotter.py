@@ -569,15 +569,18 @@ def plot_cves(df: pd.DataFrame):
                 'medium': percentage(medium_count, total_count),
                 'low': percentage(low_count, total_count)
             })
+            confstr = [cl_count and percentage(cl_count, total_count, suffix='low'), ch_count and percentage(ch_count, total_count, suffix='high')]
+            intstr = [il_count and percentage(il_count, total_count, suffix='low'), ih_count and percentage(ih_count, total_count, suffix='high')]
+            avstr = [al_count and percentage(al_count, total_count, suffix='low'), ah_count and percentage(ah_count, total_count, suffix='high')]
+            confstr = list(filter(bool, confstr))
+            intstr = list(filter(bool, intstr))
+            avstr = list(filter(bool, avstr))
             df_cia.append({
                 'project': verbatim(project),
                 'release': verbatim(release),
-                'confidentiality': percentage(cl_count, total_count),
-                'integrity': percentage(il_count, total_count),
-                'availability': percentage(al_count, total_count),
-                'confidentiality_high': percentage(ch_count, total_count),
-                'integrity_high': percentage(ih_count, total_count),
-                'availability_high': percentage(ah_count, total_count),
+                'confidentiality': ', '.join(confstr) or '$0$',
+                'integrity': ', '.join(intstr) or '$0$',
+                'availability': ', '.join(avstr) or '$0$'
             })
     dfs = titlize(dfs)
     dfs.to_latex(table_dir / 'cve-distribution.tex', index=False, caption="CVE Distribution by Severity", label="tab:cve-distribution")

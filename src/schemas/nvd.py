@@ -12,6 +12,7 @@ class CVE(Model):
     cve The CVE id
     description: The description of the CVE
     published_at: The date the CVE was published
+    part: The part of the system affected by the CVE
     last_modified_at: The date the CVE was last modified
     updated_at: The date the row in the database was updated
     cwe: The Common Weakness Enumeration
@@ -34,6 +35,7 @@ class CVE(Model):
     cve_id = CharField(null=False, unique=True)
     description = TextField(null=True)
     published_at = DateTimeField(null=True)
+    part = CharField(null=True)
     last_modified_at = DateTimeField(null=True)
     updated_at = DateTimeField(default=datetime.datetime.now)
     cvss_version = CharField(null=True)
