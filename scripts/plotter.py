@@ -713,6 +713,8 @@ def plot_overall_cwe_distribution(df: pd.DataFrame):
     project_count = len(project_names)
     fig, axs = plt.subplots(project_count, 1, figsize=(10, 8))
     plt.subplots_adjust(**Global.SUBPLOTS)
+    fig_sev, axs_sev = plt.subplots(project_count, 1, figsize=(10, 8))
+    plt.subplots_adjust(**Global.SUBPLOTS)
     # for LaTeX
     df_tex = []
     columns = ['project', 'release', 'cve_id', 'cwe_id', 'part', 'cvss_base_score']
@@ -730,6 +732,7 @@ def plot_overall_cwe_distribution(df: pd.DataFrame):
     df_sev = df_sev[columns]
     for i, project in enumerate(project_names):
         ax: plt.Axes = axs[i]
+        ax_sev: plt.Axes = axs_sev[i]
         df_project = df[df['project'] == project]
         # get most severe
         # to get the total count of CVEs for reporting
@@ -743,6 +746,20 @@ def plot_overall_cwe_distribution(df: pd.DataFrame):
         # sort by count
         sns.barplot(data=df_unique, x='cwe_id', y='count', hue='release', ax=ax, palette=palette)
         sns.barplot(data=df_top_10, x='cwe_id', y='count', ax=ax, color=Global.Colours.light_grey, alpha=0.5, zorder=0)
+
+        df_sev_top_10 = df_project[df_project['cwe_id'].isin(df_top_10['cwe_id'])].copy()
+        # set total_count using loc
+        df_sev_top_10['total_count'] = df_sev_top_10['cwe_id'].map(df_top_10.set_index('cwe_id')['count'])
+        df_sev_top_10 = df_sev_top_10.sort_values(by=['total_count'], ascending=False)
+        sns.violinplot(data=df_sev_top_10, x='cwe_id', y='cvss_base_score', ax=ax_sev, color=Global.Colours.light_grey, cut=0, zorder=1)
+        set_transparency(ax_sev, 0.2)
+        sns.swarmplot(data=df_sev_top_10, x='cwe_id', y='cvss_base_score', ax=ax_sev, color=Global.Colours.direct, zorder=2)
+
+        ax_sev.set_yticks([0, 4, 7, 9, 10])
+        ax_sev.set_title(project.title())
+        ax_sev.set_xlabel(None)
+        ax_sev.set_ylabel(None)
+
         max_count = max(df_unique['total_count'])
         ylim = max_count + 1 if max_count > 10 else 5
         step = ylim // 5
@@ -788,13 +805,17 @@ def plot_overall_cwe_distribution(df: pd.DataFrame):
     # overwrite 'source' with 'release' on idx
     df_sev.loc[idx, 'source'] = df_sev.loc[idx, 'release']
     df_sev = df_sev.drop(columns=['release', 'part'])
-    df_sev = df_sev.sort_values(by=['cvss_base_score'], ascending=[False])
     df_sev = titlize(df_sev)
     df_sev.to_latex(table_dir / 'most-severe-cwe.tex', index=False, caption=f"Top {n} Severe CVEs", label="tab:most-severe-cwe")
     fig.suptitle("Top 10 CWEs by CVE Count")
     fig.supxlabel("CWE ID")
     fig.supylabel("CVE Count")
     fig.savefig(plots_dir / 'overall-cwe-distribution.png')
+
+    fig_sev.suptitle("Top 10 CWEs Severity")
+    fig_sev.supxlabel("CWE ID")
+    fig_sev.supylabel("CVSS Base Score")
+    fig_sev.savefig(plots_dir / 'cwe-top-10-severity.png')
 
 def plot_semver(df: pd.DataFrame, static_df: pd.DataFrame):
     """
