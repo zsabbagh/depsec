@@ -946,6 +946,7 @@ def plot_issues(df: pd.DataFrame):
     issues = df[df['is_test'] == False]
     # count test_id 
     dftex = []
+    dfcat = []
 
     # plot the test category distribution
     fig_category, axs_category = plt.subplots(project_count, 1, figsize=(10, 8))
@@ -989,10 +990,27 @@ def plot_issues(df: pd.DataFrame):
                     'high': percentage(count[3], total),
                     'critical': percentage(count[4], total)
                 })
+            for test_category in unique_categories:
+                test_df = dtmp[dtmp['test_category'] == test_category]
+                count = count_issue_severity(test_df)
+                dfcat.append({
+                    'project': verbatim(project),
+                    'release': verbatim(release),
+                    'test_category': verbatim(test_category),
+                    'count': percentage(count[0], total),
+                    'low': percentage(count[1], total),
+                    'medium': percentage(count[2], total),
+                    'high': percentage(count[3], total),
+                    'critical': percentage(count[4], total)
+                })
     dftex = pd.DataFrame(dftex)
     dftex = dftex.sort_values(by=['project', 'test_id', 'count'], ascending=[True, True, False])
     dftex = titlize(dftex)
     dftex.to_latex(table_dir / 'issue-distribution.tex', index=False, caption="Issue Distribution by Severity", label="tab:issue-distribution")
+    dfcat = pd.DataFrame(dfcat)
+    dfcat = dfcat.sort_values(by=['project', 'test_category', 'count'], ascending=[True, True, False])
+    dfcat = titlize(dfcat)
+    dfcat.to_latex(table_dir / 'issue-category-distribution.tex', index=False, caption="Issue Distribution by Category", label="tab:issue-category-distribution")
     fig_category.suptitle("Bandit Test Category Distribution")
     fig_category.supxlabel("Test Category")
     fig_category.savefig(plots_dir / 'bandit-test-category-distribution.png')
