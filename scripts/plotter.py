@@ -911,14 +911,41 @@ def plot_semver(df: pd.DataFrame, static_df: pd.DataFrame):
     fig.supylabel("CVE Count | CVEs per 10,000 NLOC | NLOC")
     fig.savefig(plots_dir / f'cves-per-nloc-semver.png')
 
-def plot_issues(issues: pd.DataFrame):
+def split_issue_score(df: pd.DataFrame):
+    """
+    Returns the critical, high, medium, and low severity issues
+    """
+    df = df.copy()
+    critical = df[df['score'] == 4]
+    high = df[df['score'] == 3]
+    medium = df[df['score'] == 2]
+    low = df[df['score'] == 1]
+    return critical, high, medium, low
+
+def count_issues(df: pd.DataFrame):
+    """
+    Counts the number of issues
+    """
+    return df.drop_duplicates(subset=['filename', 'code', 'test_id']).shape[0]
+
+def count_issue_severity(df: pd.DataFrame):
+    """
+    Counts the number of CVEs by severity
+    """
+    total = count_issues(df)
+    critical, high, medium, low = split_issue_score(df)
+    return total, count_issues(critical), count_issues(high), count_issues(medium), count_issues(low)
+
+def plot_issues(df: pd.DataFrame):
     """
     Expects an issue-centred DataFrame
     """
-    projects = sorted(list(issues['project'].unique()))
+    projects = sorted(list(df['project'].unique()))
     project_count = len(projects)
 
-    issues = issues[issues['is_test'] == False]
+    issues = df[df['is_test'] == False]
+    # count test_id 
+    dftex = []
 
     # plot the test category distribution
     fig_category, axs_category = plt.subplots(project_count, 1, figsize=(10, 8))
@@ -927,25 +954,45 @@ def plot_issues(issues: pd.DataFrame):
     values = ['None', 'Low', 'Medium', 'High', 'Critical']
     for project in projects:
         ax: plt.Axes = axs_category[i]
-        df = issues[issues['project'] == project].copy()
-        releases = sorted(list(df['release'].unique()))
+        dftmp = issues[issues['project'] == project].copy()
+        releases = sorted(list(dftmp['release'].unique()))
         palette = release_colours(project, *releases)
-        version = df['project_version'].unique()[0]
+        version = dftmp['project_version'].unique()[0]
         order = [project]
         for release in releases:
             if release != project:
                 order.append(release)
         # sort the X-axis by the test category
-        df = df.sort_values(by=['test_category', 'release'], ascending=True)
-        df = df[ df['is_test'] == False ]
-        sns.swarmplot(data=df, x='test_category', y='score', hue='release', ax=ax, palette=palette, hue_order=order)
-        sns.violinplot(data=df, x='test_category', y='score', ax=ax, fill=False, color=Global.Colours.light_grey, cut=0)
-        unique_categories = df['test_category'].unique()
+        dftmp = dftmp.sort_values(by=['test_category', 'release'], ascending=True)
+        dftmp = dftmp[ dftmp['is_test'] == False ]
+        sns.swarmplot(data=dftmp, x='test_category', y='score', hue='release', ax=ax, palette=palette, hue_order=order)
+        sns.violinplot(data=dftmp, x='test_category', y='score', ax=ax, fill=False, color=Global.Colours.light_grey, cut=0)
+        unique_categories = dftmp['test_category'].unique()
         ax.set_xlabel(None)
         ax.set_ylabel(None)
         ax.set_title(f"{project.title()}:{version}")
         ax.set_yticks(range(len(values)), values)
         i += 1
+        total = count_issues(dftmp)
+        for release in releases:
+            dtmp = dftmp[dftmp['release'] == release]
+            for test_id in dtmp['test_id'].unique():
+                test_df = dtmp[dtmp['test_id'] == test_id]
+                count = count_issue_severity(test_df)
+                dftex.append({
+                    'project': verbatim(project),
+                    'release': verbatim(release),
+                    'test_id': verbatim(test_id),
+                    'count': percentage(count[0], total),
+                    'low': percentage(count[1], total),
+                    'medium': percentage(count[2], total),
+                    'high': percentage(count[3], total),
+                    'critical': percentage(count[4], total)
+                })
+    dftex = pd.DataFrame(dftex)
+    dftex = dftex.sort_values(by=['project', 'test_id', 'count'], ascending=[True, True, False])
+    dftex = titlize(dftex)
+    dftex.to_latex(table_dir / 'issue-distribution.tex', index=False, caption="Issue Distribution by Severity", label="tab:issue-distribution")
     fig_category.suptitle("Bandit Test Category Distribution")
     fig_category.supxlabel("Test Category")
     fig_category.savefig(plots_dir / 'bandit-test-category-distribution.png')
@@ -955,19 +1002,19 @@ def plot_issues(issues: pd.DataFrame):
     i = 0
     for project in projects:
         ax: plt.Axes = axs_module[i]
-        df = issues[issues['project'] == project].copy()
-        version = df['project_version'].unique()[0]
+        dftmp = issues[issues['project'] == project].copy()
+        version = dftmp['project_version'].unique()[0]
         # count the number of issues per module
-        total_count = df.groupby(['project_package']).size().reset_index(name='total_count')
+        total_count = dftmp.groupby(['project_package']).size().reset_index(name='total_count')
         total_count = total_count.sort_values(by='total_count', ascending=False).head(10)
         # in df, drop the columns that are not in total_count
-        df = df[df['project_package'].isin(total_count['project_package'])]
-        unique_categories = df['test_category'].unique()
+        dftmp = dftmp[dftmp['project_package'].isin(total_count['project_package'])]
+        unique_categories = dftmp['test_category'].unique()
         unique_categories = sorted(unique_categories)
-        df = df.groupby(['project_package', 'test_category']).size().reset_index(name='count')
+        dftmp = dftmp.groupby(['project_package', 'test_category']).size().reset_index(name='count')
         for project_package in total_count['project_package']:
             # add 0 counts for missing categories
-            project_categories: pd.DataFrame = df[df['project_package'] == project_package]['test_category'].unique()
+            project_categories: pd.DataFrame = dftmp[dftmp['project_package'] == project_package]['test_category'].unique()
             for test_category in unique_categories:
                 if test_category not in project_categories:
                     # add row
@@ -976,12 +1023,12 @@ def plot_issues(issues: pd.DataFrame):
                         'test_category': [test_category],
                         'count': [0]
                     })
-                    df = pd.concat([df, row], ignore_index=True)
+                    dftmp = pd.concat([dftmp, row], ignore_index=True)
         # translate the test category
-        df = df.merge(total_count, on='project_package', how='left')
-        df = df.sort_values(by=['total_count', 'test_category'], ascending=[False, True])
+        dftmp = dftmp.merge(total_count, on='project_package', how='left')
+        dftmp = dftmp.sort_values(by=['total_count', 'test_category'], ascending=[False, True])
         # top 10 packages
-        sns.barplot(data=df, x='project_package', y='count', hue='test_category', ax=ax, palette=Global.test_category_palette, width=0.5)
+        sns.barplot(data=dftmp, x='project_package', y='count', hue='test_category', ax=ax, palette=Global.test_category_palette, width=0.5)
         ax.set_xlabel(None)
         ax.set_ylabel(None)
         # set the legend title
