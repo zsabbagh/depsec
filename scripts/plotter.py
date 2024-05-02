@@ -875,6 +875,11 @@ def plot_semver(df: pd.DataFrame, static_df: pd.DataFrame):
             if dtmp['major'].unique().size == majors.size:
                 pdf.loc[pdf['release'] == rel, 'release'] = 'other'
                 palette['other'] = Global.Colours.light_grey
+        
+        for major in pdf['major'].unique():
+            other_nloc_sum = pdf[(pdf['major'] == major) & (pdf['release'] == 'other')]['nloc_total'].sum()
+            # overwrite value
+            pdf.loc[(pdf['major'] == major) & (pdf['release'] == 'other'), 'nloc_total'] = other_nloc_sum
 
         pdf['cves_per_nloc'] = 10000 * pdf['cve_count'] / pdf['nloc_total']
         # round the cves_per_nloc to 2 decimal places
