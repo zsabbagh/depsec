@@ -10,6 +10,7 @@
                 "cve_id": "CVE-2023-30608",
                 "description": "sqlparse is a non-validating SQL parser module for Python. In affected versions the SQL parser contains a regular expression that is vulnerable to ReDoS (Regular Expression Denial of Service). This issue was introduced by commit `e75e358`. The vulnerability may lead to Denial of Service (DoS). This issues has been fixed in sqlparse 0.4.4 by commit `c457abd5f`. Users are advised to upgrade. There are no known workarounds for this issue.\n",
                 "published_at": "2023-04-18 22:15:00",
+                "part": "sqlparse.",
                 "last_modified_at": "2023-06-14 18:14:00",
                 "updated_at": "2024-03-19 14:58:21",
                 "cvss_version": "3.1",
@@ -50,6 +51,7 @@
                 "cve_id": "CVE-2021-32839",
                 "description": "sqlparse is a non-validating SQL parser module for Python. In sqlparse versions 0.4.0 and 0.4.1 there is a regular Expression Denial of Service in sqlparse vulnerability. The regular expression may cause exponential backtracking on strings containing many repetitions of '\\r\\n' in SQL comments. Only the formatting feature that removes comments from SQL statements is affected by this regular expression. As a workaround don't use the sqlformat.format function with keyword strip_comments=True or the --strip-comments command line flag when using the sqlformat command line tool. The issues has been fixed in sqlparse 0.4.2.",
                 "published_at": "2021-09-20 17:15:00",
+                "part": "sqlparse.sqlformat",
                 "last_modified_at": "2021-09-29 15:04:00",
                 "updated_at": "2024-03-19 15:25:53",
                 "cvss_version": "3.1",
@@ -561,24 +563,6 @@
                 "osi_verified": true,
                 "dependency_count": null
             },
-            "typing-extensions:4.9.0rc1": {
-                "id": 858,
-                "project": 8,
-                "published_at": "2023-11-29 18:15:58",
-                "version": "4.9.0rc1",
-                "updated_at": "2024-03-27 10:14:24",
-                "counted_functions": null,
-                "counted_files": null,
-                "nloc_total": null,
-                "nloc_average": null,
-                "ccn_average": null,
-                "commit_at": null,
-                "commit_hash": null,
-                "includes": null,
-                "excludes": null,
-                "osi_verified": true,
-                "dependency_count": null
-            },
             "typing-extensions:4.9.0": {
                 "id": 857,
                 "project": 8,
@@ -660,24 +644,6 @@
                     "nosec": 0,
                     "skipped_tests": 0
                 }
-            },
-            "typing-extensions:4.11.0rc1": {
-                "id": 843,
-                "project": 8,
-                "published_at": "2024-03-24 14:04:40",
-                "version": "4.11.0rc1",
-                "updated_at": "2024-03-27 10:14:24",
-                "counted_functions": null,
-                "counted_files": null,
-                "nloc_total": null,
-                "nloc_average": null,
-                "ccn_average": null,
-                "commit_at": null,
-                "commit_hash": null,
-                "includes": null,
-                "excludes": null,
-                "osi_verified": true,
-                "dependency_count": 0
             }
         },
         "timeline": [
@@ -1488,7 +1454,7 @@
                 "release": [
                     "asgiref:3.7.2",
                     "sqlparse:0.4.4",
-                    "typing-extensions:4.9.0rc1"
+                    "typing-extensions:4.8.0"
                 ],
                 "cves": []
             },
@@ -1524,7 +1490,16 @@
                 "release": [
                     "asgiref:3.8.1",
                     "sqlparse:0.4.4",
-                    "typing-extensions:4.11.0rc1"
+                    "typing-extensions:4.10.0"
+                ],
+                "cves": []
+            },
+            {
+                "date": "2024-05-01 00:00:00",
+                "release": [
+                    "asgiref:3.8.1",
+                    "sqlparse:0.4.4",
+                    "typing-extensions:4.10.0"
                 ],
                 "cves": []
             }
@@ -1548,6 +1523,7 @@
                 "cve_id": "CVE-2024-22195",
                 "description": "Jinja is an extensible templating engine. Special placeholders in the template allow writing code similar to Python syntax. It is possible to inject arbitrary HTML attributes into the rendered HTML template, potentially leading to Cross-Site Scripting (XSS). The Jinja `xmlattr` filter can be abused to inject arbitrary HTML attribute keys and values, bypassing the auto escaping mechanism and potentially leading to XSS. It may also be possible to bypass attribute validation checks if they are blacklist-based.\n",
                 "published_at": "2024-01-11 03:15:00",
+                "part": "jinja2.",
                 "last_modified_at": "2024-01-27 03:15:00",
                 "updated_at": "2024-03-19 14:51:13",
                 "cvss_version": "3.1",
@@ -1588,6 +1564,7 @@
                 "cve_id": "CVE-2020-28493",
                 "description": "This affects the package jinja2 from 0.0.0 and before 2.11.3. The ReDoS vulnerability is mainly due to the `_punctuation_re regex` operator and its use of multiple wildcards. The last wildcard is the most exploitable as it searches for trailing punctuation. This issue can be mitigated by Markdown to format user content instead of the urlize filter, or by implementing request timeouts and limiting process memory.",
                 "published_at": "2021-02-01 20:15:00",
+                "part": null,
                 "last_modified_at": "2023-11-07 03:21:00",
                 "updated_at": "2024-03-19 15:39:52",
                 "cvss_version": "3.1",
@@ -1628,6 +1605,7 @@
                 "cve_id": "CVE-2019-10906",
                 "description": "In Pallets Jinja before 2.10.1, str.format_map allows a sandbox escape.",
                 "published_at": "2019-04-07 00:29:00",
+                "part": "jinja2.str",
                 "last_modified_at": "2023-11-07 03:02:00",
                 "updated_at": "2024-03-19 16:26:18",
                 "cvss_version": "3.1",
@@ -1666,6 +1644,7 @@
                 "cve_id": "CVE-2016-10745",
                 "description": "In Pallets Jinja before 2.8.1, str.format allows a sandbox escape.",
                 "published_at": "2019-04-08 13:29:00",
+                "part": "jinja2.str",
                 "last_modified_at": "2019-06-06 16:29:00",
                 "updated_at": "2024-03-19 16:47:00",
                 "cvss_version": "3.0",
@@ -1706,6 +1685,7 @@
                 "cve_id": "CVE-2023-23934",
                 "description": "Werkzeug is a comprehensive WSGI web application library. Browsers may allow \"nameless\" cookies that look like `=value` instead of `key=value`. A vulnerable browser may allow a compromised application on an adjacent subdomain to exploit this to set a cookie like `=__Host-test=bad` for another subdomain. Werkzeug prior to 2.2.3 will parse the cookie `=__Host-test=bad` as __Host-test=bad`. If a Werkzeug application is running next to a vulnerable or malicious subdomain which sets such a cookie using a vulnerable browser, the Werkzeug application will see the bad cookie value but the valid cookie key. The issue is fixed in Werkzeug 2.2.3.",
                 "published_at": "2023-02-14 20:15:00",
+                "part": "-",
                 "last_modified_at": "2023-08-18 14:15:00",
                 "updated_at": "2024-03-19 14:55:01",
                 "cvss_version": "3.1",
@@ -1746,6 +1726,7 @@
                 "cve_id": "CVE-2023-25577",
                 "description": "Werkzeug is a comprehensive WSGI web application library. Prior to version 2.2.3, Werkzeug's multipart form data parser will parse an unlimited number of parts, including file parts. Parts can be a small amount of bytes, but each requires CPU time to parse and may use more memory as Python data. If a request can be made to an endpoint that accesses `request.data`, `request.form`, `request.files`, or `request.get_data(parse_form_data=False)`, it can cause unexpectedly high resource usage. This allows an attacker to cause a denial of service by sending crafted multipart data to an endpoint that will parse it. The amount of CPU time required can block worker processes from handling legitimate requests. The amount of RAM required can trigger an out of memory kill of the process. Unlimited file parts can use up memory and file handles. If many concurrent requests are sent continuously, this can exhaust or kill all available workers. Version 2.2.3 contains a patch for this issue.",
                 "published_at": "2023-02-14 20:15:00",
+                "part": "werkzeug.request",
                 "last_modified_at": "2023-08-18 14:15:00",
                 "updated_at": "2024-03-19 14:55:35",
                 "cvss_version": "3.1",
@@ -1786,6 +1767,7 @@
                 "cve_id": "CVE-2023-46136",
                 "description": "Werkzeug is a comprehensive WSGI web application library. If an upload of a file that starts with CR or LF and then is followed by megabytes of data without these characters: all of these bytes are appended chunk by chunk into internal bytearray and lookup for boundary is performed on growing buffer. This allows an attacker to cause a denial of service by sending crafted multipart data to an endpoint that will parse it. The amount of CPU time required can block worker processes from handling legitimate requests. This vulnerability has been patched in version 3.0.1.",
                 "published_at": "2023-10-25 18:17:00",
+                "part": "werkzeug.",
                 "last_modified_at": "2024-01-10 18:58:00",
                 "updated_at": "2024-03-19 15:03:31",
                 "cvss_version": "3.1",
@@ -1838,6 +1820,7 @@
                 "cve_id": "CVE-2022-29361",
                 "description": "Improper parsing of HTTP requests in Pallets Werkzeug v2.1.0 and below allows attackers to perform HTTP Request Smuggling using a crafted HTTP request with multiple requests included inside the body. NOTE: the vendor's position is that this behavior can only occur in unsupported configurations involving development mode and an HTTP server from outside the Werkzeug project",
                 "published_at": "2022-05-25 01:15:00",
+                "part": "werkzeug.",
                 "last_modified_at": "2023-11-07 03:46:00",
                 "updated_at": "2024-03-19 15:10:46",
                 "cvss_version": "3.1",
@@ -1878,6 +1861,7 @@
                 "cve_id": "CVE-2019-14322",
                 "description": "In Pallets Werkzeug before 0.15.5, SharedDataMiddleware mishandles drive names (such as C:) in Windows pathnames.",
                 "published_at": "2019-07-28 13:15:00",
+                "part": "-",
                 "last_modified_at": "2023-01-31 20:18:00",
                 "updated_at": "2024-03-19 16:27:50",
                 "cvss_version": "3.1",
@@ -1918,6 +1902,7 @@
                 "cve_id": "CVE-2019-14806",
                 "description": "Pallets Werkzeug before 0.15.3, when used with Docker, has insufficient debugger PIN randomness because Docker containers share the same machine id.",
                 "published_at": "2019-08-09 15:15:00",
+                "part": "-",
                 "last_modified_at": "2023-03-03 19:34:00",
                 "updated_at": "2024-03-19 16:28:05",
                 "cvss_version": "3.1",
@@ -1958,6 +1943,7 @@
                 "cve_id": "CVE-2016-10516",
                 "description": "Cross-site scripting (XSS) vulnerability in the render_full function in debug/tbtools.py in the debugger in Pallets Werkzeug before 0.11.11 (as used in Pallets Flask and other products) allows remote attackers to inject arbitrary web script or HTML via a field that contains an exception message.",
                 "published_at": "2017-10-23 16:29:00",
+                "part": "werkzeug.debug",
                 "last_modified_at": "2018-02-04 02:29:00",
                 "updated_at": "2024-03-19 16:46:55",
                 "cvss_version": "3.0",
@@ -3145,41 +3131,51 @@
                     "skipped_tests": 0
                 }
             },
-            "werkzeug:1.0.0rc1": {
-                "id": 1162,
+            "werkzeug:0.16.1": {
+                "id": 1136,
                 "project": 14,
-                "published_at": "2020-01-31 16:58:39",
-                "version": "1.0.0rc1",
+                "published_at": "2020-01-27 04:13:55",
+                "version": "0.16.1",
                 "updated_at": "2024-03-27 10:41:15",
-                "counted_functions": null,
-                "counted_files": null,
-                "nloc_total": null,
-                "nloc_average": null,
-                "ccn_average": null,
-                "commit_at": null,
-                "commit_hash": null,
-                "includes": null,
+                "counted_functions": 1289,
+                "counted_files": 52,
+                "nloc_total": 16637,
+                "nloc_average": 12.91,
+                "ccn_average": 2.95,
+                "commit_at": "2020-01-27 04:51:37",
+                "commit_hash": "2b2c4c3dd3cf7389e9f4aa06371b7332257c6289",
+                "includes": "werkzeug/, src/",
                 "excludes": null,
                 "osi_verified": true,
-                "dependency_count": null
-            },
-            "jinja2:3.0.0a1": {
-                "id": 40,
-                "project": 1,
-                "published_at": "2020-02-05 22:36:18",
-                "version": "3.0.0a1",
-                "updated_at": "2024-03-25 17:46:06",
-                "counted_functions": null,
-                "counted_files": null,
-                "nloc_total": null,
-                "nloc_average": null,
-                "ccn_average": null,
-                "commit_at": null,
-                "commit_hash": null,
-                "includes": null,
-                "excludes": null,
-                "osi_verified": true,
-                "dependency_count": null
+                "dependency_count": null,
+                "bandit_report": {
+                    "id": 2085,
+                    "release": 1136,
+                    "updated_at": "2024-04-03 13:23:45",
+                    "issues_total": 34,
+                    "files_with_issues": 16,
+                    "files_skipped": 0,
+                    "confidence_high_count": 34,
+                    "confidence_medium_count": 0,
+                    "confidence_low_count": 0,
+                    "confidence_undefined_count": 0,
+                    "severity_high_count": 5,
+                    "severity_medium_count": 6,
+                    "severity_low_count": 23,
+                    "severity_undefined_count": 0,
+                    "severity_h_confidence_h_count": 5,
+                    "severity_h_confidence_m_count": 0,
+                    "severity_h_confidence_l_count": 0,
+                    "severity_m_confidence_h_count": 6,
+                    "severity_m_confidence_m_count": 0,
+                    "severity_m_confidence_l_count": 0,
+                    "severity_l_confidence_h_count": 23,
+                    "severity_l_confidence_m_count": 0,
+                    "severity_l_confidence_l_count": 0,
+                    "loc": 18968,
+                    "nosec": 0,
+                    "skipped_tests": 0
+                }
             },
             "werkzeug:1.0.0": {
                 "id": 1161,
@@ -3365,167 +3361,97 @@
                     "skipped_tests": 0
                 }
             },
-            "itsdangerous:2.0.0a1": {
-                "id": 1059,
-                "project": 12,
-                "published_at": "2020-05-28 17:43:25",
-                "version": "2.0.0a1",
-                "updated_at": "2024-03-27 10:22:53",
-                "counted_functions": null,
-                "counted_files": null,
-                "nloc_total": null,
-                "nloc_average": null,
-                "ccn_average": null,
-                "commit_at": null,
-                "commit_hash": null,
-                "includes": null,
-                "excludes": null,
-                "osi_verified": true,
-                "dependency_count": null
-            },
-            "click:8.0.0a1": {
-                "id": 911,
-                "project": 10,
-                "published_at": "2020-11-25 18:19:38",
-                "version": "8.0.0a1",
-                "updated_at": "2024-03-27 10:22:49",
-                "counted_functions": null,
-                "counted_files": null,
-                "nloc_total": null,
-                "nloc_average": null,
-                "ccn_average": null,
-                "commit_at": null,
-                "commit_hash": null,
-                "includes": null,
-                "excludes": null,
-                "osi_verified": true,
-                "dependency_count": null
-            },
-            "itsdangerous:2.0.0rc1": {
-                "id": 1060,
-                "project": 12,
-                "published_at": "2021-02-15 16:53:16",
-                "version": "2.0.0rc1",
-                "updated_at": "2024-03-27 10:22:53",
-                "counted_functions": null,
-                "counted_files": null,
-                "nloc_total": null,
-                "nloc_average": null,
-                "ccn_average": null,
-                "commit_at": null,
-                "commit_hash": null,
-                "includes": null,
-                "excludes": null,
-                "osi_verified": true,
-                "dependency_count": null
-            },
-            "werkzeug:2.0.0rc1": {
-                "id": 1165,
-                "project": 14,
-                "published_at": "2021-02-08 15:20:44",
-                "version": "2.0.0rc1",
-                "updated_at": "2024-03-27 10:41:15",
-                "counted_functions": null,
-                "counted_files": null,
-                "nloc_total": null,
-                "nloc_average": null,
-                "ccn_average": null,
-                "commit_at": null,
-                "commit_hash": null,
-                "includes": null,
-                "excludes": null,
-                "osi_verified": true,
-                "dependency_count": null
-            },
-            "werkzeug:2.0.0rc3": {
-                "id": 1167,
-                "project": 14,
-                "published_at": "2021-03-17 20:42:05",
-                "version": "2.0.0rc3",
-                "updated_at": "2024-03-27 10:41:15",
-                "counted_functions": null,
-                "counted_files": null,
-                "nloc_total": null,
-                "nloc_average": null,
-                "ccn_average": null,
-                "commit_at": null,
-                "commit_hash": null,
-                "includes": null,
-                "excludes": null,
-                "osi_verified": true,
-                "dependency_count": null
-            },
-            "click:8.0.0rc1": {
-                "id": 912,
-                "project": 10,
-                "published_at": "2021-04-16 14:09:35",
-                "version": "8.0.0rc1",
-                "updated_at": "2024-03-27 10:22:49",
-                "counted_functions": null,
-                "counted_files": null,
-                "nloc_total": null,
-                "nloc_average": null,
-                "ccn_average": null,
-                "commit_at": null,
-                "commit_hash": null,
-                "includes": null,
-                "excludes": null,
-                "osi_verified": true,
-                "dependency_count": null
-            },
-            "itsdangerous:2.0.0rc2": {
-                "id": 1061,
-                "project": 12,
-                "published_at": "2021-04-16 14:53:07",
-                "version": "2.0.0rc2",
-                "updated_at": "2024-03-27 10:22:53",
-                "counted_functions": null,
-                "counted_files": null,
-                "nloc_total": null,
-                "nloc_average": null,
-                "ccn_average": null,
-                "commit_at": null,
-                "commit_hash": null,
-                "includes": null,
-                "excludes": null,
-                "osi_verified": true,
-                "dependency_count": null
-            },
-            "jinja2:3.0.0rc2": {
-                "id": 42,
+            "jinja2:2.11.2": {
+                "id": 11,
                 "project": 1,
-                "published_at": "2021-04-25 15:12:58",
-                "version": "3.0.0rc2",
+                "published_at": "2020-04-13 16:16:44",
+                "version": "2.11.2",
                 "updated_at": "2024-03-25 17:46:06",
-                "counted_functions": null,
-                "counted_files": null,
-                "nloc_total": null,
-                "nloc_average": null,
-                "ccn_average": null,
-                "commit_at": null,
-                "commit_hash": null,
-                "includes": null,
+                "counted_functions": 785,
+                "counted_files": 27,
+                "nloc_total": 8853,
+                "nloc_average": 11.28,
+                "ccn_average": 2.85,
+                "commit_at": "2020-04-13 18:12:19",
+                "commit_hash": "737a4cd41d09878e7e6c584a2062f5853dc30150",
+                "includes": "jinja2/, src/",
                 "excludes": null,
                 "osi_verified": true,
-                "dependency_count": null
+                "dependency_count": 1,
+                "bandit_report": {
+                    "id": 2155,
+                    "release": 11,
+                    "updated_at": "2024-04-22 18:01:06",
+                    "issues_total": 31,
+                    "files_with_issues": 11,
+                    "files_skipped": 0,
+                    "confidence_high_count": 21,
+                    "confidence_medium_count": 10,
+                    "confidence_low_count": 0,
+                    "confidence_undefined_count": 0,
+                    "severity_high_count": 3,
+                    "severity_medium_count": 8,
+                    "severity_low_count": 20,
+                    "severity_undefined_count": 0,
+                    "severity_h_confidence_h_count": 3,
+                    "severity_h_confidence_m_count": 0,
+                    "severity_h_confidence_l_count": 0,
+                    "severity_m_confidence_h_count": 8,
+                    "severity_m_confidence_m_count": 0,
+                    "severity_m_confidence_l_count": 0,
+                    "severity_l_confidence_h_count": 10,
+                    "severity_l_confidence_m_count": 10,
+                    "severity_l_confidence_l_count": 0,
+                    "loc": 10243,
+                    "nosec": 0,
+                    "skipped_tests": 0
+                }
             },
-            "werkzeug:2.0.0rc4": {
-                "id": 1168,
-                "project": 14,
-                "published_at": "2021-04-16 15:35:25",
-                "version": "2.0.0rc4",
-                "updated_at": "2024-03-27 10:41:15",
-                "counted_functions": null,
-                "counted_files": null,
-                "nloc_total": null,
-                "nloc_average": null,
-                "ccn_average": null,
-                "commit_at": null,
-                "commit_hash": null,
-                "includes": null,
+            "jinja2:2.11.3": {
+                "id": 12,
+                "project": 1,
+                "published_at": "2021-01-31 16:33:07",
+                "version": "2.11.3",
+                "updated_at": "2024-03-25 17:46:06",
+                "counted_functions": 785,
+                "counted_files": 27,
+                "nloc_total": 8848,
+                "nloc_average": 11.27,
+                "ccn_average": 2.85,
+                "commit_at": "2021-01-31 17:44:37",
+                "commit_hash": "cf215390d4a4d6f0a4de27e2687eed176878f13d",
+                "includes": "jinja2/, src/",
                 "excludes": null,
                 "osi_verified": true,
-                "dependency_count": null
+                "dependency_count": 1,
+                "bandit_report": {
+                    "id": 2154,
+                    "release": 12,
+                    "updated_at": "2024-04-22 18:01:05",
+                    "issues_total": 31,
+                    "files_with_issues": 11,
+                    "files_skipped": 0,
+                    "confidence_high_count": 21,
+                    "confidence_medium_count": 10,
+                    "confidence_low_count": 0,
+                    "confidence_undefined_count": 0,
+                    "severity_high_count": 3,
+                    "severity_medium_count": 8,
+                    "severity_low_count": 20,
+                    "severity_undefined_count": 0,
+                    "severity_h_confidence_h_count": 3,
+                    "severity_h_confidence_m_count": 0,
+                    "severity_h_confidence_l_count": 0,
+                    "severity_m_confidence_h_count": 8,
+                    "severity_m_confidence_m_count": 0,
+                    "severity_m_confidence_l_count": 0,
+                    "severity_l_confidence_h_count": 10,
+                    "severity_l_confidence_m_count": 10,
+                    "severity_l_confidence_l_count": 0,
+                    "loc": 10238,
+                    "nosec": 0,
+                    "skipped_tests": 0
+                }
             },
             "click:8.0.1": {
                 "id": 913,
@@ -6989,7 +6915,7 @@
                     "click:7.0",
                     "itsdangerous:1.1.0",
                     "jinja2:2.11.1",
-                    "werkzeug:1.0.0rc1"
+                    "werkzeug:0.16.1"
                 ],
                 "cves": [
                     "CVE-2020-28493",
@@ -7005,10 +6931,11 @@
                 "release": [
                     "click:7.0",
                     "itsdangerous:1.1.0",
-                    "jinja2:3.0.0a1",
+                    "jinja2:2.11.1",
                     "werkzeug:1.0.0"
                 ],
                 "cves": [
+                    "CVE-2020-28493",
                     "CVE-2022-29361",
                     "CVE-2023-23934",
                     "CVE-2023-25577",
@@ -7021,10 +6948,11 @@
                 "release": [
                     "click:7.1.1",
                     "itsdangerous:1.1.0",
-                    "jinja2:3.0.0a1",
+                    "jinja2:2.11.1",
                     "werkzeug:1.0.1"
                 ],
                 "cves": [
+                    "CVE-2020-28493",
                     "CVE-2022-29361",
                     "CVE-2023-23934",
                     "CVE-2023-25577",
@@ -7037,10 +6965,11 @@
                 "release": [
                     "click:7.1.2",
                     "itsdangerous:1.1.0",
-                    "jinja2:3.0.0a1",
+                    "jinja2:2.11.2",
                     "werkzeug:1.0.1"
                 ],
                 "cves": [
+                    "CVE-2020-28493",
                     "CVE-2022-29361",
                     "CVE-2023-23934",
                     "CVE-2023-25577",
@@ -7052,11 +6981,12 @@
                 "date": "2020-06-01 00:00:00",
                 "release": [
                     "click:7.1.2",
-                    "itsdangerous:2.0.0a1",
-                    "jinja2:3.0.0a1",
+                    "itsdangerous:1.1.0",
+                    "jinja2:2.11.2",
                     "werkzeug:1.0.1"
                 ],
                 "cves": [
+                    "CVE-2020-28493",
                     "CVE-2022-29361",
                     "CVE-2023-23934",
                     "CVE-2023-25577",
@@ -7068,11 +6998,12 @@
                 "date": "2020-07-01 00:00:00",
                 "release": [
                     "click:7.1.2",
-                    "itsdangerous:2.0.0a1",
-                    "jinja2:3.0.0a1",
+                    "itsdangerous:1.1.0",
+                    "jinja2:2.11.2",
                     "werkzeug:1.0.1"
                 ],
                 "cves": [
+                    "CVE-2020-28493",
                     "CVE-2022-29361",
                     "CVE-2023-23934",
                     "CVE-2023-25577",
@@ -7084,11 +7015,12 @@
                 "date": "2020-08-01 00:00:00",
                 "release": [
                     "click:7.1.2",
-                    "itsdangerous:2.0.0a1",
-                    "jinja2:3.0.0a1",
+                    "itsdangerous:1.1.0",
+                    "jinja2:2.11.2",
                     "werkzeug:1.0.1"
                 ],
                 "cves": [
+                    "CVE-2020-28493",
                     "CVE-2022-29361",
                     "CVE-2023-23934",
                     "CVE-2023-25577",
@@ -7100,11 +7032,12 @@
                 "date": "2020-09-01 00:00:00",
                 "release": [
                     "click:7.1.2",
-                    "itsdangerous:2.0.0a1",
-                    "jinja2:3.0.0a1",
+                    "itsdangerous:1.1.0",
+                    "jinja2:2.11.2",
                     "werkzeug:1.0.1"
                 ],
                 "cves": [
+                    "CVE-2020-28493",
                     "CVE-2022-29361",
                     "CVE-2023-23934",
                     "CVE-2023-25577",
@@ -7116,11 +7049,12 @@
                 "date": "2020-10-01 00:00:00",
                 "release": [
                     "click:7.1.2",
-                    "itsdangerous:2.0.0a1",
-                    "jinja2:3.0.0a1",
+                    "itsdangerous:1.1.0",
+                    "jinja2:2.11.2",
                     "werkzeug:1.0.1"
                 ],
                 "cves": [
+                    "CVE-2020-28493",
                     "CVE-2022-29361",
                     "CVE-2023-23934",
                     "CVE-2023-25577",
@@ -7132,11 +7066,12 @@
                 "date": "2020-11-01 00:00:00",
                 "release": [
                     "click:7.1.2",
-                    "itsdangerous:2.0.0a1",
-                    "jinja2:3.0.0a1",
+                    "itsdangerous:1.1.0",
+                    "jinja2:2.11.2",
                     "werkzeug:1.0.1"
                 ],
                 "cves": [
+                    "CVE-2020-28493",
                     "CVE-2022-29361",
                     "CVE-2023-23934",
                     "CVE-2023-25577",
@@ -7147,12 +7082,13 @@
             {
                 "date": "2020-12-01 00:00:00",
                 "release": [
-                    "click:8.0.0a1",
-                    "itsdangerous:2.0.0a1",
-                    "jinja2:3.0.0a1",
+                    "click:7.1.2",
+                    "itsdangerous:1.1.0",
+                    "jinja2:2.11.2",
                     "werkzeug:1.0.1"
                 ],
                 "cves": [
+                    "CVE-2020-28493",
                     "CVE-2022-29361",
                     "CVE-2023-23934",
                     "CVE-2023-25577",
@@ -7163,12 +7099,13 @@
             {
                 "date": "2021-01-01 00:00:00",
                 "release": [
-                    "click:8.0.0a1",
-                    "itsdangerous:2.0.0a1",
-                    "jinja2:3.0.0a1",
+                    "click:7.1.2",
+                    "itsdangerous:1.1.0",
+                    "jinja2:2.11.2",
                     "werkzeug:1.0.1"
                 ],
                 "cves": [
+                    "CVE-2020-28493",
                     "CVE-2022-29361",
                     "CVE-2023-23934",
                     "CVE-2023-25577",
@@ -7179,9 +7116,9 @@
             {
                 "date": "2021-02-01 00:00:00",
                 "release": [
-                    "click:8.0.0a1",
-                    "itsdangerous:2.0.0a1",
-                    "jinja2:3.0.0a1",
+                    "click:7.1.2",
+                    "itsdangerous:1.1.0",
+                    "jinja2:2.11.3",
                     "werkzeug:1.0.1"
                 ],
                 "cves": [
@@ -7195,10 +7132,10 @@
             {
                 "date": "2021-03-01 00:00:00",
                 "release": [
-                    "click:8.0.0a1",
-                    "itsdangerous:2.0.0rc1",
-                    "jinja2:3.0.0a1",
-                    "werkzeug:2.0.0rc1"
+                    "click:7.1.2",
+                    "itsdangerous:1.1.0",
+                    "jinja2:2.11.3",
+                    "werkzeug:1.0.1"
                 ],
                 "cves": [
                     "CVE-2022-29361",
@@ -7211,10 +7148,10 @@
             {
                 "date": "2021-04-01 00:00:00",
                 "release": [
-                    "click:8.0.0a1",
-                    "itsdangerous:2.0.0rc1",
-                    "jinja2:3.0.0a1",
-                    "werkzeug:2.0.0rc3"
+                    "click:7.1.2",
+                    "itsdangerous:1.1.0",
+                    "jinja2:2.11.3",
+                    "werkzeug:1.0.1"
                 ],
                 "cves": [
                     "CVE-2022-29361",
@@ -7227,10 +7164,10 @@
             {
                 "date": "2021-05-01 00:00:00",
                 "release": [
-                    "click:8.0.0rc1",
-                    "itsdangerous:2.0.0rc2",
-                    "jinja2:3.0.0rc2",
-                    "werkzeug:2.0.0rc4"
+                    "click:7.1.2",
+                    "itsdangerous:1.1.0",
+                    "jinja2:2.11.3",
+                    "werkzeug:1.0.1"
                 ],
                 "cves": [
                     "CVE-2022-29361",
@@ -7811,6 +7748,20 @@
             },
             {
                 "date": "2024-04-01 00:00:00",
+                "release": [
+                    "blinker:1.7.0",
+                    "click:8.1.7",
+                    "importlib-metadata:7.1.0",
+                    "itsdangerous:2.1.2",
+                    "jinja2:3.1.3",
+                    "markupsafe:2.1.5",
+                    "werkzeug:3.0.1",
+                    "zipp:3.18.1"
+                ],
+                "cves": []
+            },
+            {
+                "date": "2024-05-01 00:00:00",
                 "release": [
                     "blinker:1.7.0",
                     "click:8.1.7",
@@ -8447,6 +8398,11 @@
             },
             {
                 "date": "2024-04-01 00:00:00",
+                "release": [],
+                "cves": []
+            },
+            {
+                "date": "2024-05-01 00:00:00",
                 "release": [],
                 "cves": []
             }

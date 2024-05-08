@@ -984,6 +984,7 @@ class Aggregator:
                           project_or_release: str | Project,
                           version: str = None,
                           force: bool = True,
+                          requirements: str = None,
                           platform: str="pypi") -> BanditReport:
         """
         Gets the bandit report of a project or a specific release
@@ -1007,7 +1008,7 @@ class Aggregator:
             logger.error(f"Project {project_or_release} not found")
             return None
         if release is None:
-            release = self.get_release(project, version, platform)
+            release = self.get_release(project, version, platform, requirements=requirements)
             if release is None:
                 logger.error(f"Release {version} not found for {project.name}")
                 return None
@@ -1790,6 +1791,14 @@ class Aggregator:
         """
         cve = nvd.CVE.get_or_none(cve_id=cve_id)
         return cve
+
+    def get_bandit(self, project: str | Project, platform: str="pypi") -> dict:
+        """
+        Gets a Bandit report for a project
+        """
+        project = self.get_project(project, platform)
+        bandit = self.get_bandit_report(project)
+        return bandit
                 
     
 if __name__ == "__main__":
@@ -1804,4 +1813,3 @@ if __name__ == "__main__":
     ag = Aggregator("config.yml", debug=True)
     ag.load_projects()
     project = ag.get_project(args.project) if args.project else None
-    v = ag.get_vulnerabilities(project)

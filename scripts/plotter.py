@@ -877,6 +877,7 @@ def plot_semver(df: pd.DataFrame, static_df: pd.DataFrame):
                 palette['other'] = Global.Colours.light_grey
         
         for major in pdf['major'].unique():
+            # drop duplicates
             other_nloc_sum = pdf[(pdf['major'] == major) & (pdf['release'] == 'other')]['nloc_total'].sum()
             # overwrite value
             pdf.loc[(pdf['major'] == major) & (pdf['release'] == 'other'), 'nloc_total'] = other_nloc_sum
