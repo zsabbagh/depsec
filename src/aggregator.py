@@ -2,6 +2,7 @@ import time, yaml, json, glob, sys, pandas as pd, datetime as dt
 import src.schemas.nvd as nvd
 import src.schemas.cwe as cwe
 import src.utils.db as db
+import src.utils.giterate as giterate
 import argparse
 import numpy as np
 from copy import deepcopy
@@ -95,6 +96,7 @@ class Aggregator:
 
         # Configure the databases
         projects_path, projects_name = get_database_dir_and_name(databases, 'projects')
+        self.repositories = self.__config.get('repositories', {}).get('path')
         vulns_path, vulns_name = get_database_dir_and_name(databases, 'vulnerabilities')
         weaks_path, weaks_name = get_database_dir_and_name(databases, 'weaknesses')
         DB_PROJECTS.set(projects_path, projects_name)
@@ -150,6 +152,17 @@ class Aggregator:
                     if product is not None:
                         project.product = product
                     project.save()
+                    repo = info.get('repo')
+                    if repo:
+                        repo_url = repo.get('url')
+                        includes = repo.get('includes')
+                        excludes = repo.get('excludes')
+                        tag_regex = repo.get('tags')
+                        if repo_url:
+                            project.repository_url = repo_url
+                        project.includes = includes
+                        project.excludes = excludes
+                        project.tag_regex = tag_regex
                     result.append(project)
         logger.info(f"Loaded {len(result)} projects")
         return result
@@ -1864,6 +1877,14 @@ class Aggregator:
                 cves.append(cve)
                 cve_ids.add(cve.cve_id)
         return cves
+    
+    def _analyse_project(self, project: str | Project, platform: str="pypi") -> dict:
+        """
+        Analyse a project's release
+        """
+        project = self.get_project(project, platform)
+        # one must identify "excludes" and "includes" for the project
+        giterate.run_analysis(project, self.repositories)
     
 if __name__ == "__main__":
     # For the purpose of loading in interactive shell and debugging

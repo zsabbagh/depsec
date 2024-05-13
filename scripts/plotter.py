@@ -5,7 +5,6 @@ import matplotlib.pyplot as plt
 import pandas as pd
 import src.utils.compute as compute
 import src.utils.tools as tools
-import src.utils.report as report
 from copy import deepcopy
 from pprint import pprint
 from pathlib import Path
@@ -1235,8 +1234,6 @@ if __name__ == '__main__':
         cves_overall_df.to_csv(cve_overall_path, index=False)
 
         # generate reports of the overall findings to explain the plots
-        rep = report.cve_report(cves_overall_df)
-        try_json_dump(rep, json_dir / 'cve_report.json')
         all_input = 'all' in args.overall
         if 'cwe' in overall_keys or all_input:
             cwe_df = cves_overall_df.copy()

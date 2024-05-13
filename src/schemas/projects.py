@@ -41,6 +41,9 @@ class Project(Model):
     osi_verified = BooleanField(default=False)
     updated_at = DateTimeField(default=datetime.datetime.now)
     package_manager_url = CharField(null=True)
+    includes = TextField(null=True)
+    excludes = TextField(null=True)
+    tag_regex = CharField(null=True)
     repository_url = CharField(null=True)
 
     class Meta:
@@ -85,6 +88,29 @@ class Release(Model):
     class Meta:
         database = DB_PROJECTS.get()
         table_name = 'releases'
+
+class Applicability(Model):
+    """
+    Applicability models a vulnerability applicability to a release
+
+    id: The CVE applicability id
+    release: The release id
+    cve: The CVE id
+    updated_at: The date the row in the database was updated
+    """
+    id = AutoField()
+    release = ForeignKeyField(Release, backref='applicabilities', on_delete='CASCADE')
+    version_start = CharField(null=False)
+    version_end = CharField(null=False)
+    exclude_start = BooleanField(default=False)
+    exclude_end = BooleanField(default=False)
+    patched_at = DateTimeField(null=True)
+    patched_version = CharField(null=True)
+    cve_id = CharField(null=False)
+    updated_at = DateTimeField(default=datetime.datetime.now)
+    class Meta:
+        database = DB_PROJECTS.get()
+        table_name = 'applicabilities'
     
 class BanditReport(Model):
     """
@@ -146,6 +172,7 @@ class BanditIssue(Model):
     more_info = CharField(null=True)
     test_id = CharField(null=False)
     test_name = CharField(null=False)
+    test_category = CharField(null=False)
     code = TextField(null=True)
     lines = CharField(null=True)
     cwe_id = CharField(null=True)
@@ -206,5 +233,5 @@ DB_PROJECTS.add_tables(
     ReleaseDependency,
     ReleaseRepo,
     BanditReport,
-    BanditIssue
+    BanditIssue,
 )
