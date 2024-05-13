@@ -733,9 +733,9 @@
                         "patched_version": "1.8.14"
                     },
                     {
-                        "version_start": "1.9",
+                        "version_start": "1.9.0",
                         "version_end": "1.9.8",
-                        "start_date": "2015-12-01 23:55:38",
+                        "start_date": null,
                         "exclude_start": false,
                         "end_date": "2016-07-18 18:19:55",
                         "exclude_end": true,
@@ -5941,7 +5941,7 @@
                 "includes": "django/",
                 "excludes": null,
                 "osi_verified": true,
-                "dependency_count": 3,
+                "dependency_count": 0,
                 "bandit_report": {
                     "id": 1627,
                     "release": 215,
@@ -5987,7 +5987,7 @@
                 "includes": "django/",
                 "excludes": null,
                 "osi_verified": true,
-                "dependency_count": 3,
+                "dependency_count": 0,
                 "bandit_report": {
                     "id": 1626,
                     "release": 218,
@@ -6033,7 +6033,7 @@
                 "includes": "django/",
                 "excludes": null,
                 "osi_verified": true,
-                "dependency_count": 3,
+                "dependency_count": 0,
                 "bandit_report": {
                     "id": 1624,
                     "release": 220,
@@ -6079,7 +6079,7 @@
                 "includes": "django/",
                 "excludes": null,
                 "osi_verified": true,
-                "dependency_count": 3,
+                "dependency_count": 0,
                 "bandit_report": {
                     "id": 1623,
                     "release": 221,
@@ -6125,7 +6125,7 @@
                 "includes": "django/",
                 "excludes": null,
                 "osi_verified": true,
-                "dependency_count": 3,
+                "dependency_count": 0,
                 "bandit_report": {
                     "id": 1622,
                     "release": 222,
@@ -6171,7 +6171,7 @@
                 "includes": "django/",
                 "excludes": null,
                 "osi_verified": true,
-                "dependency_count": 3,
+                "dependency_count": 0,
                 "bandit_report": {
                     "id": 1616,
                     "release": 226,
@@ -6217,7 +6217,7 @@
                 "includes": "django/",
                 "excludes": null,
                 "osi_verified": true,
-                "dependency_count": 3,
+                "dependency_count": 0,
                 "bandit_report": {
                     "id": 1615,
                     "release": 227,
@@ -6263,7 +6263,7 @@
                 "includes": "django/",
                 "excludes": null,
                 "osi_verified": true,
-                "dependency_count": 3,
+                "dependency_count": 0,
                 "bandit_report": {
                     "id": 1612,
                     "release": 232,
@@ -6309,7 +6309,7 @@
                 "includes": "django/",
                 "excludes": null,
                 "osi_verified": true,
-                "dependency_count": 3,
+                "dependency_count": 0,
                 "bandit_report": {
                     "id": 1611,
                     "release": 233,
@@ -6355,7 +6355,7 @@
                 "includes": "django/",
                 "excludes": null,
                 "osi_verified": true,
-                "dependency_count": 3,
+                "dependency_count": 0,
                 "bandit_report": {
                     "id": 1609,
                     "release": 235,
@@ -6401,7 +6401,7 @@
                 "includes": "django/",
                 "excludes": null,
                 "osi_verified": true,
-                "dependency_count": 3,
+                "dependency_count": 0,
                 "bandit_report": {
                     "id": 1604,
                     "release": 238,
@@ -6447,7 +6447,7 @@
                 "includes": "django/",
                 "excludes": null,
                 "osi_verified": true,
-                "dependency_count": 3,
+                "dependency_count": 0,
                 "bandit_report": {
                     "id": 1602,
                     "release": 250,
@@ -6493,7 +6493,7 @@
                 "includes": "django/",
                 "excludes": null,
                 "osi_verified": true,
-                "dependency_count": 3,
+                "dependency_count": 0,
                 "bandit_report": {
                     "id": 1601,
                     "release": 251,
@@ -6539,7 +6539,7 @@
                 "includes": "django/",
                 "excludes": null,
                 "osi_verified": true,
-                "dependency_count": 3,
+                "dependency_count": 0,
                 "bandit_report": {
                     "id": 1600,
                     "release": 252,
@@ -6585,7 +6585,7 @@
                 "includes": "django/",
                 "excludes": null,
                 "osi_verified": true,
-                "dependency_count": 3,
+                "dependency_count": 0,
                 "bandit_report": {
                     "id": 1599,
                     "release": 253,
@@ -6631,7 +6631,7 @@
                 "includes": "django/",
                 "excludes": null,
                 "osi_verified": true,
-                "dependency_count": 3,
+                "dependency_count": 0,
                 "bandit_report": {
                     "id": 1597,
                     "release": 255,
@@ -6677,7 +6677,7 @@
                 "includes": "django/",
                 "excludes": null,
                 "osi_verified": true,
-                "dependency_count": 3,
+                "dependency_count": 0,
                 "bandit_report": {
                     "id": 1584,
                     "release": 262,
@@ -6723,7 +6723,7 @@
                 "includes": "django/",
                 "excludes": null,
                 "osi_verified": true,
-                "dependency_count": 3,
+                "dependency_count": 0,
                 "bandit_report": {
                     "id": 1583,
                     "release": 263,
@@ -6769,7 +6769,7 @@
                 "includes": "django/",
                 "excludes": null,
                 "osi_verified": true,
-                "dependency_count": 3,
+                "dependency_count": 0,
                 "bandit_report": {
                     "id": 1582,
                     "release": 268,
@@ -6815,7 +6815,7 @@
                 "includes": "django/",
                 "excludes": null,
                 "osi_verified": true,
-                "dependency_count": 3,
+                "dependency_count": 0,
                 "bandit_report": {
                     "id": 1580,
                     "release": 270,
@@ -6861,7 +6861,7 @@
                 "includes": "django/",
                 "excludes": null,
                 "osi_verified": true,
-                "dependency_count": 3,
+                "dependency_count": 0,
                 "bandit_report": {
                     "id": 1579,
                     "release": 271,
@@ -6907,7 +6907,7 @@
                 "includes": "django/",
                 "excludes": null,
                 "osi_verified": true,
-                "dependency_count": 3,
+                "dependency_count": 0,
                 "bandit_report": {
                     "id": 1578,
                     "release": 272,
@@ -6953,7 +6953,7 @@
                 "includes": "django/",
                 "excludes": null,
                 "osi_verified": true,
-                "dependency_count": 3,
+                "dependency_count": 0,
                 "bandit_report": {
                     "id": 1577,
                     "release": 273,
@@ -6999,7 +6999,7 @@
                 "includes": "django/",
                 "excludes": null,
                 "osi_verified": true,
-                "dependency_count": 3,
+                "dependency_count": 0,
                 "bandit_report": {
                     "id": 1576,
                     "release": 274,
@@ -7045,7 +7045,7 @@
                 "includes": "django/",
                 "excludes": null,
                 "osi_verified": true,
-                "dependency_count": 3,
+                "dependency_count": 0,
                 "bandit_report": {
                     "id": 1570,
                     "release": 114,
@@ -7091,7 +7091,7 @@
                 "includes": "django/",
                 "excludes": null,
                 "osi_verified": true,
-                "dependency_count": 3,
+                "dependency_count": 0,
                 "bandit_report": {
                     "id": 1569,
                     "release": 115,
@@ -7137,7 +7137,7 @@
                 "includes": "django/",
                 "excludes": null,
                 "osi_verified": true,
-                "dependency_count": 3,
+                "dependency_count": 0,
                 "bandit_report": {
                     "id": 1568,
                     "release": 116,
@@ -7183,7 +7183,7 @@
                 "includes": "django/",
                 "excludes": null,
                 "osi_verified": true,
-                "dependency_count": 3,
+                "dependency_count": 0,
                 "bandit_report": {
                     "id": 1567,
                     "release": 117,
@@ -7229,7 +7229,7 @@
                 "includes": "django/",
                 "excludes": null,
                 "osi_verified": true,
-                "dependency_count": 3,
+                "dependency_count": 0,
                 "bandit_report": {
                     "id": 1566,
                     "release": 118,
@@ -7275,7 +7275,7 @@
                 "includes": "django/",
                 "excludes": null,
                 "osi_verified": true,
-                "dependency_count": 3,
+                "dependency_count": 0,
                 "bandit_report": {
                     "id": 1565,
                     "release": 119,
@@ -7321,7 +7321,7 @@
                 "includes": "django/",
                 "excludes": null,
                 "osi_verified": true,
-                "dependency_count": 3,
+                "dependency_count": 0,
                 "bandit_report": {
                     "id": 1564,
                     "release": 120,
@@ -7367,7 +7367,7 @@
                 "includes": "django/",
                 "excludes": null,
                 "osi_verified": true,
-                "dependency_count": 3,
+                "dependency_count": 1,
                 "bandit_report": {
                     "id": 1561,
                     "release": 126,
@@ -7413,7 +7413,7 @@
                 "includes": "django/",
                 "excludes": null,
                 "osi_verified": true,
-                "dependency_count": 3,
+                "dependency_count": 1,
                 "bandit_report": {
                     "id": 1560,
                     "release": 128,
@@ -7459,7 +7459,7 @@
                 "includes": "django/",
                 "excludes": null,
                 "osi_verified": true,
-                "dependency_count": 3,
+                "dependency_count": 1,
                 "bandit_report": {
                     "id": 1559,
                     "release": 138,
@@ -7505,7 +7505,7 @@
                 "includes": "django/",
                 "excludes": null,
                 "osi_verified": true,
-                "dependency_count": 3,
+                "dependency_count": 1,
                 "bandit_report": {
                     "id": 1558,
                     "release": 149,
@@ -7551,7 +7551,7 @@
                 "includes": "django/",
                 "excludes": null,
                 "osi_verified": true,
-                "dependency_count": 3,
+                "dependency_count": 1,
                 "bandit_report": {
                     "id": 1557,
                     "release": 150,
@@ -7597,7 +7597,7 @@
                 "includes": "django/",
                 "excludes": null,
                 "osi_verified": true,
-                "dependency_count": 3,
+                "dependency_count": 1,
                 "bandit_report": {
                     "id": 1556,
                     "release": 151,
@@ -7643,7 +7643,7 @@
                 "includes": "django/",
                 "excludes": null,
                 "osi_verified": true,
-                "dependency_count": 3,
+                "dependency_count": 1,
                 "bandit_report": {
                     "id": 1555,
                     "release": 152,
@@ -7689,7 +7689,7 @@
                 "includes": "django/",
                 "excludes": null,
                 "osi_verified": true,
-                "dependency_count": 3,
+                "dependency_count": 1,
                 "bandit_report": {
                     "id": 1554,
                     "release": 153,
@@ -7735,7 +7735,7 @@
                 "includes": "django/",
                 "excludes": null,
                 "osi_verified": true,
-                "dependency_count": 3,
+                "dependency_count": 1,
                 "bandit_report": {
                     "id": 1532,
                     "release": 280,
@@ -7781,7 +7781,7 @@
                 "includes": "django/",
                 "excludes": null,
                 "osi_verified": true,
-                "dependency_count": 3,
+                "dependency_count": 1,
                 "bandit_report": {
                     "id": 1531,
                     "release": 281,
@@ -7827,7 +7827,7 @@
                 "includes": "django/",
                 "excludes": null,
                 "osi_verified": true,
-                "dependency_count": 3,
+                "dependency_count": 1,
                 "bandit_report": {
                     "id": 1530,
                     "release": 285,
@@ -7873,7 +7873,7 @@
                 "includes": "django/",
                 "excludes": null,
                 "osi_verified": true,
-                "dependency_count": 3,
+                "dependency_count": 1,
                 "bandit_report": {
                     "id": 1529,
                     "release": 286,
@@ -7919,7 +7919,7 @@
                 "includes": "django/",
                 "excludes": null,
                 "osi_verified": true,
-                "dependency_count": 3,
+                "dependency_count": 1,
                 "bandit_report": {
                     "id": 1528,
                     "release": 287,
@@ -7965,7 +7965,7 @@
                 "includes": "django/",
                 "excludes": null,
                 "osi_verified": true,
-                "dependency_count": 3,
+                "dependency_count": 1,
                 "bandit_report": {
                     "id": 1527,
                     "release": 288,
@@ -8011,7 +8011,7 @@
                 "includes": "django/",
                 "excludes": null,
                 "osi_verified": true,
-                "dependency_count": 3,
+                "dependency_count": 1,
                 "bandit_report": {
                     "id": 1526,
                     "release": 289,
@@ -8057,7 +8057,7 @@
                 "includes": "django/",
                 "excludes": null,
                 "osi_verified": true,
-                "dependency_count": 3,
+                "dependency_count": 1,
                 "bandit_report": {
                     "id": 1525,
                     "release": 290,
@@ -8103,7 +8103,7 @@
                 "includes": "django/",
                 "excludes": null,
                 "osi_verified": true,
-                "dependency_count": 3,
+                "dependency_count": 1,
                 "bandit_report": {
                     "id": 1518,
                     "release": 297,
@@ -8149,7 +8149,7 @@
                 "includes": "django/",
                 "excludes": null,
                 "osi_verified": true,
-                "dependency_count": 3,
+                "dependency_count": 1,
                 "bandit_report": {
                     "id": 1517,
                     "release": 304,
@@ -8195,7 +8195,7 @@
                 "includes": "django/",
                 "excludes": null,
                 "osi_verified": true,
-                "dependency_count": 3,
+                "dependency_count": 1,
                 "bandit_report": {
                     "id": 1516,
                     "release": 305,
@@ -8241,7 +8241,7 @@
                 "includes": "django/",
                 "excludes": null,
                 "osi_verified": true,
-                "dependency_count": 3,
+                "dependency_count": 1,
                 "bandit_report": {
                     "id": 1515,
                     "release": 306,
@@ -8287,7 +8287,7 @@
                 "includes": "django/",
                 "excludes": null,
                 "osi_verified": true,
-                "dependency_count": 3,
+                "dependency_count": 1,
                 "bandit_report": {
                     "id": 1514,
                     "release": 307,
@@ -8333,7 +8333,7 @@
                 "includes": "django/",
                 "excludes": null,
                 "osi_verified": true,
-                "dependency_count": 3,
+                "dependency_count": 1,
                 "bandit_report": {
                     "id": 1513,
                     "release": 308,
@@ -8379,7 +8379,7 @@
                 "includes": "django/",
                 "excludes": null,
                 "osi_verified": true,
-                "dependency_count": 3,
+                "dependency_count": 2,
                 "bandit_report": {
                     "id": 1504,
                     "release": 314,
@@ -8425,7 +8425,7 @@
                 "includes": "django/",
                 "excludes": null,
                 "osi_verified": true,
-                "dependency_count": 3,
+                "dependency_count": 2,
                 "bandit_report": {
                     "id": 1503,
                     "release": 315,
@@ -8471,7 +8471,7 @@
                 "includes": "django/",
                 "excludes": null,
                 "osi_verified": true,
-                "dependency_count": 3,
+                "dependency_count": 2,
                 "bandit_report": {
                     "id": 1502,
                     "release": 326,
@@ -8517,7 +8517,7 @@
                 "includes": "django/",
                 "excludes": null,
                 "osi_verified": true,
-                "dependency_count": 3,
+                "dependency_count": 2,
                 "bandit_report": {
                     "id": 1501,
                     "release": 336,
@@ -8563,7 +8563,7 @@
                 "includes": "django/",
                 "excludes": null,
                 "osi_verified": true,
-                "dependency_count": 3,
+                "dependency_count": 2,
                 "bandit_report": {
                     "id": 1500,
                     "release": 337,
@@ -8609,7 +8609,7 @@
                 "includes": "django/",
                 "excludes": null,
                 "osi_verified": true,
-                "dependency_count": 3,
+                "dependency_count": 2,
                 "bandit_report": {
                     "id": 1499,
                     "release": 338,
@@ -8655,7 +8655,7 @@
                 "includes": "django/",
                 "excludes": null,
                 "osi_verified": true,
-                "dependency_count": 3,
+                "dependency_count": 2,
                 "bandit_report": {
                     "id": 1498,
                     "release": 339,
@@ -8701,7 +8701,7 @@
                 "includes": "django/",
                 "excludes": null,
                 "osi_verified": true,
-                "dependency_count": 3,
+                "dependency_count": 2,
                 "bandit_report": {
                     "id": 1497,
                     "release": 340,
@@ -8747,7 +8747,7 @@
                 "includes": "django/",
                 "excludes": null,
                 "osi_verified": true,
-                "dependency_count": 3,
+                "dependency_count": 4,
                 "bandit_report": {
                     "id": 1474,
                     "release": 347,
@@ -8793,7 +8793,7 @@
                 "includes": "django/",
                 "excludes": null,
                 "osi_verified": true,
-                "dependency_count": 3,
+                "dependency_count": 4,
                 "bandit_report": {
                     "id": 1473,
                     "release": 353,
@@ -8839,7 +8839,7 @@
                 "includes": "django/",
                 "excludes": null,
                 "osi_verified": true,
-                "dependency_count": 3,
+                "dependency_count": 4,
                 "bandit_report": {
                     "id": 1472,
                     "release": 354,
@@ -8885,7 +8885,7 @@
                 "includes": "django/",
                 "excludes": null,
                 "osi_verified": true,
-                "dependency_count": 3,
+                "dependency_count": 4,
                 "bandit_report": {
                     "id": 1471,
                     "release": 355,
@@ -8931,7 +8931,7 @@
                 "includes": "django/",
                 "excludes": null,
                 "osi_verified": true,
-                "dependency_count": 3,
+                "dependency_count": 4,
                 "bandit_report": {
                     "id": 1470,
                     "release": 356,
@@ -8977,7 +8977,7 @@
                 "includes": "django/",
                 "excludes": null,
                 "osi_verified": true,
-                "dependency_count": 3,
+                "dependency_count": 4,
                 "bandit_report": {
                     "id": 1469,
                     "release": 357,
@@ -9023,7 +9023,7 @@
                 "includes": "django/",
                 "excludes": null,
                 "osi_verified": true,
-                "dependency_count": 3,
+                "dependency_count": 4,
                 "bandit_report": {
                     "id": 1468,
                     "release": 358,
@@ -9069,7 +9069,7 @@
                 "includes": "django/",
                 "excludes": null,
                 "osi_verified": true,
-                "dependency_count": 3,
+                "dependency_count": 4,
                 "bandit_report": {
                     "id": 1467,
                     "release": 359,
@@ -9253,7 +9253,7 @@
                 "includes": "django/",
                 "excludes": null,
                 "osi_verified": true,
-                "dependency_count": 3,
+                "dependency_count": 4,
                 "bandit_report": {
                     "id": 1457,
                     "release": 372,
@@ -9299,7 +9299,7 @@
                 "includes": "django/",
                 "excludes": null,
                 "osi_verified": true,
-                "dependency_count": 3,
+                "dependency_count": 4,
                 "bandit_report": {
                     "id": 1456,
                     "release": 373,
@@ -9345,7 +9345,7 @@
                 "includes": "django/",
                 "excludes": null,
                 "osi_verified": true,
-                "dependency_count": 3,
+                "dependency_count": 4,
                 "bandit_report": {
                     "id": 1455,
                     "release": 374,
@@ -9391,7 +9391,7 @@
                 "includes": "django/",
                 "excludes": null,
                 "osi_verified": true,
-                "dependency_count": 3,
+                "dependency_count": 4,
                 "bandit_report": {
                     "id": 1453,
                     "release": 376,
@@ -9437,7 +9437,7 @@
                 "includes": "django/",
                 "excludes": null,
                 "osi_verified": true,
-                "dependency_count": 3,
+                "dependency_count": 4,
                 "bandit_report": {
                     "id": 1445,
                     "release": 382,
@@ -9483,7 +9483,7 @@
                 "includes": "django/",
                 "excludes": null,
                 "osi_verified": true,
-                "dependency_count": 3,
+                "dependency_count": 4,
                 "bandit_report": {
                     "id": 1442,
                     "release": 401,
@@ -9529,7 +9529,7 @@
                 "includes": "django/",
                 "excludes": null,
                 "osi_verified": true,
-                "dependency_count": 3,
+                "dependency_count": 4,
                 "bandit_report": {
                     "id": 1441,
                     "release": 402,
@@ -9575,7 +9575,7 @@
                 "includes": "django/",
                 "excludes": null,
                 "osi_verified": true,
-                "dependency_count": 3,
+                "dependency_count": 4,
                 "bandit_report": {
                     "id": 1440,
                     "release": 403,
@@ -9621,7 +9621,7 @@
                 "includes": "django/",
                 "excludes": null,
                 "osi_verified": true,
-                "dependency_count": 3,
+                "dependency_count": 4,
                 "bandit_report": {
                     "id": 1439,
                     "release": 404,
@@ -9667,7 +9667,7 @@
                 "includes": "django/",
                 "excludes": null,
                 "osi_verified": true,
-                "dependency_count": 3,
+                "dependency_count": 4,
                 "bandit_report": {
                     "id": 1438,
                     "release": 405,
@@ -9713,7 +9713,7 @@
                 "includes": "django/",
                 "excludes": null,
                 "osi_verified": true,
-                "dependency_count": 3,
+                "dependency_count": 4,
                 "bandit_report": {
                     "id": 1437,
                     "release": 406,
@@ -9759,7 +9759,7 @@
                 "includes": "django/",
                 "excludes": null,
                 "osi_verified": true,
-                "dependency_count": 3,
+                "dependency_count": 4,
                 "bandit_report": {
                     "id": 1436,
                     "release": 407,

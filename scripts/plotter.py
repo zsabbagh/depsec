@@ -957,6 +957,7 @@ def plot_issues(df: pd.DataFrame):
 
     # plot the test category distribution
     fig_category, axs_category = plt.subplots(project_count, 1, figsize=(10, 8))
+    axs_category = [axs_category] if project_count == 1 else axs_category
     fig_category.subplots_adjust(**Global.SUBPLOTS)
     i = 0
     values = ['None', 'Low', 'Medium', 'High', 'Critical']
@@ -1043,6 +1044,7 @@ def plot_issues(df: pd.DataFrame):
     fig_category.savefig(plots_dir / 'bandit-test-category-distribution.png')
 
     fig_module, axs_module = plt.subplots(project_count, 1, figsize=(10, 8))
+    axs_module = [axs_module] if project_count == 1 else axs_module
     fig_module.subplots_adjust(**Global.SUBPLOTS)
     i = 0
     for project in projects:

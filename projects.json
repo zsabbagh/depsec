@@ -5,8 +5,17 @@
             "vendor": "palletsprojects",
             "repo": {
                 "url": "github.com/pallets/jinja",
-                "tags": "@version",
+                "tags": "@semver",
                 "includes": ["jinja2/", "src/"]
+            }
+        },
+        "pytz": {
+            "product": "pytz",
+            "repo": {
+                "url": "github.com/stub42/pytz",
+                "tags": "(?:release_)?@calver(?:_release)?",
+                "includes": ["src/pytz"],
+                "excludes": ["src/pytz/tests/"]
             }
         },
         "flask": {
@@ -74,7 +83,7 @@
             "repo": {
                 "url": "github.com/pallets-eco/blinker",
                 "includes": ["src/", "blinker/"],
-                "tags": "(?:rel-)?@version"
+                "tags": "(?:rel-)?@semver"
             }
         },
         "click": {

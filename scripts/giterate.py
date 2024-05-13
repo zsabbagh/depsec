@@ -9,7 +9,8 @@ from src.aggregator import Aggregator
 from src.schemas.projects import *
 # This tool iterates git tags and runs a command for each tag
 
-VERSION_TAG = r'v?(\d+\.\d+(?:\.\d+)?)'
+SEMVER_TAG = r'v?(\d+\.\d+(?:\.\d+)?)'
+CALVER_TAG = r'(\d{4}[a-z]?(?:\.\d+){0,2})'
 
 parser = argparse.ArgumentParser(description='Iterate git tags and run a command for each tag')
 parser.add_argument('-p', '--projects', help='The projects file', default='projects.json')
@@ -60,9 +61,12 @@ def version_tag(tag: str, pattern: str = None):
     Returns the version tag from the tag if it matches the pattern
     """
     if type(pattern) == str:
-        pattern = pattern.replace('@version', VERSION_TAG)
+        if '@semver' in pattern:
+            pattern = pattern.replace('@semver', SEMVER_TAG)
+        if '@calver' in pattern:
+            pattern = pattern.replace('@calver', CALVER_TAG)
     else:
-        pattern = VERSION_TAG
+        pattern = SEMVER_TAG
     pattern = rf"^{pattern}$"
     groups = re.match(pattern, tag)
     if groups:
@@ -152,7 +156,16 @@ for platform, projects in data.items():
         rels = [ rel.version for rel in rels]
         logger.info(f"Releases found for {repo_name}: {', '.join(rels)}")
 
-        for version in sorted(versions.keys(), key=semver.parse, reverse=True):
+        version_iter = []
+        for v in versions.keys():
+            try:
+                semver.parse(v)
+                version_iter.append(v)
+            except:
+                print(f"Invalid version: {v}")
+                pass
+
+        for version in sorted(version_iter, key=semver.parse, reverse=True):
             print(f"Processing {project_name}:{version}...")
             if bool(args.limit) and processed > args.limit:
                 logger.info(f"Limit of {args.limit} reached, stopping")

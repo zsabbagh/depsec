@@ -287,8 +287,8 @@ class Aggregator:
             except Exception as e:
                 logger.debug(f"Error parsing version {release.version} for {project_name}: {e}")
                 continue
-            if osi_verified and not release.osi_verified:
-                logger.info(f"Skipping release {release.version} for {project_name} as it is not OSI verified")
+            if osi_verified and db.reliable_published_date(release) is None:
+                logger.debug(f"Skipping release {release.version} for {project_name} as it is not OSI verified")
                 continue
             if before_date is not None and release.published_at > before_date:
                 logger.debug(f"Skipping release {release.version} published after {before_date} for {project_name}")
@@ -353,6 +353,7 @@ class Aggregator:
                     platform: str="pypi",
                     before: str | int | dt.datetime = None,
                     requirements: str = None,
+                    osi_verified: bool = True,
                     analysed: bool = False,
                     after: str | int | dt.datetime = None) -> Release:
         """
@@ -375,7 +376,7 @@ class Aggregator:
         before_date = strint_to_date(before)
         after_date = strint_to_date(after)
         if before_date is not None or after_date is not None or requirements is not None or analysed:
-            releases = self.get_releases(project.name, platform=platform, before=before_date, after=after, sort_semantically=True, requirements=requirements)
+            releases = self.get_releases(project.name, platform=platform, before=before_date, after=after, sort_semantically=True, requirements=requirements, osi_verified=osi_verified, analysed=analysed)
             if analysed:
                 for rel in releases:
                     if rel.nloc_total is not None:
@@ -850,7 +851,13 @@ class Aggregator:
                 rel_id = f"{depname}:{dep_release.version}"
                 all_releases.add(rel_id)
                 if rel_id not in releases:
+                    nloc_total = dep_release.nloc_total
+                    if nloc_total is None:
+                        analysed_rel = self.get_release(depname, dep_release.version, platform=dep.platform, analysed=True, requirements=f"<{dep_release.version}")
+                        nloc_total = analysed_rel.nloc_total if analysed_rel is not None else None
                     releases[rel_id] = model_to_dict(dep_release, recurse=False)
+                    if nloc_total is not None:
+                        releases[rel_id]['nloc_total'] = nloc_total
                     bandit_report = dep_release.bandit_report.first()
                     if bandit_report:
                         releases[rel_id]['bandit_report'] = model_to_dict(bandit_report, recurse=False)
@@ -1709,8 +1716,10 @@ class Aggregator:
                     break
             for release, _ in date_releases:
                 # for each release in the timeline map the values to these
+                latest_analysed = self.get_release(release.project, platform=platform, analysed=True, requirements=f"<={release.version}") if release.nloc_total is None else release
                 rel_df = source_df[(source_df['release'] == release.project.name) & (source_df['release_version'] == release.version)].copy()
                 rel_df['date'] = date
+                rel_df['nloc_total'] = latest_analysed.nloc_total if latest_analysed is not None else None
             df = pd.concat([df, rel_df])
         return df
     
@@ -1799,7 +1808,26 @@ class Aggregator:
         project = self.get_project(project, platform)
         bandit = self.get_bandit_report(project)
         return bandit
-                
+    
+    def _redeps(self, project: str | Project, platform: str="pypi") -> dict:
+        """
+        Gets the dependencies of a project
+        """
+        project = self.get_project(project, platform)
+        dependencies = set()
+        for release in project.releases:
+            deps = release.dependencies
+            for dep in deps:
+                dep.delete_instance()
+                print(f"Deleted {dep.name} for {release.version}")
+            release.dependency_count = None
+            release.save()
+            deps = self.get_dependencies(project.name, release.version, platform=platform)
+            if deps is None:
+                continue
+            for dep in deps:
+                dependencies.add(dep.name)
+        return dependencies
     
 if __name__ == "__main__":
     # For the purpose of loading in interactive shell and debugging

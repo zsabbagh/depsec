@@ -89,6 +89,52 @@
             }
         },
         "releases": {
+            "sqlparse:0.3.0": {
+                "id": 818,
+                "project": 7,
+                "published_at": "2019-03-11 18:33:16",
+                "version": "0.3.0",
+                "updated_at": "2024-03-27 10:14:16",
+                "counted_functions": 187,
+                "counted_files": 22,
+                "nloc_total": 2558,
+                "nloc_average": 13.68,
+                "ccn_average": 3.17,
+                "commit_at": "2019-03-11 19:18:20",
+                "commit_hash": "93d7718e486c715849b291c35f8bbc5672a1a5de",
+                "includes": "sqlparse/",
+                "excludes": null,
+                "osi_verified": true,
+                "dependency_count": 0,
+                "bandit_report": {
+                    "id": 1786,
+                    "release": 818,
+                    "updated_at": "2024-03-28 10:49:42",
+                    "issues_total": 0,
+                    "files_with_issues": 0,
+                    "files_skipped": 0,
+                    "confidence_high_count": 0,
+                    "confidence_medium_count": 0,
+                    "confidence_low_count": 0,
+                    "confidence_undefined_count": 0,
+                    "severity_high_count": 0,
+                    "severity_medium_count": 0,
+                    "severity_low_count": 0,
+                    "severity_undefined_count": 0,
+                    "severity_h_confidence_h_count": 0,
+                    "severity_h_confidence_m_count": 0,
+                    "severity_h_confidence_l_count": 0,
+                    "severity_m_confidence_h_count": 0,
+                    "severity_m_confidence_m_count": 0,
+                    "severity_m_confidence_l_count": 0,
+                    "severity_l_confidence_h_count": 0,
+                    "severity_l_confidence_m_count": 0,
+                    "severity_l_confidence_l_count": 0,
+                    "loc": 2687,
+                    "nosec": 0,
+                    "skipped_tests": 0
+                }
+            },
             "sqlparse:0.3.1": {
                 "id": 819,
                 "project": 7,
@@ -181,6 +227,162 @@
                     "skipped_tests": 0
                 }
             },
+            "asgiref:3.3.1": {
+                "id": 778,
+                "project": 6,
+                "published_at": "2020-11-09 15:58:48",
+                "version": "3.3.1",
+                "updated_at": "2024-03-27 10:13:11",
+                "counted_functions": 62,
+                "counted_files": 9,
+                "nloc_total": 831,
+                "nloc_average": 13.4,
+                "ccn_average": 3.18,
+                "commit_at": "2020-11-09 18:08:22",
+                "commit_hash": "318c9322d4f4dce3d0f501fed1bb28ebcc37d510",
+                "includes": "asgiref/",
+                "excludes": null,
+                "osi_verified": true,
+                "dependency_count": null,
+                "bandit_report": {
+                    "id": 1731,
+                    "release": 778,
+                    "updated_at": "2024-03-28 10:49:32",
+                    "issues_total": 1,
+                    "files_with_issues": 1,
+                    "files_skipped": 0,
+                    "confidence_high_count": 1,
+                    "confidence_medium_count": 0,
+                    "confidence_low_count": 0,
+                    "confidence_undefined_count": 0,
+                    "severity_high_count": 0,
+                    "severity_medium_count": 0,
+                    "severity_low_count": 1,
+                    "severity_undefined_count": 0,
+                    "severity_h_confidence_h_count": 0,
+                    "severity_h_confidence_m_count": 0,
+                    "severity_h_confidence_l_count": 0,
+                    "severity_m_confidence_h_count": 0,
+                    "severity_m_confidence_m_count": 0,
+                    "severity_m_confidence_l_count": 0,
+                    "severity_l_confidence_h_count": 1,
+                    "severity_l_confidence_m_count": 0,
+                    "severity_l_confidence_l_count": 0,
+                    "loc": 902,
+                    "nosec": 0,
+                    "skipped_tests": 0
+                }
+            },
+            "asgiref:3.3.4": {
+                "id": 781,
+                "project": 6,
+                "published_at": "2021-04-06 18:40:04",
+                "version": "3.3.4",
+                "updated_at": "2024-03-27 10:13:11",
+                "counted_functions": 70,
+                "counted_files": 10,
+                "nloc_total": 1073,
+                "nloc_average": 15.33,
+                "ccn_average": 3.13,
+                "commit_at": "2021-04-06 20:28:23",
+                "commit_hash": "4b10ca000ffdde78266f054d226c7a2892ee01b4",
+                "includes": "asgiref/",
+                "excludes": null,
+                "osi_verified": true,
+                "dependency_count": null,
+                "bandit_report": {
+                    "id": 1728,
+                    "release": 781,
+                    "updated_at": "2024-03-28 10:49:31",
+                    "issues_total": 1,
+                    "files_with_issues": 1,
+                    "files_skipped": 0,
+                    "confidence_high_count": 1,
+                    "confidence_medium_count": 0,
+                    "confidence_low_count": 0,
+                    "confidence_undefined_count": 0,
+                    "severity_high_count": 0,
+                    "severity_medium_count": 0,
+                    "severity_low_count": 1,
+                    "severity_undefined_count": 0,
+                    "severity_h_confidence_h_count": 0,
+                    "severity_h_confidence_m_count": 0,
+                    "severity_h_confidence_l_count": 0,
+                    "severity_m_confidence_h_count": 0,
+                    "severity_m_confidence_m_count": 0,
+                    "severity_m_confidence_l_count": 0,
+                    "severity_l_confidence_h_count": 1,
+                    "severity_l_confidence_m_count": 0,
+                    "severity_l_confidence_l_count": 0,
+                    "loc": 1137,
+                    "nosec": 0,
+                    "skipped_tests": 0
+                }
+            },
+            "asgiref:3.4.0": {
+                "id": 782,
+                "project": 6,
+                "published_at": "2021-06-27 20:35:30",
+                "version": "3.4.0",
+                "updated_at": "2024-03-27 10:13:11",
+                "counted_functions": null,
+                "counted_files": null,
+                "nloc_total": 1073,
+                "nloc_average": null,
+                "ccn_average": null,
+                "commit_at": null,
+                "commit_hash": null,
+                "includes": null,
+                "excludes": null,
+                "osi_verified": true,
+                "dependency_count": null
+            },
+            "asgiref:3.4.1": {
+                "id": 783,
+                "project": 6,
+                "published_at": "2021-07-01 16:17:40",
+                "version": "3.4.1",
+                "updated_at": "2024-03-27 10:13:11",
+                "counted_functions": 79,
+                "counted_files": 11,
+                "nloc_total": 1237,
+                "nloc_average": 15.66,
+                "ccn_average": 3.03,
+                "commit_at": "2021-07-01 18:16:44",
+                "commit_hash": "c8975426fb9a9e0a431b4d93b53e70c3316e8e0e",
+                "includes": "asgiref/",
+                "excludes": null,
+                "osi_verified": true,
+                "dependency_count": null,
+                "bandit_report": {
+                    "id": 1727,
+                    "release": 783,
+                    "updated_at": "2024-03-28 10:49:31",
+                    "issues_total": 1,
+                    "files_with_issues": 1,
+                    "files_skipped": 0,
+                    "confidence_high_count": 1,
+                    "confidence_medium_count": 0,
+                    "confidence_low_count": 0,
+                    "confidence_undefined_count": 0,
+                    "severity_high_count": 0,
+                    "severity_medium_count": 0,
+                    "severity_low_count": 1,
+                    "severity_undefined_count": 0,
+                    "severity_h_confidence_h_count": 0,
+                    "severity_h_confidence_m_count": 0,
+                    "severity_h_confidence_l_count": 0,
+                    "severity_m_confidence_h_count": 0,
+                    "severity_m_confidence_m_count": 0,
+                    "severity_m_confidence_l_count": 0,
+                    "severity_l_confidence_h_count": 1,
+                    "severity_l_confidence_m_count": 0,
+                    "severity_l_confidence_l_count": 0,
+                    "loc": 1301,
+                    "nosec": 0,
+                    "skipped_tests": 0
+                }
+            },
             "sqlparse:0.4.2": {
                 "id": 822,
                 "project": 7,
@@ -263,6 +465,52 @@
                 "osi_verified": true,
                 "dependency_count": null
             },
+            "asgiref:3.5.0": {
+                "id": 784,
+                "project": 6,
+                "published_at": "2022-01-22 16:58:09",
+                "version": "3.5.0",
+                "updated_at": "2024-03-27 10:13:11",
+                "counted_functions": 70,
+                "counted_files": 10,
+                "nloc_total": 1098,
+                "nloc_average": 15.69,
+                "ccn_average": 3.06,
+                "commit_at": "2022-01-22 17:54:07",
+                "commit_hash": "8b615134bd481c4262356ad3194fbeff9240d0d3",
+                "includes": "asgiref/",
+                "excludes": null,
+                "osi_verified": true,
+                "dependency_count": null,
+                "bandit_report": {
+                    "id": 1726,
+                    "release": 784,
+                    "updated_at": "2024-03-28 10:49:31",
+                    "issues_total": 1,
+                    "files_with_issues": 1,
+                    "files_skipped": 0,
+                    "confidence_high_count": 1,
+                    "confidence_medium_count": 0,
+                    "confidence_low_count": 0,
+                    "confidence_undefined_count": 0,
+                    "severity_high_count": 0,
+                    "severity_medium_count": 0,
+                    "severity_low_count": 1,
+                    "severity_undefined_count": 0,
+                    "severity_h_confidence_h_count": 0,
+                    "severity_h_confidence_m_count": 0,
+                    "severity_h_confidence_l_count": 0,
+                    "severity_m_confidence_h_count": 0,
+                    "severity_m_confidence_m_count": 0,
+                    "severity_m_confidence_l_count": 0,
+                    "severity_l_confidence_h_count": 1,
+                    "severity_l_confidence_m_count": 0,
+                    "severity_l_confidence_l_count": 0,
+                    "loc": 1163,
+                    "nosec": 0,
+                    "skipped_tests": 0
+                }
+            },
             "typing-extensions:4.1.1": {
                 "id": 842,
                 "project": 8,
@@ -281,6 +529,52 @@
                 "osi_verified": true,
                 "dependency_count": null
             },
+            "asgiref:3.5.1": {
+                "id": 785,
+                "project": 6,
+                "published_at": "2022-04-30 21:20:01",
+                "version": "3.5.1",
+                "updated_at": "2024-03-27 10:13:11",
+                "counted_functions": 70,
+                "counted_files": 10,
+                "nloc_total": 1106,
+                "nloc_average": 15.8,
+                "ccn_average": 3.09,
+                "commit_at": "2022-04-30 23:16:11",
+                "commit_hash": "12f6355d50c271aab821a37dbf2cde5863cc2643",
+                "includes": "asgiref/",
+                "excludes": null,
+                "osi_verified": true,
+                "dependency_count": null,
+                "bandit_report": {
+                    "id": 1725,
+                    "release": 785,
+                    "updated_at": "2024-03-28 10:49:31",
+                    "issues_total": 1,
+                    "files_with_issues": 1,
+                    "files_skipped": 0,
+                    "confidence_high_count": 1,
+                    "confidence_medium_count": 0,
+                    "confidence_low_count": 0,
+                    "confidence_undefined_count": 0,
+                    "severity_high_count": 0,
+                    "severity_medium_count": 0,
+                    "severity_low_count": 1,
+                    "severity_undefined_count": 0,
+                    "severity_h_confidence_h_count": 0,
+                    "severity_h_confidence_m_count": 0,
+                    "severity_h_confidence_l_count": 0,
+                    "severity_m_confidence_h_count": 0,
+                    "severity_m_confidence_m_count": 0,
+                    "severity_m_confidence_l_count": 0,
+                    "severity_l_confidence_h_count": 1,
+                    "severity_l_confidence_m_count": 0,
+                    "severity_l_confidence_l_count": 0,
+                    "loc": 1171,
+                    "nosec": 0,
+                    "skipped_tests": 0
+                }
+            },
             "typing-extensions:4.2.0": {
                 "id": 844,
                 "project": 8,
@@ -298,6 +592,52 @@
                 "excludes": null,
                 "osi_verified": true,
                 "dependency_count": null
+            },
+            "asgiref:3.5.2": {
+                "id": 786,
+                "project": 6,
+                "published_at": "2022-05-16 20:39:27",
+                "version": "3.5.2",
+                "updated_at": "2024-03-27 10:13:11",
+                "counted_functions": 70,
+                "counted_files": 10,
+                "nloc_total": 1115,
+                "nloc_average": 15.93,
+                "ccn_average": 3.11,
+                "commit_at": "2022-05-16 22:33:08",
+                "commit_hash": "67b2e812632e7771d560c59e48e6c6fc68ff402d",
+                "includes": "asgiref/",
+                "excludes": null,
+                "osi_verified": true,
+                "dependency_count": null,
+                "bandit_report": {
+                    "id": 1724,
+                    "release": 786,
+                    "updated_at": "2024-03-28 10:49:30",
+                    "issues_total": 1,
+                    "files_with_issues": 1,
+                    "files_skipped": 0,
+                    "confidence_high_count": 1,
+                    "confidence_medium_count": 0,
+                    "confidence_low_count": 0,
+                    "confidence_undefined_count": 0,
+                    "severity_high_count": 0,
+                    "severity_medium_count": 0,
+                    "severity_low_count": 1,
+                    "severity_undefined_count": 0,
+                    "severity_h_confidence_h_count": 0,
+                    "severity_h_confidence_m_count": 0,
+                    "severity_h_confidence_l_count": 0,
+                    "severity_m_confidence_h_count": 0,
+                    "severity_m_confidence_m_count": 0,
+                    "severity_m_confidence_l_count": 0,
+                    "severity_l_confidence_h_count": 1,
+                    "severity_l_confidence_m_count": 0,
+                    "severity_l_confidence_l_count": 0,
+                    "loc": 1180,
+                    "nosec": 0,
+                    "skipped_tests": 0
+                }
             },
             "typing-extensions:4.3.0": {
                 "id": 845,
@@ -380,6 +720,52 @@
                 "excludes": null,
                 "osi_verified": true,
                 "dependency_count": null
+            },
+            "asgiref:3.6.0": {
+                "id": 787,
+                "project": 6,
+                "published_at": "2022-12-20 09:06:49",
+                "version": "3.6.0",
+                "updated_at": "2024-03-27 10:13:11",
+                "counted_functions": 72,
+                "counted_files": 10,
+                "nloc_total": 1135,
+                "nloc_average": 15.76,
+                "ccn_average": 3.08,
+                "commit_at": "2022-12-20 10:02:26",
+                "commit_hash": "79a1d01565533d79dd44ff92eabcd3a91354c20d",
+                "includes": "asgiref/",
+                "excludes": null,
+                "osi_verified": true,
+                "dependency_count": null,
+                "bandit_report": {
+                    "id": 1723,
+                    "release": 787,
+                    "updated_at": "2024-03-28 10:49:30",
+                    "issues_total": 1,
+                    "files_with_issues": 1,
+                    "files_skipped": 0,
+                    "confidence_high_count": 1,
+                    "confidence_medium_count": 0,
+                    "confidence_low_count": 0,
+                    "confidence_undefined_count": 0,
+                    "severity_high_count": 0,
+                    "severity_medium_count": 0,
+                    "severity_low_count": 1,
+                    "severity_undefined_count": 0,
+                    "severity_h_confidence_h_count": 0,
+                    "severity_h_confidence_m_count": 0,
+                    "severity_h_confidence_l_count": 0,
+                    "severity_m_confidence_h_count": 0,
+                    "severity_m_confidence_m_count": 0,
+                    "severity_m_confidence_l_count": 0,
+                    "severity_l_confidence_h_count": 1,
+                    "severity_l_confidence_m_count": 0,
+                    "severity_l_confidence_l_count": 0,
+                    "loc": 1200,
+                    "nosec": 0,
+                    "skipped_tests": 0
+                }
             },
             "typing-extensions:4.5.0": {
                 "id": 847,
@@ -1009,13 +1395,21 @@
             },
             {
                 "date": "2020-01-01 00:00:00",
-                "release": [],
-                "cves": []
+                "release": [
+                    "sqlparse:0.3.0"
+                ],
+                "cves": [
+                    "CVE-2023-30608"
+                ]
             },
             {
                 "date": "2020-02-01 00:00:00",
-                "release": [],
-                "cves": []
+                "release": [
+                    "sqlparse:0.3.0"
+                ],
+                "cves": [
+                    "CVE-2023-30608"
+                ]
             },
             {
                 "date": "2020-03-01 00:00:00",
@@ -1102,6 +1496,7 @@
             {
                 "date": "2020-12-01 00:00:00",
                 "release": [
+                    "asgiref:3.3.1",
                     "sqlparse:0.4.1"
                 ],
                 "cves": [
@@ -1112,6 +1507,7 @@
             {
                 "date": "2021-01-01 00:00:00",
                 "release": [
+                    "asgiref:3.3.1",
                     "sqlparse:0.4.1"
                 ],
                 "cves": [
@@ -1122,6 +1518,7 @@
             {
                 "date": "2021-02-01 00:00:00",
                 "release": [
+                    "asgiref:3.3.1",
                     "sqlparse:0.4.1"
                 ],
                 "cves": [
@@ -1132,6 +1529,7 @@
             {
                 "date": "2021-03-01 00:00:00",
                 "release": [
+                    "asgiref:3.3.1",
                     "sqlparse:0.4.1"
                 ],
                 "cves": [
@@ -1142,6 +1540,7 @@
             {
                 "date": "2021-04-01 00:00:00",
                 "release": [
+                    "asgiref:3.3.1",
                     "sqlparse:0.4.1"
                 ],
                 "cves": [
@@ -1152,6 +1551,7 @@
             {
                 "date": "2021-05-01 00:00:00",
                 "release": [
+                    "asgiref:3.3.4",
                     "sqlparse:0.4.1"
                 ],
                 "cves": [
@@ -1162,6 +1562,7 @@
             {
                 "date": "2021-06-01 00:00:00",
                 "release": [
+                    "asgiref:3.3.4",
                     "sqlparse:0.4.1"
                 ],
                 "cves": [
@@ -1172,6 +1573,7 @@
             {
                 "date": "2021-07-01 00:00:00",
                 "release": [
+                    "asgiref:3.4.0",
                     "sqlparse:0.4.1"
                 ],
                 "cves": [
@@ -1182,6 +1584,7 @@
             {
                 "date": "2021-08-01 00:00:00",
                 "release": [
+                    "asgiref:3.4.1",
                     "sqlparse:0.4.1"
                 ],
                 "cves": [
@@ -1192,6 +1595,7 @@
             {
                 "date": "2021-09-01 00:00:00",
                 "release": [
+                    "asgiref:3.4.1",
                     "sqlparse:0.4.1"
                 ],
                 "cves": [
@@ -1202,6 +1606,7 @@
             {
                 "date": "2021-10-01 00:00:00",
                 "release": [
+                    "asgiref:3.4.1",
                     "sqlparse:0.4.2"
                 ],
                 "cves": [
@@ -1211,6 +1616,7 @@
             {
                 "date": "2021-11-01 00:00:00",
                 "release": [
+                    "asgiref:3.4.1",
                     "sqlparse:0.4.2"
                 ],
                 "cves": [
@@ -1220,6 +1626,7 @@
             {
                 "date": "2021-12-01 00:00:00",
                 "release": [
+                    "asgiref:3.4.1",
                     "sqlparse:0.4.2",
                     "typing-extensions:4.0.0"
                 ],
@@ -1230,6 +1637,7 @@
             {
                 "date": "2022-01-01 00:00:00",
                 "release": [
+                    "asgiref:3.4.1",
                     "sqlparse:0.4.2",
                     "typing-extensions:4.0.1"
                 ],
@@ -1240,6 +1648,7 @@
             {
                 "date": "2022-02-01 00:00:00",
                 "release": [
+                    "asgiref:3.5.0",
                     "sqlparse:0.4.2",
                     "typing-extensions:4.0.1"
                 ],
@@ -1250,6 +1659,7 @@
             {
                 "date": "2022-03-01 00:00:00",
                 "release": [
+                    "asgiref:3.5.0",
                     "sqlparse:0.4.2",
                     "typing-extensions:4.1.1"
                 ],
@@ -1260,6 +1670,7 @@
             {
                 "date": "2022-04-01 00:00:00",
                 "release": [
+                    "asgiref:3.5.0",
                     "sqlparse:0.4.2",
                     "typing-extensions:4.1.1"
                 ],
@@ -1270,6 +1681,7 @@
             {
                 "date": "2022-05-01 00:00:00",
                 "release": [
+                    "asgiref:3.5.1",
                     "sqlparse:0.4.2",
                     "typing-extensions:4.2.0"
                 ],
@@ -1280,6 +1692,7 @@
             {
                 "date": "2022-06-01 00:00:00",
                 "release": [
+                    "asgiref:3.5.2",
                     "sqlparse:0.4.2",
                     "typing-extensions:4.2.0"
                 ],
@@ -1290,6 +1703,7 @@
             {
                 "date": "2022-07-01 00:00:00",
                 "release": [
+                    "asgiref:3.5.2",
                     "sqlparse:0.4.2",
                     "typing-extensions:4.2.0"
                 ],
@@ -1300,6 +1714,7 @@
             {
                 "date": "2022-08-01 00:00:00",
                 "release": [
+                    "asgiref:3.5.2",
                     "sqlparse:0.4.2",
                     "typing-extensions:4.3.0"
                 ],
@@ -1310,6 +1725,7 @@
             {
                 "date": "2022-09-01 00:00:00",
                 "release": [
+                    "asgiref:3.5.2",
                     "sqlparse:0.4.2",
                     "typing-extensions:4.3.0"
                 ],
@@ -1320,6 +1736,7 @@
             {
                 "date": "2022-10-01 00:00:00",
                 "release": [
+                    "asgiref:3.5.2",
                     "sqlparse:0.4.3",
                     "typing-extensions:4.3.0"
                 ],
@@ -1330,6 +1747,7 @@
             {
                 "date": "2022-11-01 00:00:00",
                 "release": [
+                    "asgiref:3.5.2",
                     "sqlparse:0.4.3",
                     "typing-extensions:4.4.0"
                 ],
@@ -1340,6 +1758,7 @@
             {
                 "date": "2022-12-01 00:00:00",
                 "release": [
+                    "asgiref:3.5.2",
                     "sqlparse:0.4.3",
                     "typing-extensions:4.4.0"
                 ],
@@ -1350,6 +1769,7 @@
             {
                 "date": "2023-01-01 00:00:00",
                 "release": [
+                    "asgiref:3.6.0",
                     "sqlparse:0.4.3",
                     "typing-extensions:4.4.0"
                 ],
@@ -1360,6 +1780,7 @@
             {
                 "date": "2023-02-01 00:00:00",
                 "release": [
+                    "asgiref:3.6.0",
                     "sqlparse:0.4.3",
                     "typing-extensions:4.4.0"
                 ],
@@ -1370,6 +1791,7 @@
             {
                 "date": "2023-03-01 00:00:00",
                 "release": [
+                    "asgiref:3.6.0",
                     "sqlparse:0.4.3",
                     "typing-extensions:4.5.0"
                 ],
@@ -1380,6 +1802,7 @@
             {
                 "date": "2023-04-01 00:00:00",
                 "release": [
+                    "asgiref:3.6.0",
                     "sqlparse:0.4.3",
                     "typing-extensions:4.5.0"
                 ],
@@ -1390,6 +1813,7 @@
             {
                 "date": "2023-05-01 00:00:00",
                 "release": [
+                    "asgiref:3.6.0",
                     "sqlparse:0.4.4",
                     "typing-extensions:4.5.0"
                 ],
