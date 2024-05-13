@@ -1829,6 +1829,42 @@ class Aggregator:
                 dependencies.add(dep.name)
         return dependencies
     
+    def alldeps(self, project: str | Project, platform: str="pypi") -> dict:
+        """
+        Gets all dependencies of a project
+        """
+        releases = self.get_releases(project, platform=platform, exclude_deprecated=False, exclude_nonstable=True)
+        s = {}
+        for rel in releases:
+            deps = self.get_dependencies(rel, platform=platform)
+            if deps is None:
+                continue
+            for dep in deps:
+                if dep.name not in s:
+                    proj = self.get_project(dep.name, platform=dep.platform)
+                    s[dep.name] = proj.repository_url
+        return s
+    
+    def get_cves(self, vendor: str, product: str = None):
+        """
+        Gets all CVEs for a project
+        """
+        if product is None:
+            project = self.get_project(vendor)
+            vendor = project.vendor
+            product = project.name
+        cpes = nvd.CPE.select().where((nvd.CPE.vendor == vendor) & (nvd.CPE.product == product))
+        cves = []
+        cve_ids = set()
+        for cpe in cpes:
+            cpe: nvd.CPE = cpe
+            node = cpe.node
+            cve = node.cve
+            if cve.cve_id not in cve_ids:
+                cves.append(cve)
+                cve_ids.add(cve.cve_id)
+        return cves
+    
 if __name__ == "__main__":
     # For the purpose of loading in interactive shell and debugging
     # e.g., py -i src/Aggregator.py
