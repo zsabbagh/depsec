@@ -1922,14 +1922,14 @@ class Aggregator:
                 cve_ids.add(cve.cve_id)
         return cves
     
-    def _analyse_project(self, project: str | Project, platform: str="pypi") -> dict:
+    def _analyse(self, project: str | Project, platform: str="pypi", prompt: bool = True) -> dict:
         """
         Statically analyses a project's releases
 
         project: str | Project: The project name or object
         """
         project = self.get_project(project, platform)
-        # one must identify "excludes" and "includes" for the project
+        # clone the repository
         repo, repo_path = giterate.clone_repo(project, self.__repos_dir)
         release = self.get_release(project, platform=platform)
         version = release.version
@@ -1938,8 +1938,12 @@ class Aggregator:
                 tag_regex = "@semver"
             elif giterate.is_calver(version):
                 tag_regex = "@calver"
-            print(f"Detected tag regex: {tag_regex} (e.g., {version})")
-            if input('Update? [Y/n] ').lower() != 'n':
+            update = True
+            if prompt:
+                print(f"Detected tag regex: {tag_regex} (e.g., {version})")
+                if input('Update? [Y/n] ').lower() == 'n':
+                    update = False
+            if update:
                 project.tag_regex = tag_regex
                 project.save()
         giterate.run_analysis(project, self.__repos_dir)

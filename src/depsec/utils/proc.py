@@ -32,6 +32,10 @@ def get_files(dir: str, includes: list = None, excludes: list = None, file_patte
                 skip = True
                 break
         if skip:
+            print(f"Skipping '{i}' as it is in the exclude list.")
+            continue
+        if i.is_file():
+            files.append(i)
             continue
         for f in i.glob(f'**/{file_pattern}'):
             # check if is in directory test, examples, or docs

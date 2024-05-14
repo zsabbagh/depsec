@@ -20,7 +20,7 @@ def is_calver(tag: str):
 
 def version_tag(tag: str, pattern: str = None):
     """
-    Returns the version tag from the tag if it matches the pattern
+    Returns the version tag from the tag if it matches the patter\item[\textbf{RQ}.] How can one enable the automated analysis of the security of \Gls{OSS} projects and provide an understanding of the impact that dependencies have on a project, with respect to codebase complexity and security, with a focus on the packages present in the Python ecosystem?n
     """
     if type(pattern) == str:
         if '@semver' in pattern:
@@ -149,7 +149,7 @@ def run_analysis(project: Project, repos_dir: Path, temp_dir: Path = '/tmp', liz
         includes = [ incl.strip() for incl in includes.split(',') ]
     elif includes is None:
         # follows standard Python package structure
-        includes = ['src/', f"{project_name}/"]
+        includes = ['src/', f"{project_name}/", f"{project_name}.py"]
     excludes = project.excludes
     if type(excludes) == str:
         excludes = [ excl.strip() for excl in excludes.split(',') ]
