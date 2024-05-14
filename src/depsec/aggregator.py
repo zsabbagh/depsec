@@ -297,7 +297,7 @@ class Aggregator:
             latest_release = Release.select().where(Release.project == project).order_by(Release.published_at.desc()).first()
             project.latest_release = latest_release.version
             project.save()
-        self._verify_dates(project, platform)
+        self._verify_dates(project)
         self.__analysed_projects[platform][name] = project_to_config(project)
         return project
     

@@ -213,7 +213,7 @@
             }
         },
         "numpy": {
-            "product": null,
+            "product": "numpy",
             "vendor": "numpy",
             "repo": {
                 "url": "https://github.com/numpy/numpy",

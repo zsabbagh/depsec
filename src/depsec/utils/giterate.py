@@ -9,7 +9,8 @@ from depsec.aggregator import Aggregator
 from depsec.schemas.projects import *
 # This tool iterates git tags and runs a command for each tag
 
-SEMVER_TAG = r'v?(\d+\.\d+(?:\.\d+)?)'
+# second group is pre/rc/alpha/beta
+SEMVER_TAG = r'v?(\d+\.\d+(?:\.\d+)?)(?:[\-.]((?:pre|rc|a|b)(?:\d+)?))?'
 CALVER_TAG = r'(\d{4}[a-z]?(?:\.\d+){0,2})'
 
 def version_tag(tag: str, pattern: str = None):
@@ -25,7 +26,8 @@ def version_tag(tag: str, pattern: str = None):
         pattern = SEMVER_TAG
     groups = re.match(pattern, tag)
     if groups:
-        return groups.group(1)
+        pre = groups.group(2) if groups.group(2) else ''
+        return f"{groups.group(1)}{pre}"
     return None
 
 def get_owner_project(github_url: str):
@@ -103,7 +105,7 @@ def identify_tags(repo: Repo):
     print(f"Calver matches ({len(calver_matches)} / {total_tags}): {', '.join(calver_matches)}")
     print(f"If none of the above, please provide a regex pattern to match the tags")
     tag_regex = input("Enter the tag regex (@semver, @calver expands): ")
-    return f"^{tag_regex}$" if tag_regex else (
+    return f"{tag_regex}" if tag_regex else (
         '@semver' if len(semver_matches) > len(calver_matches) else '@calver'
     )
 
