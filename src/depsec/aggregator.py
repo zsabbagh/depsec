@@ -1,19 +1,19 @@
 import time, yaml, json, glob, sys, pandas as pd, datetime as dt
-import src.schemas.nvd as nvd
-import src.schemas.cwe as cwe
-import src.utils.db as db
-import src.utils.giterate as giterate
+import depsec.schemas.nvd as nvd
+import depsec.schemas.cwe as cwe
+import depsec.utils.db as db
+import depsec.utils.giterate as giterate
 import argparse
 import numpy as np
 from copy import deepcopy
 from packaging import version as semver
 from playhouse.shortcuts import model_to_dict
 from pprint import pprint
-from src.queriers.libraries import LibrariesQuerier
-from src.queriers.snyk import SnykQuerier
-from src.queriers.osi import OSIQuerier
-from src.schemas.projects import *
-from src.utils.tools import *
+from depsec.queriers.libraries import LibrariesQuerier
+from depsec.queriers.snyk import SnykQuerier
+from depsec.queriers.osi import OSIQuerier
+from depsec.schemas.projects import *
+from depsec.utils.tools import *
 from loguru import logger
 from pathlib import Path
 from typing import List, Dict
@@ -1888,7 +1888,7 @@ class Aggregator:
     
 if __name__ == "__main__":
     # For the purpose of loading in interactive shell and debugging
-    # e.g., py -i src/Aggregator.py
+    # e.g., py -i depsec/Aggregator.py
     parser = argparse.ArgumentParser()
     parser.add_argument('-p', '--project', type=str, help='The project name')
     parser.add_argument('--debug', action='store_true', help='Debug mode')

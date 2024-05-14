@@ -1,5 +1,5 @@
 import numpy as np, pandas as pd
-import src.utils.db as db
+import depsec.utils.db as db
 from copy import deepcopy
 from packaging import version as semver
 from loguru import logger

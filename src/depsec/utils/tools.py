@@ -3,7 +3,7 @@ from loguru import logger
 from packaging import version as semver
 from pathlib import Path
 from loguru import logger
-from src.schemas.projects import Release, Project
+from depsec.schemas.projects import Release, Project
 
 def bandit_value_score(value: str) -> int:
     """

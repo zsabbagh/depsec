@@ -1,4 +1,4 @@
-import sys, requests, src.utils.tools as tools
+import sys, requests, depsec.utils.tools as tools
 
 # This file will handle querying the libraries.io API
 

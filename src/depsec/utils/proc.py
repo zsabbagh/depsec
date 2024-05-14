@@ -192,6 +192,6 @@ if __name__ == '__main__':
         dir=args.dir,
         includes=args.includes,
         excludes=args.excludes,
-        output='src/__temp__'
+        output='depsec/__temp__'
     )
     pprint(report)

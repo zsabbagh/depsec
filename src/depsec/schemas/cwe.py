@@ -1,6 +1,6 @@
 import datetime
 from peewee import *
-from src.schemas.config import DatabaseConfig
+from depsec.schemas.config import DatabaseConfig
 
 CONFIG = DatabaseConfig()
 

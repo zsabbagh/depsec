@@ -1,7 +1,7 @@
 import argparse, time, sys, yaml, xmltodict, os
-import src.schemas.cwe as cwe
+import depsec.schemas.cwe as cwe
 from loguru import logger
-from src.utils.tools import *
+from depsec.utils.tools import *
 from pprint import pprint
 
 # Script for migrating data from NVD JSON files to a database

@@ -4,9 +4,9 @@ from packaging import version as semver
 from loguru import logger
 from git import Repo
 from pathlib import Path
-from src.utils.proc import *
-from src.aggregator import Aggregator
-from src.schemas.projects import *
+from depsec.utils.proc import *
+from depsec.aggregator import Aggregator
+from depsec.schemas.projects import *
 # This tool iterates git tags and runs a command for each tag
 
 SEMVER_TAG = r'v?(\d+\.\d+(?:\.\d+)?)'
@@ -109,7 +109,7 @@ for platform, projects in data.items():
 
         repo_path = directory / repo_name
 
-        src_name = repo.get('src') or repo_name
+        depsec_name = repo.get('depsec') or repo_name
 
         tag_pattern = repo.get('tags')
 

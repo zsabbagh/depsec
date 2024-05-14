@@ -4,9 +4,9 @@ from packaging import version as semver
 from loguru import logger
 from git import Repo
 from pathlib import Path
-from src.utils.proc import *
-from src.aggregator import Aggregator
-from src.schemas.projects import *
+from depsec.utils.proc import *
+from depsec.aggregator import Aggregator
+from depsec.schemas.projects import *
 # This tool iterates git tags and runs a command for each tag
 
 SEMVER_TAG = r'v?(\d+\.\d+(?:\.\d+)?)'
@@ -67,7 +67,7 @@ def run_analysis(project: Project, directory: Path, temp_dir: Path = '/tmp', liz
     if type(includes) == str:
         includes = [ incl.strip() for incl in includes.split(',') ]
     elif includes is None:
-        includes = ['src/', f"{project_name}/"]
+        includes = ['depsec/', f"{project_name}/"]
     excludes = project.excludes
     if type(excludes) == str:
         excludes = [ excl.strip() for excl in excludes.split(',') ]

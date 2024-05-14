@@ -3,15 +3,15 @@ import seaborn as sns
 import numpy as np
 import matplotlib.pyplot as plt
 import pandas as pd
-import src.utils.compute as compute
-import src.utils.tools as tools
+import depsec.utils.compute as compute
+import depsec.utils.tools as tools
 from copy import deepcopy
 from pprint import pprint
 from pathlib import Path
-from src.aggregator import Aggregator
-import src.schemas.nvd as nvd
+from depsec.aggregator import Aggregator
+import depsec.schemas.nvd as nvd
 from loguru import logger
-from src.schemas.projects import *
+from depsec.schemas.projects import *
 # model_to_dict translates PeeWee models to dictionaries for JSON serialisation
 # the purpose is to make the data that have produced the plots available to readers of the report
 from playhouse.shortcuts import model_to_dict

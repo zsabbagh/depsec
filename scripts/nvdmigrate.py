@@ -1,7 +1,7 @@
 import argparse, json, time, requests, random, sys, yaml, os, re
-import src.schemas.nvd as nvd
+import depsec.schemas.nvd as nvd
 from loguru import logger
-from src.utils.tools import *
+from depsec.utils.tools import *
 
 parser = argparse.ArgumentParser(description='Migrate NVD data to a database')
 parser.add_argument('config', metavar='CONFIG', type=str,
