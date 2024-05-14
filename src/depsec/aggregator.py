@@ -32,6 +32,30 @@ def pm(model: List[Model] | Model, recurse=False):
         model = fn(model)
     pprint(model)
 
+def project_to_config(project: Project):
+    """
+    Convert a project to a config
+    """
+    if not project:
+        return None
+    
+    includes = project.includes
+    if includes:
+        includes = includes.split(',')
+    excludes = project.excludes
+    if excludes:
+        excludes = excludes.split(',')
+    return {
+        'product': project.product,
+        'vendor': project.vendor,
+        'repo': {
+            'url': project.repository_url,
+            'includes': includes,
+            'excludes': excludes,
+            'tags': project.tag_regex
+        }
+    }
+
 def pprows(df: pd.DataFrame, *cols: str, n: int = 10):
     print(f"{' '.join(cols)}")
     print('-' * 80)
@@ -116,10 +140,23 @@ class Aggregator:
         """
         Initialise the Aggregator
         """
+        self.__analysed_projects = {}
         self.__debug = debug
         self.__debug_delay = debug_delay
         logger.debug(f"Initalising Aggregator with config file {config_path}")
         self.config(config_path)
+    
+    def save_projects(self, file: str = 'projects.json'):
+        """
+        Save the projects to a file
+        """
+        if not file.endswith('.json'):
+            file = f"{file}.json"
+        logger.info(f"Saving projects to '{file}'")
+        path = Path(file)
+        with open(path, 'w') as f:
+            json.dump(self.__analysed_projects, f, indent=4)
+        logger.info(f"Saved {len(self.__analysed_projects)} projects")
     
     def load_projects(self, *projects: str, file: str = 'projects.json') -> Project:
         """
@@ -138,6 +175,7 @@ class Aggregator:
             return result
         with open(path) as f:
             data = json.load(f)
+            self.__analysed_projects = deepcopy(data)
             for platform in data:
                 logger.debug(f"Loading platform {platform}")
                 projects = data[platform]
@@ -160,8 +198,8 @@ class Aggregator:
                         tag_regex = repo.get('tags')
                         if repo_url:
                             project.repository_url = repo_url
-                        project.includes = includes
-                        project.excludes = excludes
+                        project.includes = ','.join(includes) if type(includes) == list else includes
+                        project.excludes = ','.join(excludes) if type(excludes) == list else excludes
                         project.tag_regex = tag_regex
                         project.save()
                     result.append(project)
@@ -194,6 +232,7 @@ class Aggregator:
             logger.debug(f"Found {project_name} in database")
             if not project.osi_verified:
                 self._verify_dates(project)
+            self.__analysed_projects[platform][project_name] = project_to_config(project)
             return project
         elif project is not None:
             logger.debug(f"Project {project_name} in database but no releases found")
@@ -259,6 +298,7 @@ class Aggregator:
             project.latest_release = latest_release.version
             project.save()
         self._verify_dates(project, platform)
+        self.__analysed_projects[platform][name] = project_to_config(project)
         return project
     
     
@@ -1845,7 +1885,8 @@ class Aggregator:
     
     def alldeps(self, project: str | Project, platform: str="pypi") -> dict:
         """
-        Gets all dependencies of a project
+        Gets all dependencies of a project as a dictionary
+        This is done by iterating through all releases and getting their dependencies
         """
         releases = self.get_releases(project, platform=platform, exclude_deprecated=False, exclude_nonstable=True)
         s = {}
@@ -1856,7 +1897,7 @@ class Aggregator:
             for dep in deps:
                 if dep.name not in s:
                     proj = self.get_project(dep.name, platform=dep.platform)
-                    s[dep.name] = proj.repository_url
+                    s[dep.name] = proj
         return s
     
     def get_cves(self, vendor: str, product: str = None):
@@ -1881,7 +1922,9 @@ class Aggregator:
     
     def _analyse_project(self, project: str | Project, platform: str="pypi") -> dict:
         """
-        Analyse a project's release
+        Statically analyses a project's releases
+
+        project: str | Project: The project name or object
         """
         project = self.get_project(project, platform)
         # one must identify "excludes" and "includes" for the project
@@ -1891,6 +1934,40 @@ class Aggregator:
             project.tag_regex = tag_regex
             project.save()
         giterate.run_analysis(project, self.__repos_dir)
+    
+    def _search_vendor(self, project: Project | str, platform: str="pypi") -> List[str]:
+        """
+        Checks if there are any matching CPEs for a project's URLs
+        Prompts the user to update the project's vendor and product if a match is found
+
+        project: Project | str: The project object or name
+        platform: str: The platform
+        """
+        project = self.get_project(project)
+        # starts with repository URL
+        repo_url = project.repository_url
+        trials = []
+        if repo_url:
+            owner, reponame = giterate.get_owner_project(repo_url)
+            trials.append(f"{owner}:{reponame}")
+            trials.append(f"{owner}:{project.name}")
+        if project.homepage:
+            homepage = homepage_to_vendor(project.homepage)
+            trials.append(f"{homepage}:{project.name}")
+        for trial in trials:
+            vendor, product = trial.split(':')
+            cpes = nvd.CPE.select().where((nvd.CPE.vendor == vendor) & (nvd.CPE.product == product))
+            if cpes.count() > 0:
+                print(f"Found {cpes.count()} CPEs for '{trial}'")
+                first = cpes.first()
+                cve: nvd.CVE = first.node.cve
+                print(f"Example CVE: {cve.description}")
+                if input('Update? [Y/n] ').lower() != 'n':
+                    project.vendor = vendor
+                    project.product = product
+                    project.save()
+                    return None
+        return None
     
 if __name__ == "__main__":
     # For the purpose of loading in interactive shell and debugging

@@ -5,52 +5,97 @@
             "vendor": "palletsprojects",
             "repo": {
                 "url": "github.com/pallets/jinja",
-                "tags": "@semver",
-                "includes": ["jinja2/", "src/"]
+                "includes": [
+                    "jinja/",
+                    "jinja2/",
+                    "src/"
+                ],
+                "excludes": null,
+                "tags": "@semver"
             }
         },
         "pytz": {
             "product": "pytz",
+            "vendor": "pythonhosted",
             "repo": {
                 "url": "github.com/stub42/pytz",
-                "tags": "(?:release_)?@calver(?:_release)?",
-                "includes": ["src/pytz"],
-                "excludes": ["src/pytz/tests/"]
+                "includes": [
+                    "src/pytz"
+                ],
+                "excludes": [
+                    "src/pytz/tests/"
+                ],
+                "tags": "(?:release_)?@calver(?:_release)?"
             }
         },
         "flask": {
+            "product": null,
+            "vendor": "palletsprojects",
             "repo": {
                 "url": "github.com/pallets/flask",
-                "src": ".",
-                "includes": ["flask/", "flask.py", "src/"]
+                "includes": [
+                    "flask/",
+                    "flask.py",
+                    "src/"
+                ],
+                "excludes": null,
+                "tags": null
             }
         },
         "django": {
+            "product": null,
+            "vendor": "djangoproject",
             "repo": {
                 "url": "github.com/django/django",
-                "includes": ["django/", "django.py", "src/"],
-                "excludes": ["django/test/"]
+                "includes": [
+                    "django/",
+                    "django.py",
+                    "src/"
+                ],
+                "excludes": [
+                    "django/test/"
+                ],
+                "tags": null
             }
         },
         "tornado": {
+            "product": null,
+            "vendor": "tornadoweb",
             "repo": {
                 "url": "github.com/tornadoweb/tornado",
-                "includes": ["tornado/"],
-                "excludes": ["tornado/test/"]
+                "includes": [
+                    "tornado/"
+                ],
+                "excludes": [
+                    "tornado/test/"
+                ],
+                "tags": null
             }
         },
         "tensorflow": {
+            "product": null,
+            "vendor": "google",
             "repo": {
                 "url": "github.com/tensorflow/tensorflow",
-                "includes": ["tensorflow/python/"],
-                "excludes": ["tensorflow/python/tests/"]
-            },
-            "vendor": "google"
+                "includes": [
+                    "tensorflow/python/"
+                ],
+                "excludes": [
+                    "tensorflow/python/tests/"
+                ],
+                "tags": null
+            }
         },
         "asgiref": {
+            "product": null,
+            "vendor": "django",
             "repo": {
                 "url": "github.com/django/asgiref",
-                "includes": ["asgiref/"]
+                "includes": [
+                    "asgiref/"
+                ],
+                "excludes": null,
+                "tags": null
             }
         },
         "sqlparse": {
@@ -58,16 +103,35 @@
             "vendor": "sqlparse_project",
             "repo": {
                 "url": "github.com/andialbrecht/sqlparse",
-                "includes": ["sqlparse/", "src/"]
+                "includes": [
+                    "sqlparse/",
+                    "src/"
+                ],
+                "excludes": null,
+                "tags": null
             }
         },
-        "typing-extensions": {},
+        "typing-extensions": {
+            "product": null,
+            "vendor": "django",
+            "repo": {
+                "url": "https://github.com/python/typing_extensions",
+                "includes": null,
+                "excludes": null,
+                "tags": null
+            }
+        },
         "werkzeug": {
             "product": "werkzeug",
             "vendor": "palletsprojects",
             "repo": {
                 "url": "github.com/pallets/werkzeug",
-                "includes": ["werkzeug/", "src/"]
+                "includes": [
+                    "werkzeug/",
+                    "src/"
+                ],
+                "excludes": null,
+                "tags": null
             }
         },
         "itsdangerous": {
@@ -75,7 +139,12 @@
             "vendor": "palletsprojects",
             "repo": {
                 "url": "github.com/pallets/itsdangerous",
-                "includes": ["itsdangerous/", "src/"]
+                "includes": [
+                    "itsdangerous/",
+                    "src/"
+                ],
+                "excludes": null,
+                "tags": null
             }
         },
         "blinker": {
@@ -83,7 +152,11 @@
             "vendor": "pallets-eco",
             "repo": {
                 "url": "github.com/pallets-eco/blinker",
-                "includes": ["src/", "blinker/"],
+                "includes": [
+                    "src/",
+                    "blinker/"
+                ],
+                "excludes": null,
                 "tags": "(?:rel-)?@semver"
             }
         },
@@ -92,8 +165,14 @@
             "vendor": "palletsprojects",
             "repo": {
                 "url": "github.com/pallets/click",
-                "includes": ["src/", "click/"],
-                "excludes": ["src/click/testing.py"]
+                "includes": [
+                    "src/",
+                    "click/"
+                ],
+                "excludes": [
+                    "src/click/testing.py"
+                ],
+                "tags": null
             }
         },
         "markupsafe": {
@@ -101,16 +180,49 @@
             "vendor": "palletsprojects",
             "repo": {
                 "url": "github.com/pallets/markupsafe",
-                "includes": ["src/", "markupsafe/"]
+                "includes": [
+                    "src/",
+                    "markupsafe/"
+                ],
+                "excludes": null,
+                "tags": null
             }
         },
-        "importlib-metadata": {},
+        "importlib-metadata": {
+            "product": null,
+            "vendor": "python",
+            "repo": {
+                "url": "https://github.com/python/importlib_metadata",
+                "includes": null,
+                "excludes": null,
+                "tags": null
+            }
+        },
         "zipp": {
             "product": "zipp",
             "vendor": "jaraco",
             "repo": {
                 "url": "github.com/jaraco/zipp",
-                "includes": ["src/", "zipp.py", "zipp/"]
+                "includes": [
+                    "src/",
+                    "zipp.py",
+                    "zipp/"
+                ],
+                "excludes": null,
+                "tags": null
+            }
+        },
+        "numpy": {
+            "product": null,
+            "vendor": "numpy",
+            "repo": {
+                "url": "https://github.com/numpy/numpy",
+                "includes": [
+                    "src/",
+                    "numpy/"
+                ],
+                "excludes": null,
+                "tags": "@semver"
             }
         }
     }

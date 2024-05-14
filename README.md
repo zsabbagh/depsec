@@ -65,7 +65,13 @@ databases:
   weaknesses:
     name  weaknesses:
     path: <path>
+repositories:
+  path: <path>
 ```
+
+The `repositories` path should be the path to the folder where the repositories are cloned.
+The `databases` paths should be the path to the SQLite3 databases are stored.
+API keys are necessary for some services.
 
 ### Scripts
 
@@ -73,8 +79,10 @@ There are four main scripts for collecting data, whereof three are for migrating
 Use `--help` to see the available options for each script.
 They are located in `scripts/`.
 
+- `cwemigrate.py` migrates data from a downloaded CWE XML file to a SQLite database defined in `weaknesses` in the config file.
+  This is a preparation step.
+- `nvdmigrate.py` migrates data from a downloaded NVD JSON file to a SQLite database defined in `vulnerabilities` in the config file.
+  This is a preparation step.
+- `plotter.py` is the plotting script for the thesis.
 - `giterate.py` handles iteration over GitHub repositories, running Bandit and Lizard on each commit associated with a release tag.
   At time of writing, it supports release tags in the format `^v?\d+\.\d+\.\d+$`. So to expand the search space, the regex should be updated.
-- `cwemigrate.py` migrates data from a downloaded CWE XML file to a SQLite database defined in `weaknesses` in the config file.
-- `nvdmigrate.py` migrates data from a downloaded NVD JSON file to a SQLite database defined in `vulnerabilities` in the config file.
-- `plotter.py` is the plotting script for the thesis.

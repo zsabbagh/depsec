@@ -28,6 +28,18 @@ def version_tag(tag: str, pattern: str = None):
         return groups.group(1)
     return None
 
+def get_owner_project(github_url: str):
+    """
+    Get the owner and project name from a GitHub URL
+    """
+    groups = re.match(r'(?:https?://)?github.com/([^/]+)/([^/]+)', github_url)
+    if groups is None:
+        logger.error(f"Invalid GitHub URL: {github_url}")
+        return None, None
+    owner = groups.group(1)
+    project = groups.group(2)
+    return owner, project
+
 def clone_repo(project: Project, repos_dir: Path | str, force: bool = False):
     """
     Clone a repository
@@ -42,13 +54,12 @@ def clone_repo(project: Project, repos_dir: Path | str, force: bool = False):
     if not repo_url:
         logger.warning(f"Repository not found for '{project_name}', skipping...")
         return None, None
+    elif 'github' not in repo_url:
+        logger.error(f"Unsupported platform for '{project_name}', skipping '{repo_url}'...")
+        return None, None
 
-    url = re.sub(r'https?://', '', repo_url)
-    url = re.sub(r'.git$', '', url)
-    repo_name = url.split('/')[-1]
-    if '.' in repo_name:
-        repo_name = repo_name.split('.')[0]
-    url = f"https://{url}.git"
+    owner, repo_name = get_owner_project(repo_url)
+    url = f"https://github.com/{owner}/{repo_name}.git"
 
     repo_path = repos_dir / repo_name
 
@@ -164,7 +175,11 @@ def run_analysis(project: Project, repos_dir: Path, temp_dir: Path = '/tmp', liz
         except:
             print(f"Invalid version: {v}")
             pass
-
+    if not project.includes and includes:
+        project.includes = ','.join(list(map(str, includes)))
+    if not project.excludes and excludes:
+        project.excludes = ','.join(list(map(str, excludes)))
+    project.save()
     for version in sorted(version_iter, key=semver.parse, reverse=True):
         print(f"Processing {project_name}:{version}...")
         release: Release = rels.get(version)
