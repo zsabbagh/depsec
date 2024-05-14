@@ -42,7 +42,8 @@
         "tensorflow": {
             "repo": {
                 "url": "github.com/tensorflow/tensorflow",
-                "includes": ["tensorflow/"]
+                "includes": ["tensorflow/python/"],
+                "excludes": ["tensorflow/python/tests/"]
             },
             "vendor": "google"
         },

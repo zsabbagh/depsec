@@ -1,4 +1,4 @@
-import re, lizard, glob, datetime, json, sys, subprocess, time
+import re, lizard, glob, datetime, json, sys, subprocess, time, os
 from pprint import pprint
 from packaging import version as semver
 from loguru import logger
@@ -23,17 +23,17 @@ def version_tag(tag: str, pattern: str = None):
             pattern = pattern.replace('@calver', CALVER_TAG)
     else:
         pattern = SEMVER_TAG
-    pattern = rf"^{pattern}$"
     groups = re.match(pattern, tag)
     if groups:
         return groups.group(1)
     return None
 
-def run_analysis(project: Project, directory: Path, temp_dir: Path = '/tmp', lizard: bool = True, bandit: bool = True):
+def clone_repo(project: Project, repos_dir: Path | str, force: bool = False):
     """
-    Analyse a project with lizard and bandit
+    Clone a repository
     """
-    directory = Path(directory)
+    if type(repos_dir) == str:
+        repos_dir = Path(repos_dir)
     project_name = project.name.lower()
     platform = project.platform.lower()
     repo_url = project.repository_url
@@ -41,7 +41,7 @@ def run_analysis(project: Project, directory: Path, temp_dir: Path = '/tmp', liz
     logger.info(f"Processing {platform} project {project_name}")
     if not repo_url:
         logger.warning(f"Repository not found for '{project_name}', skipping...")
-        return None
+        return None, None
 
     url = re.sub(r'https?://', '', repo_url)
     url = re.sub(r'.git$', '', url)
@@ -50,32 +50,97 @@ def run_analysis(project: Project, directory: Path, temp_dir: Path = '/tmp', liz
         repo_name = repo_name.split('.')[0]
     url = f"https://{url}.git"
 
-    repo_path = directory / repo_name
-    tag_regex = project.tag_regex
+    repo_path = repos_dir / repo_name
 
     if not repo_path.exists():
         # clone the repository
         logger.info(f"Cloning {repo_name} to {repo_path}... (url: {url})")
         try:
+            if not force:
+                prompt = input(f"Clone {project_name} to '{repo_path}'? (Y/n): ")
+                if prompt.lower() == 'n':
+                    logger.warning(f"Skipping {project_name}")
+                    return None, None
             repo = Repo.clone_from(url, repo_path)
         except Exception as e:
             logger.error(f"Failed to clone {project_name} to '{repo_path}', error: {e}")
-            return None
+            return None, None
         logger.info(f"Cloned {project_name} to '{repo_path}'!")
+    else:
+        repo = Repo(repo_path)
+    return repo, repo_path
+
+def identify_tags(repo: Repo):
+    """
+    Identify tags in the repository
+    """
+    semver_matches = []
+    calver_matches = []
+    tags = repo.tags
+    total_tags = len(tags)
+    for tag in tags:
+        tagname = tag.name
+        semver_tag = re.match(SEMVER_TAG, tag.name)
+        if semver_tag:
+            s = semver_tag.group(1)
+            semver_matches.append(f"{tagname} ({s})")
+        calver_tag = re.match(CALVER_TAG, tag.name)
+        if calver_tag:
+            s = calver_tag.group(1)
+            calver_matches.append(f"{tagname} ({s})")
+    print(f"Semver matches ({len(semver_matches)} / {total_tags}): {', '.join(semver_matches)}")
+    print(f"Calver matches ({len(calver_matches)} / {total_tags}): {', '.join(calver_matches)}")
+    print(f"If none of the above, please provide a regex pattern to match the tags")
+    tag_regex = input("Enter the tag regex (@semver, @calver expands): ")
+    return f"^{tag_regex}$" if tag_regex else (
+        '@semver' if len(semver_matches) > len(calver_matches) else '@calver'
+    )
+
+def find_main_package(project: Project, repo_path: str | Path):
+    """
+    Find the main package in a Python repository
+    """
+    if type(repo_path) == str:
+        repo_path = Path(repo_path)
+    max_count = 0
+    main_package = None
+    for root, dirs, files in os.walk(repo_path):
+        if '__init__.py' in files:
+            # Count Python files in the directory
+            py_files_count = sum(1 for f in files if f.endswith('.py'))
+            # Update main package if this directory has more Python files
+            if py_files_count > max_count:
+                max_count = py_files_count
+                main_package = root
+    if main_package is None and (repo_path / f"{project.name}.py").exists():
+        main_package = repo_path / f"{project.name}.py"
+
+    return main_package
+
+
+def run_analysis(project: Project, repos_dir: Path, temp_dir: Path = '/tmp', lizard: bool = True, bandit: bool = True):
+    """
+    Analyse a project with lizard and bandit
+    """
+    repos_dir = Path(repos_dir)
+    project_name = project.name.lower()
+    tag_regex = project.tag_regex
 
     includes = project.includes
     if type(includes) == str:
         includes = [ incl.strip() for incl in includes.split(',') ]
     elif includes is None:
-        includes = ['depsec/', f"{project_name}/"]
+        # follows standard Python package structure
+        includes = ['src/', f"{project_name}/"]
     excludes = project.excludes
     if type(excludes) == str:
         excludes = [ excl.strip() for excl in excludes.split(',') ]
-    elif excludes is None:
-        excludes = ['tests/', 'test/', 'docs/', 'doc/', 'examples/', 'example/']
 
-    logger.info(f"Checking out {repo_name} to {repo_path}")
-    repo = Repo(repo_path)
+    # this should be done already, connect to the repo
+    repo, repo_path = clone_repo(project, repos_dir)
+    if repo is None:
+        logger.error(f"Failed to clone {project_name}, skipping...")
+        return
     tags = repo.tags
     versions = {}
     
@@ -85,11 +150,11 @@ def run_analysis(project: Project, directory: Path, temp_dir: Path = '/tmp', liz
             continue
         versions[tag_version] = tag
     
-    logger.info(f"Versions found for {repo_name}: {len(versions)}")
+    logger.info(f"Versions found for {project_name}'s repo: {len(versions)}")
     processed = 0
     rels = project.releases
     rels = {rel.version: rel for rel in rels}
-    logger.info(f"Releases found for {repo_name}: {', '.join(rels.keys())}")
+    logger.info(f"Releases found for {project_name}: {len(rels)}")
 
     version_iter = []
     for v in versions.keys():

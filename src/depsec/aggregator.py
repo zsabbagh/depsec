@@ -96,7 +96,7 @@ class Aggregator:
 
         # Configure the databases
         projects_path, projects_name = get_database_dir_and_name(databases, 'projects')
-        self.repositories = self.__config.get('repositories', {}).get('path')
+        self.__repos_dir = self.__config.get('repositories', {}).get('path')
         vulns_path, vulns_name = get_database_dir_and_name(databases, 'vulnerabilities')
         weaks_path, weaks_name = get_database_dir_and_name(databases, 'weaknesses')
         DB_PROJECTS.set(projects_path, projects_name)
@@ -163,6 +163,7 @@ class Aggregator:
                         project.includes = includes
                         project.excludes = excludes
                         project.tag_regex = tag_regex
+                        project.save()
                     result.append(project)
         logger.info(f"Loaded {len(result)} projects")
         return result
@@ -1884,7 +1885,12 @@ class Aggregator:
         """
         project = self.get_project(project, platform)
         # one must identify "excludes" and "includes" for the project
-        giterate.run_analysis(project, self.repositories)
+        repo, repo_path = giterate.clone_repo(project, self.__repos_dir)
+        if project.tag_regex is None:
+            tag_regex = giterate.identify_tags(repo)
+            project.tag_regex = tag_regex
+            project.save()
+        giterate.run_analysis(project, self.__repos_dir)
     
 if __name__ == "__main__":
     # For the purpose of loading in interactive shell and debugging

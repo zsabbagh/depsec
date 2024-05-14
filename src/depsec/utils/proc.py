@@ -1,10 +1,20 @@
-import subprocess, datetime, os, json, lizard, glob, time, argparse
+import subprocess, datetime, os, json, lizard, glob, time, argparse, re
 from pathlib import Path
 from pprint import pprint
 from loguru import logger
 # This file includes the running of other programmes or modules
 
-def get_files(dir: str, includes: list = None, excludes: list = None, file_pattern: str = '*.py') -> list:
+def autoskip_file(path: Path, dir: Path) -> bool:
+    """
+    Automatically skip files that are in the test, examples, or docs directories.
+    """
+    parent = str(path.parent.absolute())
+    parent = parent.replace(str(dir.absolute()), '')
+    if re.match(r'/?(test|example|doc)s?/?', parent):
+        return True
+    return False
+
+def get_files(dir: str, includes: list = None, excludes: list = None, file_pattern: str = '*.py', autoskip: bool = True) -> list:
     """
     Get all files in a directory, optionally filtered by includes and excludes.
     """
@@ -24,6 +34,9 @@ def get_files(dir: str, includes: list = None, excludes: list = None, file_patte
         if skip:
             continue
         for f in i.glob(f'**/{file_pattern}'):
+            # check if is in directory test, examples, or docs
+            if autoskip and autoskip_file(f, dir):
+                continue
             if f.is_file():
                 files.append(f)
     return files
@@ -63,7 +76,8 @@ def run_bandit(dir: str | Path,
                includes: str | list = None,
                excludes: str | list = None,
                output: str | Path = None,
-               skips: str = '') -> None:
+               skips: str = '',
+               autoskip: bool = True) -> None:
     """
     Run Bandit on the codebase.
 
@@ -130,6 +144,8 @@ def run_bandit(dir: str | Path,
                 issues = data.get('results', [])
                 for issue in issues:
                     filename = issue.get('filename')
+                    if autoskip and autoskip_file(Path(filename), dir):
+                        continue
                     # TODO: this is not the true measurement of files counted, this is for those that have issues
                     if filename is not None:
                         files_with_issues.add(filename)
