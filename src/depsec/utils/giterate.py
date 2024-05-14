@@ -5,13 +5,18 @@ from loguru import logger
 from git import Repo
 from pathlib import Path
 from depsec.utils.proc import *
-from depsec.aggregator import Aggregator
 from depsec.schemas.projects import *
 # This tool iterates git tags and runs a command for each tag
 
 # second group is pre/rc/alpha/beta
 SEMVER_TAG = r'v?(\d+\.\d+(?:\.\d+)?)(?:[\-.]((?:pre|rc|a|b)(?:\d+)?))?'
 CALVER_TAG = r'(\d{4}[a-z]?(?:\.\d+){0,2})'
+
+def is_semver(tag: str):
+    return bool(re.match(SEMVER_TAG, tag))
+
+def is_calver(tag: str):
+    return bool(re.match(CALVER_TAG, tag))
 
 def version_tag(tag: str, pattern: str = None):
     """
@@ -154,6 +159,12 @@ def run_analysis(project: Project, repos_dir: Path, temp_dir: Path = '/tmp', liz
     if repo is None:
         logger.error(f"Failed to clone {project_name}, skipping...")
         return
+    follows_standard = False
+    for incl in includes:
+        if (repo_path / incl).exists():
+            follows_standard = True
+    if not follows_standard:
+        print(f"Project {project_name} does not follow standard Python package structure")
     tags = repo.tags
     versions = {}
     

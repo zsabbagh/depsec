@@ -232,6 +232,8 @@ class Aggregator:
             logger.debug(f"Found {project_name} in database")
             if not project.osi_verified:
                 self._verify_dates(project)
+            if platform not in self.__analysed_projects:
+                self.__analysed_projects[platform] = {}
             self.__analysed_projects[platform][project_name] = project_to_config(project)
             return project
         elif project is not None:
@@ -1929,10 +1931,17 @@ class Aggregator:
         project = self.get_project(project, platform)
         # one must identify "excludes" and "includes" for the project
         repo, repo_path = giterate.clone_repo(project, self.__repos_dir)
+        release = self.get_release(project, platform=platform)
+        version = release.version
         if project.tag_regex is None:
-            tag_regex = giterate.identify_tags(repo)
-            project.tag_regex = tag_regex
-            project.save()
+            if giterate.is_semver(version):
+                tag_regex = "@semver"
+            elif giterate.is_calver(version):
+                tag_regex = "@calver"
+            print(f"Detected tag regex: {tag_regex} (e.g., {version})")
+            if input('Update? [Y/n] ').lower() != 'n':
+                project.tag_regex = tag_regex
+                project.save()
         giterate.run_analysis(project, self.__repos_dir)
     
     def _search_vendor(self, project: Project | str, platform: str="pypi") -> List[str]:
