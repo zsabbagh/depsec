@@ -4,13 +4,33 @@ from pprint import pprint
 from loguru import logger
 # This file includes the running of other programmes or modules
 
-def autoskip_file(path: Path, dir: Path) -> bool:
+def any_fulfils(ls: list, expr: callable) -> bool:
+    """
+    Check if any element in a list satisfies the expression.
+    """
+    for i in ls:
+        if expr(i):
+            return True
+    return False
+
+def paths_to_str(paths: list) -> str:
+    """
+    Convert a list of paths to a string.
+    """
+    return ' '.join([str(p) for p in paths])
+
+def autoskip_file(path: Path, dir: Path = '.') -> bool:
     """
     Automatically skip files that are in the test, examples, or docs directories.
     """
+    path = Path(path) if type(path) == str else path
+    dir = Path(dir) if type(dir) == str else dir
     parent = str(path.parent.absolute())
     parent = parent.replace(str(dir.absolute()), '')
-    if re.match(r'/?(test|example|doc)s?/?', parent):
+    parts = parent.split('/')
+    if any_fulfils(parts, lambda x: bool(re.match(r"(test|example|doc)s?", x))):
+        return True
+    elif path.stem.startswith('test_'):
         return True
     return False
 
@@ -35,6 +55,7 @@ def get_files(dir: str, includes: list = None, excludes: list = None, file_patte
             print(f"Skipping '{i}' as it is in the exclude list.")
             continue
         if i.is_file():
+            print(f"Adding file '{i}' to the list.")
             files.append(i)
             continue
         for f in i.glob(f'**/{file_pattern}'):

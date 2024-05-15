@@ -1922,7 +1922,7 @@ class Aggregator:
                 cve_ids.add(cve.cve_id)
         return cves
     
-    def _analyse(self, project: str | Project, platform: str="pypi", prompt: bool = True) -> dict:
+    def _analyse(self, project: str | Project, *releases: str | Release,  platform: str="pypi", prompt: bool = True, limit: int = None) -> dict:
         """
         Statically analyses a project's releases
 
@@ -1946,7 +1946,7 @@ class Aggregator:
             if update:
                 project.tag_regex = tag_regex
                 project.save()
-        giterate.run_analysis(project, self.__repos_dir)
+        giterate.run_analysis(project, self.__repos_dir, *releases, limit=limit)
     
     def _search_vendor(self, project: Project | str, platform: str="pypi") -> List[str]:
         """

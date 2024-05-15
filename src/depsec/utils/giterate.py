@@ -136,7 +136,7 @@ def find_main_package(project: Project, repo_path: str | Path):
     return main_package
 
 
-def run_analysis(project: Project, repos_dir: Path, temp_dir: Path = '/tmp', lizard: bool = True, bandit: bool = True):
+def run_analysis(project: Project, repos_dir: Path, *v_or_rel: str | Release, temp_dir: Path = '/tmp', lizard: bool = True, bandit: bool = True, limit: int = None):
     """
     Analyse a project with lizard and bandit
     """
@@ -180,20 +180,31 @@ def run_analysis(project: Project, repos_dir: Path, temp_dir: Path = '/tmp', liz
     rels = {rel.version: rel for rel in rels}
     logger.info(f"Releases found for {project_name}: {len(rels)}")
 
+    releases = set([ rel.version if type(rel) == Release else rel for rel in v_or_rel ]) if v_or_rel else set()
+    logger.debug(f"Releases '{sorted(list(releases))}' provided.")
+
     version_iter = []
     for v in versions.keys():
         try:
             semver.parse(v)
+            if len(releases) > 0 and v not in releases:
+                logger.debug(f"Releases provided, skipping '{v}'...")
+                continue
             version_iter.append(v)
         except:
-            print(f"Invalid version: {v}")
+            logger.warning(f"Invalid version tag '{v}' found, skipping...")
             pass
     if not project.includes and includes:
         project.includes = ','.join(list(map(str, includes)))
     if not project.excludes and excludes:
         project.excludes = ','.join(list(map(str, excludes)))
     project.save()
+    count = 0
     for version in sorted(version_iter, key=semver.parse, reverse=True):
+        count += 1
+        if limit and count > limit:
+            logger.debug(f"Limit reached, stopping at {limit} versions")
+            break
         print(f"Processing {project_name}:{version}...")
         release: Release = rels.get(version)
         if release is None:
