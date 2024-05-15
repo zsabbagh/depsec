@@ -167,7 +167,7 @@ class Aggregator:
         logger.info(f"Loading projects from '{file}'")
         path = Path(file)
         result = []
-        if len(projects) > 0:
+        if len(projects) > 0 and not Path(projects[0]).exists():
             for project in projects:
                 logger.debug(f"Loading project {project}")
                 project = self.get_project(project)
@@ -302,7 +302,6 @@ class Aggregator:
         self._verify_dates(project)
         self.__analysed_projects[platform][name] = project_to_config(project)
         return project
-    
     
 
     def get_releases(self,
@@ -1947,6 +1946,36 @@ class Aggregator:
                 project.tag_regex = tag_regex
                 project.save()
         giterate.run_analysis(project, self.__repos_dir, *releases, limit=limit)
+
+    def get_all_deps(self, project: str | Project, platform: str="pypi") -> dict:
+        """
+        Gets all dependencies of a project
+        """
+        project = self.get_project(project, platform)
+        results = []
+        processed = set()
+        for release in project.releases:
+            deps = self.get_dependencies(project, release.version, platform=platform)
+            if deps is None:
+                continue
+            for dep in deps:
+                if dep.name in processed:
+                    continue
+                processed.add(dep.name)
+                depproj = self.get_project(dep.name, platform=dep.platform)
+                results.append(depproj)
+        return results
+    
+    def _analyse_deps(self, project: str | Project, platform: str="pypi", prompt: bool = True, limit: int = None) -> dict:
+        """
+        Statically analyses a project's dependencies
+
+        project: str | Project: The project name or object
+        """
+        project = self.get_project(project, platform)
+        deps = self.get_all_deps(project)
+        for dep in deps:
+            self._analyse(dep.name, platform=dep.platform, prompt=prompt, limit=limit)
     
     def _search_vendor(self, project: Project | str, platform: str="pypi") -> List[str]:
         """

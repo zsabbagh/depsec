@@ -973,7 +973,7 @@ def plot_issues(df: pd.DataFrame):
         # sort the X-axis by the test category
         dftmp = dftmp.sort_values(by=['test_category', 'release'], ascending=True)
         dftmp = dftmp[ dftmp['is_test'] == False ]
-        sns.swarmplot(data=dftmp, x='test_category', y='score', hue='release', ax=ax, palette=palette, hue_order=order)
+        # sns.swarmplot(data=dftmp, x='test_category', y='score', hue='release', ax=ax, palette=palette, hue_order=order)
         sns.violinplot(data=dftmp, x='test_category', y='score', ax=ax, fill=False, color=Global.Colours.light_grey, cut=0)
         unique_categories = dftmp['test_category'].unique()
         ax.set_xlabel(None)
@@ -1233,6 +1233,12 @@ if __name__ == '__main__':
         static_df.to_csv(static_path, index=False)
         cves_overall_df.to_csv(cve_overall_path, index=False)
 
+        # drop the rows not in 'projects'
+        cves_overall_df = cves_overall_df[cves_overall_df['project'].isin(project_names)]
+        cves_df = cves_df[cves_df['project'].isin(project_names)]
+        issues_df = issues_df[issues_df['project'].isin(project_names)]
+        static_df = static_df[static_df['project'].isin(project_names)]
+
         # generate reports of the overall findings to explain the plots
         all_input = 'all' in args.overall
         if 'cwe' in overall_keys or all_input:
@@ -1240,6 +1246,7 @@ if __name__ == '__main__':
             cwe_df = add_stats(cwe_df, ['project', 'release', 'cve_id', 'cwe_id'], 'published_to_patched')
             plot_overall_cwe_distribution(cves_overall_df)
         if 'issues' in overall_keys or all_input:
+            pprint(issues_df)
             plot_issues(issues_df)
         if 'cve' in overall_keys or all_input:
             plot_cves(cves_overall_df)
