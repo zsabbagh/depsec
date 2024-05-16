@@ -136,14 +136,22 @@ def find_main_package(project: Project, repo_path: str | Path):
     return main_package
 
 
-def get_includes(project_name: str, repo_path: Path):
+def get_includes(project_name: str, repo_path: Path, in_python: bool = False):
     """
     Get the includes for a project
     """
     repo_path = Path(repo_path).absolute()
+    includes = []
+    if not includes:
+        # check if 'python' directory exists
+        python_dir = repo_path / 'python'
+        if python_dir.exists() and not in_python:
+            return get_includes(project_name, python_dir, in_python=True)
+        src_dir = repo_path / 'src'
+        if src_dir.exists():
+            includes.append('src/')
     # get files and directories in the repository
     fildirs = [ f for f in glob.glob(f"{repo_path}/*", recursive=False) ]
-    includes = ['src/']
     for fildir in fildirs:
         fildir = Path(fildir)
         stem = fildir.stem
@@ -171,12 +179,7 @@ def run_analysis(project: Project, repos_dir: Path, *v_or_rel: str | Release, te
         logger.error(f"Failed to clone {project_name}, skipping...")
         return
 
-    includes = project.includes
-    if type(includes) == str:
-        includes = get_includes(project_name, repo_path)
-    elif includes is None:
-        # follows standard Python package structure
-        includes = ['src/', f"{project_name}/", f"{project_name}.py"]
+    includes = get_includes(project_name, repo_path)
     excludes = project.excludes
     if type(excludes) == str:
         excludes = [ excl.strip() for excl in excludes.split(',') ]
@@ -216,7 +219,7 @@ def run_analysis(project: Project, repos_dir: Path, *v_or_rel: str | Release, te
         except:
             logger.warning(f"Invalid version tag '{v}' found, skipping...")
             pass
-    if not project.includes and includes:
+    if includes:
         project.includes = ','.join(list(map(str, includes)))
     if not project.excludes and excludes:
         project.excludes = ','.join(list(map(str, excludes)))

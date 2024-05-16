@@ -97,7 +97,6 @@ args = parser.parse_args()
 
 args.projects = sorted(list(map(str.lower, args.projects)))
 
-
 args.timeline = sorted(list(map(str.lower, args.timeline)))
 args.overall = sorted(list(map(str.lower, args.overall)))
 overall_keys = set(args.overall)
@@ -169,6 +168,10 @@ class Global:
         direct = "#165DA0"
         indirect = "#0BD095"
         light_grey = "#9EBDC1"
+
+for project in args.projects:
+    if project not in Global.project_palette:
+        Global.project_palette[project] = Global.Colours.light_grey
 
 def colour_to_rgb(colour: str):
     """

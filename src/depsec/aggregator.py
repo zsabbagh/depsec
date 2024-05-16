@@ -1,4 +1,4 @@
-import time, yaml, json, glob, sys, pandas as pd, datetime as dt
+import time, yaml, json, glob, sys, pandas as pd, datetime as dt, itertools
 import depsec.schemas.nvd as nvd
 import depsec.schemas.cwe as cwe
 import depsec.utils.db as db
@@ -1923,7 +1923,7 @@ class Aggregator:
                 cve_ids.add(cve.cve_id)
         return cves
     
-    def _analyse(self, project: str | Project, *releases: str | Release,  platform: str="pypi", prompt: bool = True, limit: int = None, lizard: bool = True, bandit: bool = True) -> dict:
+    def _analyse(self, project: str | Project, *releases: str | Release,  platform: str="pypi", prompt: bool = True, limit: int = None, lizard: bool = True, bandit: bool = True, refresh: bool = False) -> dict:
         """
         Statically analyses a project's releases
 
@@ -1931,6 +1931,10 @@ class Aggregator:
         """
         platform = project.platform if type(project) == Project else platform
         project = self.get_project(project, platform)
+        analysed = self.get_release(project, platform=platform, analysed=True)
+        if analysed is not None and not prompt and not refresh:
+            print(f"Skipping {project.name} as it is already analysed")
+            return
         # clone the repository
         repo, repo_path = giterate.clone_repo(project, self.__repos_dir)
         release = self.get_release(project, platform=platform)
@@ -1969,7 +1973,7 @@ class Aggregator:
                 results.append(depproj)
         return results
     
-    def _analyse_all(self, project: str | Project, platform: str="pypi", prompt: bool = True, limit: int = None) -> dict:
+    def _analyse_all(self, project: str | Project, platform: str="pypi", prompt: bool = True, limit: int = None, refresh: bool=False) -> dict:
         """
         Statically analyses a project's dependencies
 
@@ -1982,12 +1986,12 @@ class Aggregator:
         deps = self.get_dependencies(project, platform=platform)
         for dep in deps:
             rel = self.get_release(dep.name, dep.version, platform=dep.platform, requirements=dep.requirements, analysed=True)
-            if rel is not None:
-                print(f"Project seems to be analysed: {project.name}:{rel.version} has {rel.nloc_total} NLOC")
+            if rel is not None and rel.nloc_total is not None and rel.nloc_total > 0:
+                print(f"Project seems to be analysed: {dep.name}:{rel.version} has {rel.nloc_total} NLOC")
                 if not prompt or input('Skip? [Y/n] ').lower() != 'n':
                     continue
             rels = self.get_releases(dep.name, platform=dep.platform, requirements=dep.requirements)
-            self._analyse(dep.name, *rels, platform=project.platform, prompt=prompt, limit=limit)
+            self._analyse(dep.name, *rels, platform=project.platform, prompt=prompt, limit=limit, refresh=refresh)
     
     def _search_vendor(self, project: Project | str, platform: str="pypi") -> List[str]:
         """
@@ -2000,16 +2004,23 @@ class Aggregator:
         project = self.get_project(project)
         # starts with repository URL
         repo_url = project.repository_url
-        trials = []
+        vendors = ['python'] if platform == 'pypi' else []
+        products = [project.name, re.sub(r'\d$', '', project.name)]
+        suffixes = ['', 'project', '_project', 'projects', '_projects']
         if repo_url:
             owner, reponame = giterate.get_owner_project(repo_url)
-            trials.append(f"{owner}:{reponame}")
-            trials.append(f"{owner}:{project.name}")
+            if owner:
+                for suffix in suffixes:
+                    vendors.append(f"{owner}{suffix}")
+                products.append(reponame)
         if project.homepage:
-            homepage = homepage_to_vendor(project.homepage)
-            trials.append(f"{homepage}:{project.name}")
-        for trial in trials:
-            vendor, product = trial.split(':')
+            ven = homepage_to_vendor(project.homepage)
+            if ven:
+                for suffix in suffixes:
+                    vendors.append(f"{ven}{suffix}")
+        for vendor, product in itertools.product(vendors, products):
+            trial = f"{vendor}:{product}"
+            print(f"Searching for {trial}")
             cpes = nvd.CPE.select().where((nvd.CPE.vendor == vendor) & (nvd.CPE.product == product))
             if cpes.count() > 0:
                 print(f"Found {cpes.count()} CPEs for '{trial}'")
@@ -2022,6 +2033,17 @@ class Aggregator:
                     project.save()
                     return None
         return None
+    
+    def _search_vendor_all(self, project: Project | str, platform: str="pypi") -> List[str]:
+        """
+        Searches for vendors and products for all projects
+        """
+        project = self.get_project(project, platform=platform)
+        self._search_vendor(project, platform=platform)
+        deps = self.get_all_deps(project, platform=platform)
+        for dep in deps:
+            print(f"Searching for {dep.name}")
+            self._search_vendor(dep, platform=dep.platform)
     
 if __name__ == "__main__":
     # For the purpose of loading in interactive shell and debugging
