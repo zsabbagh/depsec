@@ -2005,6 +2005,8 @@ class Aggregator:
         # starts with repository URL
         repo_url = project.repository_url
         vendors = ['python'] if platform == 'pypi' else []
+        if project.vendor:
+            vendors.append(project.vendor)
         products = [project.name, re.sub(r'\d$', '', project.name)]
         suffixes = ['', 'project', '_project', 'projects', '_projects']
         if repo_url:
@@ -2019,6 +2021,8 @@ class Aggregator:
                 for suffix in suffixes:
                     vendors.append(f"{ven}{suffix}")
         for vendor, product in itertools.product(vendors, products):
+            vendor = vendor.lower()
+            product = product.lower()
             trial = f"{vendor}:{product}"
             print(f"Searching for {trial}")
             cpes = nvd.CPE.select().where((nvd.CPE.vendor == vendor) & (nvd.CPE.product == product))
