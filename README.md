@@ -1,4 +1,4 @@
-# Master Thesis Implementation part
+# DepSec: Dependency Security Analysis Tool
 
 This is a collection of tools and scripts used to collect data and perform analysis for my master thesis.
 A project run, tested, and developed with Python 3.11.6.
