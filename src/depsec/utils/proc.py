@@ -34,7 +34,7 @@ def autoskip_file(path: Path, dir: Path = '.') -> bool:
         return True
     return False
 
-def get_files(dir: str, includes: list = None, excludes: list = None, file_pattern: str = '*.py', autoskip: bool = True) -> list:
+def get_files(dir: str, includes: list = None, excludes: list = None, file_ext: str = '.py', autoskip: bool = True) -> list:
     """
     Get all files in a directory, optionally filtered by includes and excludes.
     """
@@ -58,15 +58,18 @@ def get_files(dir: str, includes: list = None, excludes: list = None, file_patte
             print(f"Adding file '{i}' to the list.")
             files.append(i)
             continue
-        for f in i.glob(f'**/{file_pattern}'):
-            # check if is in directory test, examples, or docs
-            if autoskip and autoskip_file(f, dir):
-                continue
-            if f.is_file():
-                files.append(f)
+        file_ext = [file_ext] if '|' not in file_ext else file_ext.split('|')
+        globs = [ f'**/*{ext}' for ext in file_ext ]
+        for g in globs:
+            for f in i.glob(g):
+                # check if is in directory test, examples, or docs
+                if autoskip and autoskip_file(f, dir):
+                    continue
+                if f.is_file():
+                    files.append(f)
     return files
 
-def run_lizard(dir: str | Path, includes: list = None, excludes: list = None) -> dict:
+def run_lizard(dir: str | Path, includes: list = None, excludes: list = None, file_ext: str = '.py') -> dict:
     """
     Runs Lizard on the codebase provided.
 
@@ -74,7 +77,7 @@ def run_lizard(dir: str | Path, includes: list = None, excludes: list = None) ->
     includes: list: The filepaths to include.
     excludes: list: The filepaths to exclude (starting with the directory provided).
     """
-    files = get_files(dir, includes, excludes)
+    files = get_files(dir, includes, excludes, file_ext=file_ext)
     nloc = 0
     ccn = 0
     functions = 0

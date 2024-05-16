@@ -136,6 +136,25 @@ def find_main_package(project: Project, repo_path: str | Path):
     return main_package
 
 
+def get_includes(project_name: str, repo_path: Path):
+    """
+    Get the includes for a project
+    """
+    repo_path = Path(repo_path).absolute()
+    # get files and directories in the repository
+    fildirs = [ f for f in glob.glob(f"{repo_path}/*", recursive=False) ]
+    includes = ['src/']
+    for fildir in fildirs:
+        fildir = Path(fildir)
+        stem = fildir.stem
+        if stem.lower() in project_name.lower():
+            if fildir.is_file():
+                includes.append(fildir.name)
+            else:
+                includes.append(f"{fildir.name}/")
+    return includes
+
+
 def run_analysis(project: Project, repos_dir: Path, *v_or_rel: str | Release, temp_dir: Path = '/tmp', lizard: bool = True, bandit: bool = True, limit: int = None):
     """
     Analyse a project with lizard and bandit
@@ -144,9 +163,17 @@ def run_analysis(project: Project, repos_dir: Path, *v_or_rel: str | Release, te
     project_name = project.name.lower()
     tag_regex = project.tag_regex
 
+    platform = project.platform.lower()
+
+    # this should be done already, connect to the repo
+    repo, repo_path = clone_repo(project, repos_dir)
+    if repo is None:
+        logger.error(f"Failed to clone {project_name}, skipping...")
+        return
+
     includes = project.includes
     if type(includes) == str:
-        includes = [ incl.strip() for incl in includes.split(',') ]
+        includes = get_includes(project_name, repo_path)
     elif includes is None:
         # follows standard Python package structure
         includes = ['src/', f"{project_name}/", f"{project_name}.py"]
@@ -154,11 +181,6 @@ def run_analysis(project: Project, repos_dir: Path, *v_or_rel: str | Release, te
     if type(excludes) == str:
         excludes = [ excl.strip() for excl in excludes.split(',') ]
 
-    # this should be done already, connect to the repo
-    repo, repo_path = clone_repo(project, repos_dir)
-    if repo is None:
-        logger.error(f"Failed to clone {project_name}, skipping...")
-        return
     follows_standard = False
     for incl in includes:
         if (repo_path / incl).exists():
@@ -199,13 +221,13 @@ def run_analysis(project: Project, repos_dir: Path, *v_or_rel: str | Release, te
     if not project.excludes and excludes:
         project.excludes = ','.join(list(map(str, excludes)))
     project.save()
-    count = 0
+    processed_count = 0
     for version in sorted(version_iter, key=semver.parse, reverse=True):
-        count += 1
-        if limit and count > limit:
+        processed_count += 1
+        print(f"Processing {project_name}:{version} ({processed_count}/{len(version_iter) if limit is None else limit})...")
+        if (limit and limit > 0) and processed_count > limit:
             logger.debug(f"Limit reached, stopping at {limit} versions")
             break
-        print(f"Processing {project_name}:{version}...")
         release: Release = rels.get(version)
         if release is None:
             logger.warning(f"Release '{version}' for {project_name} not found by metadata, ignoring")
@@ -232,7 +254,8 @@ def run_analysis(project: Project, repos_dir: Path, *v_or_rel: str | Release, te
             release.includes = incl_str
         release.save()
         if lizard:
-            res = run_lizard(repo_path, includes, excludes)
+            file_ext = '.js|.ts' if project.platform == 'npm' else '.py'
+            res = run_lizard(repo_path, includes, excludes, file_ext=file_ext)
             nloc = res.get('nloc')
             avg_nloc = res.get('nloc_average')
             avg_ccn = res.get('ccn_average')
@@ -245,6 +268,9 @@ def run_analysis(project: Project, repos_dir: Path, *v_or_rel: str | Release, te
             release.ccn_average = round(avg_ccn, 2) if avg_ccn is not None else None
             logger.info(f"{project_name}:{version}, files: {files_counted}, NLOC {nloc}")
         if bandit:
+            if platform != 'pypi':
+                logger.error(f"Error: Bandit is only supported for PyPI projects, skipping {project_name}:{version}")
+                continue
             reports = BanditReport.select().where(BanditReport.release == release)
             for report in reports:
                 report.delete_instance()

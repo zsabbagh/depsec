@@ -64,16 +64,17 @@ class LibrariesQuerier:
         response = requests.get(url)
         return response.json()
 
-    def query_package(self, package_name: str, get_dependencies: bool=False):
+    def query_package(self, package_name: str, platform: str = 'pypi', get_dependencies: bool=False):
         """
         Query libraries.io API for a package
         package_name: The name of the package
         get_dependencies: Whether to get the package's dependencies
         """
+        platform = platform.lower()
         if self.__api_key is None:
             logger.error("API key is required")
             return Exception("API key is required")
-        url = f"{LIBRARIES_IO_API}/pypi/{package_name}?api_key={self.__api_key}"
+        url = f"{LIBRARIES_IO_API}/{platform}/{package_name}?api_key={self.__api_key}"
         logger.debug(f"Querying libraries.io for {package_name}")
         response = requests.get(url)
         if response.status_code != 200:

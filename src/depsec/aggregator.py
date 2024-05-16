@@ -244,7 +244,7 @@ class Aggregator:
         # Query libraries.io if the package is not in the database
         logger.debug(f"Querying libraries.io for {project_name}")
         time.sleep(1)
-        result: dict = self.libraries.query_package(project_name)
+        result: dict = self.libraries.query_package(project_name, platform=platform)
         if result is None:
             logger.error(f"Project {project_name} not found in libraries.io")
             return None
@@ -300,6 +300,8 @@ class Aggregator:
             project.latest_release = latest_release.version
             project.save()
         self._verify_dates(project)
+        if platform not in self.__analysed_projects:
+            self.__analysed_projects[platform] = {}
         self.__analysed_projects[platform][name] = project_to_config(project)
         return project
     
@@ -1921,12 +1923,13 @@ class Aggregator:
                 cve_ids.add(cve.cve_id)
         return cves
     
-    def _analyse(self, project: str | Project, *releases: str | Release,  platform: str="pypi", prompt: bool = True, limit: int = None) -> dict:
+    def _analyse(self, project: str | Project, *releases: str | Release,  platform: str="pypi", prompt: bool = True, limit: int = None, lizard: bool = True, bandit: bool = True) -> dict:
         """
         Statically analyses a project's releases
 
         project: str | Project: The project name or object
         """
+        platform = project.platform if type(project) == Project else platform
         project = self.get_project(project, platform)
         # clone the repository
         repo, repo_path = giterate.clone_repo(project, self.__repos_dir)
@@ -1945,7 +1948,7 @@ class Aggregator:
             if update:
                 project.tag_regex = tag_regex
                 project.save()
-        giterate.run_analysis(project, self.__repos_dir, *releases, limit=limit)
+        giterate.run_analysis(project, self.__repos_dir, *releases, limit=limit, lizard=lizard, bandit=bandit)
 
     def get_all_deps(self, project: str | Project, platform: str="pypi") -> dict:
         """
@@ -1966,16 +1969,25 @@ class Aggregator:
                 results.append(depproj)
         return results
     
-    def _analyse_deps(self, project: str | Project, platform: str="pypi", prompt: bool = True, limit: int = None) -> dict:
+    def _analyse_all(self, project: str | Project, platform: str="pypi", prompt: bool = True, limit: int = None) -> dict:
         """
         Statically analyses a project's dependencies
 
         project: str | Project: The project name or object
         """
         project = self.get_project(project, platform)
-        deps = self.get_all_deps(project)
+        rel = self.get_release(project, platform=platform, analysed=True)
+        if rel is not None and (not prompt or input('Re-analyse project? [Y/n] ').lower() != 'n'):
+            ag._analyse(project, platform=platform, prompt=prompt, limit=limit)
+        deps = self.get_dependencies(project, platform=platform)
         for dep in deps:
-            self._analyse(dep.name, platform=dep.platform, prompt=prompt, limit=limit)
+            rel = self.get_release(dep.name, dep.version, platform=dep.platform, requirements=dep.requirements, analysed=True)
+            if rel is not None:
+                print(f"Project seems to be analysed: {project.name}:{rel.version} has {rel.nloc_total} NLOC")
+                if not prompt or input('Skip? [Y/n] ').lower() != 'n':
+                    continue
+            rels = self.get_releases(dep.name, platform=dep.platform, requirements=dep.requirements)
+            self._analyse(dep.name, *rels, platform=project.platform, prompt=prompt, limit=limit)
     
     def _search_vendor(self, project: Project | str, platform: str="pypi") -> List[str]:
         """
