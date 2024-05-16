@@ -1993,6 +1993,29 @@ class Aggregator:
             rels = self.get_releases(dep.name, platform=dep.platform, requirements=dep.requirements)
             self._analyse(dep.name, *rels, platform=project.platform, prompt=prompt, limit=limit, refresh=refresh)
     
+    def _match_vendors(self, product_or_project: str | Project, platform: str = 'pypi') -> List[tuple]:
+        """
+        Matches vendors for a project or product based on CPEs
+
+        product_or_project: str | Project: The project name or object
+        returns: List[tuple]: A list of tuples of vendors and an example CVE
+        """
+        if product_or_project is None:
+            logger.error("No project or product provided")
+            return None
+        vendors = set()
+        platform = product_or_project.platform if type(product_or_project) == Project else platform
+        product = product_or_project if type(product_or_project) == str else product_or_project.name
+        product = product.lower()
+        cpes = nvd.CPE.select().where(nvd.CPE.product == product)
+        results = []
+        for cpe in cpes:
+            if cpe.vendor in vendors:
+                continue
+            vendors.add(cpe.vendor)
+            results.append((cpe.vendor, cpe.node.cve))
+        return sorted(list(results), key=lambda x: x[0])
+    
     def _search_vendor(self, project: Project | str, platform: str="pypi") -> List[str]:
         """
         Checks if there are any matching CPEs for a project's URLs
