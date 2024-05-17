@@ -1942,11 +1942,20 @@ class Aggregator:
         platform = project.platform if type(project) == Project else platform
         project = self.get_project(project, platform)
         analysed = self.get_release(project, platform=platform, analysed=True)
-        if analysed is not None and not prompt and not refresh:
+        reanalyse = lambda x : x is not None and (refresh and (not prompt or input('Re-analyse project? [Y/n] ').lower() != 'n'))
+        if reanalyse(analysed):
             print(f"Skipping {project.name} as it is already analysed")
             return
         # clone the repository
         repo, repo_path = giterate.clone_repo(project, self.__repos_dir, prompt=prompt)
+        if repo is None:
+            d = self.__analysed_projects[project.platform][project.name]
+            logger.error(f"Failed to clone repository: {project.repository_url}")
+            d['repo'] = {
+                'error': f"failed to clone repository: '{project.repository_url}'"
+            }
+            self.save_projects()
+            return
         release = self.get_release(project, platform=platform)
         version = release.version
         if project.tag_regex is None:

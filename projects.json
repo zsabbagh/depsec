@@ -59,7 +59,7 @@
             }
         },
         "tornado": {
-            "product": null,
+            "product": "tornado",
             "vendor": "tornadoweb",
             "repo": {
                 "url": "github.com/tornadoweb/tornado",
@@ -223,6 +223,14 @@
                 ],
                 "excludes": null,
                 "tags": "@semver"
+            }
+        },
+        "pytorch": {
+            "product": null,
+            "vendor": "pytorch",
+            "repo": {
+                "url": "github.com/pytorch/pytorch",
+                "error": "failed to clone repository: 'None'"
             }
         }
     }
