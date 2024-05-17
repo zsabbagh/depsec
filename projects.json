@@ -265,7 +265,7 @@
         },
         "certifi": {
             "product": "certifi",
-            "vendor": "certifi_project",
+            "vendor": "kennethreitz",
             "repo": {
                 "url": "https://github.com/certifi/python-certifi",
                 "includes": [
@@ -443,7 +443,1045 @@
             "product": null,
             "vendor": null,
             "repo": {
-                "error": "failed to clone repository: 'None'"
+                "url": null,
+                "includes": null,
+                "excludes": null,
+                "tags": null
+            }
+        },
+        "streamlit": {
+            "product": null,
+            "vendor": "streamlit",
+            "repo": {
+                "url": "https://github.com/streamlit/streamlit",
+                "includes": null,
+                "excludes": null,
+                "tags": "@semver"
+            }
+        },
+        "aiohttp": {
+            "product": null,
+            "vendor": "aio-libs",
+            "repo": {
+                "url": "https://github.com/aio-libs/aiohttp",
+                "includes": null,
+                "excludes": null,
+                "tags": null
+            }
+        },
+        "aiosignal": {
+            "product": null,
+            "vendor": "aio-libs",
+            "repo": {
+                "url": "https://github.com/aio-libs/aiosignal",
+                "includes": null,
+                "excludes": null,
+                "tags": null
+            }
+        },
+        "async-timeout": {
+            "product": null,
+            "vendor": "aio-libs",
+            "repo": {
+                "url": "https://github.com/aio-libs/async-timeout",
+                "includes": null,
+                "excludes": null,
+                "tags": null
+            }
+        },
+        "attrs": {
+            "product": null,
+            "vendor": "attrs",
+            "repo": {
+                "url": "https://github.com/python-attrs/attrs",
+                "includes": [
+                    "src/"
+                ],
+                "excludes": null,
+                "tags": "@semver"
+            }
+        },
+        "dnspython": {
+            "product": null,
+            "vendor": "dnspython",
+            "repo": {
+                "url": "https://github.com/rthalley/dnspython",
+                "includes": null,
+                "excludes": null,
+                "tags": null
+            }
+        },
+        "frozenlist": {
+            "product": null,
+            "vendor": "aio-libs",
+            "repo": {
+                "url": "https://github.com/aio-libs/frozenlist",
+                "includes": null,
+                "excludes": null,
+                "tags": null
+            }
+        },
+        "motor": {
+            "product": null,
+            "vendor": "mongodb",
+            "repo": {
+                "url": "https://github.com/mongodb/motor",
+                "includes": null,
+                "excludes": null,
+                "tags": null
+            }
+        },
+        "multidict": {
+            "product": null,
+            "vendor": "aio-libs",
+            "repo": {
+                "url": "https://github.com/aio-libs/multidict",
+                "includes": null,
+                "excludes": null,
+                "tags": null
+            }
+        },
+        "pandas": {
+            "product": null,
+            "vendor": "pydata",
+            "repo": {
+                "url": "https://github.com/pandas-dev/pandas",
+                "includes": [
+                    "src/",
+                    "pandas/",
+                    "pandas.py"
+                ],
+                "excludes": null,
+                "tags": "@semver"
+            }
+        },
+        "pillow": {
+            "product": null,
+            "vendor": "python-pillow",
+            "repo": {
+                "url": "https://github.com/python-pillow/Pillow",
+                "includes": [
+                    "src/"
+                ],
+                "excludes": null,
+                "tags": "@semver"
+            }
+        },
+        "protobuf": {
+            "product": "protobuf",
+            "vendor": "google",
+            "repo": {
+                "url": "https://github.com/protocolbuffers/protobuf",
+                "includes": [
+                    "src/",
+                    "protobuf.bzl",
+                    "Protobuf.podspec"
+                ],
+                "excludes": null,
+                "tags": "@semver"
+            }
+        },
+        "pymongo": {
+            "product": null,
+            "vendor": "mongodb",
+            "repo": {
+                "url": "https://github.com/mongodb/mongo-python-driver",
+                "includes": null,
+                "excludes": null,
+                "tags": null
+            }
+        },
+        "python-dateutil": {
+            "product": null,
+            "vendor": "dateutil",
+            "repo": {
+                "url": "https://github.com/dateutil/dateutil",
+                "includes": [
+                    "src/"
+                ],
+                "excludes": null,
+                "tags": "@semver"
+            }
+        },
+        "pyyaml": {
+            "product": null,
+            "vendor": "pyyaml",
+            "repo": {
+                "url": "https://github.com/yaml/pyyaml",
+                "includes": null,
+                "excludes": null,
+                "tags": null
+            }
+        },
+        "six": {
+            "product": null,
+            "vendor": "benjaminp",
+            "repo": {
+                "url": "https://github.com/benjaminp/six",
+                "includes": [
+                    "six.py"
+                ],
+                "excludes": null,
+                "tags": "@semver"
+            }
+        },
+        "tzdata": {
+            "product": null,
+            "vendor": "python",
+            "repo": {
+                "url": "https://github.com/python/tzdata",
+                "includes": [
+                    "src/"
+                ],
+                "excludes": null,
+                "tags": "@semver"
+            }
+        },
+        "yarl": {
+            "product": null,
+            "vendor": "aio-libs",
+            "repo": {
+                "url": "https://github.com/aio-libs/yarl",
+                "includes": null,
+                "excludes": null,
+                "tags": null
+            }
+        },
+        "aiobotocore": {
+            "product": null,
+            "vendor": "aio-libs",
+            "repo": {
+                "url": "https://github.com/aio-libs/aiobotocore",
+                "includes": null,
+                "excludes": null,
+                "tags": null
+            }
+        },
+        "botocore": {
+            "product": null,
+            "vendor": "boto",
+            "repo": {
+                "url": "https://github.com/boto/botocore",
+                "includes": null,
+                "excludes": null,
+                "tags": null
+            }
+        },
+        "chardet": {
+            "product": null,
+            "vendor": "chardet",
+            "repo": {
+                "url": "https://github.com/chardet/chardet",
+                "includes": null,
+                "excludes": null,
+                "tags": null
+            }
+        },
+        "docutils": {
+            "product": null,
+            "vendor": "sourceforge",
+            "repo": {
+                "url": "https://sourceforge.net/projects/docutils.sourceforge.io",
+                "includes": null,
+                "excludes": null,
+                "tags": null
+            }
+        },
+        "idna_ssl": {
+            "product": null,
+            "vendor": "aio-libs",
+            "repo": {
+                "url": "https://github.com/aio-libs/idna-ssl",
+                "includes": null,
+                "excludes": null,
+                "tags": null
+            }
+        },
+        "jmespath": {
+            "product": null,
+            "vendor": "com/jmespath/jmespath",
+            "repo": {
+                "url": "https://github.com/jmespath/jmespath.py",
+                "includes": null,
+                "excludes": null,
+                "tags": null
+            }
+        },
+        "packaging": {
+            "product": null,
+            "vendor": "pypa",
+            "repo": {
+                "url": "https://github.com/pypa/packaging",
+                "includes": [
+                    "src/"
+                ],
+                "excludes": null,
+                "tags": "@semver"
+            }
+        },
+        "pyparsing": {
+            "product": null,
+            "vendor": "pyparsing",
+            "repo": {
+                "url": "https://github.com/pyparsing/pyparsing",
+                "includes": null,
+                "excludes": null,
+                "tags": null
+            }
+        },
+        "setuptools": {
+            "product": "setuptools",
+            "vendor": "python",
+            "repo": {
+                "url": "https://github.com/pypa/setuptools",
+                "includes": [
+                    "tools/",
+                    "setup.py",
+                    "setup.cfg",
+                    "setuptools/"
+                ],
+                "excludes": null,
+                "tags": "@semver"
+            }
+        },
+        "tzlocal": {
+            "product": null,
+            "vendor": null,
+            "repo": {
+                "url": "https://github.com/regebro/tzlocal",
+                "includes": null,
+                "excludes": null,
+                "tags": null
+            }
+        },
+        "wrapt": {
+            "product": null,
+            "vendor": "GrahamDumpleton",
+            "repo": {
+                "url": "https://github.com/GrahamDumpleton/wrapt",
+                "includes": [
+                    "src/"
+                ],
+                "excludes": null,
+                "tags": "@semver"
+            }
+        },
+        "boto3": {
+            "product": null,
+            "vendor": "boto",
+            "repo": {
+                "url": "https://github.com/boto/boto3",
+                "includes": null,
+                "excludes": null,
+                "tags": null
+            }
+        },
+        "enum-compat": {
+            "product": null,
+            "vendor": "jstasiak",
+            "repo": {
+                "url": "https://github.com/jstasiak/enum-compat",
+                "includes": null,
+                "excludes": null,
+                "tags": null
+            }
+        },
+        "future": {
+            "product": null,
+            "vendor": "python-future",
+            "repo": {
+                "url": "https://github.com/PythonCharmers/python-future",
+                "includes": null,
+                "excludes": null,
+                "tags": null
+            }
+        },
+        "future-fstrings": {
+            "product": null,
+            "vendor": "asottile",
+            "repo": {
+                "url": "https://github.com/asottile/future-fstrings",
+                "includes": null,
+                "excludes": null,
+                "tags": null
+            }
+        },
+        "s3transfer": {
+            "product": null,
+            "vendor": "boto",
+            "repo": {
+                "url": "https://github.com/boto/s3transfer",
+                "includes": null,
+                "excludes": null,
+                "tags": null
+            }
+        },
+        "altair": {
+            "product": null,
+            "vendor": null,
+            "repo": {
+                "url": "https://github.com/altair-viz/altair",
+                "includes": [
+                    "altair/"
+                ],
+                "excludes": null,
+                "tags": "@semver"
+            }
+        },
+        "cachetools": {
+            "product": null,
+            "vendor": "tkem",
+            "repo": {
+                "url": "https://github.com/tkem/cachetools",
+                "includes": [
+                    "cachetools.py"
+                ],
+                "excludes": null,
+                "tags": "@semver"
+            }
+        },
+        "gitdb": {
+            "product": null,
+            "vendor": "gitpython-developers",
+            "repo": {
+                "url": "https://github.com/gitpython-developers/gitdb",
+                "includes": [
+                    "gitdb.pro",
+                    "gitdb/"
+                ],
+                "excludes": null,
+                "tags": "@semver"
+            }
+        },
+        "gitpython": {
+            "product": null,
+            "vendor": "gitpython-developers",
+            "repo": {
+                "url": "https://github.com/gitpython-developers/GitPython",
+                "includes": [
+                    "git/"
+                ],
+                "excludes": null,
+                "tags": "@semver"
+            }
+        },
+        "jsonschema": {
+            "product": null,
+            "vendor": "python-jsonschema",
+            "repo": {
+                "url": "https://github.com/python-jsonschema/jsonschema",
+                "includes": [
+                    "json/",
+                    "jsonschema/"
+                ],
+                "excludes": null,
+                "tags": "@semver"
+            }
+        },
+        "jsonschema-specifications": {
+            "product": null,
+            "vendor": "python-jsonschema",
+            "repo": {
+                "url": "https://github.com/python-jsonschema/jsonschema-specifications",
+                "includes": null,
+                "excludes": null,
+                "tags": "@semver"
+            }
+        },
+        "pyarrow": {
+            "product": null,
+            "vendor": "apache",
+            "repo": {
+                "url": "https://github.com/apache/arrow",
+                "includes": [
+                    "pyarrow/",
+                    "r/"
+                ],
+                "excludes": null,
+                "tags": "@semver"
+            }
+        },
+        "pydeck": {
+            "product": null,
+            "vendor": "com/visgl/deck",
+            "repo": {
+                "url": "https://github.com/visgl/deck.gl",
+                "includes": null,
+                "excludes": null,
+                "tags": "@semver"
+            }
+        },
+        "pygments": {
+            "product": "pygments",
+            "vendor": "pygments",
+            "repo": {
+                "url": "https://github.com/pygments/pygments",
+                "includes": [
+                    "pygments/"
+                ],
+                "excludes": null,
+                "tags": "@semver"
+            }
+        },
+        "referencing": {
+            "product": null,
+            "vendor": "python-jsonschema",
+            "repo": {
+                "url": "https://github.com/python-jsonschema/referencing",
+                "includes": [
+                    "referencing/"
+                ],
+                "excludes": null,
+                "tags": "@semver"
+            }
+        },
+        "requests": {
+            "product": "requests",
+            "vendor": "python",
+            "repo": {
+                "url": "https://github.com/psf/requests",
+                "includes": [
+                    "src/"
+                ],
+                "excludes": null,
+                "tags": "@semver"
+            }
+        },
+        "rich": {
+            "product": null,
+            "vendor": "Textualize",
+            "repo": {
+                "url": "https://github.com/Textualize/rich",
+                "includes": [
+                    "rich/"
+                ],
+                "excludes": null,
+                "tags": "@semver"
+            }
+        },
+        "rpds-py": {
+            "product": null,
+            "vendor": "crate-py",
+            "repo": {
+                "url": "https://github.com/crate-py/rpds",
+                "includes": [
+                    "src/",
+                    "rpds.pyi"
+                ],
+                "excludes": null,
+                "tags": "@semver"
+            }
+        },
+        "smmap": {
+            "product": null,
+            "vendor": "gitpython-developers",
+            "repo": {
+                "url": "https://github.com/gitpython-developers/smmap",
+                "includes": [
+                    "smmap/"
+                ],
+                "excludes": null,
+                "tags": "@semver"
+            }
+        },
+        "tenacity": {
+            "product": null,
+            "vendor": "jd",
+            "repo": {
+                "url": "https://github.com/jd/tenacity",
+                "includes": [
+                    "tenacity/"
+                ],
+                "excludes": null,
+                "tags": "@semver"
+            }
+        },
+        "toml": {
+            "product": null,
+            "vendor": "uiri",
+            "repo": {
+                "url": "https://github.com/uiri/toml",
+                "includes": [
+                    "toml/"
+                ],
+                "excludes": null,
+                "tags": "@semver"
+            }
+        },
+        "toolz": {
+            "product": null,
+            "vendor": "pytoolz",
+            "repo": {
+                "url": "https://github.com/pytoolz/toolz",
+                "includes": [
+                    "toolz/"
+                ],
+                "excludes": null,
+                "tags": "@semver"
+            }
+        },
+        "urllib3": {
+            "product": "urllib3",
+            "vendor": "python",
+            "repo": {
+                "url": "https://github.com/urllib3/urllib3",
+                "includes": [
+                    "src/"
+                ],
+                "excludes": null,
+                "tags": "@semver"
+            }
+        },
+        "watchdog": {
+            "product": null,
+            "vendor": "gorakhargosh",
+            "repo": {
+                "url": "https://github.com/gorakhargosh/watchdog",
+                "includes": [
+                    "src/"
+                ],
+                "excludes": null,
+                "tags": "@semver"
+            }
+        },
+        "backports_abc": {
+            "product": null,
+            "vendor": "cython",
+            "repo": {
+                "url": "https://github.com/cython/backports_abc",
+                "includes": null,
+                "excludes": null,
+                "tags": null
+            }
+        },
+        "base58": {
+            "product": null,
+            "vendor": "keis",
+            "repo": {
+                "url": "https://github.com/keis/base58",
+                "includes": null,
+                "excludes": null,
+                "tags": null
+            }
+        },
+        "futures": {
+            "product": null,
+            "vendor": "agronholm",
+            "repo": {
+                "url": "https://github.com/agronholm/pythonfutures",
+                "includes": null,
+                "excludes": null,
+                "tags": null
+            }
+        },
+        "psutil": {
+            "product": null,
+            "vendor": "giampaolo",
+            "repo": {
+                "url": "https://github.com/giampaolo/psutil",
+                "includes": null,
+                "excludes": null,
+                "tags": null
+            }
+        },
+        "singledispatch": {
+            "product": null,
+            "vendor": "jaraco",
+            "repo": {
+                "url": "https://github.com/jaraco/singledispatch",
+                "includes": null,
+                "excludes": null,
+                "tags": null
+            }
+        },
+        "tokenize-rt": {
+            "product": null,
+            "vendor": "asottile",
+            "repo": {
+                "url": "https://github.com/asottile/tokenize-rt",
+                "includes": null,
+                "excludes": null,
+                "tags": null
+            }
+        },
+        "mock": {
+            "product": null,
+            "vendor": null,
+            "repo": {
+                "url": "https://github.com/testing-cabal/mock",
+                "includes": null,
+                "excludes": null,
+                "tags": null
+            }
+        },
+        "pbr": {
+            "product": null,
+            "vendor": "openstack",
+            "repo": {
+                "url": "https://opendev.org/openstack/pbr",
+                "includes": null,
+                "excludes": null,
+                "tags": null
+            }
+        },
+        "entrypoints": {
+            "product": null,
+            "vendor": "takluyver",
+            "repo": {
+                "url": "https://github.com/takluyver/entrypoints",
+                "includes": null,
+                "excludes": null,
+                "tags": null
+            }
+        },
+        "opt-einsum": {
+            "product": null,
+            "vendor": "dgasmith",
+            "repo": {
+                "url": "https://github.com/dgasmith/opt_einsum",
+                "includes": null,
+                "excludes": null,
+                "tags": "@semver"
+            }
+        },
+        "optree": {
+            "product": null,
+            "vendor": "metaopt",
+            "repo": {
+                "url": "https://github.com/metaopt/optree",
+                "includes": [
+                    "src/",
+                    "optree/"
+                ],
+                "excludes": null,
+                "tags": "@semver"
+            }
+        },
+        "pydot": {
+            "product": null,
+            "vendor": "pydot",
+            "repo": {
+                "url": "https://github.com/pydot/pydot",
+                "includes": null,
+                "excludes": null,
+                "tags": null
+            }
+        },
+        "tensorboard": {
+            "product": null,
+            "vendor": "tensorflow",
+            "repo": {
+                "url": "https://github.com/tensorflow/tensorboard",
+                "includes": [
+                    "tensorboard/"
+                ],
+                "excludes": null,
+                "tags": "@semver"
+            }
+        },
+        "tensorboard-data-server": {
+            "product": null,
+            "vendor": "tensorflow",
+            "repo": {
+                "url": "https://github.com/tensorflow/tensorboard",
+                "includes": [
+                    "tensorboard/"
+                ],
+                "excludes": null,
+                "tags": "@semver"
+            }
+        },
+        "tensorflow-io-gcs-filesystem": {
+            "product": null,
+            "vendor": "tensorflow",
+            "repo": {
+                "url": "https://github.com/tensorflow/io",
+                "includes": null,
+                "excludes": null,
+                "tags": "@semver"
+            }
+        },
+        "termcolor": {
+            "product": null,
+            "vendor": "termcolor",
+            "repo": {
+                "url": "https://github.com/termcolor/termcolor",
+                "includes": [
+                    "src/"
+                ],
+                "excludes": null,
+                "tags": "@semver"
+            }
+        },
+        "wheel": {
+            "product": null,
+            "vendor": "wheel_project",
+            "repo": {
+                "url": "https://github.com/pypa/wheel",
+                "includes": [
+                    "src/"
+                ],
+                "excludes": null,
+                "tags": "@semver"
+            }
+        },
+        "astor": {
+            "product": null,
+            "vendor": "berkerpeksag",
+            "repo": {
+                "url": "https://github.com/berkerpeksag/astor",
+                "includes": null,
+                "excludes": null,
+                "tags": null
+            }
+        },
+        "validators": {
+            "product": null,
+            "vendor": "validators",
+            "repo": {
+                "url": "https://github.com/python-validators/validators",
+                "includes": null,
+                "excludes": null,
+                "tags": null
+            }
+        },
+        "bson": {
+            "product": null,
+            "vendor": "py-bson",
+            "repo": {
+                "url": "https://github.com/py-bson/bson",
+                "includes": null,
+                "excludes": null,
+                "tags": null
+            }
+        },
+        "pympler": {
+            "product": null,
+            "vendor": "pympler",
+            "repo": {
+                "url": "https://github.com/pympler/pympler",
+                "includes": null,
+                "excludes": null,
+                "tags": null
+            }
+        },
+        "semver": {
+            "product": null,
+            "vendor": "python-semver",
+            "repo": {
+                "url": "https://github.com/python-semver/python-semver",
+                "includes": null,
+                "excludes": null,
+                "tags": null
+            }
+        },
+        "pytz-deprecation-shim": {
+            "product": null,
+            "vendor": "pganssle",
+            "repo": {
+                "url": "https://github.com/pganssle/pytz-deprecation-shim",
+                "includes": null,
+                "excludes": null,
+                "tags": null
+            }
+        },
+        "google-auth": {
+            "product": null,
+            "vendor": "googleapis",
+            "repo": {
+                "url": "https://github.com/googleapis/google-auth-library-python",
+                "includes": null,
+                "excludes": null,
+                "tags": null
+            }
+        },
+        "google-auth-oauthlib": {
+            "product": null,
+            "vendor": "GoogleCloudPlatform",
+            "repo": {
+                "url": "https://github.com/GoogleCloudPlatform/google-auth-library-python-oauthlib",
+                "includes": null,
+                "excludes": null,
+                "tags": null
+            }
+        },
+        "keras-preprocessing": {
+            "product": null,
+            "vendor": "keras-team",
+            "repo": {
+                "url": "https://github.com/keras-team/keras-preprocessing",
+                "includes": null,
+                "excludes": null,
+                "tags": null
+            }
+        },
+        "oauthlib": {
+            "product": "oauthlib",
+            "vendor": "oauthlib_project",
+            "repo": {
+                "url": "https://github.com/oauthlib/oauthlib",
+                "includes": null,
+                "excludes": null,
+                "tags": null
+            }
+        },
+        "pyasn1": {
+            "product": null,
+            "vendor": "pyasn1",
+            "repo": {
+                "url": "https://github.com/pyasn1/pyasn1",
+                "includes": null,
+                "excludes": null,
+                "tags": null
+            }
+        },
+        "pyasn1-modules": {
+            "product": null,
+            "vendor": "pyasn1",
+            "repo": {
+                "url": "https://github.com/pyasn1/pyasn1-modules",
+                "includes": null,
+                "excludes": null,
+                "tags": null
+            }
+        },
+        "requests-oauthlib": {
+            "product": null,
+            "vendor": "requests",
+            "repo": {
+                "url": "https://github.com/requests/requests-oauthlib",
+                "includes": null,
+                "excludes": null,
+                "tags": null
+            }
+        },
+        "rsa": {
+            "product": "rsa",
+            "vendor": "python",
+            "repo": {
+                "url": "https://github.com/sybrenstuvel/python-rsa",
+                "includes": null,
+                "excludes": null,
+                "tags": null
+            }
+        },
+        "tensorboard-plugin-wit": {
+            "product": null,
+            "vendor": "whatif-tool",
+            "repo": {
+                "url": null,
+                "includes": null,
+                "excludes": null,
+                "tags": null
+            }
+        },
+        "tensorflow-estimator": {
+            "product": null,
+            "vendor": "tensorflow",
+            "repo": {
+                "url": null,
+                "includes": null,
+                "excludes": null,
+                "tags": null
+            }
+        },
+        "jax": {
+            "product": null,
+            "vendor": "google",
+            "repo": {
+                "url": "https://github.com/google/jax",
+                "includes": null,
+                "excludes": null,
+                "tags": null
+            }
+        },
+        "scipy": {
+            "product": "scipy",
+            "vendor": "scipy",
+            "repo": {
+                "url": "https://github.com/scipy/scipy",
+                "includes": [
+                    "ci/",
+                    "scipy/"
+                ],
+                "excludes": null,
+                "tags": "@semver"
+            }
+        },
+        "keras-nightly": {
+            "product": null,
+            "vendor": "keras-team",
+            "repo": {
+                "url": "https://github.com/keras-team/keras",
+                "includes": null,
+                "excludes": null,
+                "tags": null
+            }
+        },
+        "clang": {
+            "product": "clang",
+            "vendor": "llvm",
+            "repo": {
+                "url": null,
+                "includes": null,
+                "excludes": null,
+                "tags": null
+            }
+        },
+        "tf-estimator-nightly": {
+            "product": null,
+            "vendor": "tensorflow",
+            "repo": {
+                "url": null,
+                "includes": null,
+                "excludes": null,
+                "tags": null
+            }
+        },
+        "scikit-learn": {
+            "product": "scikit-learn",
+            "vendor": "scikit-learn",
+            "repo": {
+                "url": "https://github.com/scikit-learn/scikit-learn",
+                "includes": null,
+                "excludes": null,
+                "tags": "@semver"
+            }
+        },
+        "joblib": {
+            "product": "joblib",
+            "vendor": "joblib_project",
+            "repo": {
+                "url": "https://github.com/joblib/joblib",
+                "includes": [
+                    "joblib/"
+                ],
+                "excludes": null,
+                "tags": "@semver"
+            }
+        },
+        "threadpoolctl": {
+            "product": null,
+            "vendor": "joblib",
+            "repo": {
+                "url": "https://github.com/joblib/threadpoolctl",
+                "includes": [
+                    "threadpoolctl.py"
+                ],
+                "excludes": null,
+                "tags": "@semver"
+            }
+        },
+        "peewee": {
+            "product": null,
+            "vendor": "coleifer",
+            "repo": {
+                "url": "https://github.com/coleifer/peewee",
+                "includes": [
+                    "peewee.py"
+                ],
+                "excludes": null,
+                "tags": "@semver"
             }
         }
     }

@@ -1996,6 +1996,7 @@ class Aggregator:
             for dep in deps:
                 if dep.name in processed:
                     continue
+                print(f"Found dependency {dep.name} for {project.name}:{release.version}")
                 processed.add(dep.name)
                 depproj = self.get_project(dep.name, platform=dep.platform)
                 results.append(depproj)
@@ -2149,12 +2150,45 @@ if __name__ == "__main__":
     parser.add_argument('-r', '--refresh', action='store_true', help='Refresh the analysis')
     parser.add_argument('-l', '--limit', type=int, help='Limit the number of releases to analyse')
     parser.add_argument('--debug', action='store_true', help='Debug mode')
+    parser.add_argument('-v', '--vendors', action='store_true', help='Search for vendors', default=False)
+    parser.add_argument('-d', '--list-dependencies', action='store_true', help='List dependencies', default=False)
     logger.remove()
     args = parser.parse_args()
     logger.add(sys.stdout, colorize=True, backtrace=True, diagnose=True, level='DEBUG' if args.debug else 'INFO')
     ag = Aggregator("config.yml", debug=True)
     ag.load_projects()
     project = ag.get_project(args.project) if args.project else None
+    if args.vendors:
+        projects = [project]
+        deps = ag.get_all_deps(project)
+        for proj in projects + deps:
+            vendors = ag._match_vendors(proj)
+            if not vendors:
+                continue
+            homepage = proj.homepage.lower() if proj.homepage else None
+            repository = proj.repository_url.lower() if proj.repository_url else None
+            might_be = None
+            for i, v_cve in enumerate(vendors):
+                v, cve = v_cve
+                if homepage and v.lower() in homepage:
+                    might_be = i
+                    break
+                if repository and v.lower() in repository:
+                    might_be = i
+                    break
+            print(f"------------{proj.name}--------------")
+            for i, v_cve in enumerate(vendors):
+                v, cve = v_cve
+                print(f"{i+1}. {v} ({cve.cve_id})", end=" <--\n" if i == might_be else "\n")
+                print(f"\tDescription: {cve.description}")
+    if args.list_dependencies:
+        projects = [project]
+        deps = ag.get_all_deps(project)
+        print(f"------------{project.name}--------------")
+        projects = sorted(projects + (deps if deps else []), key=lambda x: x.name)
+        for proj in projects:
+            print(f"\t{proj.name}")
+        ag.save_projects()
     if args.analyse:
         ag._analyse(project, prompt=args.prompt, refresh=args.refresh, limit=args.limit)
     elif args.analyse_all:
