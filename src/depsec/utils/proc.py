@@ -23,12 +23,10 @@ def autoskip_file(path: Path, dir: Path = '.') -> bool:
     """
     Automatically skip files that are in the test, examples, or docs directories.
     """
-    path = Path(path) if type(path) == str else path
-    dir = Path(dir) if type(dir) == str else dir
-    parent = str(path.parent.absolute())
-    parent = parent.replace(str(dir.absolute()), '')
-    parts = parent.split('/')
-    if any_fulfils(parts, lambda x: bool(re.match(r"(test|example|doc)s?", x))):
+    path = Path(path).absolute() if type(path) == str else path.absolute()
+    dir = Path(dir).absolute() if type(dir) == str else dir.absolute()
+    stripped_path = Path(str(path).replace(str(dir), ''))
+    if any_fulfils(list(stripped_path.parts), lambda x: bool(re.match(r"_{0,2}(test(?:ing)?|example|doc)s?", x))):
         return True
     elif path.stem.startswith('test_'):
         return True

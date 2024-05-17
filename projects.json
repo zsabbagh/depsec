@@ -443,10 +443,7 @@
             "product": null,
             "vendor": null,
             "repo": {
-                "url": null,
-                "includes": null,
-                "excludes": null,
-                "tags": null
+                "error": "failed to clone repository: 'None'"
             }
         },
         "streamlit": {

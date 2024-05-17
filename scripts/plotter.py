@@ -828,6 +828,7 @@ def plot_semver(df: pd.DataFrame, static_df: pd.DataFrame):
     project_names = sorted(list(df['project'].unique()))
     cves = df.copy()
     fig, axs = plt.subplots(len(project_names), 3, figsize=(10, 8))
+    axs = [axs] if len(project_names) == 1 else axs
     fig.subplots_adjust(**Global.SUBPLOTS_3X)
     for i, project in enumerate(project_names):
         axss: plt.Axes = axs[i]
@@ -859,6 +860,8 @@ def plot_semver(df: pd.DataFrame, static_df: pd.DataFrame):
             major = row['major']
             srow = sdf[(sdf['release'] == release) & (sdf['major'] == major)].copy()
             # upate the nloc_total
+            if len(srow) == 0:
+                continue
             pdf.loc[i, 'nloc_total'] = srow['nloc_total'].values[0]
         
         # get the CVE count per major version

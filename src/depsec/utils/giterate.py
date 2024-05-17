@@ -164,6 +164,24 @@ def get_includes(project_name: str, repo_path: Path, in_python: bool = False):
                 includes.append(f"{fildir.name}/")
     return includes
 
+def get_package_and_module(project: Project | str, file_path: Path | str):
+    """
+    Get the package and module name from a file path
+    """
+    if type(file_path) == str:
+        file_path = Path(file_path)
+    file_path = Path(file_path)
+    project_name = project.name.lower() if type(project) == Project else project.lower()
+    parts = list(file_path.parts)
+    filename = file_path.name
+    module = file_path.stem
+    package = []
+    for i, part in enumerate(parts):
+        if str(part).lower() == project_name and i < len(parts)-1:
+            package = parts[i+1:-1] if i+1 < len(parts) else []
+            break
+    package = '.'.join(package)
+    return package if package != filename else '.', module
 
 def run_analysis(project: Project, repos_dir: Path, *v_or_rel: str | Release, temp_dir: Path = '/tmp', lizard: bool = True, bandit: bool = True, limit: int = None):
     """
@@ -235,15 +253,15 @@ def run_analysis(project: Project, repos_dir: Path, *v_or_rel: str | Release, te
         if limit and tools.version_has_pre(version):
             print(f"Skipping pre-release {version}, as limit is set to {limit} versions")
             continue
+        release: Release = rels.get(version)
+        if release is None:
+            logger.warning(f"Release '{version}' for {project_name} not found by metadata, ignoring")
+            continue
         processed_count += 1
         print(f"Processing {project_name}:{version} ({processed_count}/{len(version_iter) if limit is None else limit})...")
         if (limit and limit > 0) and processed_count > limit:
             logger.debug(f"Limit reached, stopping at {limit} versions")
             break
-        release: Release = rels.get(version)
-        if release is None:
-            logger.warning(f"Release '{version}' for {project_name} not found by metadata, ignoring")
-            continue
         if excludes:
             release.excludes = ','.join(list(map(str, excludes)))
             release.save()
@@ -339,11 +357,17 @@ def run_analysis(project: Project, repos_dir: Path, *v_or_rel: str | Release, te
                 cwe = issue.get('issue_cwe', {})
                 cwe = f"CWE-{cwe.get('id')}" if cwe else None
                 test_id = issue.get('test_id')
+                filename = issue.get('filename')
+                filepath = Path(filename)
+                filepath = str(filepath.absolute()).replace(str(repo_path.absolute()), '')
+                package, module = get_package_and_module(project, filepath)
                 issue_db = BanditIssue.create(
                     report=report,
                     description=issue.get('issue_text'),
-                    filename=issue.get('filename'),
+                    filename=filepath,
                     lines=lines,
+                    module=module,
+                    package=package,
                     code=issue.get('code'),
                     confidence=issue.get('issue_confidence', 'undefined').lower(),
                     severity=issue.get('issue_severity', 'undefined').lower(),
