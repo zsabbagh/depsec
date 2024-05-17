@@ -279,9 +279,6 @@ def timeline_kpis(data: dict, *kpis: str):
         # make sure we have a list of releases, even if it is a single release
         # this is to make the code more extensible
         relvs = [rel] if type(rel) == str else rel
-        if type(relvs) != list:
-            logger.error(f"Unexpected release type: {type(relvs).__name__}")
-            continue
         for k in results:
             if k not in kpi_argset:
                 continue

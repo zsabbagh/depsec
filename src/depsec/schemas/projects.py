@@ -45,6 +45,7 @@ class Project(Model):
     excludes = TextField(null=True)
     tag_regex = CharField(null=True)
     repository_url = CharField(null=True)
+    release_tags = IntegerField(null=True)
 
     class Meta:
         database = DB_PROJECTS.get()

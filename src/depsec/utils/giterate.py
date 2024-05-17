@@ -2,6 +2,7 @@ import re, lizard, glob, datetime, json, sys, subprocess, time, os
 from pprint import pprint
 from packaging import version as semver
 from loguru import logger
+from depsec.utils import tools
 from git import Repo
 from pathlib import Path
 from depsec.utils.proc import *
@@ -146,7 +147,8 @@ def get_includes(project_name: str, repo_path: Path, in_python: bool = False):
         # check if 'python' directory exists
         python_dir = repo_path / 'python'
         if python_dir.exists() and not in_python:
-            return get_includes(project_name, python_dir, in_python=True)
+            # can only happen for the root directory
+            includes = includes + get_includes(project_name, python_dir, in_python=True)
         src_dir = repo_path / 'src'
         if src_dir.exists():
             includes.append('src/')
@@ -209,9 +211,11 @@ def run_analysis(project: Project, repos_dir: Path, *v_or_rel: str | Release, te
     logger.debug(f"Releases '{sorted(list(releases))}' provided.")
 
     version_iter = []
+    release_tags = 0
     for v in versions.keys():
         try:
             semver.parse(v)
+            release_tags += 1
             if len(releases) > 0 and v not in releases:
                 logger.debug(f"Releases provided, skipping '{v}'...")
                 continue
@@ -219,6 +223,8 @@ def run_analysis(project: Project, repos_dir: Path, *v_or_rel: str | Release, te
         except:
             logger.warning(f"Invalid version tag '{v}' found, skipping...")
             pass
+    project.release_tags = release_tags
+    project.save()
     if includes:
         project.includes = ','.join(list(map(str, includes)))
     if not project.excludes and excludes:
@@ -226,6 +232,9 @@ def run_analysis(project: Project, repos_dir: Path, *v_or_rel: str | Release, te
     project.save()
     processed_count = 0
     for version in sorted(version_iter, key=semver.parse, reverse=True):
+        if limit and tools.version_has_pre(version):
+            print(f"Skipping pre-release {version}, as limit is set to {limit} versions")
+            continue
         processed_count += 1
         print(f"Processing {project_name}:{version} ({processed_count}/{len(version_iter) if limit is None else limit})...")
         if (limit and limit > 0) and processed_count > limit:

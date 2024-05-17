@@ -230,6 +230,219 @@
             "vendor": "pytorch",
             "repo": {
                 "url": "github.com/pytorch/pytorch",
+                "includes": null,
+                "excludes": null,
+                "tags": null
+            }
+        },
+        "absl-py": {
+            "product": null,
+            "vendor": "abseil",
+            "repo": {
+                "url": "https://github.com/abseil/abseil-py",
+                "includes": [
+                    "src/",
+                    "absl-py/",
+                    "absl-py.py"
+                ],
+                "excludes": null,
+                "tags": "@semver"
+            }
+        },
+        "astunparse": {
+            "product": null,
+            "vendor": "simonpercivall",
+            "repo": {
+                "url": "https://github.com/simonpercivall/astunparse",
+                "includes": [
+                    "src/",
+                    "astunparse/",
+                    "astunparse.py"
+                ],
+                "excludes": null,
+                "tags": "@semver"
+            }
+        },
+        "certifi": {
+            "product": "certifi",
+            "vendor": "certifi_project",
+            "repo": {
+                "url": "https://github.com/certifi/python-certifi",
+                "includes": [
+                    "src/",
+                    "certifi/",
+                    "certifi.py"
+                ],
+                "excludes": null,
+                "tags": "@semver"
+            }
+        },
+        "charset-normalizer": {
+            "product": null,
+            "vendor": "Ousret",
+            "repo": {
+                "url": "https://github.com/Ousret/charset_normalizer",
+                "includes": [
+                    "src/",
+                    "charset-normalizer/",
+                    "charset-normalizer.py"
+                ],
+                "excludes": null,
+                "tags": "@semver"
+            }
+        },
+        "flatbuffers": {
+            "product": "flatbuffers",
+            "vendor": "google",
+            "repo": {
+                "url": "https://github.com/google/flatbuffers",
+                "includes": [
+                    "flatbuffers/"
+                ],
+                "excludes": null,
+                "tags": "@semver"
+            }
+        },
+        "gast": {
+            "product": null,
+            "vendor": "serge-sans-paille",
+            "repo": {
+                "url": "https://github.com/serge-sans-paille/gast",
+                "includes": [
+                    "gast/"
+                ],
+                "excludes": null,
+                "tags": "@semver"
+            }
+        },
+        "google-pasta": {
+            "product": null,
+            "vendor": "google",
+            "repo": {
+                "url": "https://github.com/google/pasta",
+                "includes": [
+                    "src/",
+                    "google-pasta/",
+                    "google-pasta.py"
+                ],
+                "excludes": null,
+                "tags": "@semver"
+            }
+        },
+        "grpcio": {
+            "product": "grpc",
+            "vendor": "grpc",
+            "repo": {
+                "url": "https://github.com/grpc/grpc",
+                "includes": [
+                    "src/",
+                    "grpcio/",
+                    "grpcio.py"
+                ],
+                "excludes": null,
+                "tags": "@semver"
+            }
+        },
+        "h5py": {
+            "product": null,
+            "vendor": "h5py",
+            "repo": {
+                "url": "https://github.com/h5py/h5py",
+                "includes": [
+                    "h5py/"
+                ],
+                "excludes": null,
+                "tags": "@semver"
+            }
+        },
+        "idna": {
+            "product": null,
+            "vendor": "kjd",
+            "repo": {
+                "url": "https://github.com/kjd/idna",
+                "includes": [
+                    "src/",
+                    "idna/",
+                    "idna.py"
+                ],
+                "excludes": null,
+                "tags": "@semver"
+            }
+        },
+        "keras": {
+            "product": null,
+            "vendor": "keras-team",
+            "repo": {
+                "url": "https://github.com/keras-team/keras",
+                "includes": [
+                    "src/",
+                    "keras/",
+                    "keras.py"
+                ],
+                "excludes": null,
+                "tags": "@semver"
+            }
+        },
+        "libclang": {
+            "product": null,
+            "vendor": "sighingnow",
+            "repo": {
+                "url": "https://github.com/sighingnow/libclang",
+                "includes": [
+                    "clang/"
+                ],
+                "excludes": null,
+                "tags": "@semver"
+            }
+        },
+        "markdown": {
+            "product": null,
+            "vendor": "",
+            "repo": {
+                "url": "https://github.com/Python-Markdown/markdown",
+                "includes": [
+                    "markdown/"
+                ],
+                "excludes": null,
+                "tags": "@semver"
+            }
+        },
+        "markdown-it-py": {
+            "product": "markdown-it-py",
+            "vendor": "executablebooks",
+            "repo": {
+                "url": "https://github.com/executablebooks/markdown-it-py",
+                "includes": null,
+                "excludes": null,
+                "tags": "@semver"
+            }
+        },
+        "mdurl": {
+            "product": null,
+            "vendor": "executablebooks",
+            "repo": {
+                "url": "https://github.com/executablebooks/mdurl",
+                "includes": [
+                    "src/"
+                ],
+                "excludes": null,
+                "tags": "@semver"
+            }
+        },
+        "ml-dtypes": {
+            "product": null,
+            "vendor": "jax-ml",
+            "repo": {
+                "url": "https://github.com/jax-ml/ml_dtypes",
+                "includes": null,
+                "excludes": null,
+                "tags": "@semver"
+            }
+        },
+        "namex": {
+            "product": null,
+            "vendor": null,
+            "repo": {
                 "error": "failed to clone repository: 'None'"
             }
         }

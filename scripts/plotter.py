@@ -90,6 +90,7 @@ parser.add_argument('--debug', help='The debug level of the logger', action='sto
 parser.add_argument('--show', help='Show the plots', action='store_true')
 parser.add_argument('--dependencies', help="Generate plots for each project's dependencies as well", action='store_true')
 parser.add_argument('--force', help='Force reload', action='store_true')
+parser.add_argument('-x', '--excludes', help='Exclude Bandit test categories', nargs='+', default=[])
 
 # TODO: Add possibility to combine KPIs as left and right y-axis
 
@@ -1241,6 +1242,9 @@ if __name__ == '__main__':
         cves_df = cves_df[cves_df['project'].isin(project_names)]
         issues_df = issues_df[issues_df['project'].isin(project_names)]
         static_df = static_df[static_df['project'].isin(project_names)]
+        if args.excludes:
+            for excl in args.excludes:
+                issues_df = issues_df[~issues_df['test_id'].str.contains(excl)]
 
         # generate reports of the overall findings to explain the plots
         all_input = 'all' in args.overall

@@ -496,7 +496,7 @@ class Aggregator:
         while start_date <= end_date:
             release_most_recent = None
             # naive quadratic time complexity, could be improved
-            for rel in releases:
+            for i, rel in enumerate(releases):
                 if rel.published_at <= start_date:
                     release_most_recent = rel
                     break
@@ -798,7 +798,6 @@ class Aggregator:
         for date, rel in rel_timeline:
             if rel is None:
                 logger.debug(f"No release found for {project.name} at {start_date}")
-                start_date = datetime_increment(start_date, step)
                 results['timeline'].append({
                     'date': date,
                     'release': None,
@@ -828,7 +827,6 @@ class Aggregator:
             bandit_report = rel.bandit_report.first()
             if bandit_report:
                 results['releases'][rel.version]['bandit_report'] = model_to_dict(bandit_report, recurse=False)
-            date = datetime_increment(date, step)
         return results
     
     def get_indirect_vulnerabilities_timeline(self,
@@ -1925,6 +1923,15 @@ class Aggregator:
                 cves.append(cve)
                 cve_ids.add(cve.cve_id)
         return cves
+
+    def __do_analysis(self, is_analysed: bool, prompt: bool, refresh: bool) -> bool:
+        """
+        Checks if a project should be analysed
+        """
+        is_analysed = bool(is_analysed)
+        if is_analysed:
+            return refresh and (not prompt or input('Re-analyse project? [Y/n] ').lower() != 'n')
+        return not prompt or input('Analyse project? [Y/n] ').lower() != 'n'
     
     def _analyse(self, project: str | Project,
                  *releases: str | Release,
@@ -1942,8 +1949,7 @@ class Aggregator:
         platform = project.platform if type(project) == Project else platform
         project = self.get_project(project, platform)
         analysed = self.get_release(project, platform=platform, analysed=True)
-        reanalyse = lambda x : x is not None and (refresh and (not prompt or input('Re-analyse project? [Y/n] ').lower() != 'n'))
-        if reanalyse(analysed):
+        if not self.__do_analysis(bool(analysed), prompt, refresh):
             print(f"Skipping {project.name} as it is already analysed")
             return
         # clone the repository
@@ -1991,6 +1997,7 @@ class Aggregator:
                 depproj = self.get_project(dep.name, platform=dep.platform)
                 results.append(depproj)
         return results
+
     
     def _analyse_all(self, project: str | Project, platform: str="pypi", prompt: bool = True, limit: int = None, refresh: bool=False) -> dict:
         """
@@ -1999,16 +2006,11 @@ class Aggregator:
         project: str | Project: The project name or object
         """
         project = self.get_project(project, platform)
-        rel = self.get_release(project, platform=platform, analysed=True)
-        reanalyse = lambda x : x is not None and (refresh and (not prompt or input('Re-analyse project? [Y/n] ').lower() != 'n'))
-        if reanalyse(rel):
-            ag._analyse(project, platform=platform, prompt=prompt, limit=limit, refresh=refresh)
+        ag._analyse(project, platform=platform, prompt=prompt, limit=limit, refresh=refresh)
         deps = self.get_dependencies(project, platform=platform)
         for dep in deps:
-            rel = self.get_release(dep.name, dep.version, platform=dep.platform, requirements=dep.requirements, analysed=True)
-            if reanalyse(rel):
-                rels = self.get_releases(dep.name, platform=dep.platform, requirements=dep.requirements)
-                self._analyse(dep.name, *rels, platform=project.platform, prompt=prompt, limit=limit, refresh=refresh)
+            rels = self.get_releases(dep.name, platform=dep.platform, requirements=dep.requirements)
+            self._analyse(dep.name, *rels, platform=project.platform, prompt=prompt, limit=limit, refresh=refresh)
     
     def _match_vendors(self, product_or_project: str | Project, platform: str = 'pypi') -> List[tuple]:
         """
@@ -2089,11 +2091,26 @@ class Aggregator:
             print(f"Searching for {dep.name}")
             self._search_vendor(dep, platform=dep.platform)
     
+    def _versions(self, project: str | Project, platform: str="pypi") -> dict:
+        """
+        Gets the versions of a project
+        """
+        project = self.get_project(project, platform)
+        versions = set()
+        for release in project.releases:
+            versions.add(release.version)
+        return sorted(list(versions))
+    
 if __name__ == "__main__":
     # For the purpose of loading in interactive shell and debugging
     # e.g., py -i depsec/Aggregator.py
     parser = argparse.ArgumentParser()
     parser.add_argument('-p', '--project', type=str, help='The project name')
+    parser.add_argument('-a', '--analyse', action='store_true', help='Analyse the project', default=False)
+    parser.add_argument('-A', '--analyse-all', action='store_true', help='Analyse the project with all dependencies', default=False)
+    parser.add_argument('--prompt', action='store_true', help='Prompt for user input', default=False)
+    parser.add_argument('-r', '--refresh', action='store_true', help='Refresh the analysis')
+    parser.add_argument('-l', '--limit', type=int, help='Limit the number of releases to analyse')
     parser.add_argument('--debug', action='store_true', help='Debug mode')
     logger.remove()
     args = parser.parse_args()
@@ -2101,3 +2118,7 @@ if __name__ == "__main__":
     ag = Aggregator("config.yml", debug=True)
     ag.load_projects()
     project = ag.get_project(args.project) if args.project else None
+    if args.analyse:
+        ag._analyse(project, prompt=args.prompt, refresh=args.refresh, limit=args.limit)
+    elif args.analyse_all:
+        ag._analyse_all(project, prompt=args.prompt, refresh=args.refresh, limit=args.limit)

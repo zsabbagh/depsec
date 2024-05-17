@@ -179,7 +179,14 @@ def version_is_stable(v: str) -> bool:
     v = semver.parse(v) if type(v) == str else v
     return (v.major >= 1 and v.pre is None) if v else False
 
-def datetime_increment(dt: datetime.datetime, step: str = 'm'):
+def version_has_pre(v: str) -> bool:
+    """
+    Check if a version has a pre-release.
+    """
+    v = semver.parse(v) if type(v) == str else v
+    return v and v.pre is not None
+
+def datetime_increment(dt: datetime.datetime | str, step: str = 'm'):
     """
     Increment a datetime object by a given step.
     """
