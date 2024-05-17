@@ -47,7 +47,7 @@ def get_owner_project(github_url: str):
     project = groups.group(2)
     return owner, project
 
-def clone_repo(project: Project, repos_dir: Path | str, force: bool = False):
+def clone_repo(project: Project, repos_dir: Path | str, prompt: bool = True):
     """
     Clone a repository
     """
@@ -68,13 +68,13 @@ def clone_repo(project: Project, repos_dir: Path | str, force: bool = False):
     owner, repo_name = get_owner_project(repo_url)
     url = f"https://github.com/{owner}/{repo_name}.git"
 
-    repo_path = repos_dir / repo_name
+    repo_path = repos_dir / owner / repo_name
 
     if not repo_path.exists():
         # clone the repository
         logger.info(f"Cloning {repo_name} to {repo_path}... (url: {url})")
         try:
-            if not force:
+            if prompt:
                 prompt = input(f"Clone {project_name} to '{repo_path}'? (Y/n): ")
                 if prompt.lower() == 'n':
                     logger.warning(f"Skipping {project_name}")
@@ -238,12 +238,14 @@ def run_analysis(project: Project, repos_dir: Path, *v_or_rel: str | Release, te
         if excludes:
             release.excludes = ','.join(list(map(str, excludes)))
             release.save()
-        if includes:
-            release.includes = ','.join(list(map(str, includes)))
-            release.save()
         processed += 1
         tag = versions[version]
         repo.git.checkout(tag.commit, force=True)
+        # add includes to each release
+        includes = get_includes(project_name, repo_path)
+        if includes:
+            release.includes = ','.join(list(map(str, includes)))
+            release.save()
         date_time = datetime.datetime.fromtimestamp(tag.commit.committed_date)
         release.commit_at = date_time
         release.commit_hash = str(tag.commit)
@@ -256,14 +258,19 @@ def run_analysis(project: Project, repos_dir: Path, *v_or_rel: str | Release, te
             logger.info(f"Updating {project_name}:{version} includes to '{incl_str}'")
             release.includes = incl_str
         release.save()
+        time_lizard = None
+        time_bandit = None
         if lizard:
             file_ext = '.js|.ts' if project.platform == 'npm' else '.py'
+            time_before = time.time()
             res = run_lizard(repo_path, includes, excludes, file_ext=file_ext)
+            time_lizard = time.time() - time_before
             nloc = res.get('nloc')
             avg_nloc = res.get('nloc_average')
             avg_ccn = res.get('ccn_average')
             files_counted = res.get('files')
             functions_counted = res.get('functions')
+            release.time_to_analyse = time_lizard
             release.counted_files = files_counted
             release.counted_functions = functions_counted
             release.nloc_total = round(nloc, 2) if nloc is not None else None
@@ -274,7 +281,9 @@ def run_analysis(project: Project, repos_dir: Path, *v_or_rel: str | Release, te
             if platform != 'pypi':
                 logger.error(f"Error: Bandit is only supported for PyPI projects, skipping {project_name}:{version}")
                 continue
+            time_before = time.time()
             reports = BanditReport.select().where(BanditReport.release == release)
+            time_bandit = time.time() - time_before
             for report in reports:
                 report.delete_instance()
             res = run_bandit(repo_path, includes, excludes, temp_dir)
@@ -285,6 +294,7 @@ def run_analysis(project: Project, repos_dir: Path, *v_or_rel: str | Release, te
             logger.info(f"{project_name}:{version}, files: {res.get('files_with_issues')}, issues: {res.get('issues_total')}")
             report = BanditReport.create(
                 release=release,
+                time_to_analyse=time_bandit,
                 files_with_issues=res.get('files_with_issues'),
                 files_skipped=res.get('files_skipped'),
                 issues_total=res.get('issues_total'),

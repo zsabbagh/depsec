@@ -76,6 +76,7 @@ class Release(Model):
     updated_at = DateTimeField(default=datetime.datetime.now)
     counted_functions = IntegerField(null=True)
     counted_files = IntegerField(null=True)
+    time_to_analyse = FloatField(null=True) # refers to nloc
     nloc_total = IntegerField(null=True)
     nloc_average = FloatField(null=True)
     ccn_average = FloatField(null=True)
@@ -127,6 +128,7 @@ class BanditReport(Model):
     id = AutoField()
     release = ForeignKeyField(Release, backref='bandit_report', on_delete='CASCADE', unique=True)
     updated_at = DateTimeField(default=datetime.datetime.now)
+    time_to_analyse = FloatField(null=True)
     issues_total = IntegerField(null=True)
     files_with_issues = IntegerField(null=True)
     files_skipped = IntegerField(null=True)

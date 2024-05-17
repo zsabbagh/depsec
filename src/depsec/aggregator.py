@@ -978,6 +978,9 @@ class Aggregator:
             logger.error(f"Dependencies not found for {project_name} {version}")
             return None
         nodes = result.get('nodes', [])
+        if not nodes:
+            logger.error(f"No nodes found for {project_name} {version}")
+            return None
         if nodes[0].get('versionKey', {}).get('name', '') != project_name:
             # OSI should always return the first node as the project itself
             logger.error(f"First node is not {project_name}! Solve this")
@@ -1923,7 +1926,14 @@ class Aggregator:
                 cve_ids.add(cve.cve_id)
         return cves
     
-    def _analyse(self, project: str | Project, *releases: str | Release,  platform: str="pypi", prompt: bool = True, limit: int = None, lizard: bool = True, bandit: bool = True, refresh: bool = False) -> dict:
+    def _analyse(self, project: str | Project,
+                 *releases: str | Release,
+                 platform: str="pypi",
+                 prompt: bool = True,
+                 limit: int = None,
+                 lizard: bool = True,
+                 bandit: bool = True,
+                 refresh: bool = False) -> dict:
         """
         Statically analyses a project's releases
 
@@ -1936,7 +1946,7 @@ class Aggregator:
             print(f"Skipping {project.name} as it is already analysed")
             return
         # clone the repository
-        repo, repo_path = giterate.clone_repo(project, self.__repos_dir)
+        repo, repo_path = giterate.clone_repo(project, self.__repos_dir, prompt=prompt)
         release = self.get_release(project, platform=platform)
         version = release.version
         if project.tag_regex is None:
@@ -1981,17 +1991,15 @@ class Aggregator:
         """
         project = self.get_project(project, platform)
         rel = self.get_release(project, platform=platform, analysed=True)
-        if rel is not None and (not prompt or input('Re-analyse project? [Y/n] ').lower() != 'n'):
-            ag._analyse(project, platform=platform, prompt=prompt, limit=limit)
+        reanalyse = lambda x : x is not None and (refresh and (not prompt or input('Re-analyse project? [Y/n] ').lower() != 'n'))
+        if reanalyse(rel):
+            ag._analyse(project, platform=platform, prompt=prompt, limit=limit, refresh=refresh)
         deps = self.get_dependencies(project, platform=platform)
         for dep in deps:
             rel = self.get_release(dep.name, dep.version, platform=dep.platform, requirements=dep.requirements, analysed=True)
-            if rel is not None and rel.nloc_total is not None and rel.nloc_total > 0:
-                print(f"Project seems to be analysed: {dep.name}:{rel.version} has {rel.nloc_total} NLOC")
-                if not prompt or input('Skip? [Y/n] ').lower() != 'n':
-                    continue
-            rels = self.get_releases(dep.name, platform=dep.platform, requirements=dep.requirements)
-            self._analyse(dep.name, *rels, platform=project.platform, prompt=prompt, limit=limit, refresh=refresh)
+            if reanalyse(rel):
+                rels = self.get_releases(dep.name, platform=dep.platform, requirements=dep.requirements)
+                self._analyse(dep.name, *rels, platform=project.platform, prompt=prompt, limit=limit, refresh=refresh)
     
     def _match_vendors(self, product_or_project: str | Project, platform: str = 'pypi') -> List[tuple]:
         """

@@ -76,7 +76,10 @@ def run_lizard(dir: str | Path, includes: list = None, excludes: list = None, fi
     dir: str | Path: The directory to run Lizard on.
     includes: list: The filepaths to include.
     excludes: list: The filepaths to exclude (starting with the directory provided).
+    file_ext: str: The file extension(s) to include, separated by '|' or as a list.
     """
+    if type(file_ext) == list:
+        file_ext = '|'.join(file_ext)
     files = get_files(dir, includes, excludes, file_ext=file_ext)
     nloc = 0
     ccn = 0
