@@ -379,6 +379,9 @@ class Aggregator:
     
     def _verify_dates(self, project: Project | str):
         res = self.osi.query_package(project.name, platform=project.platform)
+        if res is None:
+            logger.error(f"Project {project.name} not found in OSI")
+            return
         for vdict in res.get('versions', []):
             published_at = vdict.get('publishedAt', None)
             vkey = vdict.get('versionKey', {})
@@ -1997,6 +2000,40 @@ class Aggregator:
                 depproj = self.get_project(dep.name, platform=dep.platform)
                 results.append(depproj)
         return results
+    
+    def df_time(self, *projects: str | Project, platform: str="pypi") -> pd.DataFrame:
+        """
+        
+        """
+        df = []
+        if not projects:
+            projects = Project.select().where(Project.platform == platform)
+        for project in projects:
+            project_name = project.name if type(project) == Project else project
+            project = self.get_project(project_name, platform=platform)
+            release = self.get_release(project, analysed=True)
+            if release is None:
+                logger.warning(f"Skipping '{project_name}' as it has no analysed release")
+                continue
+            time_lizard = release.time_to_analyse
+            bandit = release.bandit_report.first()
+            time_bandit = None
+            if bandit:
+                time_bandit = bandit.time_to_analyse
+            tags = project.release_tags
+            df.append({
+                'project': project_name,
+                'version': release.version,
+                'release_tags': tags,
+                'published_at': release.published_at,
+                'nloc': release.nloc_total,
+                'files': release.counted_files,
+                'time_lizard': time_lizard,
+                'time_bandit': time_bandit,
+                'time_total': time_lizard + (time_bandit or 0) if time_lizard is not None else None,
+            })
+        df = sorted(df, key=lambda x: x['nloc'])
+        return pd.DataFrame(df)
 
     
     def _analyse_all(self, project: str | Project, platform: str="pypi", prompt: bool = True, limit: int = None, refresh: bool=False) -> dict:
