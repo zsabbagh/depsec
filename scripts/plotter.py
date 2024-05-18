@@ -1089,8 +1089,8 @@ def plot_issues(df: pd.DataFrame):
         # set the legend title
         ax.legend(title='Test Category', **Global.LEGEND)
         # tilt the x-axis labels
-        adjust_labels(ax, axis='x', rotation=15, fontsize=8)
-        ax.set_title(f"{project.title()}{version}")
+        adjust_labels(ax, axis='x', rotation=9, fontsize=8)
+        ax.set_title(f"{project.title()} {version}")
         i += 1
     fig_module.suptitle("Top 10 Package Bandit Issue Distribution")
     fig_module.supxlabel("Package")

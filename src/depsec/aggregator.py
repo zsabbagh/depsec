@@ -1737,6 +1737,8 @@ class Aggregator:
                         issue_dict['severity_score'] = bandit_value_score(severity)
                         issue_dict['test_category'] = issue.test_id[:2] if issue.test_id and len(issue.test_id) > 2 else None
                         package = issue.package or ''
+                        project_name = release.project.name.lower()
+                        package = package.lstrip(f"{project_name}.")
                         module = issue.module or ''
                         issue_dict['is_test'] = package.startswith('test') or 'test' in module
                         issue_dict['project_package'] = f"{release.project.name}.{package}"
