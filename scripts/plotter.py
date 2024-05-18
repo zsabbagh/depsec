@@ -715,8 +715,10 @@ def plot_overall_cwe_distribution(df: pd.DataFrame):
     project_names = sorted(list(df['project'].unique()))
     project_count = len(project_names)
     fig, axs = plt.subplots(project_count, 1, figsize=(10, 8))
+    axs = [axs] if project_count == 1 else axs
     plt.subplots_adjust(**Global.SUBPLOTS)
     fig_sev, axs_sev = plt.subplots(project_count, 1, figsize=(10, 8))
+    axs_sev = [axs_sev] if project_count == 1 else axs_sev
     plt.subplots_adjust(**Global.SUBPLOTS)
     # for LaTeX
     df_tex = []

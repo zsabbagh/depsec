@@ -183,7 +183,14 @@ def get_package_and_module(project: Project | str, file_path: Path | str):
     package = '.'.join(package)
     return package if package != filename else '.', module
 
-def run_analysis(project: Project, repos_dir: Path, *v_or_rel: str | Release, temp_dir: Path = '/tmp', lizard: bool = True, bandit: bool = True, limit: int = None):
+def run_analysis(project: Project,
+                 repos_dir: Path,
+                 *v_or_rel: str | Release,
+                 temp_dir: Path = '/tmp',
+                 lizard: bool = True,
+                 bandit: bool = True,
+                 limit: int = None,
+                 skip_pre: bool = True):
     """
     Analyse a project with lizard and bandit
     """
@@ -236,6 +243,9 @@ def run_analysis(project: Project, repos_dir: Path, *v_or_rel: str | Release, te
             release_tags += 1
             if len(releases) > 0 and v not in releases:
                 logger.debug(f"Releases provided, skipping '{v}'...")
+                continue
+            if skip_pre and tools.version_has_pre(v):
+                logger.debug(f"Skipping pre-release '{v}'...")
                 continue
             version_iter.append(v)
         except:
