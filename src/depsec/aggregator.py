@@ -362,7 +362,7 @@ class Aggregator:
             if exclude_nonstable and version.pre is not None:
                 logger.debug(f"Skipping non-stable version {release.version} for {project_name}")
                 continue
-            if requirements is not None:
+            if requirements is not None and bool(requirements.strip()):
                 # check if the version satisfies the requirements
                 if not version_satisfies_requirements(version, requirements):
                     logger.debug(f"Version {release.version} does not satisfy requirements {requirements} for {project_name}")
@@ -954,12 +954,12 @@ class Aggregator:
         platform: str, default: pypi
         """
         release = self.get_release(project_or_release, version, platform)
-        if release is None:
-            logger.error(f"Release '{version}' not found for {project_name}")
-            return None
         project_name = project_or_release if type(project_or_release) == str else (
             project_or_release.project.name if type(project_or_release) == Release else project_or_release.name
         )
+        if release is None:
+            logger.error(f"Release '{version}' not found for {project_name}")
+            return None
         if not force:
             if release.dependency_count == 0:
                 logger.debug(f"No dependencies found for {project_name} {version}")
@@ -1008,8 +1008,12 @@ class Aggregator:
         for nname in metadata:
             depth = 0
             inherited_from = metadata[nname].get('inherited_from', None)
+            visited = set()
             while inherited_from is not None:
                 depth += 1
+                if inherited_from in visited:
+                    break
+                visited.add(inherited_from)
                 inherited_from = metadata.get(inherited_from, {}).get('inherited_from', None)
             metadata[nname]['depth'] = depth
         results = []
@@ -1929,14 +1933,14 @@ class Aggregator:
                 cve_ids.add(cve.cve_id)
         return cves
 
-    def __do_analysis(self, is_analysed: bool, prompt: bool, refresh: bool) -> bool:
+    def __do_analysis(self, is_analysed: bool, prompt: bool, refresh: bool, project_name: str = '') -> bool:
         """
         Checks if a project should be analysed
         """
         is_analysed = bool(is_analysed)
         if is_analysed:
-            return refresh and (not prompt or input('Re-analyse project? [Y/n] ').lower() != 'n')
-        return not prompt or input('Analyse project? [Y/n] ').lower() != 'n'
+            return refresh and (not prompt or input(f"Re-analyse project '{project_name}'? [Y/n] ").lower() != 'n')
+        return not prompt or input(f"Analyse project '{project_name}'? [Y/n] ").lower() != 'n'
     
     def _analyse(self, project: str | Project,
                  *releases: str | Release,
@@ -1954,7 +1958,7 @@ class Aggregator:
         platform = project.platform if type(project) == Project else platform
         project = self.get_project(project, platform)
         analysed = self.get_release(project, platform=platform, analysed=True)
-        if not self.__do_analysis(bool(analysed), prompt, refresh):
+        if not self.__do_analysis(bool(analysed), prompt, refresh, project.name):
             print(f"Skipping {project.name} as it is already analysed")
             return
         # clone the repository
@@ -2164,6 +2168,7 @@ if __name__ == "__main__":
         projects = [project]
         deps = ag.get_all_deps(project)
         for proj in projects + deps:
+            print(f"Checking vendors for {proj.name}")
             vendors = ag._match_vendors(proj)
             if not vendors:
                 continue
@@ -2178,11 +2183,35 @@ if __name__ == "__main__":
                 if repository and v.lower() in repository:
                     might_be = i
                     break
+            print()
             print(f"------------{proj.name}--------------")
+            is_done = False
             for i, v_cve in enumerate(vendors):
                 v, cve = v_cve
+                if v == proj.vendor:
+                    is_done = True
+                    break
                 print(f"{i+1}. {v} ({cve.cve_id})", end=" <--\n" if i == might_be else "\n")
                 print(f"\tDescription: {cve.description}")
+            if is_done:
+                print(f"Vendor '{proj.vendor}' already set for '{proj.name}'")
+                continue
+            inp = input(f"Update '{proj.name}'? [Y/n/number] ")
+            if inp.lower() == 'n':
+                continue
+            if inp.isdigit():
+                inp = int(inp) - 1
+            elif inp == '-':
+                proj.vendor = '-'
+                proj.save()
+                continue
+            else:
+                inp = might_be if might_be else 0
+            if 0 <= inp < len(vendors):
+                vendor, cve = vendors[inp]
+                print(f"\nUpdating '{proj.name}' with vendor '{vendor}'")
+                proj.vendor = vendor
+                proj.save()
     if args.list_dependencies:
         projects = [project]
         deps = ag.get_all_deps(project)

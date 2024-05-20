@@ -1019,7 +1019,8 @@ def plot_issues(df: pd.DataFrame):
         # sort the X-axis by the test category
         dftmp = dftmp.sort_values(by=['test_category', 'release'], ascending=True)
         dftmp = dftmp[ dftmp['is_test'] == False ]
-        # sns.swarmplot(data=dftmp, x='test_category', y='score', hue='release', ax=ax, palette=palette, hue_order=order)
+        if len(dftmp) < 1000:
+            sns.swarmplot(data=dftmp, x='test_category', y='score', hue='release', ax=ax, palette=palette, hue_order=order)
         sns.violinplot(data=dftmp, x='test_category', y='score', ax=ax, fill=False, color=Global.Colours.light_grey, cut=0)
         unique_categories = dftmp['test_category'].unique()
         ax.set_xlabel(None)

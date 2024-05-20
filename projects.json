@@ -443,7 +443,10 @@
             "product": null,
             "vendor": null,
             "repo": {
-                "error": "failed to clone repository: 'None'"
+                "url": null,
+                "includes": null,
+                "excludes": null,
+                "tags": null
             }
         },
         "streamlit": {
@@ -815,7 +818,7 @@
         },
         "altair": {
             "product": null,
-            "vendor": null,
+            "vendor": "-",
             "repo": {
                 "url": "https://github.com/altair-viz/altair",
                 "includes": [
@@ -1103,7 +1106,7 @@
         },
         "mock": {
             "product": null,
-            "vendor": null,
+            "vendor": "-",
             "repo": {
                 "url": "https://github.com/testing-cabal/mock",
                 "includes": null,
@@ -1479,6 +1482,326 @@
                 ],
                 "excludes": null,
                 "tags": "@semver"
+            }
+        },
+        "torch": {
+            "product": null,
+            "vendor": "pytorch",
+            "repo": {
+                "url": "https://github.com/pytorch/pytorch",
+                "includes": null,
+                "excludes": null,
+                "tags": null
+            }
+        },
+        "nvidia-cublas-cu11": {
+            "product": null,
+            "vendor": "nvidia",
+            "repo": {
+                "url": null,
+                "includes": null,
+                "excludes": null,
+                "tags": null
+            }
+        },
+        "nvidia-cuda-nvrtc-cu11": {
+            "product": null,
+            "vendor": "nvidia",
+            "repo": {
+                "url": null,
+                "includes": null,
+                "excludes": null,
+                "tags": null
+            }
+        },
+        "nvidia-cuda-runtime-cu11": {
+            "product": null,
+            "vendor": "nvidia",
+            "repo": {
+                "url": null,
+                "includes": null,
+                "excludes": null,
+                "tags": null
+            }
+        },
+        "nvidia-cudnn-cu11": {
+            "product": null,
+            "vendor": "nvidia",
+            "repo": {
+                "url": null,
+                "includes": null,
+                "excludes": null,
+                "tags": null
+            }
+        },
+        "cmake": {
+            "product": null,
+            "vendor": "-",
+            "repo": {
+                "url": "https://github.com/scikit-build/cmake-python-distributions",
+                "includes": null,
+                "excludes": null,
+                "tags": null
+            }
+        },
+        "filelock": {
+            "product": null,
+            "vendor": "tox-dev",
+            "repo": {
+                "url": "https://github.com/tox-dev/py-filelock",
+                "includes": null,
+                "excludes": null,
+                "tags": null
+            }
+        },
+        "lit": {
+            "product": null,
+            "vendor": "llvm",
+            "repo": {
+                "url": null,
+                "includes": null,
+                "excludes": null,
+                "tags": null
+            }
+        },
+        "mpmath": {
+            "product": null,
+            "vendor": "-",
+            "repo": {
+                "url": "https://github.com/fredrik-johansson/mpmath",
+                "includes": null,
+                "excludes": null,
+                "tags": null
+            }
+        },
+        "networkx": {
+            "product": null,
+            "vendor": "networkx",
+            "repo": {
+                "url": "https://github.com/networkx/networkx",
+                "includes": null,
+                "excludes": null,
+                "tags": null
+            }
+        },
+        "nvidia-cuda-cupti-cu11": {
+            "product": null,
+            "vendor": "nvidia",
+            "repo": {
+                "url": null,
+                "includes": null,
+                "excludes": null,
+                "tags": null
+            }
+        },
+        "nvidia-cufft-cu11": {
+            "product": null,
+            "vendor": "nvidia",
+            "repo": {
+                "url": null,
+                "includes": null,
+                "excludes": null,
+                "tags": null
+            }
+        },
+        "nvidia-curand-cu11": {
+            "product": null,
+            "vendor": "nvidia",
+            "repo": {
+                "url": null,
+                "includes": null,
+                "excludes": null,
+                "tags": null
+            }
+        },
+        "nvidia-cusolver-cu11": {
+            "product": null,
+            "vendor": "nvidia",
+            "repo": {
+                "url": null,
+                "includes": null,
+                "excludes": null,
+                "tags": null
+            }
+        },
+        "nvidia-cusparse-cu11": {
+            "product": null,
+            "vendor": "nvidia",
+            "repo": {
+                "url": null,
+                "includes": null,
+                "excludes": null,
+                "tags": null
+            }
+        },
+        "nvidia-nccl-cu11": {
+            "product": null,
+            "vendor": "nvidia",
+            "repo": {
+                "url": null,
+                "includes": null,
+                "excludes": null,
+                "tags": null
+            }
+        },
+        "nvidia-nvtx-cu11": {
+            "product": null,
+            "vendor": "nvidia",
+            "repo": {
+                "url": null,
+                "includes": null,
+                "excludes": null,
+                "tags": null
+            }
+        },
+        "sympy": {
+            "product": null,
+            "vendor": "sympy",
+            "repo": {
+                "url": "https://github.com/sympy/sympy",
+                "includes": null,
+                "excludes": null,
+                "tags": null
+            }
+        },
+        "triton": {
+            "product": null,
+            "vendor": "-",
+            "repo": {
+                "url": "https://github.com/openai/triton",
+                "includes": null,
+                "excludes": null,
+                "tags": null
+            }
+        },
+        "fsspec": {
+            "product": null,
+            "vendor": "fsspec",
+            "repo": {
+                "url": "https://github.com/fsspec/filesystem_spec",
+                "includes": null,
+                "excludes": null,
+                "tags": null
+            }
+        },
+        "nvidia-cublas-cu12": {
+            "product": null,
+            "vendor": "nvidia",
+            "repo": {
+                "url": null,
+                "includes": null,
+                "excludes": null,
+                "tags": null
+            }
+        },
+        "nvidia-cuda-cupti-cu12": {
+            "product": null,
+            "vendor": "nvidia",
+            "repo": {
+                "url": null,
+                "includes": null,
+                "excludes": null,
+                "tags": null
+            }
+        },
+        "nvidia-cuda-nvrtc-cu12": {
+            "product": null,
+            "vendor": "nvidia",
+            "repo": {
+                "url": null,
+                "includes": null,
+                "excludes": null,
+                "tags": null
+            }
+        },
+        "nvidia-cuda-runtime-cu12": {
+            "product": null,
+            "vendor": "nvidia",
+            "repo": {
+                "url": null,
+                "includes": null,
+                "excludes": null,
+                "tags": null
+            }
+        },
+        "nvidia-cudnn-cu12": {
+            "product": null,
+            "vendor": "nvidia",
+            "repo": {
+                "url": null,
+                "includes": null,
+                "excludes": null,
+                "tags": null
+            }
+        },
+        "nvidia-cufft-cu12": {
+            "product": null,
+            "vendor": "nvidia",
+            "repo": {
+                "url": null,
+                "includes": null,
+                "excludes": null,
+                "tags": null
+            }
+        },
+        "nvidia-curand-cu12": {
+            "product": null,
+            "vendor": "nvidia",
+            "repo": {
+                "url": null,
+                "includes": null,
+                "excludes": null,
+                "tags": null
+            }
+        },
+        "nvidia-cusolver-cu12": {
+            "product": null,
+            "vendor": "nvidia",
+            "repo": {
+                "url": null,
+                "includes": null,
+                "excludes": null,
+                "tags": null
+            }
+        },
+        "nvidia-cusparse-cu12": {
+            "product": null,
+            "vendor": "nvidia",
+            "repo": {
+                "url": null,
+                "includes": null,
+                "excludes": null,
+                "tags": null
+            }
+        },
+        "nvidia-nccl-cu12": {
+            "product": null,
+            "vendor": "nvidia",
+            "repo": {
+                "url": null,
+                "includes": null,
+                "excludes": null,
+                "tags": null
+            }
+        },
+        "nvidia-nvjitlink-cu12": {
+            "product": null,
+            "vendor": "nvidia",
+            "repo": {
+                "url": null,
+                "includes": null,
+                "excludes": null,
+                "tags": null
+            }
+        },
+        "nvidia-nvtx-cu12": {
+            "product": null,
+            "vendor": "nvidia",
+            "repo": {
+                "url": null,
+                "includes": null,
+                "excludes": null,
+                "tags": null
             }
         }
     }
