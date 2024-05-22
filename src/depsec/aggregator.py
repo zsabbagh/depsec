@@ -1433,7 +1433,7 @@ class Aggregator:
         [[(release, None), (deprel, dep), ...], ...], list of lists where each list contains all releases with the dependency object it is derived from
         """
         results = []
-        releases = self.get_releases(project, platform=platform, analysed=analysed, exclude_deprecated=True, sort_semantically=sort_semantically)
+        releases = self.get_releases(project, platform=platform, analysed=analysed, exclude_deprecated=False, sort_semantically=sort_semantically)
         if releases is None:
             return results
         previous_major = None
@@ -1920,7 +1920,8 @@ class Aggregator:
         if product is None:
             project = self.get_project(vendor)
             vendor = project.vendor
-            product = project.name
+            product = project.product or project.name
+        print(f"Checking {vendor}:{product}")
         cpes = nvd.CPE.select().where((nvd.CPE.vendor == vendor) & (nvd.CPE.product == product))
         cves = []
         cve_ids = set()
@@ -2068,7 +2069,9 @@ class Aggregator:
             return None
         vendors = set()
         platform = product_or_project.platform if type(product_or_project) == Project else platform
-        product = product_or_project if type(product_or_project) == str else product_or_project.name
+        product = product_or_project if type(product_or_project) == str else (product_or_project.product or product_or_project.name)
+        if '-' in product:
+            product = product.replace('-', '_')
         product = product.lower()
         cpes = nvd.CPE.select().where(nvd.CPE.product == product)
         results = []
@@ -2164,6 +2167,7 @@ if __name__ == "__main__":
     ag = Aggregator("config.yml", debug=True)
     ag.load_projects()
     project = ag.get_project(args.project) if args.project else None
+    rel = ag.get_release(project, analysed=True) if project else None
     if args.vendors:
         projects = [project]
         deps = ag.get_all_deps(project)

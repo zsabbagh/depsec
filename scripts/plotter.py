@@ -1006,8 +1006,17 @@ def plot_issues(df: pd.DataFrame):
     fig_category.subplots_adjust(**Global.SUBPLOTS)
     i = 0
     values = ['None', 'Low', 'Medium', 'High', 'Critical']
+    fig_tests, axs_tests = plt.subplots(project_count, 1, figsize=(10, 8))
+    fig_tests.subplots_adjust(**Global.SUBPLOTS)
+    fig_tests.suptitle("Bandit Test ID Distribution")
+    fig_tests.supxlabel("Test ID")
+    fig_tests.supylabel("Issue Count")
+    axs_tests = [axs_tests] if project_count == 1 else axs_tests
+    all_test_ids = df['test_id'].unique()
     for project in projects:
         ax: plt.Axes = axs_category[i]
+        ax_tests: plt.Axes = axs_tests[i]
+        ax_tests.set_title(f"{project.title()}")
         dftmp = issues[issues['project'] == project].copy()
         releases = sorted(list(dftmp['release'].unique()))
         palette = release_colours(project, *releases)
@@ -1017,6 +1026,17 @@ def plot_issues(df: pd.DataFrame):
             if release != project:
                 order.append(release)
         # sort the X-axis by the test category
+        dftest = dftmp[dftmp['is_test'] == False]
+        dftest = dftest.copy().groupby(['test_id', 'release']).size().reset_index(name='count')
+        for test_id in all_test_ids:
+            if test_id not in dftest['test_id'].unique():
+                dftest = pd.concat([dftest, pd.DataFrame({'test_id': [test_id], 'release': ['other'], 'count': [0]})])
+        dftest = dftest.sort_values(by=['test_id', 'release'], ascending=True)
+        print(f"Tests: {dftest['test_id'].unique()}")
+        sns.barplot(data=dftest, x='test_id', y='count', hue='release', ax=ax_tests, palette=palette, hue_order=order, width=0.5)
+        ax_tests.set_xlabel(None)
+        ax_tests.set_ylabel(None)
+        ax_tests.set_title(f"{project.title()} {version}")
         dftmp = dftmp.sort_values(by=['test_category', 'release'], ascending=True)
         dftmp = dftmp[ dftmp['is_test'] == False ]
         if len(dftmp) < 1000:
@@ -1127,7 +1147,7 @@ def plot_issues(df: pd.DataFrame):
         # set the legend title
         ax.legend(title='Test Category', **Global.LEGEND)
         # tilt the x-axis labels
-        adjust_labels(ax, axis='x', rotation=9, fontsize=8)
+        adjust_labels(ax, axis='x', rotation=11, fontsize=8)
         ax.set_title(f"{project.title()} {version}")
         i += 1
     fig_module.suptitle("Top 10 Package Bandit Issue Distribution")
@@ -1281,10 +1301,14 @@ if __name__ == '__main__':
         cves_overall_df.to_csv(cve_overall_path, index=False)
 
         # drop the rows not in 'projects'
-        cves_overall_df = cves_overall_df[cves_overall_df['project'].isin(project_names)]
-        cves_df = cves_df[cves_df['project'].isin(project_names)]
-        issues_df = issues_df[issues_df['project'].isin(project_names)]
-        static_df = static_df[static_df['project'].isin(project_names)]
+        if 'project' in cves_overall_df.columns:
+            cves_overall_df = cves_overall_df[cves_overall_df['project'].isin(project_names)]
+        if 'project' in cves_df.columns:
+            cves_df = cves_df[cves_df['project'].isin(project_names)]
+        if 'project' in issues_df.columns:
+            issues_df = issues_df[issues_df['project'].isin(project_names)]
+        if 'project' in static_df.columns:
+            static_df = static_df[static_df['project'].isin(project_names)]
         if args.excludes:
             for excl in args.excludes:
                 issues_df = issues_df[~issues_df['test_id'].str.contains(excl)]

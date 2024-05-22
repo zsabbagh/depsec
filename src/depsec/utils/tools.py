@@ -59,6 +59,9 @@ def date_range(start_date: str | int | datetime.datetime, end_date: str | int | 
         yield current_date
         current_date = datetime_increment(current_date, step)
 
+OPERATOR_REGEX = r'[<>=]+'
+REQUIREMENT_REGEX = r'((?:[<>=]+)[^<>=!]+)'
+
 def parse_requirements(requirements: str) -> list:
     """
     Parse a list of requirements.
@@ -67,7 +70,16 @@ def parse_requirements(requirements: str) -> list:
         return []
     if type(requirements) == str:
         requirements = requirements.strip().split(',')
-    results = [parse_requirement(requirement) for requirement in requirements]
+    reqs = []
+    for req in requirements:
+        matches = re.findall(REQUIREMENT_REGEX, req)
+        if len(matches) > 1:
+            # we have multiple operators, split the requirement
+            for match in matches:
+                reqs.append(match)
+        else:
+            reqs.append(req)
+    results = [parse_requirement(req) for req in reqs]
     return [result for result in results if result]
 
 def applicability_to_requirements(applicability: list) -> str:
@@ -103,6 +115,7 @@ def get_max_version(requirements: str) -> str:
                 max_version = semver.parse(version)
     return max_version, include_end
 
+
 def version_satisfies_requirements(v: str, requirements: str) -> bool:
     """
     Check if a version satisfies the requirements.
@@ -111,12 +124,9 @@ def version_satisfies_requirements(v: str, requirements: str) -> bool:
     requirements: The requirements to check
     """
     v = semver.parse(v.strip('.')) if type(v) == str else v
-    requirements = requirements.split(',')
+    requirements = parse_requirements(requirements)
     for requirement in requirements:
-        parsed = parse_requirement(requirement)
-        if not parsed:
-            return False
-        operator, version = parsed
+        operator, version = requirement
         version = semver.parse(version.strip('.'))
         match operator:
             # return False if the version does not satisfy the requirement
