@@ -17,7 +17,7 @@ def bandit_value_score(value: str) -> int:
             return 1
         case 'high':
             return 2
-    return 0
+    return None
 
 def bandit_issue_score(severity: str, confidence: str) -> int:
     """
@@ -107,12 +107,19 @@ def get_max_version(requirements: str) -> str:
     """
     requirements = parse_requirements(requirements)
     max_version = include_end = None
+    min_version = None
     for requirement in requirements:
         operator, version = requirement
         include_end = operator.startswith('<=')
         if operator.startswith('<'):
             if max_version is None or semver.parse(version) > semver.parse(max_version):
                 max_version = semver.parse(version)
+        elif operator.startswith('>'):
+            if min_version is None or semver.parse(version) < semver.parse(min_version):
+                min_version = semver.parse(version)
+    if min_version is not None:
+        if max_version is None or min_version > max_version:
+            return None, None
     return max_version, include_end
 
 
@@ -201,6 +208,7 @@ def datetime_increment(dt: datetime.datetime | str, step: str = 'm'):
     Increment a datetime object by a given step.
     """
     year, month = dt.year, dt.month
+    day = dt.day
     if step == 'y':
         year += 1
     elif step == 'm':
@@ -210,7 +218,7 @@ def datetime_increment(dt: datetime.datetime | str, step: str = 'm'):
             year += 1
     else:
         raise ValueError(f"Unimplemented step '{step}'")
-    return datetime.datetime(year, month, 1)
+    return datetime.datetime(year, month, day)
 
 def get_database_dir_and_name(databases: dict, name: str):
     """

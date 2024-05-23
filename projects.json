@@ -1835,6 +1835,100 @@
                 "excludes": null,
                 "tags": null
             }
+        },
+        "marshmallow": {
+            "product": null,
+            "vendor": "marshmallow_project",
+            "repo": {
+                "url": "https://github.com/marshmallow-code/marshmallow",
+                "includes": [
+                    "src/"
+                ],
+                "excludes": null,
+                "tags": "@semver"
+            }
+        },
+        "tortoise-orm": {
+            "product": "tortoise_orm",
+            "vendor": "tortoise_orm_project",
+            "repo": {
+                "url": "https://github.com/tortoise/tortoise-orm",
+                "includes": [
+                    "tortoise/"
+                ],
+                "excludes": null,
+                "tags": "@semver"
+            }
+        },
+        "aiosqlite": {
+            "product": null,
+            "vendor": "omnilib",
+            "repo": {
+                "url": "https://github.com/jreese/aiosqlite",
+                "includes": [
+                    "aiosqlite/"
+                ],
+                "excludes": null,
+                "tags": "@semver"
+            }
+        },
+        "annotated-types": {
+            "product": null,
+            "vendor": null,
+            "repo": {
+                "url": "https://github.com/annotated-types/annotated-types",
+                "includes": null,
+                "excludes": null,
+                "tags": "@semver"
+            }
+        },
+        "iso8601": {
+            "product": null,
+            "vendor": "micktwomey",
+            "repo": {
+                "url": "https://github.com/micktwomey/pyiso8601",
+                "includes": [
+                    "iso8601/"
+                ],
+                "excludes": null,
+                "tags": "@semver"
+            }
+        },
+        "pydantic": {
+            "product": null,
+            "vendor": "pydantic_project",
+            "repo": {
+                "url": "https://github.com/pydantic/pydantic",
+                "includes": [
+                    "pydantic/"
+                ],
+                "excludes": null,
+                "tags": "@semver"
+            }
+        },
+        "pydantic-core": {
+            "product": null,
+            "vendor": "pydantic",
+            "repo": {
+                "url": "https://github.com/pydantic/pydantic-core",
+                "includes": [
+                    "src/"
+                ],
+                "excludes": null,
+                "tags": "@semver"
+            }
+        },
+        "pypika-tortoise": {
+            "product": null,
+            "vendor": "tortoise",
+            "repo": {
+                "url": "https://github.com/tortoise/pypika-tortoise",
+                "includes": [
+                    "pypika/"
+                ],
+                "excludes": null,
+                "tags": "@semver"
+            }
         }
     }
 }
