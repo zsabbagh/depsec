@@ -1921,7 +1921,6 @@ class Aggregator:
             project = self.get_project(vendor)
             vendor = project.vendor
             product = project.product or project.name
-        print(f"Checking {vendor}:{product}")
         cpes = nvd.CPE.select().where((nvd.CPE.vendor == vendor) & (nvd.CPE.product == product))
         cves = []
         cve_ids = set()
@@ -2222,7 +2221,10 @@ if __name__ == "__main__":
         print(f"------------{project.name}--------------")
         projects = sorted(projects + (deps if deps else []), key=lambda x: x.name)
         for proj in projects:
-            print(f"\t{proj.name}")
+            cves = ag.get_cves(proj)
+            cves = ', '.join([cve.cve_id for cve in cves])
+            cves = f": {cves}" if cves else ""
+            print(f"\t{proj.name}{cves}")
         ag.save_projects()
     if args.analyse:
         ag._analyse(project, prompt=args.prompt, refresh=args.refresh, limit=args.limit)

@@ -1539,9 +1539,11 @@
             "vendor": "-",
             "repo": {
                 "url": "https://github.com/scikit-build/cmake-python-distributions",
-                "includes": null,
+                "includes": [
+                    "src/"
+                ],
                 "excludes": null,
-                "tags": null
+                "tags": "@semver"
             }
         },
         "filelock": {
