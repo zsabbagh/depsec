@@ -4,6 +4,7 @@ from depsec.schemas.config import DatabaseConfig
 
 CONFIG = DatabaseConfig()
 
+
 class CVE(Model):
     """
     CVE models a Common Vulnerability and Exposures
@@ -31,6 +32,7 @@ class CVE(Model):
     cvss_base_score: The CVSS base score
     cvss_base_severity: The CVSS base severity
     """
+
     id = AutoField()
     cve_id = CharField(null=False, unique=True)
     description = TextField(null=True)
@@ -57,7 +59,8 @@ class CVE(Model):
 
     class Meta:
         database = CONFIG.get()
-        table_name = 'cves'
+        table_name = "cves"
+
 
 class CWE(Model):
     """
@@ -69,13 +72,15 @@ class CWE(Model):
     description: The description of the CWE
     updated_at: The date the row in the database was updated
     """
-    cve = ForeignKeyField(CVE, backref='cwes', on_delete='CASCADE')
+
+    cve = ForeignKeyField(CVE, backref="cwes", on_delete="CASCADE")
     cwe_id = CharField(null=False)
     updated_at = DateTimeField(default=datetime.datetime.now)
 
     class Meta:
         database = CONFIG.get()
-        table_name = 'cwes'
+        table_name = "cwes"
+
 
 class NVDFile(Model):
     """
@@ -90,6 +95,7 @@ class NVDFile(Model):
     cves_skipped: The number of CVEs skipped
     updated_at: The date the row in the database was updated
     """
+
     id = AutoField()
     file = CharField(null=False)
     created_at = DateTimeField(null=True)
@@ -99,7 +105,8 @@ class NVDFile(Model):
 
     class Meta:
         database = CONFIG.get()
-        table_name = 'nvd_files'
+        table_name = "nvd_files"
+
 
 class ConfigNode(Model):
     """
@@ -111,14 +118,16 @@ class ConfigNode(Model):
     operator: The operator of the node
     children: The children of the node
     """
+
     id = AutoField()
-    cve = ForeignKeyField(CVE, backref='config_nodes', on_delete='CASCADE')
+    cve = ForeignKeyField(CVE, backref="config_nodes", on_delete="CASCADE")
     is_root = BooleanField(default=False)
     operator = CharField(null=True)
 
     class Meta:
         database = CONFIG.get()
-        table_name = 'config_nodes'
+        table_name = "config_nodes"
+
 
 class ConfigEdge(Model):
     """
@@ -129,14 +138,16 @@ class ConfigEdge(Model):
     parent The parent id
     cpe: The Common Platform Enumeration
     """
+
     id = AutoField()
-    root = ForeignKeyField(ConfigNode, backref='root', on_delete='CASCADE')
-    parent = ForeignKeyField(ConfigNode, backref='children', on_delete='CASCADE')
-    child = ForeignKeyField(ConfigNode, backref='parents')
+    root = ForeignKeyField(ConfigNode, backref="root", on_delete="CASCADE")
+    parent = ForeignKeyField(ConfigNode, backref="children", on_delete="CASCADE")
+    child = ForeignKeyField(ConfigNode, backref="parents")
 
     class Meta:
         database = CONFIG.get()
-        table_name = 'config_edges'
+        table_name = "config_edges"
+
 
 class CPE(Model):
     """
@@ -156,9 +167,10 @@ class CPE(Model):
     language: The language of the CPE
     updated_at: The date the row in the database was updated
     """
+
     id = AutoField()
     uri = CharField(null=False)
-    node = ForeignKeyField(ConfigNode, backref='cpes', on_delete='CASCADE')
+    node = ForeignKeyField(ConfigNode, backref="cpes", on_delete="CASCADE")
     part = CharField(null=True)
     vendor = CharField(null=False)
     product = CharField(null=False)
@@ -177,13 +189,7 @@ class CPE(Model):
 
     class Meta:
         database = CONFIG.get()
-        table_name = 'cpes'
+        table_name = "cpes"
 
-CONFIG.add_tables(
-    CVE,
-    CWE,
-    NVDFile,
-    ConfigNode,
-    ConfigEdge,
-    CPE
-)
+
+CONFIG.add_tables(CVE, CWE, NVDFile, ConfigNode, ConfigEdge, CPE)

@@ -4,6 +4,7 @@ from depsec.schemas.config import DatabaseConfig
 
 DB_PROJECTS = DatabaseConfig()
 
+
 class Project(Model):
     """
     Project models a libraries.io project,
@@ -25,6 +26,7 @@ class Project(Model):
     package_manager_url: The URL of the package manager
     repository_url: The URL of the repository
     """
+
     id = AutoField()
     name = CharField(null=False)
     platform = CharField(null=False)
@@ -49,12 +51,13 @@ class Project(Model):
 
     class Meta:
         database = DB_PROJECTS.get()
-        table_name = 'projects'
+        table_name = "projects"
+
 
 class Release(Model):
     """
     Release models a release of a project. Note nloc and cc excludes test files
-    
+
     id: The release id
     project The project id
     published_at: The date the release was published
@@ -70,14 +73,15 @@ class Release(Model):
     includes: The files included in the release for analysis
     excludes: The files excluded from the release for analysis
     """
+
     id = AutoField()
-    project = ForeignKeyField(Project, backref='releases', on_delete='CASCADE')
+    project = ForeignKeyField(Project, backref="releases", on_delete="CASCADE")
     published_at = DateTimeField(null=True)
     version = CharField(null=False)
     updated_at = DateTimeField(default=datetime.datetime.now)
     counted_functions = IntegerField(null=True)
     counted_files = IntegerField(null=True)
-    time_to_analyse = FloatField(null=True) # refers to nloc
+    time_to_analyse = FloatField(null=True)  # refers to nloc
     nloc_total = IntegerField(null=True)
     nloc_average = FloatField(null=True)
     ccn_average = FloatField(null=True)
@@ -87,9 +91,11 @@ class Release(Model):
     excludes = TextField(null=True)
     osi_verified = BooleanField(default=False)
     dependency_count = IntegerField(null=True)
+
     class Meta:
         database = DB_PROJECTS.get()
-        table_name = 'releases'
+        table_name = "releases"
+
 
 class Applicability(Model):
     """
@@ -100,8 +106,9 @@ class Applicability(Model):
     cve: The CVE id
     updated_at: The date the row in the database was updated
     """
+
     id = AutoField()
-    release = ForeignKeyField(Release, backref='applicabilities', on_delete='CASCADE')
+    release = ForeignKeyField(Release, backref="applicabilities", on_delete="CASCADE")
     version_start = CharField(null=False)
     version_end = CharField(null=False)
     exclude_start = BooleanField(default=False)
@@ -110,10 +117,12 @@ class Applicability(Model):
     patched_version = CharField(null=True)
     cve_id = CharField(null=False)
     updated_at = DateTimeField(default=datetime.datetime.now)
+
     class Meta:
         database = DB_PROJECTS.get()
-        table_name = 'applicabilities'
-    
+        table_name = "applicabilities"
+
+
 class BanditReport(Model):
     """
     BanditReport models a bandit report
@@ -126,8 +135,11 @@ class BanditReport(Model):
     code: The code
     updated_at: The date the row in the database was updated
     """
+
     id = AutoField()
-    release = ForeignKeyField(Release, backref='bandit_report', on_delete='CASCADE', unique=True)
+    release = ForeignKeyField(
+        Release, backref="bandit_report", on_delete="CASCADE", unique=True
+    )
     updated_at = DateTimeField(default=datetime.datetime.now)
     time_to_analyse = FloatField(null=True)
     issues_total = IntegerField(null=True)
@@ -153,19 +165,24 @@ class BanditReport(Model):
     loc = IntegerField(null=True)
     nosec = IntegerField(null=True)
     skipped_tests = IntegerField(null=True)
+
     class Meta:
         database = DB_PROJECTS.get()
-        table_name = 'bandit_reports'
+        table_name = "bandit_reports"
+
 
 class BanditIssue(Model):
     """
     Models a bandit issue, that is, an issue found in a Bandit report
     """
+
     id = AutoField()
-    report = ForeignKeyField(BanditReport, backref='issues', on_delete='CASCADE')
+    report = ForeignKeyField(BanditReport, backref="issues", on_delete="CASCADE")
     description = TextField(null=False)
-    true_positive = BooleanField(default=None) # Whether the issue is a true positive
-    verified = BooleanField(default=False) # Whether the issue has been verified as true or false
+    true_positive = BooleanField(default=None)  # Whether the issue is a true positive
+    verified = BooleanField(
+        default=False
+    )  # Whether the issue has been verified as true or false
     package = CharField(null=False)
     module = CharField(null=False)
     filename = CharField(null=False)
@@ -179,9 +196,11 @@ class BanditIssue(Model):
     code = TextField(null=True)
     lines = CharField(null=True)
     cwe_id = CharField(null=True)
+
     class Meta:
         database = DB_PROJECTS.get()
-        table_name = 'bandit_issues'
+        table_name = "bandit_issues"
+
 
 class ReleaseDependency(Model):
     """
@@ -197,13 +216,13 @@ class ReleaseDependency(Model):
     inherited_from: The project the dependency is inherited from
     updated_at: The date the row in the database was updated
     """
-    
-    release = ForeignKeyField(Release, backref='dependencies', on_delete='CASCADE')
+
+    release = ForeignKeyField(Release, backref="dependencies", on_delete="CASCADE")
     name = CharField(null=False)
-    project_name = CharField(null=False) # Is this really necessary?
+    project_name = CharField(null=False)  # Is this really necessary?
     platform = CharField(null=True)
     requirements = CharField(null=True)
-    version = CharField(null=True) # Version from OSI
+    version = CharField(null=True)  # Version from OSI
     depth = BooleanField(default=False, null=True)
     inherited_from = CharField(null=True)
     updated_at = DateTimeField(default=datetime.datetime.now)
@@ -211,7 +230,8 @@ class ReleaseDependency(Model):
 
     class Meta:
         database = DB_PROJECTS.get()
-        table_name = 'release_dependencies'
+        table_name = "release_dependencies"
+
 
 class ReleaseRepo(Model):
     """
@@ -221,13 +241,15 @@ class ReleaseRepo(Model):
     repo_url: The URL of the repository
     updated_at: The date the row in the database was updated
     """
-    release = ForeignKeyField(Release, backref='repos', on_delete='CASCADE')
+
+    release = ForeignKeyField(Release, backref="repos", on_delete="CASCADE")
     repo_url = CharField(null=False)
     updated_at = DateTimeField(default=datetime.datetime.now)
 
     class Meta:
         database = DB_PROJECTS.get()
-        table_name = 'release_repos'
+        table_name = "release_repos"
+
 
 # Add the tables to the database
 DB_PROJECTS.add_tables(

@@ -5,19 +5,21 @@ from pathlib import Path
 from loguru import logger
 from depsec.schemas.projects import Release, Project
 
+
 def bandit_value_score(value: str) -> int:
     """
     Calculate the score of a Bandit issue severity or confidence value.
     """
     value = value.lower()
     match value:
-        case 'low':
+        case "low":
             return 0
-        case 'medium':
+        case "medium":
             return 1
-        case 'high':
+        case "high":
             return 2
     return None
+
 
 def bandit_issue_score(severity: str, confidence: str) -> int:
     """
@@ -25,12 +27,11 @@ def bandit_issue_score(severity: str, confidence: str) -> int:
     """
     return bandit_value_score(severity) + bandit_value_score(confidence)
 
+
 def parse_requirement(requirement: str) -> dict:
-    """
-    
-    """
+    """ """
     requirement = requirement.strip()
-    regex = re.match(r'([<>=]+)(.*)', requirement)
+    regex = re.match(r"([<>=]+)(.*)", requirement)
     if not regex:
         logger.debug(f"Error parsing requirement '{requirement}'")
         return None
@@ -41,7 +42,12 @@ def parse_requirement(requirement: str) -> dict:
         return None
     return operator, version
 
-def date_range(start_date: str | int | datetime.datetime, end_date: str | int | datetime.datetime, step: str = 'm'):
+
+def date_range(
+    start_date: str | int | datetime.datetime,
+    end_date: str | int | datetime.datetime,
+    step: str = "m",
+):
     """
     Generate a range of dates.
 
@@ -59,8 +65,10 @@ def date_range(start_date: str | int | datetime.datetime, end_date: str | int | 
         yield current_date
         current_date = datetime_increment(current_date, step)
 
-OPERATOR_REGEX = r'[<>=]+'
-REQUIREMENT_REGEX = r'((?:[<>=]+)[^<>=!]+)'
+
+OPERATOR_REGEX = r"[<>=]+"
+REQUIREMENT_REGEX = r"((?:[<>=]+)[^<>=!]+)"
+
 
 def parse_requirements(requirements: str) -> list:
     """
@@ -69,7 +77,7 @@ def parse_requirements(requirements: str) -> list:
     if requirements is None:
         return []
     if type(requirements) == str:
-        requirements = requirements.strip().split(',')
+        requirements = requirements.strip().split(",")
     reqs = []
     for req in requirements:
         matches = re.findall(REQUIREMENT_REGEX, req)
@@ -82,20 +90,22 @@ def parse_requirements(requirements: str) -> list:
     results = [parse_requirement(req) for req in reqs]
     return [result for result in results if result]
 
+
 def applicability_to_requirements(applicability: list) -> str:
     """
     Converts a list of applicability to a string of requirements of version ranges.
     """
     reqs = []
     for app in applicability:
-        version_start = app.get('version_start')
-        exclude_start = app.get('exclude_start')
-        version_end = app.get('version_end', '')
-        exclude_end = app.get('exclude_end', '')
-        prefix = '(' if exclude_start else '['
-        suffix = ')' if exclude_end else ']'
+        version_start = app.get("version_start")
+        exclude_start = app.get("exclude_start")
+        version_end = app.get("version_end", "")
+        exclude_end = app.get("exclude_end", "")
+        prefix = "(" if exclude_start else "["
+        suffix = ")" if exclude_end else "]"
         reqs.append(f"{prefix}{version_start},{version_end}{suffix}")
-    return ','.join(reqs)
+    return ",".join(reqs)
+
 
 def get_max_version(requirements: str) -> str:
     """
@@ -110,11 +120,11 @@ def get_max_version(requirements: str) -> str:
     min_version = None
     for requirement in requirements:
         operator, version = requirement
-        include_end = operator.startswith('<=')
-        if operator.startswith('<'):
+        include_end = operator.startswith("<=")
+        if operator.startswith("<"):
             if max_version is None or semver.parse(version) > semver.parse(max_version):
                 max_version = semver.parse(version)
-        elif operator.startswith('>'):
+        elif operator.startswith(">"):
             if min_version is None or semver.parse(version) < semver.parse(min_version):
                 min_version = semver.parse(version)
     if min_version is not None:
@@ -130,34 +140,35 @@ def version_satisfies_requirements(v: str, requirements: str) -> bool:
     v: The version to check
     requirements: The requirements to check
     """
-    v = semver.parse(v.strip('.')) if type(v) == str else v
+    v = semver.parse(v.strip(".")) if type(v) == str else v
     requirements = parse_requirements(requirements)
     for requirement in requirements:
         operator, version = requirement
-        version = semver.parse(version.strip('.'))
+        version = semver.parse(version.strip("."))
         match operator:
             # return False if the version does not satisfy the requirement
-            case '>':
+            case ">":
                 if v <= version:
                     return False
-            case '>=':
+            case ">=":
                 if v < version:
                     return False
-            case '<':
+            case "<":
                 if v >= version:
                     return False
-            case '<=':
+            case "<=":
                 if v > version:
                     return False
-            case '==':
+            case "==":
                 if v != version:
                     return False
-            case '!=':
+            case "!=":
                 if v == version:
                     return False
             case _:
                 raise ValueError(f"Unexpected operator '{operator}'")
     return True
+
 
 def strint_to_date(date: str | int | datetime.datetime | None):
     """
@@ -171,13 +182,20 @@ def strint_to_date(date: str | int | datetime.datetime | None):
         return date
     if type(date) == int:
         date = str(date)
-    count_dash = date.count('-')
-    fmt = '%Y-%m-%d' if count_dash == 2 else '%Y-%m' if count_dash == 1 else '%Y'
+    count_dash = date.count("-")
+    fmt = "%Y-%m-%d" if count_dash == 2 else "%Y-%m" if count_dash == 1 else "%Y"
     if type(date) == str:
         return datetime.datetime.strptime(date, fmt)
     raise ValueError(f"Unexpected date type '{type(date).__name__}'")
 
-def version_in_range(v: str, start: str = None, end: str = None, exclude_start: bool = False, exclude_end: bool = False) -> bool:
+
+def version_in_range(
+    v: str,
+    start: str = None,
+    end: str = None,
+    exclude_start: bool = False,
+    exclude_end: bool = False,
+) -> bool:
     """
     Compare two versions using semver.
     Defaults to inclusive start and inclusive end.
@@ -189,12 +207,14 @@ def version_in_range(v: str, start: str = None, end: str = None, exclude_start: 
     is_before_end = end is None or (v < end if exclude_end else v <= end)
     return is_after_start and is_before_end
 
+
 def version_is_stable(v: str) -> bool:
     """
     Check if a version is deprecated or not a stable release.
     """
     v = semver.parse(v) if type(v) == str else v
     return (v.major >= 1 and v.pre is None) if v else False
+
 
 def version_has_pre(v: str) -> bool:
     """
@@ -203,15 +223,16 @@ def version_has_pre(v: str) -> bool:
     v = semver.parse(v) if type(v) == str else v
     return v and v.pre is not None
 
-def datetime_increment(dt: datetime.datetime | str, step: str = 'm'):
+
+def datetime_increment(dt: datetime.datetime | str, step: str = "m"):
     """
     Increment a datetime object by a given step.
     """
     year, month = dt.year, dt.month
     day = dt.day
-    if step == 'y':
+    if step == "y":
         year += 1
-    elif step == 'm':
+    elif step == "m":
         month += 1
         if month > 12:
             month = 1
@@ -220,21 +241,27 @@ def datetime_increment(dt: datetime.datetime | str, step: str = 'm'):
         raise ValueError(f"Unimplemented step '{step}'")
     return datetime.datetime(year, month, day)
 
+
 def get_database_dir_and_name(databases: dict, name: str):
     """
     Get the path and name of the database
     """
     data = databases.get(name, {})
-    path = data.get('path', './data')
+    path = data.get("path", "./data")
     path = Path(path).resolve()
     if not path.exists():
-        raise ValueError(f"Path does not exist for '{name}', cannot create database to non-existent path '{path}'")
+        raise ValueError(
+            f"Path does not exist for '{name}', cannot create database to non-existent path '{path}'"
+        )
     elif not path.is_dir():
-        raise ValueError(f"Path is not a directory for '{name}', cannot create database to non-directory path '{path}'")
-    name = data.get('name', name)
-    if not name.endswith('.db'):
+        raise ValueError(
+            f"Path is not a directory for '{name}', cannot create database to non-directory path '{path}'"
+        )
+    name = data.get("name", name)
+    if not name.endswith(".db"):
         name = f"{name}.db"
     return path, name
+
 
 def create_purl(type, namespace, name, version, qualifiers=None, subpath=None):
     """
@@ -250,11 +277,14 @@ def create_purl(type, namespace, name, version, qualifiers=None, subpath=None):
     purl = f"pkg:{type}/{namespace}/{name}@{version}"
     if qualifiers:
         # Convert qualifiers dictionary to a sorted, encoded string
-        qualifier_str = '&'.join(f"{key}={value}" for key, value in sorted(qualifiers.items()))
+        qualifier_str = "&".join(
+            f"{key}={value}" for key, value in sorted(qualifiers.items())
+        )
         purl += f"?{qualifier_str}"
     if subpath:
         purl += f"#{subpath}"
     return purl
+
 
 def homepage_to_vendor(homepage: str) -> str:
     """
@@ -264,27 +294,30 @@ def homepage_to_vendor(homepage: str) -> str:
     """
     if not homepage:
         return None
-    homepage = re.sub(r'^https?://', '', homepage)
-    parts = homepage.split('.')
+    homepage = re.sub(r"^https?://", "", homepage)
+    parts = homepage.split(".")
     if len(parts) < 2:
         return None
     domain = parts[-2]
-    if domain == 'github':
+    if domain == "github":
         result = parts[-1]
         if result is not None:
-            result = result.split('/')
+            result = result.split("/")
             result = result[1] if len(result) > 1 else None
-    elif domain == 'readthedocs':
+    elif domain == "readthedocs":
         return None
     else:
         result = parts[-2]
     return result
 
-def datetime_in_range(dt: datetime.datetime,
-                      start: datetime.datetime,
-                      end: datetime.datetime,
-                      exclude_start: bool = False,
-                      exclude_end: bool = True):
+
+def datetime_in_range(
+    dt: datetime.datetime,
+    start: datetime.datetime,
+    end: datetime.datetime,
+    exclude_start: bool = False,
+    exclude_end: bool = True,
+):
     """
     Check if a datetime is within a range.
 
@@ -295,10 +328,13 @@ def datetime_in_range(dt: datetime.datetime,
     exclude_end: Whether to exclude the end of the range (default: True, exclusive)
     """
     exclude_start, exclude_end = bool(exclude_start), bool(exclude_end)
+
     def comp_start(dt, start):
         return dt > start if exclude_start else dt >= start
+
     def comp_end(dt, end):
         return dt < end if exclude_end else dt <= end
+
     if dt is None:
         logger.warning(f"Unexpected 'None' datetime!")
         return False

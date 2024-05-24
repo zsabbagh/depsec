@@ -4,21 +4,24 @@ from depsec.schemas.config import DatabaseConfig
 
 CONFIG = DatabaseConfig()
 
+
 class View(Model):
     """
     View models a view of a Common Weakness Enumeration list
 
     Could this be skipped?
     """
+
     id = AutoField()
     name = CharField(null=False)
     kind = CharField(null=False)
     status = CharField(null=True)
     objective = TextField(null=True)
-    
+
     class Meta:
         database = CONFIG.get()
-        table_name = 'views'
+        table_name = "views"
+
 
 class Entry(Model):
     """
@@ -32,6 +35,7 @@ class Entry(Model):
     description: The description of the CWE
     updated_at: The date the row in the database was updated
     """
+
     id = AutoField()
     cwe_id = CharField(null=False, unique=True)
     kind = CharField(null=True)
@@ -50,7 +54,7 @@ class Entry(Model):
 
     class Meta:
         database = CONFIG.get()
-        table_name = 'entries'
+        table_name = "entries"
 
 
 class Consequence(Model):
@@ -63,6 +67,7 @@ class Consequence(Model):
     scope: The scope of the consequence
     updated_at: The date the row in the database was updated
     """
+
     id = AutoField()
     scope = CharField(null=True)
     impact = CharField(null=True)
@@ -70,7 +75,8 @@ class Consequence(Model):
 
     class Meta:
         database = CONFIG.get()
-        table_name = 'consequences'
+        table_name = "consequences"
+
 
 class Relation(Model):
     """
@@ -80,18 +86,16 @@ class Relation(Model):
     main_id: The main id
     other_id: The other id
     """
-    main = ForeignKeyField(Entry, backref='relations')
+
+    main = ForeignKeyField(Entry, backref="relations")
     kind = CharField(null=False)
     ordinal = CharField(null=True)
-    view_id = CharField(null=True) # The view table is not implemented yet
+    view_id = CharField(null=True)  # The view table is not implemented yet
     other_id = CharField(null=False)
 
     class Meta:
         database = CONFIG.get()
-        table_name = 'relations'
+        table_name = "relations"
 
 
-CONFIG.add_tables(View,
-                  Entry,
-                  Consequence,
-                  Relation)
+CONFIG.add_tables(View, Entry, Consequence, Relation)
