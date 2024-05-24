@@ -1,5 +1,5 @@
 import sys, argparse, re
-from src.aggregator import Aggregator
+from depsec.aggregator import Aggregator
 
 parser = argparse.ArgumentParser(description='Analyse CVEs to add information to the database')
 parser.add_argument('config', type=str, help='The configuration file to use')

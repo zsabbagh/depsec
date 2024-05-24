@@ -319,5 +319,71 @@
             }
         },
         "cves_total": 3
+    },
+    "numpy": {
+        "sources": {
+            "Direct": {
+                "numpy": {
+                    "cves_total": 8,
+                    "cves_percentage": "100.00%%",
+                    "patch_time": {
+                        "after_publication": {
+                            "critical": {
+                                "count": 1,
+                                "percentage": "12.5%",
+                                "value": 15.0
+                            },
+                            "high": {
+                                "count": 1,
+                                "percentage": "12.5%",
+                                "value": 45.0
+                            },
+                            "medium": {
+                                "count": 1,
+                                "percentage": "12.5%",
+                                "value": 14.0
+                            },
+                            "all": {
+                                "count": 3,
+                                "percentage": "37.50%%",
+                                "mean": 24.666666666666668,
+                                "std": 17.616280348965084,
+                                "min": 14.0,
+                                "25%": 14.5,
+                                "50%": 15.0,
+                                "75%": 30.0,
+                                "max": 45.0
+                            }
+                        },
+                        "before_publication": {
+                            "medium": {
+                                "count": 5,
+                                "percentage": "62.50%%",
+                                "mean": -1217.6,
+                                "std": 722.4962283638579,
+                                "min": -2259.0,
+                                "25%": -1385.0,
+                                "50%": -1385.0,
+                                "75%": -545.0,
+                                "max": -514.0
+                            }
+                        }
+                    },
+                    "severities": {
+                        "critical": 1,
+                        "critical_percentage": "12.50%%",
+                        "high": 1,
+                        "high_percentage": "12.50%%",
+                        "medium": 6,
+                        "medium_percentage": "75.00%%",
+                        "all": 8,
+                        "all_percentage": "100.00%%"
+                    }
+                },
+                "cves_total": 8,
+                "cves_percentage": "100.00%%"
+            }
+        },
+        "cves_total": 8
     }
 }

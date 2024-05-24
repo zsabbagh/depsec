@@ -2,9 +2,9 @@ import argparse, re, sys
 from loguru import logger
 from pathlib import Path
 from pprint import pprint
-from src.schemas.projects import *
-from src.aggregator import Aggregator
-from src.utils.tools import bandit_value_score
+from depsec.schemas.projects import *
+from depsec.aggregator import Aggregator
+from depsec.utils.tools import bandit_value_score
 from playhouse.shortcuts import model_to_dict
 
 # A tiny script to help update Bandit issues in the database

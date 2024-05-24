@@ -3,16 +3,15 @@ import seaborn as sns
 import numpy as np
 import matplotlib.pyplot as plt
 import pandas as pd
-import src.utils.compute as compute
-import src.utils.tools as tools
-import src.utils.report as report
+import depsec.utils.compute as compute
+import depsec.utils.tools as tools
 from copy import deepcopy
 from pprint import pprint
 from pathlib import Path
-from src.aggregator import Aggregator
-import src.schemas.nvd as nvd
+from depsec.aggregator import Aggregator
+import depsec.schemas.nvd as nvd
 from loguru import logger
-from src.schemas.projects import *
+from depsec.schemas.projects import *
 # model_to_dict translates PeeWee models to dictionaries for JSON serialisation
 # the purpose is to make the data that have produced the plots available to readers of the report
 from playhouse.shortcuts import model_to_dict
@@ -91,13 +90,14 @@ parser.add_argument('--debug', help='The debug level of the logger', action='sto
 parser.add_argument('--show', help='Show the plots', action='store_true')
 parser.add_argument('--dependencies', help="Generate plots for each project's dependencies as well", action='store_true')
 parser.add_argument('--force', help='Force reload', action='store_true')
+parser.add_argument('--top', help='The number of top CWEs to plot', default=10)
+parser.add_argument('-x', '--excludes', help='Exclude Bandit test categories', nargs='+', default=[])
 
 # TODO: Add possibility to combine KPIs as left and right y-axis
 
 args = parser.parse_args()
 
 args.projects = sorted(list(map(str.lower, args.projects)))
-
 
 args.timeline = sorted(list(map(str.lower, args.timeline)))
 args.overall = sorted(list(map(str.lower, args.overall)))
@@ -149,6 +149,8 @@ class Global:
     }
     release_palettes = {}
     colours_indirect = ["#00c48d","#00ced9","#0598f3","#865fe1","#b754d8"]
+    colours_indirect_l = ["#00c48d", "#02b9a7", "#03aec0", "#3192d3", "#b754d8", "#d04d8f", "#e94545"]
+    colours_indirect_xl = ["#00c48d", "#01b9a7", "#03aec0", "#04a3da", "#0598f3", "#3287ec", "#5e76e6", "#8b65df", "#b754d8", "#c450b3", "#d04d8f", "#dd496a", "#e94545", "#ef6643", "#f48741", "#faa73e", "#ffc83c"]
     source_palette = {
         "Direct": "#325B8B",
         False: "#325B8B",
@@ -170,6 +172,10 @@ class Global:
         direct = "#165DA0"
         indirect = "#0BD095"
         light_grey = "#9EBDC1"
+
+for project in args.projects:
+    if project not in Global.project_palette:
+        Global.project_palette[project] = Global.Colours.light_grey
 
 def colour_to_rgb(colour: str):
     """
@@ -194,7 +200,7 @@ def tone_colour(colour: str, factor: float):
     new_rgb = tuple(min(255, c) for c in new_rgb)
     return rgb_to_colour(new_rgb)
 
-def release_colours(project_name: str, *releases: str):
+def release_colours(project_name: str, *releases: str, with_order=False):
     """
     Generates a palette of colours for releases
     """
@@ -202,12 +208,24 @@ def release_colours(project_name: str, *releases: str):
         k: Global.Colours.light_grey for k in releases
     }
     palette['total'] = Global.Colours.light_grey
+    count_rels = len(releases)
+    _source_palette = Global.colours_indirect if len(Global.colours_indirect) >= count_rels else (
+        Global.colours_indirect_l if len(Global.colours_indirect_l) >= count_rels else Global.colours_indirect_xl
+    )
+    releases = sorted(list(releases))
+    releases = [project_name] + releases
+    order = {
+        project_name: 0
+    }
     for i, release in enumerate(releases):
         release = release.lower()
         if release == project_name.lower():
             palette[release] = Global.Colours.direct
         else:
-            palette[release] = Global.colours_indirect[i % len(Global.colours_indirect)]
+            palette[release] = _source_palette[i % len(_source_palette)]
+        order[release] = i + 1
+    if with_order:
+        return palette, lambda x: order.get(x, 0)
     return palette
 
 def barplot_labels(ax: plt.Axes, fontsize: str = 'small'):
@@ -670,10 +688,13 @@ def plot_cves(df: pd.DataFrame):
     fig.supylabel("CVSS Impact Score")
     fig.savefig(plots_dir / 'cve-cia.png')
 
-def top_cwe(df: pd.DataFrame, n: int = 10):
+def top_cwe(df: pd.DataFrame, project: str, order = None,n: int = 10):
     """
     Computes the top N CWEs
+
+    order: callable to order the releases
     """
+    order = order if order is not None else lambda x: x
     df_top_n = df.groupby(['cwe_id']).size().reset_index(name='count').copy()
     # sort by count descending
     df_top_n = df_top_n.sort_values(by='count', ascending=False)
@@ -687,7 +708,16 @@ def top_cwe(df: pd.DataFrame, n: int = 10):
     # add the 'total_count' column
     df_unique['total_count'] = df_unique['cwe_id'].map(df_top_n.set_index('cwe_id')['count'])
     # rename the 'release' to "total" for all rows in the cwe_count df
-    df_unique = df_unique.sort_values(by=['total_count', 'release'], ascending=[False, True])
+    releases = df_unique['release'].unique()
+    releases = [project] + list(releases)
+    for cwe in df_top_n['cwe_id'].unique():
+        total_count = df_top_n[df_top_n['cwe_id'] == cwe]['count'].sum()
+        for release in releases:
+            cwes = df_unique[(df_unique['cwe_id'] == cwe) & (df_unique['release'] == release)]['cwe_id'].unique()
+            if cwe not in cwes:
+                df_unique = pd.concat([df_unique, pd.DataFrame({'release': [release], 'cwe_id': [cwe], 'count': [0], 'total_count': [total_count]})])
+    df_unique['release_order'] = df_unique['release'].map(lambda x: order(x))
+    df_unique = df_unique.sort_values(by=['total_count', 'release_order'], ascending=[False, True])
     return df_top_n, df_unique
 
 def score_to_label(score: float):
@@ -702,6 +732,15 @@ def score_to_label(score: float):
         return 'Medium'
     return 'Low'
 
+def sort_legend(project_name: str, ax: plt.Axes):
+    """
+    Sorts the legend labels
+    """
+    lmbd = lambda t: t[0] if t[0] != project_name else ''
+    handles, labels = ax.get_legend_handles_labels()
+    labels, handles = zip(*sorted(zip(labels, handles), key=lmbd))
+    ax.legend(handles, labels, title='Release', **Global.LEGEND)
+
 def plot_overall_cwe_distribution(df: pd.DataFrame):
     """
     Plots CWE distribution
@@ -712,8 +751,10 @@ def plot_overall_cwe_distribution(df: pd.DataFrame):
     project_names = sorted(list(df['project'].unique()))
     project_count = len(project_names)
     fig, axs = plt.subplots(project_count, 1, figsize=(10, 8))
+    axs = [axs] if project_count == 1 else axs
     plt.subplots_adjust(**Global.SUBPLOTS)
     fig_sev, axs_sev = plt.subplots(project_count, 1, figsize=(10, 8))
+    axs_sev = [axs_sev] if project_count == 1 else axs_sev
     plt.subplots_adjust(**Global.SUBPLOTS)
     # for LaTeX
     df_tex = []
@@ -737,12 +778,11 @@ def plot_overall_cwe_distribution(df: pd.DataFrame):
         # get most severe
         # to get the total count of CVEs for reporting
         cves_total = df_project['cve_id'].nunique()
-        if project not in Global.release_palettes:
-            releases = sorted(list(df_project['release'].unique()))
-            Global.release_palettes[project] = release_colours(project, *releases)
+        releases = sorted(list(df_project['release'].unique()))
+        Global.release_palettes[project], order = release_colours(project, *releases, with_order=True)
         palette = Global.release_palettes[project]
         # cwe count distinct cve_id
-        df_top_10, df_unique = top_cwe(df_project, 10)
+        df_top_10, df_unique = top_cwe(df_project, project, order)
         # sort by count
         sns.barplot(data=df_unique, x='cwe_id', y='count', hue='release', ax=ax, palette=palette)
         sns.barplot(data=df_top_10, x='cwe_id', y='count', ax=ax, color=Global.Colours.light_grey, alpha=0.5, zorder=0)
@@ -750,7 +790,7 @@ def plot_overall_cwe_distribution(df: pd.DataFrame):
         df_sev_top_10 = df_project[df_project['cwe_id'].isin(df_top_10['cwe_id'])].copy()
         # set total_count using loc
         df_sev_top_10['total_count'] = df_sev_top_10['cwe_id'].map(df_top_10.set_index('cwe_id')['count'])
-        df_sev_top_10 = df_sev_top_10.sort_values(by=['total_count'], ascending=False)
+        # sort by total_count, then custom sort release with lambda
         sns.violinplot(data=df_sev_top_10, x='cwe_id', y='cvss_base_score', ax=ax_sev, color=Global.Colours.light_grey, cut=0, zorder=1)
         set_transparency(ax_sev, 0.2)
         sns.swarmplot(data=df_sev_top_10, x='cwe_id', y='cvss_base_score', ax=ax_sev, color=Global.Colours.direct, zorder=2)
@@ -769,6 +809,8 @@ def plot_overall_cwe_distribution(df: pd.DataFrame):
         ax.set_title(project.title())
         ax.set_xlabel(None)
         ax.set_ylabel(None)
+        # sort legend labels
+        sort_legend(project, ax)
         # add the confidentiality, integrity, and availability scores
         # TODO: Show the TOP 10 CWEs by each CIA impact
         # create table to LaTeX
@@ -825,6 +867,7 @@ def plot_semver(df: pd.DataFrame, static_df: pd.DataFrame):
     project_names = sorted(list(df['project'].unique()))
     cves = df.copy()
     fig, axs = plt.subplots(len(project_names), 3, figsize=(10, 8))
+    axs = [axs] if len(project_names) == 1 else axs
     fig.subplots_adjust(**Global.SUBPLOTS_3X)
     for i, project in enumerate(project_names):
         axss: plt.Axes = axs[i]
@@ -856,6 +899,8 @@ def plot_semver(df: pd.DataFrame, static_df: pd.DataFrame):
             major = row['major']
             srow = sdf[(sdf['release'] == release) & (sdf['major'] == major)].copy()
             # upate the nloc_total
+            if len(srow) == 0:
+                continue
             pdf.loc[i, 'nloc_total'] = srow['nloc_total'].values[0]
         
         # get the CVE count per major version
@@ -961,8 +1006,17 @@ def plot_issues(df: pd.DataFrame):
     fig_category.subplots_adjust(**Global.SUBPLOTS)
     i = 0
     values = ['None', 'Low', 'Medium', 'High', 'Critical']
+    fig_tests, axs_tests = plt.subplots(project_count, 1, figsize=(10, 8))
+    fig_tests.subplots_adjust(**Global.SUBPLOTS)
+    fig_tests.suptitle("Bandit Test ID Distribution")
+    fig_tests.supxlabel("Test ID")
+    fig_tests.supylabel("Issue Count")
+    axs_tests = [axs_tests] if project_count == 1 else axs_tests
+    all_test_ids = df['test_id'].unique()
     for project in projects:
         ax: plt.Axes = axs_category[i]
+        ax_tests: plt.Axes = axs_tests[i]
+        ax_tests.set_title(f"{project.title()}")
         dftmp = issues[issues['project'] == project].copy()
         releases = sorted(list(dftmp['release'].unique()))
         palette = release_colours(project, *releases)
@@ -972,9 +1026,21 @@ def plot_issues(df: pd.DataFrame):
             if release != project:
                 order.append(release)
         # sort the X-axis by the test category
+        dftest = dftmp[dftmp['is_test'] == False]
+        dftest = dftest.copy().groupby(['test_id', 'release']).size().reset_index(name='count')
+        for test_id in all_test_ids:
+            if test_id not in dftest['test_id'].unique():
+                dftest = pd.concat([dftest, pd.DataFrame({'test_id': [test_id], 'release': ['other'], 'count': [0]})])
+        dftest = dftest.sort_values(by=['test_id', 'release'], ascending=True)
+        print(f"Tests: {dftest['test_id'].unique()}")
+        sns.barplot(data=dftest, x='test_id', y='count', hue='release', ax=ax_tests, palette=palette, hue_order=order, width=0.5)
+        ax_tests.set_xlabel(None)
+        ax_tests.set_ylabel(None)
+        ax_tests.set_title(f"{project.title()} {version}")
         dftmp = dftmp.sort_values(by=['test_category', 'release'], ascending=True)
         dftmp = dftmp[ dftmp['is_test'] == False ]
-        sns.swarmplot(data=dftmp, x='test_category', y='score', hue='release', ax=ax, palette=palette, hue_order=order)
+        if len(dftmp) < 1000:
+            sns.swarmplot(data=dftmp, x='test_category', y='score', hue='release', ax=ax, palette=palette, hue_order=order)
         sns.violinplot(data=dftmp, x='test_category', y='score', ax=ax, fill=False, color=Global.Colours.light_grey, cut=0)
         unique_categories = dftmp['test_category'].unique()
         ax.set_xlabel(None)
@@ -1081,8 +1147,8 @@ def plot_issues(df: pd.DataFrame):
         # set the legend title
         ax.legend(title='Test Category', **Global.LEGEND)
         # tilt the x-axis labels
-        adjust_labels(ax, axis='x', rotation=15, fontsize=8)
-        ax.set_title(f"{project.title()}{version}")
+        adjust_labels(ax, axis='x', rotation=11, fontsize=8)
+        ax.set_title(f"{project.title()} {version}")
         i += 1
     fig_module.suptitle("Top 10 Package Bandit Issue Distribution")
     fig_module.supxlabel("Package")
@@ -1226,7 +1292,6 @@ if __name__ == '__main__':
                 df = ag.df_static(project, platform, with_issues=False, only_latest=False)
                 static_df = pd.concat([static_df, df], ignore_index=True)
             if techlag_df.empty or project_name not in techlag_df['project'].unique():
-                print(f"Trying to get techlag for {project}")
                 df = ag.df_tech_lag(project, platform)
                 techlag_df = pd.concat([techlag_df, df], ignore_index=True)
         cves_df.to_csv(cve_path, index=False)
@@ -1234,15 +1299,27 @@ if __name__ == '__main__':
         static_df.to_csv(static_path, index=False)
         cves_overall_df.to_csv(cve_overall_path, index=False)
 
+        # drop the rows not in 'projects'
+        if 'project' in cves_overall_df.columns:
+            cves_overall_df = cves_overall_df[cves_overall_df['project'].isin(project_names)]
+        if 'project' in cves_df.columns:
+            cves_df = cves_df[cves_df['project'].isin(project_names)]
+        if 'project' in issues_df.columns:
+            issues_df = issues_df[issues_df['project'].isin(project_names)]
+        if 'project' in static_df.columns:
+            static_df = static_df[static_df['project'].isin(project_names)]
+        if args.excludes:
+            for excl in args.excludes:
+                issues_df = issues_df[~issues_df['test_id'].str.contains(excl)]
+
         # generate reports of the overall findings to explain the plots
-        rep = report.cve_report(cves_overall_df)
-        try_json_dump(rep, json_dir / 'cve_report.json')
         all_input = 'all' in args.overall
         if 'cwe' in overall_keys or all_input:
             cwe_df = cves_overall_df.copy()
             cwe_df = add_stats(cwe_df, ['project', 'release', 'cve_id', 'cwe_id'], 'published_to_patched')
             plot_overall_cwe_distribution(cves_overall_df)
         if 'issues' in overall_keys or all_input:
+            pprint(issues_df)
             plot_issues(issues_df)
         if 'cve' in overall_keys or all_input:
             plot_cves(cves_overall_df)
@@ -1261,6 +1338,7 @@ if __name__ == '__main__':
         if 'semver' in overall_keys or all_input:
             plot_semver(cves_df, static_df)
         if 'techlag' in overall_keys or all_input:
+            techlag_df = techlag_df[techlag_df['cves'].notna()]
             to_latex(techlag_df, tex_dir / 'techlag.tex',
                      project='Project',
                      version='Version',
