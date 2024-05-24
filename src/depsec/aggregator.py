@@ -576,6 +576,8 @@ class Aggregator:
         logger.debug(f"Got {len(cpes)} CPEs for {project.vendor} {project.name} {version}")
         for cpe in cpes:
             cpe: nvd.CPE
+            if project.platform == 'pypi' and cpe.target_sw and cpe.target_sw not in ['python', '*']:
+                continue
             logger.debug(f"Processing CPE {cpe.vendor} {cpe.product} {cpe.version_start} - {cpe.version_end}")
             # Get release of versions since some contain letters
             node = cpe.node
@@ -1795,12 +1797,17 @@ class Aggregator:
         Returns a DataFrame of technical lag for a project
         """
         project = self.get_project(project, platform)
-        releases = self.get_releases(project, platform=platform, descending=False, exclude_deprecated=False, exclude_nonstable=True)
+        releases = self.get_releases(project, platform=platform, descending=False, exclude_deprecated=True, exclude_nonstable=True)
         df = []
         rel_deps = {}
+        vulns = {}
         for i, release in enumerate(releases):
             version = release.version
-            rel_deps[version] = self.get_dependencies(release, platform=platform)
+            deps = self.get_dependencies(project.name, version, platform=platform)
+            rel_deps[version] = deps
+            for dep in deps:
+                if dep.name not in vulns:
+                    vulns[dep.name] = self.get_vulnerabilities(dep.name, platform=dep.platform)
         for i, rel in enumerate(releases):
             version = rel.version
             vparsed = semver.parse(version)
@@ -1810,22 +1817,26 @@ class Aggregator:
             for dep in deps:
                 depname = dep.name
                 constraints = dep.requirements
-                reqs = parse_requirements(constraints)
-                max_constraint = None
-                for op, v in reqs:
-                    if op.startswith('<'):
-                        max_constraint = f"{op}{v}"
-                        break
-                if max_constraint:
-                    newrels = self.get_releases(project.name, platform, requirements=f">{version},<{major+1}.0.0", descending=False, exclude_deprecated=False, exclude_nonstable=True)
+                latest_rel = self.get_release(depname, platform=dep.platform, requirements=constraints)
+                max_version, include = get_max_version(constraints)
+                if max_version:
+                    max_constraint = f">{'' if include else '='}{max_version}"
+                    newrels = self.get_releases(project.name, platform, requirements=f"{max_constraint},<{major+1}.0.0", descending=False, exclude_deprecated=False, exclude_nonstable=True)
                     has_solution = False
+                    cves = None
+                    for cve in vulns.get(depname, {}).get('cves', {}).values():
+                        if db.is_applicable(latest_rel, cve.get('applicability', [])):
+                            if cves is None:
+                                cves = []
+                            cves.append(cve.get('cve_id'))
                     for newrel in newrels:
                         # increase the index until a release is found that satisfies the requirements
                         ndeps = rel_deps.get(newrel.version, [])
                         has_same = True
                         new_req = None
                         for ndep in ndeps:
-                            if ndep.name == depname and max_constraint not in ndep.requirements:
+                            new_max, new_incl = get_max_version(ndep.requirements)
+                            if ndep.name == depname and (new_max != max_version and include != new_incl):
                                 has_same = False
                                 new_req = ndep.requirements
                                 break
@@ -1842,6 +1853,7 @@ class Aggregator:
                                 'next_version': newrel.version,
                                 'next_requirements': new_req,
                                 'technical_lag': True,
+                                'cves': ', '.join(cves) if cves is not None else None,
                             })
                             has_solution = True
                             break
@@ -1857,6 +1869,7 @@ class Aggregator:
                             'next_published_at': None,
                             'next_version': None,
                             'next_requirements': None,
+                            'cves': ', '.join(cves) if cves is not None else None,
                             'technical_lag': True,
                         })
         return pd.DataFrame(df)

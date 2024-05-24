@@ -150,7 +150,7 @@ class Global:
     release_palettes = {}
     colours_indirect = ["#00c48d","#00ced9","#0598f3","#865fe1","#b754d8"]
     colours_indirect_l = ["#00c48d", "#02b9a7", "#03aec0", "#3192d3", "#b754d8", "#d04d8f", "#e94545"]
-    colours_indirect_xl = ["#00c48d", "#01b9a7", "#03aec0", "#04a3da", "#0598f3", "#3287ec", "#5e76e6", "#8b65df", "#b754d8", "#b754d8", "#c450b3", "#d04d8f", "#dd496a", "#e94545", "#ef6643", "#f48741", "#faa73e", "#ffc83c"]
+    colours_indirect_xl = ["#00c48d", "#01b9a7", "#03aec0", "#04a3da", "#0598f3", "#3287ec", "#5e76e6", "#8b65df", "#b754d8", "#c450b3", "#d04d8f", "#dd496a", "#e94545", "#ef6643", "#f48741", "#faa73e", "#ffc83c"]
     source_palette = {
         "Direct": "#325B8B",
         False: "#325B8B",
@@ -1292,7 +1292,6 @@ if __name__ == '__main__':
                 df = ag.df_static(project, platform, with_issues=False, only_latest=False)
                 static_df = pd.concat([static_df, df], ignore_index=True)
             if techlag_df.empty or project_name not in techlag_df['project'].unique():
-                print(f"Trying to get techlag for {project}")
                 df = ag.df_tech_lag(project, platform)
                 techlag_df = pd.concat([techlag_df, df], ignore_index=True)
         cves_df.to_csv(cve_path, index=False)
@@ -1339,6 +1338,7 @@ if __name__ == '__main__':
         if 'semver' in overall_keys or all_input:
             plot_semver(cves_df, static_df)
         if 'techlag' in overall_keys or all_input:
+            techlag_df = techlag_df[techlag_df['cves'].notna()]
             to_latex(techlag_df, tex_dir / 'techlag.tex',
                      project='Project',
                      version='Version',
