@@ -8,7 +8,6 @@ A project run, tested, and developed with Python 3.11.6.
 To run the code, you need to have the following installed:
 ```
 argparse
-argparse
 gitpython
 lizard
 loguru
@@ -84,5 +83,3 @@ They are located in `scripts/`.
 - `nvdmigrate.py` migrates data from a downloaded NVD JSON file to a SQLite database defined in `vulnerabilities` in the config file.
   This is a preparation step.
 - `plotter.py` is the plotting script for the thesis.
-- `giterate.py` handles iteration over GitHub repositories, running Bandit and Lizard on each commit associated with a release tag.
-  At time of writing, it supports release tags in the format `^v?\d+\.\d+\.\d+$`. So to expand the search space, the regex should be updated.
