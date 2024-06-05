@@ -492,10 +492,6 @@ class Aggregator:
                 osi_verified=osi_verified,
                 analysed=analysed,
             )
-            if analysed:
-                for rel in releases:
-                    if rel.nloc_total is not None:
-                        return rel
             return releases[0] if len(releases) > 0 else None
         release = Release.get_or_none(
             Release.project == project.id, Release.version == version

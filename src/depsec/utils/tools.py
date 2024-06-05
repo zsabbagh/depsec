@@ -5,6 +5,23 @@ from pathlib import Path
 from loguru import logger
 from depsec.schemas.projects import Release, Project
 
+def has_patch_version(v: str) -> bool:
+    """
+    Check if a version has a patch version.
+    """
+    v = semver.parse(v)
+    return v and len(v.release) >= 3
+
+def get_version_patch(v: str | semver.Version) -> str:
+    """ """
+    if type(v) == str:
+        v = semver.parse(v)
+    if v:
+        if len(v.release) < 3:
+            return "0"
+        return v.release[2]
+    else:
+        return None
 
 def bandit_value_score(value: str) -> int:
     """
@@ -31,7 +48,7 @@ def bandit_issue_score(severity: str, confidence: str) -> int:
 def parse_requirement(requirement: str) -> dict:
     """ """
     requirement = requirement.strip()
-    regex = re.match(r"([<>=]+)(.*)", requirement)
+    regex = re.match(rf"([{OPERATOR_CHARACTERS}]+)(.*)", requirement)
     if not regex:
         logger.debug(f"Error parsing requirement '{requirement}'")
         return None
@@ -65,9 +82,8 @@ def date_range(
         yield current_date
         current_date = datetime_increment(current_date, step)
 
-
-OPERATOR_REGEX = r"[<>=]+"
-REQUIREMENT_REGEX = r"((?:[<>=]+)[^<>=!]+)"
+OPERATOR_CHARACTERS = r"<>=~!"
+REQUIREMENT_REGEX = rf"((?:[{OPERATOR_CHARACTERS}]+)[^{OPERATOR_CHARACTERS}]+)"
 
 
 def parse_requirements(requirements: str) -> list:
@@ -132,6 +148,64 @@ def get_max_version(requirements: str) -> str:
             return None, None
     return max_version, include_end
 
+def operator_compare(op, a, b):
+    """ """
+    if type(a) == str and not type(b) == str:
+        b = str(b)
+    match op:
+        case ">":
+            return a > b
+        case ">=":
+            return a >= b
+        case "<":
+            return a < b
+        case "<=":
+            return a <= b
+        case "==":
+            return a == b
+        case "!=":
+            return a != b
+        case _:
+            raise ValueError(f"Unexpected operator '{op}'")
+
+def check_version(v: str, operator: str, version: str) -> bool:
+    """
+    Check if a version satisfies a requirement.
+
+    v: The version to check
+    operator: The operator to use
+    version: The version to check against
+    """
+    v = semver.parse(v.strip(".")) if type(v) == str else v
+    if operator == '~=':
+        # compatible release check
+        version = version.strip(".")
+        parts = version.split(".")
+        major = int(parts[0])
+        minor = int(parts[1]) if len(parts) > 1 else 0
+        patch = int(parts[2]) if len(parts) > 2 else None
+        if not operator_compare("==", v.major, major):
+            return False
+        if patch and not operator_compare("==", v.minor, minor):
+            return False
+        elif not operator_compare(">=", v.minor, minor):
+            return False
+        return True
+    elif '*' in version:
+        # wildcard version check
+        parts = version.split(".")
+        major = int(parts[0]) if parts[0] != "*" else None
+        minor = int(parts[1]) if len(parts) > 1 and parts[1] != "*" else None
+        patch = int(parts[2]) if len(parts) > 2 and parts[2] != "*" else None
+        if major and not operator_compare(operator, v.major, major):
+            return False
+        if minor and not operator_compare(operator, v.minor, minor):
+            return False
+        if patch and not operator_compare(operator, get_version_patch(v), patch):
+            return False
+        return True
+    version = semver.parse(version.strip("."))
+    return operator_compare(operator, v, version)
 
 def version_satisfies_requirements(v: str, requirements: str) -> bool:
     """
@@ -144,31 +218,9 @@ def version_satisfies_requirements(v: str, requirements: str) -> bool:
     requirements = parse_requirements(requirements)
     for requirement in requirements:
         operator, version = requirement
-        version = semver.parse(version.strip("."))
-        match operator:
-            # return False if the version does not satisfy the requirement
-            case ">":
-                if v <= version:
-                    return False
-            case ">=":
-                if v < version:
-                    return False
-            case "<":
-                if v >= version:
-                    return False
-            case "<=":
-                if v > version:
-                    return False
-            case "==":
-                if v != version:
-                    return False
-            case "!=":
-                if v == version:
-                    return False
-            case _:
-                raise ValueError(f"Unexpected operator '{operator}'")
+        if not check_version(v, operator, version):
+            return False
     return True
-
 
 def strint_to_date(date: str | int | datetime.datetime | None):
     """
