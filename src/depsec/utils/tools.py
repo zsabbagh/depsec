@@ -123,7 +123,7 @@ def applicability_to_requirements(applicability: list) -> str:
     return ",".join(reqs)
 
 
-def get_max_version(requirements: str) -> str:
+def get_max_version(requirements: str) -> tuple:
     """
     Get the maximum version from a list of requirements.
 
@@ -140,6 +140,24 @@ def get_max_version(requirements: str) -> str:
         if operator.startswith("<"):
             if max_version is None or semver.parse(version) > semver.parse(max_version):
                 max_version = semver.parse(version)
+        elif operator.startswith("~="):
+            new_version = semver.parse(version)
+            if has_patch_version(version):
+                new_version = semver.Version(f"{new_version.major}.{new_version.minor+1}.0")
+                minew = semver.Version(f"{new_version.major}.{new_version.minor}.0")
+                if max_version is None or new_version > max_version:
+                    max_version = new_version
+                    include_end = False
+                if min_version is None or minew < min_version:
+                    min_version = minew
+            else:
+                new_version = semver.Version(f"{new_version.major+1}.0.0")
+                minew = semver.Version(f"{new_version.major}.0.0")
+                if max_version is None or new_version > max_version:
+                    max_version = new_version
+                    include_end = False
+                if min_version is None or minew < min_version:
+                    min_version = minew
         elif operator.startswith(">"):
             if min_version is None or semver.parse(version) < semver.parse(min_version):
                 min_version = semver.parse(version)
