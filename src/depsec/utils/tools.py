@@ -1,9 +1,9 @@
-import re, datetime, numpy as np
+import re
+import datetime
 from loguru import logger
 from packaging import version as semver
 from pathlib import Path
-from loguru import logger
-from depsec.schemas.projects import Release, Project
+
 
 def has_patch_version(v: str) -> bool:
     """
@@ -11,6 +11,7 @@ def has_patch_version(v: str) -> bool:
     """
     v = semver.parse(v)
     return v and len(v.release) >= 3
+
 
 def get_version_patch(v: str | semver.Version) -> str:
     """ """
@@ -23,6 +24,7 @@ def get_version_patch(v: str | semver.Version) -> str:
         return f"{v.release[2]}{pre}"
     else:
         return None
+
 
 def bandit_value_score(value: str) -> int:
     """
@@ -55,7 +57,7 @@ def parse_requirement(requirement: str) -> dict:
         return None
     try:
         operator, version = regex.groups()
-    except Exception as e:
+    except Exception:
         logger.debug(f"Error parsing requirement '{requirement}'")
         return None
     return operator, version
@@ -82,6 +84,7 @@ def date_range(
     while current_date < end_date:
         yield current_date
         current_date = datetime_increment(current_date, step)
+
 
 OPERATOR_CHARACTERS = r"<>=~!"
 REQUIREMENT_REGEX = rf"((?:[{OPERATOR_CHARACTERS}]+)[^{OPERATOR_CHARACTERS}]+)"
@@ -144,7 +147,9 @@ def get_max_version(requirements: str) -> tuple:
         elif operator.startswith("~="):
             new_version = semver.parse(version)
             if has_patch_version(version):
-                new_version = semver.Version(f"{new_version.major}.{new_version.minor+1}.0")
+                new_version = semver.Version(
+                    f"{new_version.major}.{new_version.minor+1}.0"
+                )
                 minew = semver.Version(f"{new_version.major}.{new_version.minor}.0")
                 if max_version is None or new_version > max_version:
                     max_version = new_version
@@ -167,6 +172,7 @@ def get_max_version(requirements: str) -> tuple:
             return None, None
     return max_version, include_end
 
+
 def operator_compare(op, a, b):
     """ """
     if type(a) == str and not type(b) == str:
@@ -187,6 +193,7 @@ def operator_compare(op, a, b):
         case _:
             raise ValueError(f"Unexpected operator '{op}'")
 
+
 def check_version(v: str, operator: str, version: str) -> bool:
     """
     Check if a version satisfies a requirement.
@@ -196,7 +203,7 @@ def check_version(v: str, operator: str, version: str) -> bool:
     version: The version to check against
     """
     v = semver.parse(v.strip(".")) if type(v) == str else v
-    if operator == '~=':
+    if operator == "~=":
         # compatible release check
         version = version.strip(".")
         parts = version.split(".")
@@ -210,7 +217,7 @@ def check_version(v: str, operator: str, version: str) -> bool:
         elif not operator_compare(">=", v.minor, minor):
             return False
         return True
-    elif '*' in version:
+    elif "*" in version:
         # wildcard version check
         parts = version.split(".")
         major = int(parts[0]) if parts[0] != "*" else None
@@ -226,6 +233,7 @@ def check_version(v: str, operator: str, version: str) -> bool:
     version = semver.parse(version.strip("."))
     return operator_compare(operator, v, version)
 
+
 def version_satisfies_requirements(v: str, requirements: str) -> bool:
     """
     Check if a version satisfies the requirements.
@@ -240,6 +248,7 @@ def version_satisfies_requirements(v: str, requirements: str) -> bool:
         if not check_version(v, operator, version):
             return False
     return True
+
 
 def strint_to_date(date: str | int | datetime.datetime | None):
     """
@@ -407,7 +416,7 @@ def datetime_in_range(
         return dt < end if exclude_end else dt <= end
 
     if dt is None:
-        logger.warning(f"Unexpected 'None' datetime!")
+        logger.warning("Unexpected 'None' datetime!")
         return False
     if start is None and end is None:
         return True

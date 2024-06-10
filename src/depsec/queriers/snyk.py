@@ -1,4 +1,6 @@
-import sys, requests, depsec.utils.tools as tools
+import sys
+import requests
+import depsec.utils.tools as tools
 
 # This file will handle querying the libraries.io API
 
@@ -17,7 +19,7 @@ class SnykQuerier:
         """
         if self.__api_key is None:
             self.__headers = None
-            print(f"Warning: No API key provided for Snyk API", file=sys.stderr)
+            print("Warning: No API key provided for Snyk API", file=sys.stderr)
             return
         self.__headers = {"Authorization": f"Token {self.__api_key}"}
 

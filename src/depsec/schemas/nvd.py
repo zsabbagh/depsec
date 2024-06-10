@@ -1,4 +1,4 @@
-import datetime, os
+import datetime
 from peewee import *
 from depsec.schemas.config import DatabaseConfig
 

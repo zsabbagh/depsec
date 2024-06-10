@@ -1,4 +1,5 @@
-import requests, sys, time
+import requests
+import time
 from loguru import logger
 
 # This file will handle querying the libraries.io API

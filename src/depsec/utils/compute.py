@@ -1,4 +1,5 @@
-import numpy as np, pandas as pd
+import numpy as np
+import pandas as pd
 import depsec.utils.db as db
 from copy import deepcopy
 from packaging import version as semver
@@ -558,7 +559,7 @@ def semver_cve_distribution(
             cve = cves.get(cve_id)
             res["Project"] = project_name
             res["Major"] = int(version.major)
-            if not version.major in majors:
+            if version.major not in majors:
                 logger.info(f"Found major version {version.major} for {project_name}")
                 majors.add(version.major)
             res["Minor"] = int(version.minor)

@@ -1,10 +1,16 @@
-import time, yaml, json, glob, sys, pandas as pd, datetime as dt, itertools
+import time
+import yaml
+import json
+import glob
+import sys
+import pandas as pd
+import datetime as dt
+import itertools
 import depsec.schemas.nvd as nvd
 import depsec.schemas.cwe as cwe
 import depsec.utils.db as db
 import depsec.utils.giterate as giterate
 import argparse
-import numpy as np
 from copy import deepcopy
 from packaging import version as semver
 from playhouse.shortcuts import model_to_dict
@@ -16,7 +22,7 @@ from depsec.schemas.projects import *
 from depsec.utils.tools import *
 from loguru import logger
 from pathlib import Path
-from typing import List, Dict
+from typing import List
 
 
 def pm(model: List[Model] | Model, recurse=False):
@@ -623,7 +629,7 @@ class Aggregator:
             platform=platform,
             descending=False,
             sort_semantically=False,
-            requirements=f">0.9",
+            requirements=">0.9",
             exclude_deprecated=False,
         )
         releases = (
@@ -1871,7 +1877,7 @@ class Aggregator:
         """
         constraints = dependency.requirements if dependency is not None else None
         if type(model) != dict and not isinstance(model, Model):
-            logger.error(f"Incorrect typing logic. Expected 'dict' or 'Model'")
+            logger.error("Incorrect typing logic. Expected 'dict' or 'Model'")
             exit(1)
         result = (
             model_to_dict(model, recurse=False) if isinstance(model, Model) else model
@@ -1922,7 +1928,7 @@ class Aggregator:
         """
         constraints = dependency.requirements if dependency is not None else None
         if type(model) != dict and not isinstance(model, Model):
-            logger.error(f"Incorrect typing logic. Expected 'dict' or 'Model'")
+            logger.error("Incorrect typing logic. Expected 'dict' or 'Model'")
             exit(1)
         result = (
             model_to_dict(model, recurse=False) if isinstance(model, Model) else model
@@ -1955,7 +1961,7 @@ class Aggregator:
         )
         for releases in release_deps:
             if len(releases) == 0:
-                logger.warning(f"Unexpected empty list of releases")
+                logger.warning("Unexpected empty list of releases")
                 continue
             # releases are lists of tuples, where each tuple is a release and its dependency
             main_release = releases[0][
@@ -2102,7 +2108,7 @@ class Aggregator:
         df = []
         for releases in release_deps:
             if len(releases) == 0:
-                logger.warning(f"Unexpected empty list of releases")
+                logger.warning("Unexpected empty list of releases")
                 continue
             main_release = releases[0][0]
             for release, dependency in releases:
@@ -2175,7 +2181,7 @@ class Aggregator:
             date_releases = None
             for rels in releases:
                 if len(rels) == 0:
-                    logger.warning(f"Unexpected empty list of releases")
+                    logger.warning("Unexpected empty list of releases")
                     continue
                 main_release = rels[0][0]
                 if main_release.published_at.date() <= date.date():

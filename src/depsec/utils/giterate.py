@@ -1,5 +1,8 @@
-import re, lizard, glob, datetime, json, sys, subprocess, time, os
-from pprint import pprint
+import re
+import glob
+import datetime
+import time
+import os
 from packaging import version as semver
 from loguru import logger
 from depsec.utils import tools
@@ -122,7 +125,7 @@ def identify_tags(repo: Repo):
     print(
         f"Calver matches ({len(calver_matches)} / {total_tags}): {', '.join(calver_matches)}"
     )
-    print(f"If none of the above, please provide a regex pattern to match the tags")
+    print("If none of the above, please provide a regex pattern to match the tags")
     tag_regex = input("Enter the tag regex (@semver, @calver expands): ")
     return (
         f"{tag_regex}"

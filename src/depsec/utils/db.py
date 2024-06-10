@@ -1,6 +1,6 @@
 import depsec.schemas.cwe as cwe
 import depsec.schemas.nvd as nvd
-from depsec.utils.tools import version_in_range, datetime_in_range
+from depsec.utils.tools import version_in_range
 from packaging import version as semver
 from playhouse.shortcuts import model_to_dict
 from loguru import logger
