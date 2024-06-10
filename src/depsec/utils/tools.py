@@ -19,7 +19,8 @@ def get_version_patch(v: str | semver.Version) -> str:
     if v:
         if len(v.release) < 3:
             return "0"
-        return v.release[2]
+        pre = v.pre if v.pre else ""
+        return f"{v.release[2]}{pre}"
     else:
         return None
 
@@ -148,7 +149,7 @@ def get_max_version(requirements: str) -> tuple:
                 if max_version is None or new_version > max_version:
                     max_version = new_version
                     include_end = False
-                if min_version is None or minew < min_version:
+                if min_version is None or minew > min_version:
                     min_version = minew
             else:
                 new_version = semver.Version(f"{new_version.major+1}.0.0")
@@ -156,7 +157,7 @@ def get_max_version(requirements: str) -> tuple:
                 if max_version is None or new_version > max_version:
                     max_version = new_version
                     include_end = False
-                if min_version is None or minew < min_version:
+                if min_version is None or minew > min_version:
                     min_version = minew
         elif operator.startswith(">"):
             if min_version is None or semver.parse(version) < semver.parse(min_version):
@@ -201,7 +202,7 @@ def check_version(v: str, operator: str, version: str) -> bool:
         parts = version.split(".")
         major = int(parts[0])
         minor = int(parts[1]) if len(parts) > 1 else 0
-        patch = int(parts[2]) if len(parts) > 2 else None
+        patch = parts[2] if len(parts) > 2 else None
         if not operator_compare("==", v.major, major):
             return False
         if patch and not operator_compare("==", v.minor, minor):
@@ -214,7 +215,7 @@ def check_version(v: str, operator: str, version: str) -> bool:
         parts = version.split(".")
         major = int(parts[0]) if parts[0] != "*" else None
         minor = int(parts[1]) if len(parts) > 1 and parts[1] != "*" else None
-        patch = int(parts[2]) if len(parts) > 2 and parts[2] != "*" else None
+        patch = parts[2] if len(parts) > 2 and parts[2] != "*" else None
         if major and not operator_compare(operator, v.major, major):
             return False
         if minor and not operator_compare(operator, v.minor, minor):
