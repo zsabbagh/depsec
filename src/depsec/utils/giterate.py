@@ -255,6 +255,16 @@ def run_analysis(
     processed = 0
     rels = project.releases
     rels = {rel.version: rel for rel in rels}
+    for r in list(rels.keys()):
+        try:
+            v = semver.parse(r)
+        except:
+            pass
+        if len(v.release) == 2 and v.pre is None:
+            v = f"{v.release[0]}.{v.release[1]}.0"
+            # add alternative version, i.e., 1.0.0 for 1.0
+            logger.info(f"Adding {project_name}:{r} ({v})")
+            rels[v] = rels[r]
     logger.info(f"Releases found for {project_name}: {len(rels)}")
 
     releases = (

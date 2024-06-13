@@ -3,6 +3,7 @@ import yaml
 import json
 import glob
 import sys
+import os
 import pandas as pd
 import datetime as dt
 import itertools
@@ -2539,6 +2540,8 @@ class Aggregator:
         prompt: bool = True,
         limit: int = None,
         refresh: bool = False,
+        lizard: bool = True,
+        bandit: bool = True
     ) -> dict:
         """
         Statically analyses a project's dependencies
@@ -2547,7 +2550,7 @@ class Aggregator:
         """
         project = self.get_project(project, platform)
         ag._analyse(
-            project, platform=platform, prompt=prompt, limit=limit, refresh=refresh
+            project, platform=platform, prompt=prompt, limit=limit, refresh=refresh, lizard=lizard, bandit=bandit
         )
         deps = self.get_dependencies(project, platform=platform)
         for dep in deps:
@@ -2561,6 +2564,8 @@ class Aggregator:
                 prompt=prompt,
                 limit=limit,
                 refresh=refresh,
+                lizard=lizard,
+                bandit=bandit
             )
 
     def _match_vendors(
@@ -2703,6 +2708,8 @@ if __name__ == "__main__":
     parser.add_argument(
         "-v", "--vendors", action="store_true", help="Search for vendors", default=False
     )
+    parser.add_argument('-L', '--lizard', action='store_true', help='Run lizard analysis', default=False)
+    parser.add_argument('-B', '--bandit', action='store_true', help='Run bandit analysis', default=False)
     parser.add_argument(
         "-d",
         "--list-dependencies",
@@ -2785,9 +2792,16 @@ if __name__ == "__main__":
             cves = f": {cves}" if cves else ""
             print(f"\t{proj.name}{cves}")
         ag.save_projects()
+    lizard = args.lizard if args.lizard else (
+        False if args.bandit else True
+    )
+    bandit = args.bandit if args.bandit else (
+        False if args.lizard else True
+    )
+    print(f"Got lizard: {lizard}, bandit: {bandit}")
     if args.analyse:
-        ag._analyse(project, prompt=args.prompt, refresh=args.refresh, limit=args.limit)
+        ag._analyse(project, prompt=args.prompt, refresh=args.refresh, limit=args.limit, lizard=lizard, bandit=bandit)
     elif args.analyse_all:
         ag._analyse_all(
-            project, prompt=args.prompt, refresh=args.refresh, limit=args.limit
+            project, prompt=args.prompt, refresh=args.refresh, limit=args.limit, lizard=lizard, bandit=bandit
         )
