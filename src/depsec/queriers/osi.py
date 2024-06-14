@@ -69,3 +69,31 @@ class OSIQuerier:
             )
             return None
         return response.json()
+    
+    def query_version(self, package: str, version: str, platform: str = "pypi"):
+        """
+        Query OSI for a specific version of a package
+        """
+        package = package.strip().lower()
+        platform = platform.strip().lower()
+        url = f"{OSI_API}/systems/{platform}/packages/{package}/versions/{version}"
+        response = requests.get(url)
+        if self.__query_failed(response):
+            logger.error(
+                f"Error querying OSI for '{platform}' package '{package}' version '{version}': {response.status_code}: {response.text}"
+            )
+            return None
+        return response.json()
+    
+    def query_advisory(self, id: str):
+        """
+        Query OSI for advisory by ID
+        """
+        url = f"{OSI_API}/advisories/{id}"
+        response = requests.get(url)
+        if self.__query_failed(response):
+            logger.error(
+                f"Error querying OSI for advisory '{id}': {response.status_code}: {response.text}"
+            )
+            return None
+        return response.json()

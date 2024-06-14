@@ -12,6 +12,7 @@ import depsec.schemas.cwe as cwe
 import depsec.utils.db as db
 import depsec.utils.giterate as giterate
 import argparse
+import pylev
 from copy import deepcopy
 from packaging import version as semver
 from playhouse.shortcuts import model_to_dict
@@ -2674,6 +2675,63 @@ class Aggregator:
         for release in project.releases:
             versions.add(release.version)
         return sorted(list(versions))
+    
+    def _vendor(self, project: Project | str, platform: str = "pypi", force: bool = True) -> str:
+        """
+        Deduces the vendor for a project
+        """
+        project = self.get_project(project, platform=platform)
+        if not force and project.vendor and project.vendor != "-":
+            return project.vendor, project.product
+        releases = self.get_releases(project, platform=platform, exclude_nonstable=True, descending=False, osi_verified=True)
+        cve = None
+        for release in releases:
+            data = self.osi.query_version(project.name, release.version, platform=platform)
+            if not data:
+                print(f"Could not find OSI data for {project.name}:{release.version}")
+                continue
+            advisory_keys = data.get("advisoryKeys", {})
+            print(f"Got {len(advisory_keys)} advisories for {project.name}:{release.version}")
+            for key in advisory_keys:
+                key = key.get('id', '')
+                adv = self.osi.query_advisory(key)
+                if not adv:
+                    print(f"Could not find OSI advisory for {key}")
+                    continue
+                aliases = adv.get("aliases", [])
+                for alias in aliases:
+                    if alias.lower().startswith('cve-'):
+                        cve = alias
+                        break
+                if cve:
+                    break
+            if cve:
+                break
+        if not cve:
+            print(f"Could not find CVE for {project.name}")
+            return None, None
+        cve: nvd.CVE = self.get_cve(cve) 
+        if not cve:
+            print(f"Could not find CVE for {project.name}")
+            return None, None
+        processed = set()
+        prod_vend = []
+        for node in cve.config_nodes:
+            for cpe in node.cpes:
+                id = f"{cpe.vendor}:{cpe.product}"
+                if id in processed:
+                    continue
+                prod_vend.append((cpe.vendor, cpe.product))
+                processed.add(id)
+        min_pylev = None
+        vendor = product = None
+        for vend, prod in prod_vend:
+            distance = pylev.levenshtein(prod, project.name)
+            if min_pylev is None or distance < min_pylev:
+                min_pylev = distance
+                vendor = vend
+                product = prod
+        return vendor, product
 
 
 if __name__ == "__main__":
