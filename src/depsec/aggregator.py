@@ -2676,7 +2676,7 @@ class Aggregator:
             versions.add(release.version)
         return sorted(list(versions))
     
-    def _vendor(self, project: Project | str, platform: str = "pypi", force: bool = True) -> str:
+    def _vendor(self, project: Project | str, platform: str = "pypi", force: bool = True, update: bool = True) -> str:
         """
         Deduces the vendor for a project
         """
@@ -2731,6 +2731,11 @@ class Aggregator:
                 min_pylev = distance
                 vendor = vend
                 product = prod
+        if vendor and product and update:
+            project.vendor = vendor
+            project.product = product
+            project.save()
+            print(f"Updated {project.name} with vendor '{vendor}' and product '{product}'")
         return vendor, product
 
 
